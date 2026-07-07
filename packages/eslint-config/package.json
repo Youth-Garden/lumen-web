@@ -1,0 +1,12 @@
+{
+  "name": "@lumen/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "files": [
+    "next.mjs"
+  ],
+  "dependencies": {
+    "eslint-config-next": "^14.0.0 || ^15.0.0",
+    "eslint": "^9.0.0"
+  }
+}

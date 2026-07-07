@@ -1,0 +1,20 @@
+{
+  "name": "@lumen/shared-api",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@lumen/eslint-config": "workspace:*",
+    "@lumen/typescript-config": "workspace:*",
+    "typescript": "^5.0.0"
+  }
+}
