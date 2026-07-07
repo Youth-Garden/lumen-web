@@ -5,6 +5,7 @@ import {
   create,
   isCancel,
 } from 'axios';
+import qs from 'qs';
 import {
   ApiError,
   BaseResponse,
@@ -29,15 +30,20 @@ function flattenApiErrors(errors: unknown): string[] {
   if (Array.isArray(errors)) return errors.map((error) => String(error));
   if (typeof errors !== 'object') return [String(errors)];
 
-  return Object.entries(errors as Record<string, unknown>).flatMap(([field, value]) => {
-    if (Array.isArray(value)) {
-      return value.map((message) => `${field}: ${String(message)}`);
-    }
-    return [`${field}: ${String(value)}`];
-  });
+  return Object.entries(errors as Record<string, unknown>).flatMap(
+    ([field, value]) => {
+      if (Array.isArray(value)) {
+        return value.map((message) => `${field}: ${String(message)}`);
+      }
+      return [`${field}: ${String(value)}`];
+    },
+  );
 }
 
-function formatUrl(url: string, pathParams?: Record<string, string | number>): string {
+function formatUrl(
+  url: string,
+  pathParams?: Record<string, string | number>,
+): string {
   if (!pathParams) return url;
   let formattedUrl = url;
   for (const [key, value] of Object.entries(pathParams)) {
@@ -56,6 +62,8 @@ export abstract class BaseApiService {
     this.axiosInstance = create({
       baseURL: config.baseURL,
       timeout: config.timeout || 30000,
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'brackets' }),
     });
     this.mappers = config.mappers || {};
 
@@ -72,13 +80,15 @@ export abstract class BaseApiService {
     method: HttpMethod,
     url: string,
     config: RequestConfig = {},
-    data?: any
-  ): Promise<BaseResponse<T>> {
+    data?: any,
+  ): Promise<T> {
     try {
+      // 1. Resolve mapper (direct mapper > registry mapper)
       const mapper =
-        config.mapperKey !== undefined
+        config.mapper ||
+        (config.mapperKey !== undefined
           ? this.mappers[config.mapperKey]
-          : (this.mappers[registryKey(method, url)] ?? this.mappers[url]);
+          : (this.mappers[registryKey(method, url)] ?? this.mappers[url]));
       const formattedUrl = formatUrl(url, config.pathParams);
 
       const finalConfig: AxiosRequestConfig = {
@@ -86,54 +96,76 @@ export abstract class BaseApiService {
         method,
         url: formattedUrl,
         data,
-        validateStatus: () => true,
       };
 
+      // 2. Add interceptors / transformers for mapping API structures
       const defaultTransforms =
-        (create().defaults.transformResponse as AxiosResponseTransformer[]) || [];
-      const normalize = (raw: any) => ({
-        ...raw,
-        code: raw.success !== false && raw.statusCode !== 400 && raw.statusCode !== 500 && raw.statusCode !== 401 && raw.statusCode !== 403 && raw.statusCode !== 404 ? 'success' : 'error',
-      });
+        (create().defaults.transformResponse as AxiosResponseTransformer[]) ||
+        [];
+
       const mapSuccessResponse = (raw: any) => {
-        if (!mapper || raw?.code !== 'success') return raw;
+        if (!mapper) return raw;
+
+        // If data is array (like in pagination items), map each item
+        if (raw && raw.data && Array.isArray(raw.data.items)) {
+          return {
+            ...raw,
+            data: {
+              ...raw.data,
+              items: raw.data.items.map((item: any) => mapper(item)),
+            },
+          };
+        }
+
+        if (raw && Array.isArray(raw.data)) {
+          return { ...raw, data: raw.data.map((item: any) => mapper(item)) };
+        }
+
+        if (raw && raw.data) {
+          return { ...raw, data: mapper(raw.data) };
+        }
+
         return mapper(raw);
       };
-      finalConfig.transformResponse = [...defaultTransforms, normalize, mapSuccessResponse];
+
+      finalConfig.transformResponse = [
+        ...defaultTransforms,
+        mapSuccessResponse,
+      ];
 
       finalConfig.headers = {
         'Api-Language': 'en',
         ...finalConfig.headers,
       };
-      const result = await this.axiosInstance.request<BaseResponse<T>>(finalConfig);
-
-      if (result.data?.code === 'error' && !config.disabledToast) {
-        const errors = flattenApiErrors(result.data.error ?? result.data.errors ?? result.data.message);
-        const message = result.data.message || 'Unknown Error';
-        console.error('API Error:', {
-          method,
-          url: formattedUrl,
-          payload: data,
-          message,
-          errors,
-          response: result.data,
-        });
-        
-        if (this.config.onError) {
-          this.config.onError(errors, message);
-        }
-      }
-
-      if (result.data?.code === 'error') {
-        throw new ApiError(
-          result.data.message || 'Unknown Error',
-          result.data,
-          !config.disabledToast
-        );
-      }
+      const result = await this.axiosInstance.request<T>(finalConfig);
 
       return result.data;
     } catch (error: any) {
+      if (error.response && !config.disabledToast) {
+        const errorData = error.response.data;
+        const errors = flattenApiErrors(
+          errorData?.error ??
+            errorData?.errors ??
+            errorData?.message ??
+            error.message,
+        );
+        const message = errorData?.message || error.message || 'Unknown Error';
+
+        console.error('API Error:', {
+          method,
+          url,
+          payload: data,
+          message,
+          errors,
+          response: errorData,
+        });
+
+        if (this.config.onError) {
+          this.config.onError(errors, message);
+        }
+
+        throw new ApiError(message, errorData, !config.disabledToast);
+      }
       if (!isCancel(error) && !error.isHandled && !config.disabledToast) {
         console.error('Network Error:', error?.message);
         if (this.config.onNetworkError) {
@@ -147,40 +179,89 @@ export abstract class BaseApiService {
   protected _get<T = any>(
     url: string,
     params?: any,
-    config?: RequestConfig
-  ): Promise<BaseResponse<T>> {
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>(HttpMethod.GET, url, { ...config, params });
   }
 
   protected _post<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
-  ): Promise<BaseResponse<T>> {
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>(HttpMethod.POST, url, config, data);
   }
 
   protected _put<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
-  ): Promise<BaseResponse<T>> {
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>(HttpMethod.PUT, url, config, data);
   }
 
   protected _patch<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
-  ): Promise<BaseResponse<T>> {
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>(HttpMethod.PATCH, url, config, data);
   }
 
   protected _delete<T = any>(
     url: string,
     params?: any,
-    config?: RequestConfig
-  ): Promise<BaseResponse<T>> {
+    config?: RequestConfig<T>,
+  ): Promise<T> {
     return this.request<T>(HttpMethod.DELETE, url, { ...config, params });
+  }
+
+  // --- Helpers for Form Upload ---
+  protected _postForm<T = any>(
+    url: string,
+    data: any,
+    config?: RequestConfig<T>,
+  ): Promise<T> {
+    return this.request<T>(
+      HttpMethod.POST,
+      url,
+      {
+        ...config,
+        headers: { ...config?.headers, 'Content-Type': 'multipart/form-data' },
+      },
+      this.toFormData(data),
+    );
+  }
+
+  protected _putForm<T = any>(
+    url: string,
+    data: any,
+    config?: RequestConfig<T>,
+  ): Promise<T> {
+    return this.request<T>(
+      HttpMethod.PUT,
+      url,
+      {
+        ...config,
+        headers: { ...config?.headers, 'Content-Type': 'multipart/form-data' },
+      },
+      this.toFormData(data),
+    );
+  }
+
+  private toFormData(obj: any): FormData {
+    const formData = new FormData();
+    Object.entries(obj).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (value instanceof File || value instanceof Blob) {
+          formData.append(key, value);
+        } else if (Array.isArray(value)) {
+          value.forEach((v) => formData.append(`${key}[]`, String(v)));
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+    return formData;
   }
 }

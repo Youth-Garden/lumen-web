@@ -1,9 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
 
-export interface RequestConfig extends AxiosRequestConfig {
+export interface RequestConfig<T = any> extends AxiosRequestConfig {
   disabledToast?: boolean;
   mapperKey?: string;
+  mapper?: ResponseMapper<T>;
   pathParams?: Record<string, string | number>;
+  isFileUpload?: boolean;
 }
 
 export interface ErrorItem {
@@ -27,8 +29,8 @@ export interface Paging<T> {
   };
 }
 
-export type ResponseMapper = (data: any) => any;
-export type MapperRegistry = Record<string, ResponseMapper>;
+export type ResponseMapper<T = any> = (data: any) => T;
+export type MapperRegistry = Record<string, ResponseMapper<any>>;
 
 export enum HttpMethod {
   GET = 'GET',

@@ -10,11 +10,13 @@
     "build": "tsc"
   },
   "dependencies": {
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "qs": "^6.15.3"
   },
   "devDependencies": {
     "@lumen/eslint-config": "workspace:*",
     "@lumen/typescript-config": "workspace:*",
+    "@types/qs": "^6.15.1",
     "typescript": "^5.0.0"
   }
 }
