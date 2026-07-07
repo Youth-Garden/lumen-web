@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { QueryProvider } from './query-provider';
-import { PortalRenderer } from './portal-renderer';
+import { PortalRenderer } from '@lumen/uikit/portal';
 import { Updater } from './updater';
 import { ThemeProvider } from './theme-provider';
-import { Toaster } from '@/shared/components/ui/sonner';
-import { TooltipProvider } from '@/shared/components/ui/tooltip';
+import { Toaster } from '@lumen/uikit/components';
+import { TooltipProvider } from '@lumen/uikit/components';
 
 interface ProvidersProps {
   children: React.ReactNode;

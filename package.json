@@ -10,5 +10,8 @@
     "build": "pnpm --filter web build",
     "start": "pnpm --filter web start",
     "lint": "pnpm --filter web lint"
+  },
+  "devDependencies": {
+    "iconsax-react": "^0.0.8"
   }
 }

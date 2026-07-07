@@ -6,12 +6,16 @@ export interface RequestConfig extends AxiosRequestConfig {
   pathParams?: Record<string, string | number>;
 }
 
+export interface ErrorItem {
+  field?: string;
+  message: string;
+}
+
 export interface BaseResponse<T> {
   code: string;
   message: string;
   data: T;
-  error?: any;
-  errors?: unknown;
+  errors?: ErrorItem[];
 }
 
 export interface Paging<T> {

@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { ThemeSwitcher } from '@/shared/components/ui/theme-switcher';
+import { ThemeSwitcher } from '@lumen/uikit/components';
 
 export default function Home() {
   const t = useTranslations('Index');
