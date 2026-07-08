@@ -53,3 +53,4 @@ export * from './languages-icon';
 export * from './bar-chart-icon';
 export * from './flag-icon';
 export * from './filter-icon';
+export * from './save-icon';

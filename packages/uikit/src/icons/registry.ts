@@ -76,6 +76,7 @@ export const registry = {
   'bar-chart': lazy(() => import('./svgs').then((mod) => ({ default: mod.BarChartIcon }))),
   'flag': lazy(() => import('./svgs').then((mod) => ({ default: mod.FlagIcon }))),
   'filter': lazy(() => import('./svgs').then((mod) => ({ default: mod.FilterIcon }))),
+  'save': lazy(() => import('./svgs').then((mod) => ({ default: mod.SaveIcon }))),
 } as const;
 
 export type IconName = keyof typeof registry;
