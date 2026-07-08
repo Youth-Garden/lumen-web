@@ -3,19 +3,21 @@
 import { useState } from 'react';
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { Input, Button, Card, CardContent, ScrollArea, Skeleton } from '@lumen/uikit/components';
-import { Search, Volume2, Filter, Plus } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
 import { usePortal } from '@lumen/uikit/portal';
+import { useDebounce } from '@lumen/hooks';
 
 export function VocabularyList() {
   const t = useTranslations('Vocabulary.List');
   const [search, setSearch] = useState('');
   const [cefrLevel, setCefrLevel] = useState<string>('');
+  const debouncedSearch = useDebounce(search, 500);
 
   const [presentAddFlashcard] = usePortal(AddFlashcardDialog);
 
-  const { data, isLoading } = useVocabularyWords({ search, cefrLevel });
+  const { data, isLoading } = useVocabularyWords({ search: debouncedSearch, cefrLevel });
 
   const playAudio = (url: string) => {
     const audio = new Audio(url);
@@ -49,7 +51,7 @@ export function VocabularyList() {
 
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Icons name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
             placeholder={t('searchPlaceholder')} 
             className="pl-9"
@@ -58,7 +60,7 @@ export function VocabularyList() {
           />
         </div>
         <Button variant="outline" className="gap-2">
-          <Filter className="h-4 w-4" />
+          <Icons name="filter" className="h-4 w-4" />
           {t('filterByLevel')}
         </Button>
       </div>
@@ -92,7 +94,7 @@ export function VocabularyList() {
                           className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full"
                           onClick={() => playAudio(word.audioUrl!)}
                         >
-                          <Volume2 className="h-4 w-4" />
+                          <Icons name="volume-2" className="h-4 w-4" />
                         </Button>
                       )}
                     </div>
@@ -110,7 +112,7 @@ export function VocabularyList() {
                     </div>
                     <div className="flex items-center gap-2 mt-4">
                       <Button variant="outline" size="sm" className="gap-2" onClick={() => presentAddFlashcard({ wordId: word.id, term: word.term })}>
-                        <Plus className="h-4 w-4" />
+                        <Icons name="plus" className="h-4 w-4" />
                         {t('addToDeck', { fallback: 'Add to Deck' })}
                       </Button>
                     </div>

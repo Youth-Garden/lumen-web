@@ -1,6 +1,6 @@
 import React from 'react';
 import { DictationPlayer } from '@/features/dictation/components/dictation-player';
-import { Headphones } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import Link from 'next/link';
 
 export default function DictationExercisePage({ params }: { params: { id: string } }) {

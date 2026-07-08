@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { DataTable } from "@/shared/components/data-table"
 import { Button } from "@lumen/uikit/components"
-import { Plus, Edit, Trash2, Loader2 } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { useToeicTests, useDeleteToeicTest } from "../hooks"
 
 export default function TestList() {
@@ -46,14 +46,14 @@ export default function TestList() {
         return (
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => navigate(`/toeic/${row.original.id}/edit`)}>
-              <Edit className="h-4 w-4 mr-1" /> Edit
+              <Icons name="edit" className="h-4 w-4 mr-1" /> Edit
             </Button>
             <Button variant="destructive" size="sm" onClick={() => {
               if (confirm("Are you sure you want to delete this test?")) {
                 deleteMutation.mutate(row.original.id)
               }
             }} disabled={isPending || deleteMutation.isPending}>
-              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              {isPending ? <Icons name="loader-2" className="h-4 w-4 animate-spin" /> : <Icons name="trash-2" className="h-4 w-4" />}
             </Button>
           </div>
         )
@@ -64,7 +64,7 @@ export default function TestList() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Icons name="loader-2" className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -74,7 +74,7 @@ export default function TestList() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold tracking-tight">TOEIC Tests</h2>
         <Button onClick={() => navigate("/toeic/new")}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Test
+          <Icons name="plus" className="mr-2 h-4 w-4" /> Add New Test
         </Button>
       </div>
 

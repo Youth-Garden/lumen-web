@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Bell, LogOut, User as UserIcon } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { 
   Input, 
   Button, 
@@ -39,7 +39,7 @@ export function Header() {
     <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
       <div className="flex items-center gap-4 flex-1">
         <div className="relative w-full max-w-md hidden sm:flex">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Icons name="search" className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder={t('search')}
@@ -49,7 +49,7 @@ export function Header() {
       </div>
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
+          <Icons name="bell" className="h-5 w-5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive"></span>
         </Button>
         <ThemeSwitcher />
@@ -73,12 +73,12 @@ export function Header() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <UserIcon className="mr-2 h-4 w-4" />
+                <Icons name="user" className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
+                <Icons name="log-out" className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

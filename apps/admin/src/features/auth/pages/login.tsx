@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Button, Input, Label, Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@lumen/uikit/components"
 import { useLogin } from "../hooks"
 import { useAuthStore } from "@/store/auth.store"
-import { Loader2, Mail, Lock, ShieldCheck } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { toast } from "sonner"
 
 export default function Login() {
@@ -41,7 +41,7 @@ export default function Login() {
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center mb-4">
           <div className="h-12 w-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-            <ShieldCheck className="h-8 w-8" />
+            <Icons name="shield-check" className="h-8 w-8" />
           </div>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Lumen Admin</h1>
@@ -60,7 +60,7 @@ export default function Login() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Icons name="mail" className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
@@ -77,7 +77,7 @@ export default function Login() {
                 <Label htmlFor="password">Password</Label>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Icons name="lock" className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
@@ -98,7 +98,7 @@ export default function Login() {
             >
               {loginMutation.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Signing in...
+                  <Icons name="loader-2" className="mr-2 h-5 w-5 animate-spin" /> Signing in...
                 </>
               ) : (
                 "Sign In"

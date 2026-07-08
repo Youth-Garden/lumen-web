@@ -4,7 +4,7 @@ import { useGetArticles } from '../hooks';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@lumen/uikit/components';
 import { Button } from '@lumen/uikit/components';
-import { Newspaper, Loader2, ArrowRight, BookOpen, Clock } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -16,7 +16,7 @@ export const ArticleList = () => {
   if (isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Icons name="loader-2" className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -71,7 +71,7 @@ export const ArticleList = () => {
                   <span className="inline-flex items-center rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-semibold text-teal-700 dark:bg-teal-900 dark:text-teal-300">
                     Article
                   </span>
-                  <Newspaper className="h-4 w-4 text-slate-400" />
+                  <Icons name="newspaper" className="h-4 w-4 text-slate-400" />
                 </div>
                 <CardTitle className="line-clamp-2 text-xl leading-tight text-slate-800 dark:text-slate-200">{article.title}</CardTitle>
               </CardHeader>
@@ -81,10 +81,10 @@ export const ArticleList = () => {
                 </p>
                 <div className="mt-4 flex items-center gap-4 text-xs font-medium">
                   <div className="flex items-center gap-1 text-teal-600 dark:text-teal-400">
-                    <BookOpen className="h-3 w-3" /> Reading
+                    <Icons name="book-open" className="h-3 w-3" /> Reading
                   </div>
                   <div className="flex items-center gap-1 text-slate-400">
-                    <Clock className="h-3 w-3" /> {new Date(article.createdAt).toLocaleDateString()}
+                    <Icons name="clock" className="h-3 w-3" /> {new Date(article.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               </CardContent>
@@ -94,7 +94,7 @@ export const ArticleList = () => {
                   onClick={() => router.push(`/dashboard/reading/${article.id}`)}
                 >
                   Start Reading
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <Icons name="arrow-right" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </CardFooter>
             </Card>

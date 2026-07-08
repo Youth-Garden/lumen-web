@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button, Input, Label, Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger } from "@lumen/uikit/components"
 import { RichTextEditor } from "@/shared/components/rich-text-editor"
-import { Save, ArrowLeft, Upload, Plus, Trash2, Loader2 } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { useToeicTestDetail, useCreateToeicTest, useUpdateToeicTest } from "../hooks"
 
 export default function TestForm() {
@@ -79,7 +79,7 @@ export default function TestForm() {
   if (isEditing && isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Icons name="loader-2" className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -90,14 +90,14 @@ export default function TestForm() {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Button variant="ghost" onClick={() => navigate("/toeic")} className="p-2 h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
+            <Icons name="arrow-left" className="h-4 w-4" />
           </Button>
           <h2 className="text-2xl font-bold tracking-tight">
             {isEditing ? "Edit Test" : "Create New Test"}
           </h2>
         </div>
         <Button onClick={handleSave} disabled={isPending}>
-          {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />} Save
+          {isPending ? <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" /> : <Icons name="save" className="mr-2 h-4 w-4" />} Save
         </Button>
       </div>
 
@@ -149,7 +149,7 @@ export default function TestForm() {
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-semibold">Questions for Part {activePart}</h3>
                     <Button variant="outline" size="sm" onClick={addQuestion}>
-                      <Plus className="h-4 w-4 mr-2" /> Add Question
+                      <Icons name="plus" className="h-4 w-4 mr-2" /> Add Question
                     </Button>
                   </div>
                   
@@ -167,7 +167,7 @@ export default function TestForm() {
                             className="absolute top-2 right-2 text-red-500 hover:text-red-700 hover:bg-red-50"
                             onClick={() => setQuestions(questions.filter(item => item.id !== q.id))}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Icons name="trash-2" className="h-4 w-4" />
                           </Button>
                           
                           <div className="space-y-4 pt-2">
@@ -184,7 +184,7 @@ export default function TestForm() {
                                 {/* Media Uploads (Audio/Image) */}
                                 {(activePart === "1" || activePart === "2" || activePart === "3" || activePart === "4") && (
                                   <div className="flex gap-4 items-center p-3 border border-dashed rounded-md bg-white dark:bg-slate-950">
-                                    <Upload className="h-4 w-4 text-muted-foreground" />
+                                    <Icons name="upload" className="h-4 w-4 text-muted-foreground" />
                                     <span className="text-sm text-muted-foreground">Upload Audio (.mp3)</span>
                                     <Button size="sm" variant="secondary" className="ml-auto">Browse</Button>
                                   </div>
@@ -192,7 +192,7 @@ export default function TestForm() {
                                 
                                 {activePart === "1" && (
                                   <div className="flex gap-4 items-center p-3 border border-dashed rounded-md bg-white dark:bg-slate-950">
-                                    <Upload className="h-4 w-4 text-muted-foreground" />
+                                    <Icons name="upload" className="h-4 w-4 text-muted-foreground" />
                                     <span className="text-sm text-muted-foreground">Upload Image (.jpg, .png)</span>
                                     <Button size="sm" variant="secondary" className="ml-auto">Browse</Button>
                                   </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useGetArticleById } from '../hooks';
-import { Loader2, ArrowLeft, BookOpen, Clock, Tag } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { useRouter } from 'next/navigation';
 import { TranslationPopover } from './translation-popover';
@@ -46,7 +46,7 @@ export const ArticleReader = ({ articleId }: { articleId: string }) => {
   if (isLoading) {
     return (
       <div className="flex h-[70vh] items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-teal-600" />
+        <Icons name="loader-2" className="h-10 w-10 animate-spin text-teal-600" />
       </div>
     );
   }
@@ -67,17 +67,17 @@ export const ArticleReader = ({ articleId }: { articleId: string }) => {
         className="mb-8 pl-0 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
         onClick={() => router.back()}
       >
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Articles
+        <Icons name="arrow-left" className="mr-2 h-4 w-4" /> Back to Articles
       </Button>
 
       <article className="rounded-3xl bg-white p-8 shadow-sm dark:bg-slate-900 md:p-12">
         <div className="mb-8 border-b border-slate-100 pb-8 dark:border-slate-800">
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-700 dark:bg-teal-900 dark:text-teal-300">
-              <Tag className="mr-1 h-3 w-3" /> Vocabulary Building
+              <Icons name="tag" className="mr-1 h-3 w-3" /> Vocabulary Building
             </span>
             <span className="inline-flex items-center text-sm text-slate-500">
-              <Clock className="mr-1 h-4 w-4" /> {new Date(article.createdAt).toLocaleDateString()}
+              <Icons name="clock" className="mr-1 h-4 w-4" /> {new Date(article.createdAt).toLocaleDateString()}
             </span>
           </div>
           

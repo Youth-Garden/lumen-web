@@ -1,6 +1,6 @@
 import React from 'react';
 import { DictationList } from '@/features/dictation/components/dictation-list';
-import { Headphones } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 
 export default function DictationPage() {
   return (
@@ -8,7 +8,7 @@ export default function DictationPage() {
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <Headphones className="w-8 h-8 text-primary" />
+            <Icons name="headphones" className="w-8 h-8 text-primary" />
             Daily Dictation
           </h2>
           <p className="text-muted-foreground mt-2">

@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@lumen/uikit/components';
-import { Loader2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useVocabularyDecks } from '@/features/vocabulary/hooks';
 import { useCreateFlashcard } from '@/features/vocabulary/hooks';
 import { PortalProps } from '@lumen/uikit/portal';
@@ -127,7 +127,7 @@ export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddF
                   {t('cancel', { fallback: 'Cancel' })}
                 </Button>
                 <Button type="submit" disabled={isPending || decks.length === 0}>
-                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isPending && <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />}
                   {t('add', { fallback: 'Add' })}
                 </Button>
               </div>

@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Loader2, Command } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 
 import { Button, Input, Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@lumen/uikit/components';
 import { LoginFormData, getLoginSchema } from '@/features/auth/validations/auth';
@@ -63,7 +63,7 @@ export default function LoginPage() {
       <div className="flex flex-col space-y-2 text-center mb-4">
         <div className="flex justify-center mb-4">
           <div className="p-3 bg-zinc-900 rounded-xl shadow-lg ring-1 ring-zinc-800">
-            <Command className="w-8 h-8 text-white" />
+            <Icons name="command" className="w-8 h-8 text-white" />
           </div>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
@@ -123,7 +123,7 @@ export default function LoginPage() {
           <Button type="submit" className="w-full mt-6" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />
                 {t('processing')}
               </>
             ) : (

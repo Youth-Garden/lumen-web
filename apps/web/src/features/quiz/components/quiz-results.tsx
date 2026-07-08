@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardContent, Button } from '@lumen/uikit/components';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import type { QuizDetailResponseDto } from '@/services/quiz';
 import { useRouter } from 'next/navigation';
 import { RouteEnum } from '@/shared/constants';
@@ -28,9 +28,9 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ quiz }) => {
                 <div className="flex items-start justify-between gap-4">
                   <span className="font-semibold text-lg">{idx + 1}. {q.questionText}</span>
                   {q.isCorrect ? (
-                    <CheckCircle2 className="text-green-500 shrink-0 w-6 h-6" />
+                    <Icons name="check-circle" size={24} className="text-green-500 shrink-0 w-6 h-6" />
                   ) : (
-                    <XCircle className="text-destructive shrink-0 w-6 h-6" />
+                    <Icons name="close-circle" size={24} className="text-destructive shrink-0 w-6 h-6" />
                   )}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4 mt-2">

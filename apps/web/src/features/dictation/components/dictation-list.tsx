@@ -12,7 +12,7 @@ import {
   CardContent,
   Button,
 } from '@lumen/uikit/components';
-import { Headphones, Clock, BarChart } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
 
 export const DictationList = () => {
@@ -63,11 +63,11 @@ export const DictationList = () => {
             <div className="flex flex-col space-y-4">
               <div className="flex items-center text-sm text-muted-foreground gap-4">
                 <div className="flex items-center gap-1">
-                  <Headphones className="w-4 h-4" />
+                  <Icons name="headphones" className="w-4 h-4" />
                   <span>Audio</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+                  <Icons name="clock" className="w-4 h-4" />
                   <span>~5 mins</span>
                 </div>
               </div>

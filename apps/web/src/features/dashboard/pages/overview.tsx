@@ -1,6 +1,6 @@
 "use client";
 
-import { Trophy, Flame, BookOpen, Clock } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@lumen/uikit/components';
 import { MetricCard } from '../components/metric-card';
 import { RecentActivity } from '../components/recent-activity';
@@ -46,28 +46,28 @@ export function OverviewPage() {
               value={progressData?.totalPoints?.toString() || '0'}
               trend="from last week"
               trendValue={15.5}
-              icon={Trophy}
+              icon="trophy"
             />
             <MetricCard
               title="Current Streak"
               value={`${progressData?.streak || 0} days`}
               trend="keep it up!"
               trendValue={100}
-              icon={Flame}
+              icon="flame"
             />
             <MetricCard
               title="Words Learned"
               value="342"
               trend="from last month"
               trendValue={12}
-              icon={BookOpen}
+              icon="book-open"
             />
             <MetricCard
               title="Study Time"
               value="12h 30m"
               trend="this week"
               trendValue={5.2}
-              icon={Clock}
+              icon="clock"
             />
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">

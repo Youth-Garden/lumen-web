@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@lumen/uikit/components';
 import { Button } from '@lumen/uikit/components';
-import { Loader2, Play, Pause, ChevronRight, ChevronLeft, Flag, CheckCircle2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 
 interface ToeicTestPlayerProps {
@@ -22,7 +22,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   if (isLoading) {
     return (
       <div className="flex h-[70vh] items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <Icons name="loader-2" className="h-10 w-10 animate-spin text-primary" />
       </div>
     );
   }
@@ -94,7 +94,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                     Part {currentQuestion.part}
                   </span>
                   <Button variant="ghost" size="sm" className="text-slate-500">
-                    <Flag className="mr-2 h-4 w-4" /> Flag for review
+                    <Icons name="flag" className="mr-2 h-4 w-4" /> Flag for review
                   </Button>
                 </div>
 
@@ -165,7 +165,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                           {option}
                         </span>
                         {isSelected && (
-                          <CheckCircle2 className="ml-auto h-5 w-5 text-indigo-500" />
+                          <Icons name="check-circle" className="ml-auto h-5 w-5 text-indigo-500" />
                         )}
                       </button>
                     );
@@ -186,12 +186,12 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
           disabled={currentQuestionIndex === 0}
           className="rounded-full px-6"
         >
-          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+          <Icons name="chevron-left" className="mr-2 h-4 w-4" /> Previous
         </Button>
         
         {currentQuestionIndex === totalQuestions - 1 ? (
           <Button size="lg" className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 px-8 text-white shadow-lg hover:from-green-600 hover:to-emerald-700">
-            Submit Test <CheckCircle2 className="ml-2 h-4 w-4" />
+            Submit Test <Icons name="check-circle" className="ml-2 h-4 w-4" />
           </Button>
         ) : (
           <Button
@@ -199,7 +199,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
             onClick={nextQuestion}
             className="rounded-full bg-slate-900 px-8 text-white shadow-lg hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-700"
           >
-            Next <ChevronRight className="ml-2 h-4 w-4" />
+            Next <Icons name="chevron-right" className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>

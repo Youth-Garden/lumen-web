@@ -5,7 +5,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { materialService, DictationSubmissionDto } from '@/services/material/material.service';
 import { materialKeys } from '@/services/material/material.keys';
 import { Button, Input, Card, CardContent } from '@lumen/uikit/components';
-import { Play, Pause, RotateCcw, CheckCircle, XCircle } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { toast } from 'sonner';
 
 export const DictationPlayer = ({ materialId }: { materialId: string }) => {
@@ -131,12 +131,12 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
                     className="rounded-full w-10 h-10"
                     onClick={() => isActive ? handlePause() : handlePlaySegment(transcript.id, transcript.startTime)}
                   >
-                    {isActive ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                    {isActive ? <Icons name="pause" className="w-5 h-5" /> : <Icons name="play" className="w-5 h-5" />}
                   </Button>
                   <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 text-muted-foreground hover:text-primary"
                     onClick={() => handlePlaySegment(transcript.id, transcript.startTime)}
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <Icons name="rotate-ccw" className="w-4 h-4" />
                   </Button>
                 </div>
                 
@@ -159,7 +159,7 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
                   {isSubmitted && result && (
                     <div className={`p-3 rounded-lg text-sm ${result.isCorrect ? 'bg-green-500/10 text-green-700 dark:text-green-400' : 'bg-red-500/10 text-red-700 dark:text-red-400'}`}>
                       <div className="flex items-start gap-2">
-                        {result.isCorrect ? <CheckCircle className="w-5 h-5 shrink-0 mt-0.5" /> : <XCircle className="w-5 h-5 shrink-0 mt-0.5" />}
+                        {result.isCorrect ? <Icons name="check-circle" className="w-5 h-5 shrink-0 mt-0.5" /> : <Icons name="x-circle" className="w-5 h-5 shrink-0 mt-0.5" />}
                         <div>
                           {!result.isCorrect && (
                             <p className="font-semibold mb-1">Correct Answer:</p>

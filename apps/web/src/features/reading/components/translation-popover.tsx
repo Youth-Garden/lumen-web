@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslateText } from '../hooks';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, Languages, Plus, Check } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 
 interface TranslationPopoverProps {
@@ -65,7 +65,7 @@ export const TranslationPopover = ({ text, position, onClose, onAddToFlashcard }
       >
         <div className="mb-3 border-b border-slate-100 pb-2 dark:border-slate-800">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-teal-600 dark:text-teal-400">
-            <Languages className="h-4 w-4" /> Translation
+            <Icons name="languages" className="h-4 w-4" /> Translation
           </div>
           <div className="mt-1 line-clamp-2 text-sm font-medium text-slate-800 dark:text-slate-200">
             &quot;{text}&quot;
@@ -75,7 +75,7 @@ export const TranslationPopover = ({ text, position, onClose, onAddToFlashcard }
         <div className="min-h-[60px]">
           {isLoading ? (
             <div className="flex h-full items-center justify-center space-x-2 text-slate-400">
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Icons name="loader-2" className="h-5 w-5 animate-spin" />
               <span className="text-sm">Translating...</span>
             </div>
           ) : isError ? (
@@ -94,11 +94,11 @@ export const TranslationPopover = ({ text, position, onClose, onAddToFlashcard }
               >
                 {added ? (
                   <>
-                    <Check className="mr-2 h-4 w-4" /> Added to Decks
+                    <Icons name="check" className="mr-2 h-4 w-4" /> Added to Decks
                   </>
                 ) : (
                   <>
-                    <Plus className="mr-2 h-4 w-4" /> Add to Flashcards
+                    <Icons name="plus" className="mr-2 h-4 w-4" /> Add to Flashcards
                   </>
                 )}
               </Button>

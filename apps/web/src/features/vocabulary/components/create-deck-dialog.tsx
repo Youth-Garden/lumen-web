@@ -22,7 +22,7 @@ import {
   FormMessage,
   Input,
 } from '@lumen/uikit/components';
-import { Plus, Loader2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useCreateDeck } from '@/features/vocabulary/hooks';
 import { PortalProps } from '@lumen/uikit/portal';
 
@@ -108,7 +108,7 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
                 {t('cancel', { fallback: 'Cancel' })}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isPending && <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />}
                 {t('save', { fallback: 'Save' })}
               </Button>
             </div>

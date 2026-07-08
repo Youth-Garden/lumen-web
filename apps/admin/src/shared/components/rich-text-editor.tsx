@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Image from "@tiptap/extension-image"
 import Link from "@tiptap/extension-link"
-import { Bold, Italic, Strikethrough, List, ListOrdered, Heading2, Quote, Undo, Redo, ImageIcon, LinkIcon } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { Toggle } from "@/shared/components/toggle"
 import { Button } from "@lumen/uikit/components"
 
@@ -47,7 +47,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleBold().run()}
         aria-label="Toggle bold"
       >
-        <Bold className="h-4 w-4" />
+        <Icons name="bold" className="h-4 w-4" />
       </Toggle>
       <Toggle
         size="sm"
@@ -55,7 +55,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleItalic().run()}
         aria-label="Toggle italic"
       >
-        <Italic className="h-4 w-4" />
+        <Icons name="italic" className="h-4 w-4" />
       </Toggle>
       <Toggle
         size="sm"
@@ -63,7 +63,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleStrike().run()}
         aria-label="Toggle strikethrough"
       >
-        <Strikethrough className="h-4 w-4" />
+        <Icons name="strikethrough" className="h-4 w-4" />
       </Toggle>
       
       <div className="w-px h-6 bg-border mx-1" />
@@ -74,7 +74,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         aria-label="Toggle heading"
       >
-        <Heading2 className="h-4 w-4" />
+        <Icons name="heading2" className="h-4 w-4" />
       </Toggle>
 
       <div className="w-px h-6 bg-border mx-1" />
@@ -85,7 +85,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
         aria-label="Toggle bullet list"
       >
-        <List className="h-4 w-4" />
+        <Icons name="list" className="h-4 w-4" />
       </Toggle>
       <Toggle
         size="sm"
@@ -93,7 +93,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
         aria-label="Toggle ordered list"
       >
-        <ListOrdered className="h-4 w-4" />
+        <Icons name="list"Ordered className="h-4 w-4" />
       </Toggle>
       <Toggle
         size="sm"
@@ -101,7 +101,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
         aria-label="Toggle blockquote"
       >
-        <Quote className="h-4 w-4" />
+        <Icons name="quote" className="h-4 w-4" />
       </Toggle>
 
       <div className="w-px h-6 bg-border mx-1" />
@@ -112,19 +112,19 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onClick={setLink}
         className={editor.isActive("link") ? "bg-accent text-accent-foreground" : ""}
       >
-        <LinkIcon className="h-4 w-4" />
+        <Icons name="link-icon" className="h-4 w-4" />
       </Button>
       <Button variant="ghost" size="sm" onClick={addImage}>
-        <ImageIcon className="h-4 w-4" />
+        <Icons name="image-icon" className="h-4 w-4" />
       </Button>
 
       <div className="flex-1" />
 
       <Button variant="ghost" size="sm" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}>
-        <Undo className="h-4 w-4" />
+        <Icons name="undo" className="h-4 w-4" />
       </Button>
       <Button variant="ghost" size="sm" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()}>
-        <Redo className="h-4 w-4" />
+        <Icons name="redo" className="h-4 w-4" />
       </Button>
     </div>
   )

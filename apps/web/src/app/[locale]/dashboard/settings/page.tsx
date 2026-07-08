@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button, Input, Label, Tabs, TabsContent, TabsList, TabsTrigger } from '@lumen/uikit/components';
-import { Settings, User, Bell, Shield } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 
 export default function SettingsPage() {
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Settings className="w-8 h-8 text-primary" />
+          <Icons name="settings" className="w-8 h-8 text-primary" />
           Settings
         </h2>
       </div>
@@ -15,13 +15,13 @@ export default function SettingsPage() {
       <Tabs defaultValue="profile" className="space-y-4">
         <TabsList>
           <TabsTrigger value="profile" className="flex gap-2">
-            <User className="w-4 h-4" /> Profile
+            <Icons name="user" className="w-4 h-4" /> Profile
           </TabsTrigger>
           <TabsTrigger value="account" className="flex gap-2">
-            <Shield className="w-4 h-4" /> Account
+            <Icons name="shield" className="w-4 h-4" /> Account
           </TabsTrigger>
           <TabsTrigger value="notifications" className="flex gap-2">
-            <Bell className="w-4 h-4" /> Notifications
+            <Icons name="bell" className="w-4 h-4" /> Notifications
           </TabsTrigger>
         </TabsList>
         <TabsContent value="profile" className="space-y-4">

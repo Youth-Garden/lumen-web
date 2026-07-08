@@ -4,7 +4,7 @@ import { useGetToeicTests } from '../hooks';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@lumen/uikit/components';
 import { Button } from '@lumen/uikit/components';
-import { Headphones, BookOpen, Clock, BarChart, ArrowRight, Loader2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
 
 export const ToeicTestList = () => {
@@ -14,7 +14,7 @@ export const ToeicTestList = () => {
   if (isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Icons name="loader-2" className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -70,8 +70,8 @@ export const ToeicTestList = () => {
                     Full Test
                   </span>
                   <div className="flex space-x-1">
-                    <Headphones className="h-4 w-4 text-slate-400" />
-                    <BookOpen className="h-4 w-4 text-slate-400" />
+                    <Icons name="headphones" className="h-4 w-4 text-slate-400" />
+                    <Icons name="book-open" className="h-4 w-4 text-slate-400" />
                   </div>
                 </div>
                 <CardTitle className="line-clamp-1 text-xl">{test.title}</CardTitle>
@@ -79,11 +79,11 @@ export const ToeicTestList = () => {
               </CardHeader>
               <CardContent className="grid grid-cols-2 gap-4 pb-4 pt-4 text-sm text-slate-500 dark:text-slate-400">
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" />
+                  <Icons name="clock" className="h-4 w-4 text-primary" />
                   <span>120 mins</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BarChart className="h-4 w-4 text-primary" />
+                  <Icons name="bar-chart" className="h-4 w-4 text-primary" />
                   <span>200 Questions</span>
                 </div>
               </CardContent>
@@ -93,7 +93,7 @@ export const ToeicTestList = () => {
                   onClick={() => router.push(`/dashboard/toeic/${test.id}`)}
                 >
                   Start Test
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <Icons name="arrow-right" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </CardFooter>
             </Card>

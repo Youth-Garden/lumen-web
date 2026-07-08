@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { useDueFlashcards } from '@/features/vocabulary/hooks';
 import { useReviewFlashcard } from '@/features/vocabulary/hooks';
@@ -40,7 +40,7 @@ export function StudyPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)] w-full">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <Icons name="loader-2" className="h-10 w-10 animate-spin text-primary" />
         <p className="mt-4 text-muted-foreground">{t('loading', { fallback: 'Loading due flashcards...' })}</p>
       </div>
     );
@@ -61,7 +61,7 @@ export function StudyPage() {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)] w-full animate-in fade-in zoom-in duration-500">
         <div className="bg-primary/10 p-6 rounded-full mb-6">
-          <CheckCircle2 className="h-20 w-20 text-primary" />
+          <Icons name="check-circle" className="h-20 w-20 text-primary" />
         </div>
         <h2 className="text-3xl font-bold mb-4">{t('allCaughtUp', { fallback: 'You\'re all caught up!' })}</h2>
         <p className="text-muted-foreground text-lg mb-8 max-w-md text-center">
@@ -85,7 +85,7 @@ export function StudyPage() {
     <div className="flex flex-col h-full max-w-4xl mx-auto w-full pb-10">
       <div className="flex items-center justify-between mb-8">
         <Button variant="ghost" className="gap-2" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4" />
+          <Icons name="arrow-left" className="h-4 w-4" />
           {t('back', { fallback: 'Back' })}
         </Button>
         

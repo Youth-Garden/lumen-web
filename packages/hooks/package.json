@@ -1,0 +1,16 @@
+{
+  "name": "@lumen/hooks",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "react": "19.2.4"
+  },
+  "devDependencies": {
+    "@lumen/typescript-config": "workspace:*",
+    "@types/react": "^19.0.7",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,5 +1,5 @@
 import { Button, Input } from '@lumen/uikit/components';
-import { Trash2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 
 interface VocabExampleItemProps {
   sentenceEn: string;
@@ -42,7 +42,7 @@ export function VocabExampleItem({
         onClick={onRemove}
         className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50"
       >
-        <Trash2 className="h-4 w-4" />
+        <Icons name="trash-2" className="h-4 w-4" />
       </Button>
     </div>
   );

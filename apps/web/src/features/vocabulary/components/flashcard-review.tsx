@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Card, CardContent, Button, Skeleton } from '@lumen/uikit/components';
-import { Volume2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { DueFlashcard } from '@/services/vocabulary';
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
@@ -79,7 +79,7 @@ export function FlashcardReview({ flashcard, onGrade, isSubmitting }: FlashcardR
                           playAudio(word.audioUrl!);
                         }}
                       >
-                        <Volume2 className="h-5 w-5 text-primary" />
+                        <Icons name="volume-2" className="h-5 w-5 text-primary" />
                       </Button>
                     )}
                   </div>

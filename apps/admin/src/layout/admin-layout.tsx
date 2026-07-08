@@ -1,16 +1,16 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom"
-import { Users, LayoutDashboard, FileText, Settings, BookOpen, BookMarked, LogOut, Loader2 } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { Button } from "@lumen/uikit/components"
 import { useAuthStore } from "@/store/auth.store"
 import { useLogout, useMe } from "@/features/auth/hooks"
 import { toast } from "sonner"
 
 const navItems = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/users", icon: Users, label: "Users" },
-  { to: "/toeic", icon: FileText, label: "TOEIC Tests" },
-  { to: "/vocabulary", icon: BookMarked, label: "Vocabulary" },
-  { to: "/materials", icon: BookOpen, label: "Materials" },
+  { to: "/dashboard", icon: "layout-dashboard", label: "Dashboard" },
+  { to: "/users", icon: "users", label: "Users" },
+  { to: "/toeic", icon: "file-text", label: "TOEIC Tests" },
+  { to: "/vocabulary", icon: "book-marked", label: "Vocabulary" },
+  { to: "/materials", icon: "book-open", label: "Materials" },
 ]
 
 export default function AdminLayout() {
@@ -42,7 +42,7 @@ export default function AdminLayout() {
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
-          {navItems.map(({ to, icon: Icon, label }) => (
+          {navItems.map(({ to, icon, label }) => (
             <NavLink
               key={to}
               to={to}
@@ -54,7 +54,7 @@ export default function AdminLayout() {
                 }`
               }
             >
-              <Icon className="h-4 w-4" />
+              <Icons name={icon as any} className="h-4 w-4" />
               <span>{label}</span>
             </NavLink>
           ))}
@@ -71,11 +71,11 @@ export default function AdminLayout() {
               }`
             }
           >
-            <Settings className="h-4 w-4" />
+            <Icons name="settings" className="h-4 w-4" />
             <span>Settings</span>
           </NavLink>
           <Button variant="ghost" className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950" onClick={handleLogout} disabled={logoutMutation.isPending}>
-            {logoutMutation.isPending ? <Loader2 className="h-4 w-4 mr-3 animate-spin" /> : <LogOut className="h-4 w-4 mr-3" />}
+            {logoutMutation.isPending ? <Icons name="loader-2" className="h-4 w-4 mr-3 animate-spin" /> : <Icons name="log-out" className="h-4 w-4 mr-3" />}
             Logout
           </Button>
         </div>

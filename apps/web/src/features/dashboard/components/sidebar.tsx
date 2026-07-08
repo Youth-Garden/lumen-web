@@ -2,24 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Command, 
-  LayoutDashboard, 
-  Users, 
-  Settings, 
-  PieChart, 
-  CreditCard,
-  LogOut,
-  ChevronUp,
-  User as UserIcon,
-  Book,
-  Layers,
-  Brain,
-  FileQuestion,
-  Headphones,
-  Newspaper,
-  Mic
-} from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 
 import { 
   Button, 
@@ -42,15 +25,15 @@ import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 
 const navigationKeys = [
-  { key: 'overview', href: RouteEnum.DASHBOARD, icon: LayoutDashboard },
-  { key: 'study', href: RouteEnum.STUDY, icon: Brain },
-  { key: 'quiz', href: RouteEnum.QUIZ, icon: FileQuestion },
-  { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: Book },
-  { key: 'decks', href: RouteEnum.DECKS, icon: Layers },
-  { key: 'toeic', href: RouteEnum.TOEIC, icon: Headphones },
-  { key: 'reading', href: RouteEnum.READING, icon: Newspaper },
-  { key: 'dictation', href: RouteEnum.DICTATION, icon: Mic },
-  { key: 'settings', href: RouteEnum.SETTINGS, icon: Settings },
+  { key: 'overview', href: RouteEnum.DASHBOARD, icon: 'layout-dashboard' },
+  { key: 'study', href: RouteEnum.STUDY, icon: 'brain' },
+  { key: 'quiz', href: RouteEnum.QUIZ, icon: 'file-question' },
+  { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: 'book' },
+  { key: 'decks', href: RouteEnum.DECKS, icon: 'layers' },
+  { key: 'toeic', href: RouteEnum.TOEIC, icon: 'headphones' },
+  { key: 'reading', href: RouteEnum.READING, icon: 'newspaper' },
+  { key: 'dictation', href: RouteEnum.DICTATION, icon: 'mic' },
+  { key: 'settings', href: RouteEnum.SETTINGS, icon: 'settings' },
 ];
 
 export function Sidebar() {
@@ -69,7 +52,7 @@ export function Sidebar() {
       <div className="p-6">
         <Link href={RouteEnum.DASHBOARD} className="flex items-center gap-2 font-bold text-xl">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Command className="h-5 w-5" />
+            <Icons name="command" className="h-5 w-5" />
           </div>
           Lumen
         </Link>
@@ -85,9 +68,10 @@ export function Sidebar() {
                   variant={isActive ? 'secondary' : 'ghost'}
                   className={cn("w-full justify-start gap-3", isActive ? "font-semibold" : "text-muted-foreground")}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <Icons name={item.icon as any} className="h-5 w-5" />
                   {t(item.key)}
                 </Button>
+
               </Link>
             );
           })}
@@ -101,7 +85,7 @@ export function Sidebar() {
               <Button variant="ghost" className="w-full justify-start gap-3 h-14 px-2">
                 <Avatar className="h-9 w-9 border border-border">
                   <AvatarImage src="https://github.com/shadcn.png" alt="@lumen" />
-                  <AvatarFallback><UserIcon className="h-4 w-4" /></AvatarFallback>
+                  <AvatarFallback><Icons name="user" className="h-4 w-4" /></AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start text-left flex-1 overflow-hidden">
                   <span className="text-sm font-medium leading-none mb-1 truncate w-full">
@@ -111,7 +95,7 @@ export function Sidebar() {
                     {user?.email || 'admin@lumen.com'}
                   </span>
                 </div>
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                <Icons name="chevron-up" className="h-4 w-4 text-muted-foreground" />
               </Button>
             }
           />
@@ -122,7 +106,7 @@ export function Sidebar() {
             <DropdownMenuItem>{t('settings')}</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-              <LogOut className="mr-2 h-4 w-4" />
+              <Icons name="log-out" className="mr-2 h-4 w-4" />
               <span>{t('logout')}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

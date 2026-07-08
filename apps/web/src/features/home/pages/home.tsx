@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ArrowRight, Box, Command, Layers, Shield, Zap } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
 
@@ -16,7 +16,7 @@ export default function HomePage() {
         <div className="container flex h-14 max-w-screen-2xl items-center px-4 mx-auto">
           <div className="mr-4 flex">
             <Link href={RouteEnum.HOME} className="mr-6 flex items-center space-x-2">
-              <Command className="h-6 w-6 text-primary" />
+              <Icons name="command" className="h-6 w-6 text-primary" />
               <span className="hidden font-bold sm:inline-block">
                 Lumen
               </span>
@@ -59,7 +59,7 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                 <Link href={RouteEnum.REGISTER}>
                   <Button size="lg" className="w-full sm:w-auto gap-2">
-                    Bắt đầu miễn phí <ArrowRight className="h-4 w-4" />
+                    Bắt đầu miễn phí <Icons name="arrow-right" className="h-4 w-4" />
                   </Button>
                 </Link>
                 <Link href="#features">
@@ -85,7 +85,7 @@ export default function HomePage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-background rounded-2xl p-8 border border-border/50 shadow-sm hover:shadow-md transition-shadow">
                 <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                  <Zap className="h-6 w-6 text-primary" />
+                  <Icons name="zap" className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Tốc độ chớp nhoáng</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -95,7 +95,7 @@ export default function HomePage() {
 
               <div className="bg-background rounded-2xl p-8 border border-border/50 shadow-sm hover:shadow-md transition-shadow">
                 <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-6">
-                  <Shield className="h-6 w-6 text-blue-500" />
+                  <Icons name="shield" className="h-6 w-6 text-blue-500" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Bảo mật tối đa</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -105,7 +105,7 @@ export default function HomePage() {
 
               <div className="bg-background rounded-2xl p-8 border border-border/50 shadow-sm hover:shadow-md transition-shadow">
                 <div className="h-12 w-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-6">
-                  <Layers className="h-6 w-6 text-emerald-500" />
+                  <Icons name="layers" className="h-6 w-6 text-emerald-500" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Kiến trúc Microservices</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -121,7 +121,7 @@ export default function HomePage() {
       <footer className="border-t border-border py-12 md:py-16">
         <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center space-x-2">
-            <Command className="h-5 w-5 text-primary" />
+            <Icons name="command" className="h-5 w-5 text-primary" />
             <span className="font-bold">Lumen Platform</span>
           </div>
           <p className="text-sm text-muted-foreground">

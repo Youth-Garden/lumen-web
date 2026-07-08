@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { DataTable } from "@/shared/components/data-table"
 import { Button } from "@lumen/uikit/components"
-import { Plus, Edit, Ban, CheckCircle, Loader2 } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { useUsers } from "../hooks"
 import { useBanUser, useUnbanUser } from "../hooks"
 import type { AdminUser } from "@/services/users"
@@ -54,7 +54,7 @@ export default function UserList() {
           <span className={`px-2 py-1 rounded-md text-xs font-semibold inline-flex items-center gap-1 ${
             status === "Active" ? "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300" : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
           }`}>
-            {status === "Active" ? <CheckCircle className="h-3 w-3" /> : <Ban className="h-3 w-3" />}
+            {status === "Active" ? <Icons name="check-circle" className="h-3 w-3" /> : <Icons name="ban" className="h-3 w-3" />}
             {status}
           </span>
         )
@@ -78,7 +78,7 @@ export default function UserList() {
         return (
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => navigate(`/users/${user.id}/edit`)}>
-              <Edit className="h-4 w-4 mr-1" /> Edit
+              <Icons name="edit" className="h-4 w-4 mr-1" /> Edit
             </Button>
             <Button
               variant={user.status === "Active" ? "destructive" : "outline"}
@@ -86,7 +86,7 @@ export default function UserList() {
               onClick={() => toggleBan(user)}
               disabled={isPending}
             >
-              {user.status === "Active" ? <Ban className="h-4 w-4 mr-1" /> : <CheckCircle className="h-4 w-4 mr-1" />}
+              {user.status === "Active" ? <Icons name="ban" className="h-4 w-4 mr-1" /> : <Icons name="check-circle" className="h-4 w-4 mr-1" />}
               {user.status === "Active" ? "Ban" : "Unban"}
             </Button>
           </div>
@@ -98,7 +98,7 @@ export default function UserList() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Icons name="loader-2" className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -111,21 +111,21 @@ export default function UserList() {
           <p className="text-muted-foreground text-sm mt-1">Manage learner and admin accounts</p>
         </div>
         <Button onClick={() => navigate("/users/new")}>
-          <Plus className="mr-2 h-4 w-4" /> Add User
+          <Icons name="plus" className="mr-2 h-4 w-4" /> Add User
         </Button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-4 flex items-center gap-4">
-          <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600"><CheckCircle className="h-5 w-5" /></div>
+          <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600"><Icons name="check-circle" className="h-5 w-5" /></div>
           <div><p className="text-sm text-muted-foreground">Total Users</p><p className="text-2xl font-bold">{response?.data?.meta?.totalItems || users.length}</p></div>
         </div>
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-4 flex items-center gap-4">
-          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600"><CheckCircle className="h-5 w-5" /></div>
+          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600"><Icons name="check-circle" className="h-5 w-5" /></div>
           <div><p className="text-sm text-muted-foreground">Active</p><p className="text-2xl font-bold">{users.filter(u => u.status === "Active").length}</p></div>
         </div>
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-4 flex items-center gap-4">
-          <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"><Ban className="h-5 w-5" /></div>
+          <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"><Icons name="ban" className="h-5 w-5" /></div>
           <div><p className="text-sm text-muted-foreground">Banned</p><p className="text-2xl font-bold">{users.filter(u => u.status === "Banned").length}</p></div>
         </div>
       </div>

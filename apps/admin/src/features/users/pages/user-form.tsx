@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button, Input, Label, Card, CardContent, CardHeader, CardTitle } from "@lumen/uikit/components"
-import { Save, ArrowLeft, Shield, User, Loader2 } from "lucide-react"
+import { Icons } from '@lumen/uikit/icons';
 import { useUserDetail, useCreateUser, useUpdateUser } from "../hooks"
 
 export default function UserForm() {
@@ -51,7 +51,7 @@ export default function UserForm() {
   if (isEditing && isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Icons name="loader-2" className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -61,14 +61,14 @@ export default function UserForm() {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Button variant="ghost" onClick={() => navigate("/users")} className="p-2 h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
+            <Icons name="arrow-left" className="h-4 w-4" />
           </Button>
           <h2 className="text-2xl font-bold tracking-tight">
             {isEditing ? "Edit User" : "Add New User"}
           </h2>
         </div>
         <Button onClick={handleSave} disabled={isPending}>
-          {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+          {isPending ? <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" /> : <Icons name="save" className="mr-2 h-4 w-4" />}
           Save
         </Button>
       </div>
@@ -116,7 +116,7 @@ export default function UserForm() {
                   role === "Learner" ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20" : "border-border bg-white dark:bg-slate-900"
                 }`}
               >
-                <User className={`h-5 w-5 ${role === "Learner" ? "text-indigo-600" : "text-muted-foreground"}`} />
+                <Icons name="user" className={`h-5 w-5 ${role === "Learner" ? "text-indigo-600" : "text-muted-foreground"}`} />
                 <div className="text-left">
                   <p className="font-medium text-sm">Learner</p>
                   <p className="text-xs text-muted-foreground">Access learning content</p>
@@ -129,7 +129,7 @@ export default function UserForm() {
                   role === "Admin" ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20" : "border-border bg-white dark:bg-slate-900"
                 }`}
               >
-                <Shield className={`h-5 w-5 ${role === "Admin" ? "text-indigo-600" : "text-muted-foreground"}`} />
+                <Icons name="shield" className={`h-5 w-5 ${role === "Admin" ? "text-indigo-600" : "text-muted-foreground"}`} />
                 <div className="text-left">
                   <p className="font-medium text-sm">Admin</p>
                   <p className="text-xs text-muted-foreground">Full management access</p>

@@ -1,5 +1,5 @@
 import { Button, Input, Label } from '@lumen/uikit/components';
-import { Plus, Trash2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { VocabExampleItem } from './vocab-example-item';
 
 export interface VocabDefinitionData {
@@ -51,7 +51,7 @@ export function VocabDefinitionItem({
             className="text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors"
             onClick={onRemove}
           >
-            <Trash2 className="h-4 w-4" />
+            <Icons name="trash-2" className="h-4 w-4" />
           </Button>
         )}
       </div>
@@ -98,7 +98,7 @@ export function VocabDefinitionItem({
             className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors"
             onClick={onAddExample}
           >
-            <Plus className="h-4 w-4 mr-1" /> Add Example
+            <Icons name="plus" className="h-4 w-4 mr-1" /> Add Example
           </Button>
         </div>
         

@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpen, Headphones, Trophy, CheckCircle } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 
 type ActivityType = 'dictation_completed' | 'reading_completed' | 'quiz_completed' | 'streak_achieved';
@@ -60,15 +60,15 @@ const mockActivities: ActivityItem[] = [
 const ActivityIcon = ({ type }: { type: ActivityType }) => {
   switch (type) {
     case 'dictation_completed':
-      return <Headphones className="h-4 w-4 text-primary" />;
+      return <Icons name="headphones" className="h-4 w-4 text-primary" />;
     case 'reading_completed':
-      return <BookOpen className="h-4 w-4 text-primary" />;
+      return <Icons name="book-open" className="h-4 w-4 text-primary" />;
     case 'quiz_completed':
-      return <CheckCircle className="h-4 w-4 text-green-500" />;
+      return <Icons name="check-circle" className="h-4 w-4 text-green-500" />;
     case 'streak_achieved':
-      return <Trophy className="h-4 w-4 text-yellow-500" />;
+      return <Icons name="trophy" className="h-4 w-4 text-yellow-500" />;
     default:
-      return <BookOpen className="h-4 w-4 text-primary" />;
+      return <Icons name="book-open" className="h-4 w-4 text-primary" />;
   }
 };
 

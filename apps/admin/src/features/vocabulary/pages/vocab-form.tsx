@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@lumen/uikit/components';
-import { Save, ArrowLeft, Plus, Loader2 } from 'lucide-react';
+import { Icons } from '@lumen/uikit/icons';
 import { useVocabularyWordDetail, useCreateVocabularyWord, useUpdateVocabularyWord } from '../hooks';
 import { RouteEnum } from '@/shared/constants';
 import { VocabBasicInfo } from '../components/vocab-basic-info';
@@ -136,7 +136,7 @@ export default function VocabForm() {
   if (isEditing && isLoading) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+        <Icons name="loader-2" className="h-10 w-10 animate-spin text-blue-500" />
       </div>
     );
   }
@@ -150,7 +150,7 @@ export default function VocabForm() {
             onClick={() => navigate(RouteEnum.VOCABULARY)}
             className="p-2 h-10 w-10 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <Icons name="arrow-left" className="h-5 w-5" />
           </Button>
           <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent dark:from-white dark:to-slate-400">
             {isEditing ? 'Edit Vocabulary Word' : 'Create New Word'}
@@ -162,9 +162,9 @@ export default function VocabForm() {
           className="rounded-full px-6 shadow-md hover:shadow-lg transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white"
         >
           {isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Save className="mr-2 h-4 w-4" />
+            <Icons name="save" className="mr-2 h-4 w-4" />
           )}
           {isEditing ? 'Save Changes' : 'Create Word'}
         </Button>
@@ -194,7 +194,7 @@ export default function VocabForm() {
                 onClick={addDefinition}
                 className="rounded-full shadow-sm hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all dark:hover:bg-blue-900/30 dark:hover:border-blue-800 dark:hover:text-blue-400"
               >
-                <Plus className="h-4 w-4 mr-1.5" /> Add Definition
+                <Icons name="plus" className="h-4 w-4 mr-1.5" /> Add Definition
               </Button>
             </CardHeader>
             <CardContent className="space-y-6 pt-6">
