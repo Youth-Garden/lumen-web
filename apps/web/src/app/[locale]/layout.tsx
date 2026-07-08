@@ -6,6 +6,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/shared/i18n/routing";
 import { Providers } from "@/shared/components/providers";
+import NextTopLoader from 'nextjs-toploader';
 import { PropsWithChildren } from 'react';
 
 const geistSans = Geist({
@@ -43,6 +44,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <NextTopLoader color="#6366f1" showSpinner={false} />
         <NextIntlClientProvider messages={messages}>
           <Providers>
             {children}

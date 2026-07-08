@@ -31,10 +31,13 @@
     },
     "Sidebar": {
       "overview": "Tổng quan",
-      "analytics": "Phân tích",
+      "vocabulary": "Từ vựng",
+      "decks": "Bộ thẻ",
+      "toeic": "Luyện thi TOEIC",
+      "reading": "Đọc & Dịch",
+      "settings": "Cài đặt",
       "customers": "Khách hàng",
       "billing": "Giao dịch",
-      "settings": "Cài đặt",
       "myAccount": "Tài khoản của tôi",
       "profile": "Hồ sơ",
       "logout": "Đăng xuất"
@@ -78,6 +81,25 @@
       "invalidEmail": "Email không hợp lệ",
       "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
       "passwordMismatch": "Mật khẩu xác nhận không khớp"
+    }
+  },
+  "Vocabulary": {
+    "List": {
+      "title": "Kho từ vựng",
+      "description": "Khám phá và lưu trữ các từ vựng mới vào bộ thẻ của bạn.",
+      "searchPlaceholder": "Tìm kiếm từ vựng...",
+      "filterByLevel": "Lọc theo CEFR",
+      "noResults": "Không tìm thấy từ vựng nào.",
+      "addToDeck": "Thêm vào thẻ"
+    },
+    "Decks": {
+      "title": "Bộ thẻ của tôi",
+      "description": "Quản lý và ôn tập các thẻ flashcard của bạn.",
+      "createDeck": "Tạo bộ thẻ",
+      "noDecks": "Bạn chưa có bộ thẻ nào.",
+      "cards": "thẻ",
+      "dueToday": "Đến hạn hôm nay",
+      "studyNow": "Học ngay"
     }
   }
 }

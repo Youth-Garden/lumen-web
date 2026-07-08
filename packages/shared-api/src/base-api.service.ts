@@ -9,11 +9,12 @@ import qs from 'qs';
 import {
   ApiError,
   BaseResponse,
+  BYPASS_MAPPER,
   HttpMethod,
   MapperRegistry,
   RequestConfig,
-  registryKey,
 } from './types';
+import { registryKey } from './utils';
 
 export interface BaseApiServiceConfig {
   baseURL: string;
@@ -137,7 +138,8 @@ export abstract class BaseApiService {
         'Api-Language': 'en',
         ...finalConfig.headers,
       };
-      const result = await this.axiosInstance.request<BaseResponse<T>>(finalConfig);
+      const result =
+        await this.axiosInstance.request<BaseResponse<T>>(finalConfig);
 
       return result.data;
     } catch (error: any) {

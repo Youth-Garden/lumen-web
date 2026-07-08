@@ -9,7 +9,14 @@ import {
   CreditCard,
   LogOut,
   ChevronUp,
-  User as UserIcon
+  User as UserIcon,
+  Book,
+  Layers,
+  Brain,
+  FileQuestion,
+  Headphones,
+  Newspaper,
+  Mic
 } from 'lucide-react';
 
 import { 
@@ -34,9 +41,13 @@ import { useTranslations } from 'next-intl';
 
 const navigationKeys = [
   { key: 'overview', href: RouteEnum.DASHBOARD, icon: LayoutDashboard },
-  { key: 'analytics', href: '/analytics', icon: PieChart },
-  { key: 'customers', href: '/customers', icon: Users },
-  { key: 'billing', href: '/billing', icon: CreditCard },
+  { key: 'study', href: RouteEnum.STUDY, icon: Brain },
+  { key: 'quiz', href: RouteEnum.QUIZ, icon: FileQuestion },
+  { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: Book },
+  { key: 'decks', href: RouteEnum.DECKS, icon: Layers },
+  { key: 'toeic', href: RouteEnum.TOEIC, icon: Headphones },
+  { key: 'reading', href: RouteEnum.READING, icon: Newspaper },
+  { key: 'dictation', href: RouteEnum.DICTATION, icon: Mic },
   { key: 'settings', href: RouteEnum.SETTINGS, icon: Settings },
 ];
 

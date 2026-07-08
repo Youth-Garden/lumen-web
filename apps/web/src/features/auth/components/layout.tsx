@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const t = useTranslations('Auth.Layout');
@@ -8,10 +9,11 @@ export default function AuthLayout({ children }: PropsWithChildren) {
       {/* Left side - Cover Image */}
       <div className="hidden lg:flex flex-1 relative bg-zinc-900 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 z-10" />
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
           alt="Auth Background"
-          className="object-cover w-full h-full opacity-60"
+          fill
+          className="object-cover opacity-60"
         />
         <div className="absolute bottom-16 left-16 z-20 text-white max-w-lg animate-in slide-in-from-bottom-8 duration-700">
           <h1 className="text-5xl font-bold mb-4 tracking-tight">{t('title')}</h1>

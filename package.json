@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "iconsax-react": "^0.0.8"
+  },
+  "dependencies": {
+    "@eslint/eslintrc": "^3.3.5"
   }
 }

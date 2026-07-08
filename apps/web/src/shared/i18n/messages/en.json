@@ -31,10 +31,13 @@
     },
     "Sidebar": {
       "overview": "Overview",
-      "analytics": "Analytics",
+      "vocabulary": "Vocabulary",
+      "decks": "Decks",
+      "toeic": "TOEIC Tests",
+      "reading": "Reading & Translate",
+      "settings": "Settings",
       "customers": "Customers",
       "billing": "Billing",
-      "settings": "Settings",
       "myAccount": "My Account",
       "profile": "Profile",
       "logout": "Log out"
@@ -78,6 +81,25 @@
       "invalidEmail": "Invalid email",
       "passwordMin": "Password must be at least 6 characters",
       "passwordMismatch": "Passwords do not match"
+    }
+  },
+  "Vocabulary": {
+    "List": {
+      "title": "Vocabulary Bank",
+      "description": "Discover and save new words to your flashcard decks.",
+      "searchPlaceholder": "Search for words...",
+      "filterByLevel": "Filter by CEFR",
+      "noResults": "No vocabulary found.",
+      "addToDeck": "Add to Deck"
+    },
+    "Decks": {
+      "title": "My Decks",
+      "description": "Manage and review your flashcard decks.",
+      "createDeck": "Create Deck",
+      "noDecks": "You don't have any decks yet.",
+      "cards": "cards",
+      "dueToday": "Due today",
+      "studyNow": "Study Now"
     }
   }
 }

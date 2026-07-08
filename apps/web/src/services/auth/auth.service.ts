@@ -1,6 +1,6 @@
 import { WebApiService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { AuthTokens, LoginPayload, RegisterPayload } from './auth.types';
+import { AuthTokens, LoginPayload, RegisterPayload, LogoutPayload, UserInfo } from './auth.types';
 import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './auth.registry';
 
@@ -11,6 +11,14 @@ class AuthService extends WebApiService {
 
   register(payload: RegisterPayload): Promise<BaseResponse<any>> {
     return this._post(ApiEndpointEnum.REGISTER, payload);
+  }
+
+  getMe(): Promise<BaseResponse<UserInfo>> {
+    return this._get<UserInfo>(ApiEndpointEnum.GET_ME);
+  }
+
+  logout(payload: LogoutPayload): Promise<BaseResponse<any>> {
+    return this._post(ApiEndpointEnum.LOGOUT, payload);
   }
 }
 

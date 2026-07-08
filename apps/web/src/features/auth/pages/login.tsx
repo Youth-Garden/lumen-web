@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { Loader2, Command } from 'lucide-react';
 
 import { Button, Input, Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@lumen/uikit/components';
-import { LoginFormData, getLoginSchema } from '@/features/auth';
+import { LoginFormData, getLoginSchema } from '@/features/auth/validations/auth';
 import { authService } from '@/services/auth';
 import { useAuthStore } from '@/store/auth.store';
 import { RouteEnum } from '@/shared/constants';

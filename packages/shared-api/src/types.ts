@@ -40,10 +40,6 @@ export enum HttpMethod {
   PATCH = 'PATCH',
 }
 
-export function registryKey(method: HttpMethod, endpoint: string): string {
-  return `${method}:${endpoint}`;
-}
-
 export const BYPASS_MAPPER = '__bypass__';
 
 export class ApiError extends Error {

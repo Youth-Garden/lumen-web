@@ -1,95 +1,94 @@
-import { DollarSign, Users, CreditCard, Activity } from 'lucide-react';
+import { Trophy, Flame, BookOpen, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@lumen/uikit/components';
 import { MetricCard } from '../components/metric-card';
-import { RecentSales } from '../components/recent-sales';
+import { RecentActivity } from '../components/recent-activity';
+import { XpProgressChart } from '../components/charts/xp-progress-chart';
 import { useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { progressService } from '../../../services/progress/progress.service';
 
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
+  const { data: progressData } = useQuery({
+    queryKey: ['dashboard-progress'],
+    queryFn: () => progressService.getDashboardData(),
+  });
+
+  // Generate fake weekly data for the chart if backend doesn't provide it yet
+  const chartData = progressData?.weeklyData || Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return {
+      date: d.toISOString(),
+      xp: Math.floor(Math.random() * 200) + 50,
+    };
+  });
+
   return (
     <div className="flex-1 space-y-4 p-8 pt-6 animate-in fade-in duration-500">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Your Learning Dashboard</h2>
         <div className="flex items-center space-x-2">
-          <Button>{t('downloadReport')}</Button>
+          <Button>Download Report</Button>
         </div>
       </div>
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('tabs.analytics')}</TabsTrigger>
-          <TabsTrigger value="reports">{t('tabs.reports')}</TabsTrigger>
-          <TabsTrigger value="notifications">{t('tabs.notifications')}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <MetricCard
-              title={t('metrics.totalRevenue')}
-              value="$45,231.89"
-              trend={t('metrics.fromLastMonth')}
-              trendValue={20.1}
-              icon={DollarSign}
+              title="Total XP"
+              value={progressData?.totalPoints?.toString() || '0'}
+              trend="from last week"
+              trendValue={15.5}
+              icon={Trophy}
             />
             <MetricCard
-              title={t('metrics.newUsers')}
-              value="+2350"
-              trend={t('metrics.fromLastMonth')}
-              trendValue={180.1}
-              icon={Users}
+              title="Current Streak"
+              value={`${progressData?.streak || 0} days`}
+              trend="keep it up!"
+              trendValue={100}
+              icon={Flame}
             />
             <MetricCard
-              title={t('metrics.sales')}
-              value="+12,234"
-              trend={t('metrics.fromLastMonth')}
-              trendValue={19}
-              icon={CreditCard}
+              title="Words Learned"
+              value="342"
+              trend="from last month"
+              trendValue={12}
+              icon={BookOpen}
             />
             <MetricCard
-              title={t('metrics.activeNow')}
-              value="+573"
-              trend={t('metrics.sinceLastHour')}
-              trendValue={-2.4}
-              icon={Activity}
+              title="Study Time"
+              value="12h 30m"
+              trend="this week"
+              trendValue={5.2}
+              icon={Clock}
             />
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4">
               <CardHeader>
-                <CardTitle>{t('revenueChart.title')}</CardTitle>
+                <CardTitle>XP Progress</CardTitle>
                 <CardDescription>
-                  {t('revenueChart.description')}
+                  Your learning activity over the last 7 days.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pl-2 flex justify-center items-center h-[350px]">
-                {/* Fake Chart Area */}
-                <div className="w-full h-full flex flex-col justify-end items-center px-4 pt-4 relative">
-                  <div className="w-full h-full border-b border-l border-border/50 flex items-end justify-between px-2 pb-0">
-                    {/* Fake bars */}
-                    {[40, 70, 45, 90, 65, 80, 55, 100, 75, 85, 60, 95].map((h, i) => (
-                      <div 
-                        key={i} 
-                        className="w-[6%] bg-primary/80 rounded-t-sm hover:bg-primary transition-colors cursor-pointer"
-                        style={{ height: `${h}%` }}
-                      ></div>
-                    ))}
-                  </div>
-                  <div className="w-full flex justify-between mt-2 px-2 text-xs text-muted-foreground">
-                    <span>T1</span><span>T2</span><span>T3</span><span>T4</span>
-                    <span>T5</span><span>T6</span><span>T7</span><span>T8</span>
-                    <span>T9</span><span>T10</span><span>T11</span><span>T12</span>
-                  </div>
-                </div>
+              <CardContent className="pl-2">
+                <XpProgressChart data={chartData} />
               </CardContent>
             </Card>
             <Card className="col-span-3">
               <CardHeader>
-                <CardTitle>{t('recentSales.title')}</CardTitle>
+                <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>
-                  {t('recentSales.description')}
+                  You&apos;ve earned 450 XP this week.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <RecentSales />
+                <RecentActivity />
               </CardContent>
             </Card>
           </div>

@@ -1,5 +1,3 @@
-import { OverviewPage } from '@/features/dashboard';
+import { OverviewPage } from '@/features/dashboard/pages/overview';
 
-export default function Page() {
-  return <OverviewPage />;
-}
+export default OverviewPage;

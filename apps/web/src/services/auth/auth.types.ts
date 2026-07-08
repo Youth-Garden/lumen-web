@@ -19,3 +19,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
 }
+
+export interface LogoutPayload {
+  refreshToken: string;
+}
