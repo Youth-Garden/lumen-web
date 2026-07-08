@@ -70,7 +70,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ quiz }) => {
               const isSelected = question.userAnswer === option;
               const isAnswered = !!question.userAnswer;
 
-              let buttonVariant: 'default' | 'outline' | 'secondary' =
+              const buttonVariant: 'default' | 'outline' | 'secondary' =
                 'outline';
               let extraClasses =
                 'h-16 text-lg border-2 relative overflow-hidden transition-all duration-300';

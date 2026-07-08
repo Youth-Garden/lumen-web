@@ -2,6 +2,9 @@ export interface UserInfo {
   id: string;
   email: string;
   role: string;
+  fullName?: string;
+  avatarUrl?: string;
+  phone?: string;
 }
 
 export interface AuthTokens {
@@ -22,4 +25,10 @@ export interface RegisterPayload {
 
 export interface LogoutPayload {
   refreshToken: string;
+}
+
+export interface UpdateProfilePayload {
+  fullName?: string;
+  avatarUrl?: string;
+  phone?: string;
 }

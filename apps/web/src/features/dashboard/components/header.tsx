@@ -19,12 +19,15 @@ import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
 import { RouteEnum } from '@/shared/constants';
+import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 
 export function Header() {
   const t = useTranslations('Dashboard.Header');
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
+  
+  const { data: progressData } = useProgressDashboard();
 
   const handleLogout = async () => {
     await logout();
@@ -48,6 +51,12 @@ export function Header() {
         </div>
       </div>
       <div className="flex items-center gap-4">
+        {progressData && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 text-orange-500 font-medium text-sm">
+            <Icons name="flame" className="h-4 w-4" />
+            <span>{progressData.streak}</span>
+          </div>
+        )}
         <Button variant="ghost" size="icon" className="relative">
           <Icons name="bell" className="h-5 w-5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive"></span>

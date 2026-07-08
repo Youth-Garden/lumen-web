@@ -6,15 +6,16 @@ import { MetricCard } from '../components/metric-card';
 import { RecentActivity } from '../components/recent-activity';
 import { XpProgressChart } from '../components/charts/xp-progress-chart';
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
-import { progressService } from '../../../services/progress/progress.service';
+import { useProgressDashboard } from '../hooks/use-progress-dashboard';
+import { useDueFlashcards } from '@/features/vocabulary/hooks/use-vocabulary';
+import Link from 'next/link';
+import { RouteEnum } from '@/shared/constants';
 
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
-  const { data: progressData } = useQuery({
-    queryKey: ['dashboard-progress'],
-    queryFn: () => progressService.getDashboardData(),
-  });
+  const { data: progressData } = useProgressDashboard();
+  const { data: dueFlashcards } = useDueFlashcards();
+  const dueCount = dueFlashcards?.length || 0;
 
   // Generate fake weekly data for the chart if backend doesn't provide it yet
   const chartData = progressData?.weeklyData || Array.from({ length: 7 }).map((_, i) => {
@@ -70,6 +71,30 @@ export function OverviewPage() {
               icon="clock"
             />
           </div>
+          
+          {dueCount > 0 && (
+            <Card className="border-orange-500/50 bg-orange-500/5 shadow-sm">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Icons name="flame" className="h-5 w-5 text-orange-500" />
+                    <CardTitle className="text-orange-700 dark:text-orange-400">Review Due Today</CardTitle>
+                  </div>
+                </div>
+                <CardDescription className="text-orange-600/80 dark:text-orange-400/80">
+                  You have {dueCount} flashcard{dueCount !== 1 && 's'} pending for review based on spaced repetition.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href={`${RouteEnum.VOCABULARY}/study`}>
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white border-0">
+                    Review Now
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4">
               <CardHeader>

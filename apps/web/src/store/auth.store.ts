@@ -5,9 +5,10 @@ import { authService } from '@/services/auth';
 export interface User {
   id: string;
   email: string;
-  name?: string;
   role?: string;
-  avatar?: string;
+  fullName?: string;
+  avatarUrl?: string;
+  phone?: string;
 }
 
 interface AuthState {

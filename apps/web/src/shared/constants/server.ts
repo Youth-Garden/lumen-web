@@ -3,7 +3,12 @@ export enum ApiEndpointEnum {
   REGISTER = '/iam/register',
   REFRESH_TOKEN = '/iam/refresh',
   GET_ME = '/iam/me',
+  UPDATE_PROFILE = '/iam/profile',
   LOGOUT = '/iam/logout',
+
+  // Progress
+  PROGRESS_DASHBOARD = '/progress/dashboard',
+  PROGRESS_SETTINGS = '/progress/settings',
 
   // Vocabulary
   VOCABULARY_WORDS = '/vocabulary/words',
