@@ -6,6 +6,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/shared/i18n/routing";
 import { Providers } from "@/shared/components/providers";
+import { PropsWithChildren } from 'react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,8 +26,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
   params
-}: Readonly<{
-  children: React.ReactNode;
+}: PropsWithChildren<{
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;

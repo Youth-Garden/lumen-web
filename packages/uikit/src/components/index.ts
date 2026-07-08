@@ -18,3 +18,13 @@ export * from './ui/table';
 export * from './ui/tabs';
 export * from './ui/theme-switcher';
 export * from './ui/tooltip';
+export {
+  useFormField,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+} from './ui/form';

@@ -1,5 +1,83 @@
 {
   "Index": {
     "title": "Welcome to Lumen"
+  },
+  "Dashboard": {
+    "Overview": {
+      "title": "Overview",
+      "downloadReport": "Download Report",
+      "tabs": {
+        "overview": "Overview",
+        "analytics": "Analytics",
+        "reports": "Reports",
+        "notifications": "Notifications"
+      },
+      "metrics": {
+        "totalRevenue": "Total Revenue",
+        "newUsers": "New Users",
+        "sales": "Sales",
+        "activeNow": "Active Now",
+        "fromLastMonth": "from last month",
+        "sinceLastHour": "since last hour"
+      },
+      "revenueChart": {
+        "title": "Revenue Overview",
+        "description": "Revenue chart for this year."
+      },
+      "recentSales": {
+        "title": "Recent Sales",
+        "description": "You made 265 sales this month."
+      }
+    },
+    "Sidebar": {
+      "overview": "Overview",
+      "analytics": "Analytics",
+      "customers": "Customers",
+      "billing": "Billing",
+      "settings": "Settings",
+      "myAccount": "My Account",
+      "profile": "Profile",
+      "logout": "Log out"
+    },
+    "Header": {
+      "search": "Search..."
+    }
+  },
+  "Auth": {
+    "Login": {
+      "success": "Login successful",
+      "successDesc": "Welcome back to Lumen Platform.",
+      "title": "Log in",
+      "subtitle": "Enter your email and password to access the system",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "processing": "Processing...",
+      "submit": "Log in",
+      "noAccount": "Don't have an account?",
+      "registerNow": "Register now"
+    },
+    "Register": {
+      "success": "Registration successful",
+      "successDesc": "Your account has been created. Please log in.",
+      "title": "Create an account",
+      "subtitle": "Fill in the information below to join Lumen Platform",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "processing": "Processing...",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "loginNow": "Log in"
+    },
+    "Layout": {
+      "title": "Lumen Platform",
+      "subtitle": "Discover the most comprehensive and powerful ecosystem to manage your business. Streamline processes, optimize performance."
+    },
+    "Validation": {
+      "invalidEmail": "Invalid email",
+      "passwordMin": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match"
+    }
   }
 }

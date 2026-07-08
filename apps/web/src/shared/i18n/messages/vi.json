@@ -1,5 +1,83 @@
 {
   "Index": {
     "title": "Chào mừng đến với Lumen"
+  },
+  "Dashboard": {
+    "Overview": {
+      "title": "Tổng quan",
+      "downloadReport": "Tải báo cáo",
+      "tabs": {
+        "overview": "Tổng quan",
+        "analytics": "Phân tích",
+        "reports": "Báo cáo",
+        "notifications": "Thông báo"
+      },
+      "metrics": {
+        "totalRevenue": "Tổng doanh thu",
+        "newUsers": "Người dùng mới",
+        "sales": "Giao dịch",
+        "activeNow": "Đang hoạt động",
+        "fromLastMonth": "so với tháng trước",
+        "sinceLastHour": "từ giờ trước"
+      },
+      "revenueChart": {
+        "title": "Tổng quan doanh thu",
+        "description": "Biểu đồ doanh thu trong năm nay."
+      },
+      "recentSales": {
+        "title": "Giao dịch gần đây",
+        "description": "Có 265 giao dịch trong tháng này."
+      }
+    },
+    "Sidebar": {
+      "overview": "Tổng quan",
+      "analytics": "Phân tích",
+      "customers": "Khách hàng",
+      "billing": "Giao dịch",
+      "settings": "Cài đặt",
+      "myAccount": "Tài khoản của tôi",
+      "profile": "Hồ sơ",
+      "logout": "Đăng xuất"
+    },
+    "Header": {
+      "search": "Tìm kiếm..."
+    }
+  },
+  "Auth": {
+    "Login": {
+      "success": "Đăng nhập thành công",
+      "successDesc": "Chào mừng bạn quay trở lại Lumen Platform.",
+      "title": "Đăng nhập",
+      "subtitle": "Nhập email và mật khẩu của bạn để truy cập hệ thống",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "forgotPassword": "Quên mật khẩu?",
+      "processing": "Đang xử lý...",
+      "submit": "Đăng nhập",
+      "noAccount": "Chưa có tài khoản?",
+      "registerNow": "Đăng ký ngay"
+    },
+    "Register": {
+      "success": "Đăng ký thành công",
+      "successDesc": "Tài khoản của bạn đã được tạo. Vui lòng đăng nhập.",
+      "title": "Tạo tài khoản",
+      "subtitle": "Điền thông tin bên dưới để tham gia Lumen Platform",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "processing": "Đang xử lý...",
+      "submit": "Đăng ký tài khoản",
+      "hasAccount": "Đã có tài khoản?",
+      "loginNow": "Đăng nhập"
+    },
+    "Layout": {
+      "title": "Lumen Platform",
+      "subtitle": "Khám phá hệ sinh thái toàn diện và mạnh mẽ nhất để quản lý doanh nghiệp của bạn. Tinh giản quy trình, tối ưu hiệu suất."
+    },
+    "Validation": {
+      "invalidEmail": "Email không hợp lệ",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp"
+    }
   }
 }

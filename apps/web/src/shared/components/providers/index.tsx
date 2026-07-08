@@ -7,12 +7,9 @@ import { Updater } from './updater';
 import { ThemeProvider } from './theme-provider';
 import { Toaster } from '@lumen/uikit/components';
 import { TooltipProvider } from '@lumen/uikit/components';
+import { PropsWithChildren } from 'react';
 
-interface ProvidersProps {
-  children: React.ReactNode;
-}
-
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: PropsWithChildren) {
   return (
     <ThemeProvider>
       <TooltipProvider>

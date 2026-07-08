@@ -81,7 +81,7 @@ export abstract class BaseApiService {
     url: string,
     config: RequestConfig = {},
     data?: any,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     try {
       // 1. Resolve mapper (direct mapper > registry mapper)
       const mapper =
@@ -137,7 +137,7 @@ export abstract class BaseApiService {
         'Api-Language': 'en',
         ...finalConfig.headers,
       };
-      const result = await this.axiosInstance.request<T>(finalConfig);
+      const result = await this.axiosInstance.request<BaseResponse<T>>(finalConfig);
 
       return result.data;
     } catch (error: any) {
@@ -180,7 +180,7 @@ export abstract class BaseApiService {
     url: string,
     params?: any,
     config?: RequestConfig,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(HttpMethod.GET, url, { ...config, params });
   }
 
@@ -188,7 +188,7 @@ export abstract class BaseApiService {
     url: string,
     data?: any,
     config?: RequestConfig,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(HttpMethod.POST, url, config, data);
   }
 
@@ -196,7 +196,7 @@ export abstract class BaseApiService {
     url: string,
     data?: any,
     config?: RequestConfig,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(HttpMethod.PUT, url, config, data);
   }
 
@@ -204,7 +204,7 @@ export abstract class BaseApiService {
     url: string,
     data?: any,
     config?: RequestConfig,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(HttpMethod.PATCH, url, config, data);
   }
 
@@ -212,7 +212,7 @@ export abstract class BaseApiService {
     url: string,
     params?: any,
     config?: RequestConfig<T>,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(HttpMethod.DELETE, url, { ...config, params });
   }
 
@@ -221,7 +221,7 @@ export abstract class BaseApiService {
     url: string,
     data: any,
     config?: RequestConfig<T>,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(
       HttpMethod.POST,
       url,
@@ -237,7 +237,7 @@ export abstract class BaseApiService {
     url: string,
     data: any,
     config?: RequestConfig<T>,
-  ): Promise<T> {
+  ): Promise<BaseResponse<T>> {
     return this.request<T>(
       HttpMethod.PUT,
       url,
