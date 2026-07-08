@@ -5,7 +5,7 @@ import { Save, ArrowLeft, Plus, Loader2 } from 'lucide-react';
 import { useVocabularyWordDetail, useCreateVocabularyWord, useUpdateVocabularyWord } from '../hooks';
 import { RouteEnum } from '@/shared/constants';
 import { VocabBasicInfo } from '../components/vocab-basic-info';
-import { VocabDefinitionItem, VocabDefinitionData } from '../components/vocab-definition-item';
+import { VocabDefinitionItem, type VocabDefinitionData } from '../components/vocab-definition-item';
 
 export default function VocabForm() {
   const { id } = useParams();

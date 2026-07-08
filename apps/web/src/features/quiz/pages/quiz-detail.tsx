@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { useQuizDetail } from '../hooks';
 import { QuizSession } from '../components/quiz-session';

@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { useQuizzes, useGenerateQuiz } from '../hooks';
 import { useTranslations } from 'next-intl';

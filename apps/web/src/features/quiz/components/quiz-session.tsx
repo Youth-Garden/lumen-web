@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useMemo } from 'react';
 import { Button, Card, CardContent } from '@lumen/uikit/components';
 import { useSubmitAnswer, useFinishQuiz } from '../hooks';

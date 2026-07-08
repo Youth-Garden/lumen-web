@@ -1,3 +1,5 @@
+"use client";
+
 import { Trophy, Flame, BookOpen, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@lumen/uikit/components';
 import { MetricCard } from '../components/metric-card';
