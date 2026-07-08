@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuizDetailQuery } from '../hooks';
+import { useQuizDetail } from '../hooks';
 import { QuizSession } from '../components/quiz-session';
 import { QuizResults } from '../components/quiz-results';
 import { QuizStatus } from '@/services/quiz';
@@ -9,7 +9,7 @@ interface QuizDetailProps {
 }
 
 export const QuizDetail: React.FC<QuizDetailProps> = ({ id }) => {
-  const { data: quiz, isLoading } = useQuizDetailQuery(id);
+  const { data: quiz, isLoading } = useQuizDetail(id);
 
   if (isLoading) return <div>Loading quiz...</div>;
   if (!quiz) return <div>Quiz not found.</div>;

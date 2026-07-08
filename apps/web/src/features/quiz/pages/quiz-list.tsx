@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuizzesQuery, useGenerateQuizMutation } from '../hooks';
+import { useQuizzes, useGenerateQuiz } from '../hooks';
 import { useTranslations } from 'next-intl';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 export const QuizList = () => {
   const t = useTranslations('quiz');
   const router = useRouter();
-  const { data: quizzes, isLoading } = useQuizzesQuery({ page: 1, limit: 10 });
-  const { mutate: generateQuiz, isPending } = useGenerateQuizMutation();
+  const { data: quizzes, isLoading } = useQuizzes({ page: 1, limit: 10 });
+  const { mutate: generateQuiz, isPending } = useGenerateQuiz();
 
   const handleStartQuiz = () => {
     generateQuiz({ limit: 10 }, {

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Button, Card, CardContent } from '@lumen/uikit/components';
-import { useSubmitAnswerMutation, useFinishQuizMutation } from '../hooks';
+import { useSubmitAnswer, useFinishQuiz } from '../hooks';
 import type { QuizDetailResponseDto, QuestionDetailDto } from '@/services/quiz';
 
 interface QuizSessionProps {
@@ -8,8 +8,8 @@ interface QuizSessionProps {
 }
 
 export const QuizSession: React.FC<QuizSessionProps> = ({ quiz }) => {
-  const { mutate: submitAnswer, isPending: isSubmitting } = useSubmitAnswerMutation();
-  const { mutate: finishQuiz, isPending: isFinishing } = useFinishQuizMutation();
+  const { mutate: submitAnswer, isPending: isSubmitting } = useSubmitAnswer();
+  const { mutate: finishQuiz, isPending: isFinishing } = useFinishQuiz();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
     // Find the first unanswered question

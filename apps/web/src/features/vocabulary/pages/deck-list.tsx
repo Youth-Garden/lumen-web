@@ -1,6 +1,6 @@
 'use client';
 
-import { useVocabularyDecksQuery } from '@/features/vocabulary/hooks/queries';
+import { useVocabularyDecks } from '@/features/vocabulary/hooks';
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Skeleton } from '@lumen/uikit/components';
 import { Plus, BookOpen, Clock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -10,7 +10,7 @@ import { usePortal } from '@lumen/uikit/portal';
 export function DeckList() {
   const t = useTranslations('Vocabulary.Decks');
 
-  const { data, isLoading } = useVocabularyDecksQuery();
+  const { data, isLoading } = useVocabularyDecks();
   const [presentCreateDeck] = usePortal(CreateDeckDialog);
 
   return (

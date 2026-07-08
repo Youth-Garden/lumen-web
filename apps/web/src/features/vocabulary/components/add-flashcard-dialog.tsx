@@ -27,8 +27,8 @@ import {
   SelectValue,
 } from '@lumen/uikit/components';
 import { Loader2 } from 'lucide-react';
-import { useVocabularyDecksQuery } from '@/features/vocabulary/hooks/queries';
-import { useCreateFlashcardMutation } from '@/features/vocabulary/hooks/mutations';
+import { useVocabularyDecks } from '@/features/vocabulary/hooks';
+import { useCreateFlashcard } from '@/features/vocabulary/hooks';
 import { PortalProps } from '@lumen/uikit/portal';
 
 const formSchema = z.object({
@@ -46,8 +46,8 @@ export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddF
   const { wordId, term } = data || { wordId: '', term: '' };
   const t = useTranslations('Vocabulary.List');
   
-  const { data: decksData, isLoading: isLoadingDecks } = useVocabularyDecksQuery();
-  const { mutateAsync: createFlashcard, isPending } = useCreateFlashcardMutation();
+  const { data: decksData, isLoading: isLoadingDecks } = useVocabularyDecks();
+  const { mutateAsync: createFlashcard, isPending } = useCreateFlashcard();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

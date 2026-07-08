@@ -23,7 +23,7 @@ import {
   Input,
 } from '@lumen/uikit/components';
 import { Plus, Loader2 } from 'lucide-react';
-import { useCreateDeckMutation } from '@/features/vocabulary/hooks/mutations';
+import { useCreateDeck } from '@/features/vocabulary/hooks';
 import { PortalProps } from '@lumen/uikit/portal';
 
 const formSchema = z.object({
@@ -35,7 +35,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Decks');
-  const { mutateAsync: createDeck, isPending } = useCreateDeckMutation();
+  const { mutateAsync: createDeck, isPending } = useCreateDeck();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

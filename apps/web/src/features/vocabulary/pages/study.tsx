@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Button } from '@lumen/uikit/components';
-import { useDueFlashcardsQuery } from '@/features/vocabulary/hooks/queries';
-import { useReviewFlashcardMutation } from '@/features/vocabulary/hooks/mutations';
+import { useDueFlashcards } from '@/features/vocabulary/hooks';
+import { useReviewFlashcard } from '@/features/vocabulary/hooks';
 import { FlashcardReview } from '../components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
 
@@ -15,8 +15,8 @@ export function StudyPage() {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { data: dueFlashcardsResponse, isLoading, isError } = useDueFlashcardsQuery();
-  const { mutateAsync: reviewFlashcard, isPending: isReviewing } = useReviewFlashcardMutation();
+  const { data: dueFlashcardsResponse, isLoading, isError } = useDueFlashcards();
+  const { mutateAsync: reviewFlashcard, isPending: isReviewing } = useReviewFlashcard();
 
   const dueFlashcards = dueFlashcardsResponse?.data || [];
   const currentFlashcard = dueFlashcards[currentIndex];

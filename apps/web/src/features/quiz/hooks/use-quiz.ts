@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { quizService, quizKeys } from '@/services/quiz';
 import type { GenerateQuizDto, SubmitAnswerDto } from '@/services/quiz';
 
-export const useGenerateQuizMutation = () => {
+export const useGenerateQuiz = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -14,7 +14,7 @@ export const useGenerateQuizMutation = () => {
   });
 };
 
-export const useSubmitAnswerMutation = () => {
+export const useSubmitAnswer = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -35,7 +35,7 @@ export const useSubmitAnswerMutation = () => {
   });
 };
 
-export const useFinishQuizMutation = () => {
+export const useFinishQuiz = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -45,5 +45,20 @@ export const useFinishQuizMutation = () => {
       queryClient.invalidateQueries({ queryKey: quizKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
     },
+  });
+};
+
+export const useQuizzes = (params?: { page?: number; limit?: number }) => {
+  return useQuery({
+    queryKey: quizKeys.list(params),
+    queryFn: () => quizService.listQuizzes(params).then((res) => res.data),
+  });
+};
+
+export const useQuizDetail = (id: string, options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: quizKeys.detail(id),
+    queryFn: () => quizService.getQuiz(id).then((res) => res.data),
+    enabled: options?.enabled,
   });
 };

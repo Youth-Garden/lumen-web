@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useVocabularyWordsQuery } from '@/features/vocabulary/hooks/queries';
+import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { Input, Button, Card, CardContent, ScrollArea, Skeleton } from '@lumen/uikit/components';
 import { Search, Volume2, Filter, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -15,7 +15,7 @@ export function VocabularyList() {
 
   const [presentAddFlashcard] = usePortal(AddFlashcardDialog);
 
-  const { data, isLoading } = useVocabularyWordsQuery({ search, cefrLevel });
+  const { data, isLoading } = useVocabularyWords({ search, cefrLevel });
 
   const playAudio = (url: string) => {
     const audio = new Audio(url);

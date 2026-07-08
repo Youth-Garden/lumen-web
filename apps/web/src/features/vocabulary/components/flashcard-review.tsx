@@ -5,7 +5,7 @@ import { Card, CardContent, Button, Skeleton } from '@lumen/uikit/components';
 import { Volume2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { DueFlashcard } from '@/services/vocabulary';
-import { useVocabularyWordDetailQuery } from '@/features/vocabulary/hooks/queries';
+import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
 import { cn } from '@lumen/uikit/utils';
 
 interface FlashcardReviewProps {
@@ -19,7 +19,7 @@ export function FlashcardReview({ flashcard, onGrade, isSubmitting }: FlashcardR
   const [isFlipped, setIsFlipped] = useState(false);
 
   // Fetch word details when flipped
-  const { data: wordDetailResponse, isLoading } = useVocabularyWordDetailQuery(flashcard.wordId, {
+  const { data: wordDetailResponse, isLoading } = useVocabularyWordDetail(flashcard.wordId, {
     enabled: isFlipped,
   });
 

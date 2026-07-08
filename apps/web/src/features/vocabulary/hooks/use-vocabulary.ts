@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { vocabularyService, vocabularyKeys } from '@/services/vocabulary';
 import { CreateDeckPayload, CreateFlashcardPayload, ReviewFlashcardPayload } from '@/services/vocabulary';
 
-export const useCreateDeckMutation = () => {
+export const useCreateDeck = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,7 +13,7 @@ export const useCreateDeckMutation = () => {
   });
 };
 
-export const useCreateFlashcardMutation = () => {
+export const useCreateFlashcard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -25,7 +25,7 @@ export const useCreateFlashcardMutation = () => {
   });
 };
 
-export const useReviewFlashcardMutation = () => {
+export const useReviewFlashcard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -33,5 +33,34 @@ export const useReviewFlashcardMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.dueFlashcards() });
     },
+  });
+};
+
+export const useVocabularyWords = (params?: { search?: string; cefrLevel?: string }) => {
+  return useQuery({
+    queryKey: vocabularyKeys.wordList(params),
+    queryFn: () => vocabularyService.listWords(params),
+  });
+};
+
+export const useVocabularyWordDetail = (id: string, options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: vocabularyKeys.wordDetail(id),
+    queryFn: () => vocabularyService.getWord(id),
+    enabled: options?.enabled,
+  });
+};
+
+export const useVocabularyDecks = () => {
+  return useQuery({
+    queryKey: vocabularyKeys.decks(),
+    queryFn: () => vocabularyService.listDecks(),
+  });
+};
+
+export const useDueFlashcards = () => {
+  return useQuery({
+    queryKey: vocabularyKeys.dueFlashcards(),
+    queryFn: () => vocabularyService.listDueFlashcards(),
   });
 };
