@@ -16,7 +16,7 @@ export default function QuizzesList() {
         </Button>
       </div>
       <div className="bg-white dark:bg-slate-900 border rounded-lg p-16 text-center text-muted-foreground flex flex-col items-center justify-center">
-        <Icons name="inbox" className="h-12 w-12 mb-4 opacity-30 text-teal-500" />
+        <Icons name="layers" className="h-12 w-12 mb-4 opacity-30 text-teal-500" />
         <p className="text-lg font-medium text-slate-700 dark:text-slate-300">No quizzes found</p>
         <p className="text-sm mt-1 mb-6">Click "Add" to create the first entry.</p>
       </div>
