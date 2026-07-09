@@ -23,11 +23,11 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ quiz }) => {
         </div>
         <CardContent className="p-8">
           <div className="space-y-6">
-            {quiz.questions.map((q, idx) => (
-              <div key={q.id} className="p-4 rounded-lg border bg-card flex flex-col gap-3">
+            {quiz.questions.map((question, idx) => (
+              <div key={question.id} className="p-4 rounded-lg border bg-card flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-lg">{idx + 1}. {q.questionText}</span>
-                  {q.isCorrect ? (
+                  <span className="font-semibold text-lg">{idx + 1}. {question.questionText}</span>
+                  {question.isCorrect ? (
                     <Icons name="check-circle" size={24} className="text-green-500 shrink-0 w-6 h-6" />
                   ) : (
                     <Icons name="close-circle" size={24} className="text-destructive shrink-0 w-6 h-6" />
@@ -36,15 +36,15 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ quiz }) => {
                 <div className="grid sm:grid-cols-2 gap-4 mt-2">
                   <div className="bg-muted/50 p-3 rounded">
                     <span className="text-sm text-muted-foreground block mb-1">Your Answer</span>
-                    <span className={q.isCorrect ? "text-green-600 font-medium" : "text-destructive font-medium"}>
-                      {q.userAnswer}
+                    <span className={question.isCorrect ? "text-green-600 font-medium" : "text-destructive font-medium"}>
+                      {question.userAnswer}
                     </span>
                   </div>
-                  {!q.isCorrect && (
+                  {!question.isCorrect && (
                     <div className="bg-green-500/10 p-3 rounded border border-green-500/20">
                       <span className="text-sm text-green-600/80 block mb-1">Correct Answer</span>
                       <span className="text-green-600 font-medium">
-                        {q.correctAnswer}
+                        {question.correctAnswer}
                       </span>
                     </div>
                   )}

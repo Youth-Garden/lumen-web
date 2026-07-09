@@ -2,17 +2,17 @@ import * as z from 'zod';
 
 import { TranslateFn } from '@/shared/types';
 
-export const getLoginSchema = (t: TranslateFn) => z.object({
-  email: z.string().email({ message: t('invalidEmail') }),
-  password: z.string().min(6, { message: t('passwordMin') }),
+export const getLoginSchema = (translate: TranslateFn) => z.object({
+  email: z.string().email({ message: translate('invalidEmail') }),
+  password: z.string().min(6, { message: translate('passwordMin') }),
 });
 
-export const getRegisterSchema = (t: TranslateFn) => z.object({
-  email: z.string().email({ message: t('invalidEmail') }),
-  password: z.string().min(6, { message: t('passwordMin') }),
+export const getRegisterSchema = (translate: TranslateFn) => z.object({
+  email: z.string().email({ message: translate('invalidEmail') }),
+  password: z.string().min(6, { message: translate('passwordMin') }),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: t('passwordMismatch'),
+  message: translate('passwordMismatch'),
   path: ['confirmPassword'],
 });
 

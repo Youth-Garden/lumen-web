@@ -39,8 +39,7 @@ export default function MaterialForm() {
       title,
       category,
       level: level as any,
-      content,
-      tags: tags.split(",").map(t => t.trim()).filter(Boolean)
+      tags: tags.split(",").map(tag => tag.trim()).filter(Boolean)
     }
 
     if (isEditing && id) {

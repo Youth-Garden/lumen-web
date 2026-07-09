@@ -35,7 +35,7 @@ export function Header() {
   };
 
   const userInitials = user?.fullName 
-    ? user.fullName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    ? user.fullName.split(' ').map((namePart) => namePart[0]).join('').toUpperCase().slice(0, 2)
     : user?.email?.substring(0, 2).toUpperCase() || 'U';
 
   return (

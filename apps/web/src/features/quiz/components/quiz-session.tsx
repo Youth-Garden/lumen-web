@@ -16,13 +16,13 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ quiz }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
     // Find the first unanswered question
-    const idx = quiz.questions.findIndex((q) => !q.userAnswer);
+    const idx = quiz.questions.findIndex((questionItem) => !questionItem.userAnswer);
     return idx === -1 ? quiz.questions.length - 1 : idx;
   });
 
   const question = quiz.questions[currentQuestionIndex];
   const allAnswered = useMemo(
-    () => quiz.questions.every((q) => q.userAnswer),
+    () => quiz.questions.every((questionItem) => questionItem.userAnswer),
     [quiz.questions],
   );
 

@@ -122,11 +122,11 @@ export default function UserList() {
         </div>
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-4 flex items-center gap-4">
           <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600"><Icons name="check-circle" className="h-5 w-5" /></div>
-          <div><p className="text-sm text-muted-foreground">Active</p><p className="text-2xl font-bold">{users.filter(u => u.status === "Active").length}</p></div>
+          <div><p className="text-sm text-muted-foreground">Active</p><p className="text-2xl font-bold">{users.filter(userItem => userItem.status === "Active").length}</p></div>
         </div>
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-4 flex items-center gap-4">
           <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"><Icons name="ban" className="h-5 w-5" /></div>
-          <div><p className="text-sm text-muted-foreground">Banned</p><p className="text-2xl font-bold">{users.filter(u => u.status === "Banned").length}</p></div>
+          <div><p className="text-sm text-muted-foreground">Banned</p><p className="text-2xl font-bold">{users.filter(userItem => userItem.status === "Banned").length}</p></div>
         </div>
       </div>
 

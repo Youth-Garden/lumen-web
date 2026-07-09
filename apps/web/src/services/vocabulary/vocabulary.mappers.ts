@@ -35,10 +35,10 @@ export const wordMapper = (raw: any): VocabularyWord => {
 
 export const deckListMapper = (raw: any): Deck[] => {
   if (!Array.isArray(raw)) return [];
-  return raw.map((d: any) => ({
-    id: d?.id || '',
-    name: d?.name || '',
-    description: d?.description || null,
-    flashcardCount: d?.flashcardCount || 0,
+  return raw.map((deckRaw: any) => ({
+    id: deckRaw?.id || '',
+    name: deckRaw?.name || '',
+    description: deckRaw?.description || null,
+    flashcardCount: deckRaw?.flashcardCount || 0,
   }));
 };

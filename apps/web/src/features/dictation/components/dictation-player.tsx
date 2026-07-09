@@ -39,7 +39,7 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
 
     const handleTimeUpdate = () => {
       if (!activeTranscriptId || !material) return;
-      const activeSegment = material.transcripts.find(t => t.id === activeTranscriptId);
+      const activeSegment = material.transcripts.find(transcript => transcript.id === activeTranscriptId);
       if (activeSegment && audio.currentTime >= activeSegment.endTime) {
         audio.pause();
         setIsPlaying(false);
@@ -118,7 +118,7 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
       {/* Transcripts List */}
       <div className="space-y-6 pb-20">
         {material.transcripts.sort((a, b) => a.order - b.order).map((transcript, index) => {
-          const result = results.find(r => r.transcriptId === transcript.id);
+          const result = results.find(res => res.transcriptId === transcript.id);
           const isActive = activeTranscriptId === transcript.id && isPlaying;
           
           return (

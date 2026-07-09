@@ -33,14 +33,14 @@ export default function TestForm() {
       setDescription(test.description || "")
       if (test.questions && test.questions.length > 0) {
         // Simple mapping for demo
-        setQuestions(test.questions.map((q: any) => ({
-          id: q.id || Date.now(),
-          part: String(q.part),
-          text: q.questionText || "",
-          options: q.options || ["", "", "", ""],
-          correctAnswer: q.correctAnswer || 0,
-          audioUrl: q.audioUrl || null,
-          imageUrl: q.imageUrl || null
+        setQuestions(test.questions.map((question: any) => ({
+          id: question.id || Date.now(),
+          part: String(question.part),
+          text: question.questionText || "",
+          options: question.options || ["", "", "", ""],
+          correctAnswer: question.correctAnswer || 0,
+          audioUrl: question.audioUrl || null,
+          imageUrl: question.imageUrl || null
         })))
       }
     }
@@ -55,13 +55,13 @@ export default function TestForm() {
       title,
       description,
       durationMinutes: 120, // Default for now
-      questions: questions.map(q => ({
-        part: Number(q.part),
-        questionText: q.text,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        audioUrl: q.audioUrl,
-        imageUrl: q.imageUrl
+      questions: questions.map(question => ({
+        part: Number(question.part),
+        questionText: question.text,
+        options: question.options,
+        correctAnswer: question.correctAnswer,
+        audioUrl: question.audioUrl,
+        imageUrl: question.imageUrl
       }))
     }
 
@@ -154,18 +154,18 @@ export default function TestForm() {
                   </div>
                   
                   <div className="space-y-6">
-                    {questions.filter(q => q.part === activePart).length === 0 ? (
+                    {questions.filter(question => question.part === activePart).length === 0 ? (
                       <div className="text-center text-muted-foreground py-8">
                         No questions added to this part yet.
                       </div>
                     ) : (
-                      questions.filter(q => q.part === activePart).map((q, index) => (
-                        <Card key={q.id} className="p-4 relative">
+                      questions.filter(question => question.part === activePart).map((question, index) => (
+                        <Card key={question.id} className="p-4 relative">
                           <Button 
                             variant="ghost" 
                             size="sm" 
                             className="absolute top-2 right-2 text-red-500 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => setQuestions(questions.filter(item => item.id !== q.id))}
+                            onClick={() => setQuestions(questions.filter(item => item.id !== question.id))}
                           >
                             <Icons name="trash-2" className="h-4 w-4" />
                           </Button>
@@ -207,7 +207,7 @@ export default function TestForm() {
                                       <Input placeholder={`Option ${opt}`} />
                                       <input 
                                         type="radio" 
-                                        name={`correct-${q.id}`} 
+                                        name={`correct-${question.id}`} 
                                         className="ml-2 w-4 h-4 cursor-pointer"
                                         title="Mark as correct answer"
                                       />

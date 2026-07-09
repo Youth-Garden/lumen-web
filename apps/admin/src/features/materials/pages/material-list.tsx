@@ -107,9 +107,9 @@ export default function MaterialList() {
       <div className="grid grid-cols-4 gap-4">
         {[
           { label: "Total", value: response?.data?.meta?.totalItems || materials.length, icon: <Icons name="book-open" className="h-5 w-5" />, color: "indigo" },
-          { label: "Reading", value: materials.filter((m) => m.category === "Reading").length, icon: <Icons name="book-open" className="h-5 w-5" />, color: "blue" },
-          { label: "Listening", value: materials.filter((m) => m.category === "Listening").length, icon: <Icons name="headphones" className="h-5 w-5" />, color: "amber" },
-          { label: "Published", value: materials.filter((m) => m.status === "Published").length, icon: <Icons name="book-open" className="h-5 w-5" />, color: "green" },
+          { label: "Reading", value: materials.filter((material) => material.category === "Reading").length, icon: <Icons name="book-open" className="h-5 w-5" />, color: "blue" },
+          { label: "Listening", value: materials.filter((material) => material.category === "Listening").length, icon: <Icons name="headphones" className="h-5 w-5" />, color: "amber" },
+          { label: "Published", value: materials.filter((material) => material.status === "Published").length, icon: <Icons name="book-open" className="h-5 w-5" />, color: "green" },
         ].map((stat) => (
           <div key={stat.label} className="bg-white dark:bg-slate-900 border rounded-lg p-4 flex items-center gap-4">
             <div className={`h-10 w-10 rounded-full flex items-center justify-center bg-${stat.color}-100 text-${stat.color}-600`}>
