@@ -12,18 +12,10 @@ export const loginMapper = (raw: any): AuthTokens => {
   };
 };
 
-export const registerMapper = (raw: any): any => {
-  return raw;
-};
-
 export const getMeMapper = (raw: any): AuthTokens['user'] => {
   return {
     id: raw?.id || '',
     email: raw?.email || '',
     role: raw?.role || '',
   };
-};
-
-export const logoutMapper = (raw: any): any => {
-  return raw;
 };

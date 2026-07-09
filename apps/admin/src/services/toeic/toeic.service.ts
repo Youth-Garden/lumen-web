@@ -1,10 +1,10 @@
-import { AdminApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { registry } from './toeic.registry';
 import type { BaseResponse } from '@lumen/shared-api';
 import type { CreateToeicQuestionPayload, CreateToeicTestPayload, ToeicTestDto, ToeicTestListResponse } from './toeic.types';
 
-class ToeicAdminService extends AdminApiService {
+export class ToeicAdminService extends CoreService {
   listTests(params?: { page?: number; limit?: number; search?: string; status?: string }): Promise<BaseResponse<ToeicTestListResponse>> {
     return this._get<ToeicTestListResponse>(ApiEndpointEnum.TOEIC_TESTS, { params });
   }
@@ -30,4 +30,4 @@ class ToeicAdminService extends AdminApiService {
   }
 }
 
-export const toeicAdminService = new ToeicAdminService(registry);
+export const toeicAdminService = ToeicAdminService.getInstance(registry);

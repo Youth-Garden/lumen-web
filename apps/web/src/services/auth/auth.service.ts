@@ -1,29 +1,36 @@
-import { WebApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { AuthTokens, LoginPayload, RegisterPayload, LogoutPayload, UserInfo, UpdateProfilePayload } from './auth.types';
 import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './auth.registry';
+import {
+  AuthTokens,
+  LoginPayload,
+  RegisterPayload,
+  UserInfo,
+  UpdateProfilePayload,
+  LogoutPayload,
+} from './auth.types';
 
-class AuthService extends WebApiService {
+export class AuthService extends CoreService {
   login(payload: LoginPayload): Promise<BaseResponse<AuthTokens>> {
     return this._post<AuthTokens>(ApiEndpointEnum.LOGIN, payload);
   }
 
-  register(payload: RegisterPayload): Promise<BaseResponse<any>> {
-    return this._post(ApiEndpointEnum.REGISTER, payload);
+  register(payload: RegisterPayload): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.REGISTER, payload);
   }
 
   getMe(): Promise<BaseResponse<UserInfo>> {
     return this._get<UserInfo>(ApiEndpointEnum.GET_ME);
   }
 
-  logout(payload: LogoutPayload): Promise<BaseResponse<any>> {
-    return this._post(ApiEndpointEnum.LOGOUT, payload);
+  updateProfile(payload: UpdateProfilePayload): Promise<BaseResponse<UserInfo>> {
+    return this._post<UserInfo>(ApiEndpointEnum.UPDATE_PROFILE, payload);
   }
 
-  updateProfile(payload: UpdateProfilePayload): Promise<BaseResponse<UserInfo>> {
-    return this._put<UserInfo>(ApiEndpointEnum.UPDATE_PROFILE, payload);
+  logout(payload: LogoutPayload): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.LOGOUT, payload);
   }
 }
 
-export const authService = new AuthService(registry);
+export const authService = AuthService.getInstance(registry);

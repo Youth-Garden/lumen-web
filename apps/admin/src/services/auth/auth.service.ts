@@ -1,10 +1,10 @@
-import { AdminApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { registry } from './auth.registry';
 import type { BaseResponse } from '@lumen/shared-api';
 import type { AuthResponse, LoginPayload } from './auth.types';
 
-class AuthService extends AdminApiService {
+export class AuthService extends CoreService {
   login(payload: LoginPayload): Promise<BaseResponse<AuthResponse>> {
     return this._post<AuthResponse>(ApiEndpointEnum.LOGIN, payload);
   }
@@ -18,7 +18,7 @@ class AuthService extends AdminApiService {
   }
 }
 
-export const authService = new AuthService(registry);
+export const authService = AuthService.getInstance(registry);
 export const authKeys = {
   all: ['auth'] as const,
   me: () => [...authKeys.all, 'me'] as const,

@@ -1,13 +1,22 @@
-import { WebApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './vocabulary.registry';
-import { CreateDeckPayload, CreateFlashcardPayload, Deck, DueFlashcard, ReviewFlashcardPayload, VocabularyWord, WordListResponse } from './vocabulary.types';
+import {
+  CreateDeckPayload,
+  CreateFlashcardPayload,
+  Deck,
+  DueFlashcard,
+  ReviewFlashcardPayload,
+  VocabularyWord,
+  WordListResponse,
+} from './vocabulary.types';
 
-class VocabularyService extends WebApiService {
+export class VocabularyService extends CoreService {
   listWords(params?: {
     page?: number;
     limit?: number;
+    deckId?: string;
     search?: string;
     cefrLevel?: string;
   }): Promise<BaseResponse<WordListResponse>> {
@@ -41,4 +50,4 @@ class VocabularyService extends WebApiService {
   }
 }
 
-export const vocabularyService = new VocabularyService(registry);
+export const vocabularyService = VocabularyService.getInstance(registry);

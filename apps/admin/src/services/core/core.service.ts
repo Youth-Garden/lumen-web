@@ -3,7 +3,7 @@ import type { MapperRegistry } from '@lumen/shared-api';
 import { useAuthStore } from '@/store/auth.store';
 import { toast } from 'sonner';
 
-export abstract class AdminApiService extends BaseApiService {
+export abstract class CoreService extends BaseApiService {
   constructor(mappers?: MapperRegistry) {
     super({
       baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',

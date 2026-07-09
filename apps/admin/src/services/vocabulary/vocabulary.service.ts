@@ -1,10 +1,10 @@
-import { AdminApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { registry } from './vocabulary.registry';
 import type { BaseResponse } from '@lumen/shared-api';
 import type { AdminVocabularyWord, CreateVocabularyWordPayload, UpdateVocabularyWordPayload, VocabularyWordListResponse } from './vocabulary.types';
 
-class VocabularyAdminService extends AdminApiService {
+export class VocabularyAdminService extends CoreService {
   listWords(params?: { page?: number; limit?: number; search?: string; cefrLevel?: string }): Promise<BaseResponse<VocabularyWordListResponse>> {
     return this._get<VocabularyWordListResponse>(ApiEndpointEnum.VOCABULARY_WORDS, { params });
   }
@@ -26,4 +26,4 @@ class VocabularyAdminService extends AdminApiService {
   }
 }
 
-export const vocabularyAdminService = new VocabularyAdminService(registry);
+export const vocabularyAdminService = VocabularyAdminService.getInstance(registry);

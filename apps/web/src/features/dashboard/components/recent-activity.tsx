@@ -2,82 +2,50 @@
 
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
+import { useRecentActivities } from '../hooks/use-recent-activities';
 
-type ActivityType = 'dictation_completed' | 'reading_completed' | 'quiz_completed' | 'streak_achieved';
-
-interface ActivityItem {
-  id: string;
-  type: ActivityType;
-  title: string;
-  description: string;
-  timestamp: string;
-  xpEarned: number;
-}
-
-const mockActivities: ActivityItem[] = [
-  {
-    id: '1',
-    type: 'dictation_completed',
-    title: 'Completed Dictation Lesson',
-    description: 'B1 - General Conversation',
-    timestamp: 'Just now',
-    xpEarned: 50,
-  },
-  {
-    id: '2',
-    type: 'quiz_completed',
-    title: 'Passed TOEIC Mini Quiz',
-    description: 'Score: 90/100',
-    timestamp: '2 hours ago',
-    xpEarned: 120,
-  },
-  {
-    id: '3',
-    type: 'streak_achieved',
-    title: '3 Day Streak Achieved!',
-    description: 'Keep it up!',
-    timestamp: 'Yesterday',
-    xpEarned: 200,
-  },
-  {
-    id: '4',
-    type: 'reading_completed',
-    title: 'Read Article',
-    description: 'The Future of AI in Education',
-    timestamp: 'Yesterday',
-    xpEarned: 30,
-  },
-  {
-    id: '5',
-    type: 'dictation_completed',
-    title: 'Completed Dictation Lesson',
-    description: 'A2 - Basic Introductions',
-    timestamp: '2 days ago',
-    xpEarned: 50,
-  },
-];
+import { ActivityType } from '@/services/progress';
 
 const ActivityIcon = ({ type }: { type: ActivityType }) => {
   switch (type) {
-    case 'dictation_completed':
+    case ActivityType.DICTATION_COMPLETED:
+    case ActivityType.SPEAKING_COMPLETED:
       return <Icons name="headphones" className="h-4 w-4 text-primary" />;
-    case 'reading_completed':
+    case ActivityType.READING_COMPLETED:
+    case ActivityType.GRAMMAR_COMPLETED:
       return <Icons name="book-open" className="h-4 w-4 text-primary" />;
-    case 'quiz_completed':
+    case ActivityType.QUIZ_COMPLETED:
       return <Icons name="check-circle" className="h-4 w-4 text-green-500" />;
-    case 'streak_achieved':
+    case ActivityType.STREAK_ACHIEVED:
       return <Icons name="trophy" className="h-4 w-4 text-yellow-500" />;
+    case ActivityType.FLASHCARD_REVIEWED:
+      return <Icons name="book" className="h-4 w-4 text-blue-500" />;
     default:
-      return <Icons name="book-open" className="h-4 w-4 text-primary" />;
+      return <Icons name="activity" className="h-4 w-4 text-primary" />;
   }
 };
 
 export function RecentActivity() {
   const t = useTranslations('Dashboard.Overview');
+  const { data: activities, isLoading } = useRecentActivities();
+
+  if (isLoading) {
+    return (
+      <div className="text-sm text-muted-foreground">Loading activities...</div>
+    );
+  }
+
+  if (!activities || activities.length === 0) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        No recent activity found.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
-      {mockActivities.map((activity) => (
+      {activities.map((activity) => (
         <div key={activity.id} className="flex items-center">
           <div className="bg-primary/10 p-2 rounded-full mr-4">
             <ActivityIcon type={activity.type} />
@@ -92,7 +60,9 @@ export function RecentActivity() {
             <div className="font-medium text-green-600 dark:text-green-400">
               +{activity.xpEarned} XP
             </div>
-            <div className="text-xs text-muted-foreground">{activity.timestamp}</div>
+            <div className="text-xs text-muted-foreground">
+              {new Date(activity.timestamp).toLocaleDateString()}
+            </div>
           </div>
         </div>
       ))}

@@ -8,6 +8,7 @@ export enum ApiEndpointEnum {
 
   // Progress
   PROGRESS_DASHBOARD = '/progress/dashboard',
+  PROGRESS_ACTIVITIES = '/progress/activities',
   PROGRESS_SETTINGS = '/progress/settings',
 
   // Vocabulary
@@ -32,4 +33,9 @@ export enum ApiEndpointEnum {
   // TOEIC
   TOEIC_TESTS = '/toeic/tests',
   TOEIC_TEST_DETAIL = '/toeic/tests/:id',
+
+  // Material
+  MATERIALS = '/materials',
+  MATERIAL_DETAIL = '/materials/:id',
+  MATERIAL_DICTATION = '/materials/dictation',
 }

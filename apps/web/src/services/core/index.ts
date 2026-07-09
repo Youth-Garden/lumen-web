@@ -1,1 +1,2 @@
-export * from './base-web-api.service';
+export * from './core.service';
+export * from './core.mappers';

@@ -1,10 +1,10 @@
-import { AdminApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import type { BaseResponse as BaseResponseType } from '@lumen/shared-api';
 import { registry } from './users.registry';
 import type { AdminUser, CreateUserPayload, UpdateUserPayload, UserListResponse } from './users.types';
 
-class UsersService extends AdminApiService {
+export class UsersService extends CoreService {
   listUsers(params?: { page?: number; limit?: number; search?: string; role?: string; status?: string }): Promise<BaseResponseType<UserListResponse>> {
     return this._get<UserListResponse>(ApiEndpointEnum.USERS, { params });
   }
@@ -34,4 +34,4 @@ class UsersService extends AdminApiService {
   }
 }
 
-export const usersService = new UsersService(registry);
+export const usersService = UsersService.getInstance(registry);

@@ -2,7 +2,7 @@ import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
 import { useAuthStore } from '@/store/auth.store';
 import { toast } from 'sonner';
 
-export abstract class WebApiService extends BaseApiService {
+export abstract class CoreService extends BaseApiService {
   constructor(mappers?: MapperRegistry) {
     super({
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',

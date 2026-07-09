@@ -1,10 +1,18 @@
 import { ApiEndpointEnum } from '@/shared/constants';
-import { HttpMethod, MapperRegistry, BYPASS_MAPPER } from '@lumen/shared-api';
-import { registryKey } from '@lumen/shared-api';
+import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
+import {
+  articleListMapper,
+  articleMapper,
+  translateResponseMapper,
+} from './reading.mappers';
 
 export const registry: MapperRegistry = {
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.READING_ARTICLES)]: BYPASS_MAPPER as any,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.READING_ARTICLE_DETAIL)]: BYPASS_MAPPER as any,
-  [registryKey(HttpMethod.POST, ApiEndpointEnum.READING_ARTICLES)]: BYPASS_MAPPER as any,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.READING_TRANSLATE)]: BYPASS_MAPPER as any,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.READING_ARTICLES)]:
+    articleListMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.READING_ARTICLE_DETAIL)]:
+    articleMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.READING_ARTICLES)]:
+    articleMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.READING_TRANSLATE)]:
+    translateResponseMapper,
 };

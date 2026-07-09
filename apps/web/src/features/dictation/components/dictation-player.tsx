@@ -2,7 +2,8 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { materialService, DictationSubmissionDto } from '@/services/material/material.service';
+import { materialService } from '@/services/material/material.service';
+import type { DictationSubmissionDto } from '@/services/material';
 import { materialKeys } from '@/services/material/material.keys';
 import { Button, Input, Card, CardContent } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';

@@ -9,7 +9,6 @@ import qs from 'qs';
 import {
   ApiError,
   BaseResponse,
-  BYPASS_MAPPER,
   HttpMethod,
   MapperRegistry,
   RequestConfig,
@@ -54,6 +53,18 @@ function formatUrl(
 }
 
 export abstract class BaseApiService {
+  protected static _instance: any = null;
+
+  public static getInstance<T extends BaseApiService>(
+    this: new (...args: any[]) => T,
+    ...args: any[]
+  ): T {
+    if (!(this as any)._instance) {
+      (this as any)._instance = new this(...args);
+    }
+    return (this as any)._instance;
+  }
+
   protected readonly axiosInstance: AxiosInstance;
   protected readonly mappers: MapperRegistry;
   private readonly config: BaseApiServiceConfig;

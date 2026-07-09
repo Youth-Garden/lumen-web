@@ -40,8 +40,6 @@ export enum HttpMethod {
   PATCH = 'PATCH',
 }
 
-export const BYPASS_MAPPER = '__bypass__';
-
 export class ApiError extends Error {
   public response: { data: any };
   public isHandled: boolean;

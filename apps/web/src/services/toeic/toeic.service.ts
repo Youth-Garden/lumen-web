@@ -1,10 +1,10 @@
-import { WebApiService } from '../core';
+import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './toeic.registry';
 import { ToeicTestDto, ToeicTestListResponse } from './toeic.types';
 
-class ToeicService extends WebApiService {
+export class ToeicService extends CoreService {
   getTests(): Promise<BaseResponse<ToeicTestListResponse>> {
     return this._get<ToeicTestListResponse>(ApiEndpointEnum.TOEIC_TESTS);
   }
@@ -16,4 +16,4 @@ class ToeicService extends WebApiService {
   }
 }
 
-export const toeicService = new ToeicService(registry);
+export const toeicService = ToeicService.getInstance(registry);
