@@ -74,7 +74,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         aria-label="Toggle heading"
       >
-        <Icons name="heading2" className="h-4 w-4" />
+        <Icons name="heading-2" className="h-4 w-4" />
       </Toggle>
 
       <div className="w-px h-6 bg-border mx-1" />
@@ -93,7 +93,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
         aria-label="Toggle ordered list"
       >
-        <Icons name="list"Ordered className="h-4 w-4" />
+        <Icons name="list-ordered" className="h-4 w-4" />
       </Toggle>
       <Toggle
         size="sm"
@@ -112,10 +112,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
         onClick={setLink}
         className={editor.isActive("link") ? "bg-accent text-accent-foreground" : ""}
       >
-        <Icons name="link-icon" className="h-4 w-4" />
+        <Icons name="link" className="h-4 w-4" />
       </Button>
       <Button variant="ghost" size="sm" onClick={addImage}>
-        <Icons name="image-icon" className="h-4 w-4" />
+        <Icons name="image" className="h-4 w-4" />
       </Button>
 
       <div className="flex-1" />
