@@ -14,6 +14,14 @@ import UserList from "./features/users/pages/user-list"
 import UserForm from "./features/users/pages/user-form"
 import MaterialList from "./features/materials/pages/material-list"
 import MaterialForm from "./features/materials/pages/material-form"
+import ReadingList from "./features/reading/pages/reading-list"
+import ReadingForm from "./features/reading/pages/reading-form"
+import GrammarList from "./features/grammar/pages/grammar-list"
+import GrammarForm from "./features/grammar/pages/grammar-form"
+import ListeningSpeakingList from "./features/listening-speaking/pages/listening-speaking-list"
+import ListeningSpeakingForm from "./features/listening-speaking/pages/listening-speaking-form"
+import QuizzesList from "./features/quizzes/pages/quizzes-list"
+import QuizzesForm from "./features/quizzes/pages/quizzes-form"
 
 const queryClient = new QueryClient()
 
@@ -50,6 +58,30 @@ function App() {
                 <Route index element={<VocabList />} />
                 <Route path="new" element={<VocabForm />} />
                 <Route path=":id/edit" element={<VocabForm />} />
+              </Route>
+
+              <Route path="reading">
+                <Route index element={<ReadingList />} />
+                <Route path="new" element={<ReadingForm />} />
+                <Route path=":id/edit" element={<ReadingForm />} />
+              </Route>
+
+              <Route path="grammar">
+                <Route index element={<GrammarList />} />
+                <Route path="new" element={<GrammarForm />} />
+                <Route path=":id/edit" element={<GrammarForm />} />
+              </Route>
+
+              <Route path="listening-speaking">
+                <Route index element={<ListeningSpeakingList />} />
+                <Route path="new" element={<ListeningSpeakingForm />} />
+                <Route path=":id/edit" element={<ListeningSpeakingForm />} />
+              </Route>
+
+              <Route path="quizzes">
+                <Route index element={<QuizzesList />} />
+                <Route path="new" element={<QuizzesForm />} />
+                <Route path=":id/edit" element={<QuizzesForm />} />
               </Route>
 
               <Route path="settings" element={<div className="p-4">Settings Module Coming Soon</div>} />

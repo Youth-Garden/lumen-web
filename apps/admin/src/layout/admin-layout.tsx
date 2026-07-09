@@ -11,6 +11,10 @@ const navItems = [
   { to: "/toeic", icon: "file-text", label: "TOEIC Tests" },
   { to: "/vocabulary", icon: "book-marked", label: "Vocabulary" },
   { to: "/materials", icon: "book-open", label: "Materials" },
+  { to: "/reading", icon: "book", label: "Reading" },
+  { to: "/grammar", icon: "pen-tool", label: "Grammar" },
+  { to: "/listening-speaking", icon: "headphones", label: "Listening/Speaking" },
+  { to: "/quizzes", icon: "check-circle", label: "Quizzes" },
 ]
 
 export default function AdminLayout() {
@@ -36,7 +40,7 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside className="w-64 border-r bg-white dark:bg-slate-900 hidden md:flex flex-col">
         <div className="h-16 flex items-center px-6 border-b">
-          <span className="font-bold text-xl tracking-tight text-indigo-600 dark:text-indigo-400">
+          <span className="font-bold text-xl tracking-tight text-teal-600 dark:text-teal-400">
             Lumen Admin
           </span>
         </div>
@@ -49,7 +53,7 @@ export default function AdminLayout() {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-lg px-3 py-2 transition-all text-sm font-medium ${
                   isActive
-                    ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                    ? "bg-teal-50 text-teal-600 dark:bg-teal-900/50 dark:text-teal-400"
                     : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
                 }`
               }
@@ -66,7 +70,7 @@ export default function AdminLayout() {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-3 py-2 transition-all text-sm font-medium mb-2 ${
                 isActive
-                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400"
+                  ? "bg-teal-50 text-teal-600 dark:bg-teal-900/50 dark:text-teal-400"
                   : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
               }`
             }
@@ -88,7 +92,7 @@ export default function AdminLayout() {
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Lumen Dashboard</h2>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800">
-              <div className="h-7 w-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs uppercase">
+              <div className="h-7 w-7 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-bold text-xs uppercase">
                 {user?.name?.substring(0, 2) || "AD"}
               </div>
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mr-1">{user?.name || "Admin"}</span>
