@@ -34,19 +34,19 @@ export function Header() {
     router.push(RouteEnum.LOGIN);
   };
 
-  const userInitials = user?.name 
-    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+  const userInitials = user?.fullName 
+    ? user.fullName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
     : user?.email?.substring(0, 2).toUpperCase() || 'U';
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
+    <header className="flex h-16 items-center justify-between border-b border-white/10 bg-background/60 backdrop-blur-md px-6 sticky top-0 z-50">
       <div className="flex items-center gap-4 flex-1">
-        <div className="relative w-full max-w-md hidden sm:flex">
-          <Icons name="search" className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="relative w-full max-w-md hidden sm:flex group">
+          <Icons name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
           <Input
             type="search"
             placeholder={t('search')}
-            className="w-full bg-background pl-9 md:w-[300px] lg:w-[400px]"
+            className="w-full bg-white/5 border-white/10 pl-10 md:w-[300px] lg:w-[400px] focus:bg-white/10 transition-all rounded-full"
           />
         </div>
       </div>
@@ -66,15 +66,15 @@ export function Header() {
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger className="relative h-8 w-8 rounded-full outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={user.avatar} alt={user.name || user.email} />
+              <Avatar className="h-8 w-8 border border-white/20 shadow-sm">
+                <AvatarImage src={user.avatarUrl} alt={user.fullName || user.email} />
                 <AvatarFallback>{userInitials}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user.name || 'User'}</p>
+                  <p className="text-sm font-medium leading-none">{user.fullName || 'User'}</p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user.email}
                   </p>

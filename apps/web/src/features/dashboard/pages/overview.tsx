@@ -15,7 +15,7 @@ export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
   const { data: progressData } = useProgressDashboard();
   const { data: dueFlashcards } = useDueFlashcards();
-  const dueCount = dueFlashcards?.length || 0;
+  const dueCount = dueFlashcards?.data?.length || 0;
 
   // Generate fake weekly data for the chart if backend doesn't provide it yet
   const chartData = progressData?.weeklyData || Array.from({ length: 7 }).map((_, i) => {
@@ -73,7 +73,7 @@ export function OverviewPage() {
           </div>
           
           {dueCount > 0 && (
-            <Card className="border-orange-500/50 bg-orange-500/5 shadow-sm">
+            <Card className="border-orange-500/20 bg-orange-500/10 shadow-lg backdrop-blur-md hover:-translate-y-1 hover:shadow-orange-500/10 transition-all duration-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export function OverviewPage() {
           )}
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
+            <Card className="col-span-4 bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
               <CardHeader>
                 <CardTitle>XP Progress</CardTitle>
                 <CardDescription>
@@ -107,7 +107,7 @@ export function OverviewPage() {
                 <XpProgressChart data={chartData} />
               </CardContent>
             </Card>
-            <Card className="col-span-3">
+            <Card className="col-span-3 bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>

@@ -48,7 +48,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r border-border bg-card text-card-foreground">
+    <div className="flex h-full w-64 flex-col border-r border-white/10 bg-background/60 backdrop-blur-xl text-card-foreground shadow-xl">
       <div className="p-6">
         <Link href={RouteEnum.DASHBOARD} className="flex items-center gap-2 font-bold text-xl">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -66,7 +66,7 @@ export function Sidebar() {
               <Link key={item.key} href={item.href}>
                 <Button
                   variant={isActive ? 'secondary' : 'ghost'}
-                  className={cn("w-full justify-start gap-3", isActive ? "font-semibold" : "text-muted-foreground")}
+                  className={cn("w-full justify-start gap-3 transition-all duration-300 hover:-translate-y-0.5", isActive ? "bg-primary/20 text-primary font-semibold shadow-sm" : "text-muted-foreground hover:bg-white/5")}
                 >
                   <Icons name={item.icon as any} className="h-5 w-5" />
                   {t(item.key)}
@@ -78,7 +78,7 @@ export function Sidebar() {
         </nav>
       </ScrollArea>
 
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-white/10">
         <DropdownMenu>
           <DropdownMenuTrigger
             render={

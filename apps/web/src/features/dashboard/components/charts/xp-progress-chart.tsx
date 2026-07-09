@@ -38,8 +38,15 @@ export function XpProgressChart({ data }: XpProgressChartProps) {
   return (
     <div className="h-[350px] w-full pt-4">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={formattedData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+        <BarChart
+          data={formattedData}
+          margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke="hsl(var(--border))"
+          />
           <XAxis
             dataKey="name"
             stroke="hsl(var(--muted-foreground))"
@@ -60,7 +67,8 @@ export function XpProgressChart({ data }: XpProgressChartProps) {
               backgroundColor: 'hsl(var(--background))',
               borderColor: 'hsl(var(--border))',
               borderRadius: '8px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+              boxShadow:
+                '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
             }}
             labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
             itemStyle={{ color: 'hsl(var(--primary))' }}
