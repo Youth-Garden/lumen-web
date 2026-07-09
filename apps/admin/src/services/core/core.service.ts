@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export abstract class CoreService extends BaseApiService {
   constructor(mappers?: MapperRegistry) {
     super({
-      baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+      baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
       mappers,
       getToken: () => useAuthStore.getState().accessToken,
       onError: (errors, message) => {
