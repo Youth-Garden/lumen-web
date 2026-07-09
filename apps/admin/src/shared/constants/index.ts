@@ -1,2 +1,2 @@
-export * from './api-endpoint.enum';
+export * from './server';
 export * from './route';
