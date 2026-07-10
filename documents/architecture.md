@@ -347,4 +347,4 @@ Because the Domain layer does not depend on a framework, it is the easiest part 
 
 ---
 
-*Related Documents: see `01-y-tuong-san-pham.md` for product context and overall Lumen roadmap.*
+*Related Documents: see `01-product-idea.md` for product context and overall Lumen roadmap.*
