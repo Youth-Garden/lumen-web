@@ -26,7 +26,7 @@ export const PortalRenderer = () => {
         />
       ))}
     </>,
-    document.body
+    document.body,
   );
 };
 
@@ -38,6 +38,17 @@ const PortalInstanceItem = ({
   onDismiss: () => void;
 }) => {
   const Component = instance.component;
+
+  if (instance.disableBackdrop) {
+    return (
+      <Component
+        id={instance.id}
+        data={instance.data}
+        isOpen={instance.isOpen}
+        onDismiss={onDismiss}
+      />
+    );
+  }
 
   // Added a specific z-index wrapping wrapper for stacking correctly if multiple portals exist
   return (

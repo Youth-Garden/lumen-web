@@ -1,13 +1,7 @@
-import { ToeicTestList } from '@/features/toeic/components/toeic-test-list';
+import { ToeicTestListPage } from '@/features/toeic/pages/toeic-test-list-page';
 
 export const metadata = {
   title: 'TOEIC Tests | Lumen',
 };
 
-export default function ToeicPage() {
-  return (
-    <div className="container mx-auto p-4 py-8 md:p-8">
-      <ToeicTestList />
-    </div>
-  );
-}
+export default ToeicTestListPage;

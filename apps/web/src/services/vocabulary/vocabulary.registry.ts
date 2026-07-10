@@ -9,10 +9,16 @@ import {
 } from './vocabulary.mappers';
 
 export const registry: MapperRegistry = {
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORDS)]: wordListMapper,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORD_DETAIL)]: wordMapper,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_DECKS)]: deckListMapper,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE)]: dueFlashcardsMapper,
-  [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_DECKS)]: idResponseMapper,
-  [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS)]: idResponseMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORDS)]:
+    wordListMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORD_DETAIL)]:
+    wordMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_DECKS)]:
+    deckListMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE)]:
+    dueFlashcardsMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_DECKS)]:
+    idResponseMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS)]:
+    idResponseMapper,
 };

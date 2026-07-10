@@ -1,9 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { materialService } from '@/services/material/material.service';
-import { materialKeys } from '@/services/material/material.keys';
+import { useDictationMaterials } from '@/features/dictation/hooks/use-dictation';
 import {
   Card,
   CardHeader,
@@ -18,10 +16,7 @@ import { useRouter } from 'next/navigation';
 export const DictationList = () => {
   const router = useRouter();
 
-  const { data: materialsResponse, isLoading } = useQuery({
-    queryKey: materialKeys.list({ type: 'AUDIO' }),
-    queryFn: () => materialService.getMaterials({ type: 'AUDIO' }),
-  });
+  const { data: materialsResponse, isLoading } = useDictationMaterials();
 
   if (isLoading) {
     return <div className="p-8 text-center">Loading dictation lessons...</div>;

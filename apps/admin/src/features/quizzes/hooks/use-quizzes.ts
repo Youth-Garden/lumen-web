@@ -20,7 +20,7 @@ export const useQuiz = (id: string) => {
 
 export const useCreateQuiz = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: CreatePresetQuizDto) => quizzesService.createQuiz(data),
     onSuccess: () => {
@@ -35,13 +35,15 @@ export const useCreateQuiz = () => {
 
 export const useUpdateQuiz = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdatePresetQuizDto }) => 
+    mutationFn: ({ id, data }: { id: string; data: UpdatePresetQuizDto }) =>
       quizzesService.updateQuiz(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-quizzes'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-quizzes', variables.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['admin-quizzes', variables.id],
+      });
       toast.success('Quiz updated successfully');
     },
     onError: (error: any) => {
@@ -52,7 +54,7 @@ export const useUpdateQuiz = () => {
 
 export const useDeleteQuiz = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => quizzesService.deleteQuiz(id),
     onSuccess: () => {

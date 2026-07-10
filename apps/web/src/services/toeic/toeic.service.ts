@@ -10,9 +10,13 @@ export class ToeicService extends CoreService {
   }
 
   getTestById(id: string): Promise<BaseResponse<ToeicTestDto>> {
-    return this._get<ToeicTestDto>(ApiEndpointEnum.TOEIC_TEST_DETAIL, undefined, {
-      pathParams: { id },
-    });
+    return this._get<ToeicTestDto>(
+      ApiEndpointEnum.TOEIC_TEST_DETAIL,
+      undefined,
+      {
+        pathParams: { id },
+      },
+    );
   }
 }
 

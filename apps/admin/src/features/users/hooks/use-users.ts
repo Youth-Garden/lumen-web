@@ -5,7 +5,8 @@ import type { CreateUserPayload, UpdateUserPayload } from '@/services/users';
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: CreateUserPayload) => usersService.createUser(payload),
+    mutationFn: (payload: CreateUserPayload) =>
+      usersService.createUser(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });
     },
@@ -54,7 +55,13 @@ export const useUnbanUser = () => {
   });
 };
 
-export const useUsers = (params?: { page?: number; limit?: number; search?: string; role?: string; status?: string }) => {
+export const useUsers = (params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: string;
+  status?: string;
+}) => {
   return useQuery({
     queryKey: userKeys.list(params),
     queryFn: () => usersService.listUsers(params),

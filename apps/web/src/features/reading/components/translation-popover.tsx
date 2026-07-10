@@ -1,41 +1,39 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { useTranslateText } from '../hooks';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@lumen/uikit/components';
+import { PortalProps } from '@lumen/uikit/portal';
 
-interface TranslationPopoverProps {
+import { useTranslations } from 'next-intl';
+
+export interface TranslationPopoverData {
   text: string;
   position: { x: number; y: number } | null;
-  onClose: () => void;
   onAddToFlashcard?: (word: string, translation: string) => void;
 }
 
-export const TranslationPopover = ({ text, position, onClose, onAddToFlashcard }: TranslationPopoverProps) => {
-  const { data: translationResult, isLoading, isError } = useTranslateText(text);
+export const TranslationPopover = ({
+  isOpen,
+  onDismiss,
+  data,
+}: PortalProps<TranslationPopoverData>) => {
+  const t = useTranslations('Reading');
+  const { text = '', position = null, onAddToFlashcard } = data || {};
+  const {
+    data: translationResult,
+    isLoading,
+    isError,
+  } = useTranslateText(text);
   const [added, setAdded] = useState(false);
-  const popoverRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-    
-    // Slight delay so the selection click doesn't immediately close it
-    setTimeout(() => {
-      document.addEventListener('mousedown', handleClickOutside);
-    }, 100);
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
-
-  if (!position || !text) return null;
+  if (!text || !position) return null;
 
   const handleAdd = () => {
     if (translationResult?.translation) {
@@ -46,26 +44,25 @@ export const TranslationPopover = ({ text, position, onClose, onAddToFlashcard }
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        ref={popoverRef}
-        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.15 }}
+    <Popover open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
+      <PopoverTrigger
+        className="fixed z-[-1] opacity-0 pointer-events-none"
         style={{
-          position: 'fixed',
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          zIndex: 50,
-          transform: 'translate(-50%, -100%)', // Center above the cursor
-          marginTop: '-10px',
+          left: position.x,
+          top: position.y,
+          width: 0,
+          height: 0,
         }}
-        className="w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90"
+      />
+      <PopoverContent
+        align="center"
+        side="top"
+        sideOffset={10}
+        className="w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95"
       >
         <div className="mb-3 border-b border-slate-100 pb-2 dark:border-slate-800">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-teal-600 dark:text-teal-400">
-            <Icons name="languages" className="h-4 w-4" /> Translation
+            <Icons name="languages" className="h-4 w-4" /> {t('translation')}
           </div>
           <div className="mt-1 line-clamp-2 text-sm font-medium text-slate-800 dark:text-slate-200">
             &quot;{text}&quot;
@@ -76,39 +73,42 @@ export const TranslationPopover = ({ text, position, onClose, onAddToFlashcard }
           {isLoading ? (
             <div className="flex h-full items-center justify-center space-x-2 text-slate-400">
               <Icons name="loader-2" className="h-5 w-5 animate-spin" />
-              <span className="text-sm">Translating...</span>
+              <span className="text-sm">{t('translating')}</span>
             </div>
           ) : isError ? (
-            <div className="text-sm text-red-500">Failed to load translation.</div>
+            <div className="text-sm text-red-500">{t('failedTranslation')}</div>
           ) : (
             <div className="space-y-4">
               <p className="text-base text-slate-700 dark:text-slate-300">
-                {translationResult?.translation || 'No translation available.'}
+                {translationResult?.translation || t('noTranslation')}
               </p>
-              
-              <Button 
+
+              <Button
                 onClick={handleAdd}
-                variant={added ? "secondary" : "default"}
-                size="sm" 
-                className={`w-full font-medium ${added ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400' : 'bg-teal-600 hover:bg-teal-700 text-white'}`}
+                variant={added ? 'secondary' : 'default'}
+                size="sm"
+                className={`w-full font-medium ${
+                  added
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400'
+                    : 'bg-teal-600 hover:bg-teal-700 text-white'
+                }`}
               >
                 {added ? (
                   <>
-                    <Icons name="check" className="mr-2 h-4 w-4" /> Added to Decks
+                    <Icons name="check" className="mr-2 h-4 w-4" />{' '}
+                    {t('addedToDecks')}
                   </>
                 ) : (
                   <>
-                    <Icons name="plus" className="mr-2 h-4 w-4" /> Add to Flashcards
+                    <Icons name="plus" className="mr-2 h-4 w-4" />{' '}
+                    {t('addToFlashcards')}
                   </>
                 )}
               </Button>
             </div>
           )}
         </div>
-        
-        {/* Pointer Triangle */}
-        <div className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-b border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"></div>
-      </motion.div>
-    </AnimatePresence>
+      </PopoverContent>
+    </Popover>
   );
 };

@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@lumen/uikit/components';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useVocabularyWordDetail, useCreateVocabularyWord, useUpdateVocabularyWord } from '../hooks';
+import {
+  useVocabularyWordDetail,
+  useCreateVocabularyWord,
+  useUpdateVocabularyWord,
+} from '../hooks';
 import { RouteEnum } from '@/shared/constants';
 import { VocabBasicInfo } from '../components/vocab-basic-info';
-import { VocabDefinitionItem, type VocabDefinitionData } from '../components/vocab-definition-item';
+import {
+  VocabDefinitionItem,
+  type VocabDefinitionData,
+} from '../components/vocab-definition-item';
 
 export default function VocabForm() {
   const { id } = useParams();
@@ -31,7 +44,15 @@ export default function VocabForm() {
       partOfSpeech: 'noun',
       definitionEn: '',
       translationVi: '',
-      examples: [{ id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + '-ex', sentenceEn: '', translationVi: '' }],
+      examples: [
+        {
+          id: crypto.randomUUID
+            ? crypto.randomUUID()
+            : Date.now().toString() + '-ex',
+          sentenceEn: '',
+          translationVi: '',
+        },
+      ],
     },
   ]);
 
@@ -66,7 +87,15 @@ export default function VocabForm() {
         partOfSpeech: 'noun',
         definitionEn: '',
         translationVi: '',
-        examples: [{ id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + '-ex', sentenceEn: '', translationVi: '' }],
+        examples: [
+          {
+            id: crypto.randomUUID
+              ? crypto.randomUUID()
+              : Date.now().toString() + '-ex',
+            sentenceEn: '',
+            translationVi: '',
+          },
+        ],
       },
     ]);
   };
@@ -75,7 +104,11 @@ export default function VocabForm() {
     setDefinitions(definitions.filter((_, i) => i !== defIndex));
   };
 
-  const updateDefinition = (defIndex: number, field: keyof VocabDefinitionData, value: string) => {
+  const updateDefinition = (
+    defIndex: number,
+    field: keyof VocabDefinitionData,
+    value: string,
+  ) => {
     const newDefs = [...definitions];
     (newDefs[defIndex][field] as string) = value;
     setDefinitions(newDefs);
@@ -93,11 +126,18 @@ export default function VocabForm() {
 
   const removeExample = (defIndex: number, exIndex: number) => {
     const newDefs = [...definitions];
-    newDefs[defIndex].examples = newDefs[defIndex].examples.filter((_, i) => i !== exIndex);
+    newDefs[defIndex].examples = newDefs[defIndex].examples.filter(
+      (_, i) => i !== exIndex,
+    );
     setDefinitions(newDefs);
   };
 
-  const updateExample = (defIndex: number, exIndex: number, field: 'sentenceEn' | 'translationVi', value: string) => {
+  const updateExample = (
+    defIndex: number,
+    exIndex: number,
+    field: 'sentenceEn' | 'translationVi',
+    value: string,
+  ) => {
     const newDefs = [...definitions];
     newDefs[defIndex].examples[exIndex][field] = value;
     setDefinitions(newDefs);
@@ -136,7 +176,10 @@ export default function VocabForm() {
   if (isEditing && isLoading) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-        <Icons name="loader-2" className="h-10 w-10 animate-spin text-blue-500" />
+        <Icons
+          name="loader-2"
+          className="h-10 w-10 animate-spin text-blue-500"
+        />
       </div>
     );
   }
@@ -156,8 +199,8 @@ export default function VocabForm() {
             {isEditing ? 'Edit Vocabulary Word' : 'Create New Word'}
           </h2>
         </div>
-        <Button 
-          onClick={handleSave} 
+        <Button
+          onClick={handleSave}
           disabled={isPending}
           className="rounded-full px-6 shadow-md hover:shadow-lg transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white"
         >
@@ -188,9 +231,9 @@ export default function VocabForm() {
               <CardTitle className="text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">
                 Definitions & Examples
               </CardTitle>
-              <Button 
-                size="sm" 
-                variant="outline" 
+              <Button
+                size="sm"
+                variant="outline"
                 onClick={addDefinition}
                 className="rounded-full shadow-sm hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all dark:hover:bg-blue-900/30 dark:hover:border-blue-800 dark:hover:text-blue-400"
               >
@@ -204,11 +247,17 @@ export default function VocabForm() {
                   definition={def}
                   index={defIndex}
                   showRemove={definitions.length > 1}
-                  onChange={(field, value) => updateDefinition(defIndex, field, value)}
+                  onChange={(field, value) =>
+                    updateDefinition(defIndex, field, value)
+                  }
                   onRemove={() => removeDefinition(defIndex)}
                   onAddExample={() => addExample(defIndex)}
-                  onRemoveExample={(exIndex) => removeExample(defIndex, exIndex)}
-                  onChangeExample={(exIndex, field, value) => updateExample(defIndex, exIndex, field, value)}
+                  onRemoveExample={(exIndex) =>
+                    removeExample(defIndex, exIndex)
+                  }
+                  onChangeExample={(exIndex, field, value) =>
+                    updateExample(defIndex, exIndex, field, value)
+                  }
                 />
               ))}
             </CardContent>

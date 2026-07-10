@@ -20,7 +20,10 @@ export default function QuizzesList() {
       accessorKey: 'description',
       header: 'Description',
       cell: ({ row }) => (
-        <span className="truncate max-w-[200px] block" title={row.getValue('description')}>
+        <span
+          className="truncate max-w-[200px] block"
+          title={row.getValue('description')}
+        >
           {row.getValue('description')}
         </span>
       ),
@@ -69,7 +72,9 @@ export default function QuizzesList() {
               size="icon"
               className="text-destructive hover:text-destructive/90"
               onClick={() => {
-                if (window.confirm('Are you sure you want to delete this quiz?')) {
+                if (
+                  window.confirm('Are you sure you want to delete this quiz?')
+                ) {
                   deleteQuiz.mutate(quiz.id);
                 }
               }}
@@ -86,29 +91,39 @@ export default function QuizzesList() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Quizzes Management</h2>
-          <p className="text-muted-foreground text-sm mt-1">Manage static preset quizzes</p>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Quizzes Management
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1">
+            Manage static preset quizzes
+          </p>
         </div>
         <Button onClick={() => navigate('/quizzes/new')}>
           <Icons name="plus" className="mr-2 h-4 w-4" /> Add Quiz
         </Button>
       </div>
-      
+
       {isLoading ? (
         <div className="flex justify-center p-8">
-          <Icons name="loader-2" className="h-8 w-8 animate-spin text-primary" />
+          <Icons
+            name="loader-2"
+            className="h-8 w-8 animate-spin text-primary"
+          />
         </div>
-      ) : (data?.items && data.items.length > 0) ? (
-        <DataTable
-          columns={columns}
-          data={data.items}
-          searchKey="title"
-        />
+      ) : data?.items && data.items.length > 0 ? (
+        <DataTable columns={columns} data={data.items} searchKey="title" />
       ) : (
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-16 text-center text-muted-foreground flex flex-col items-center justify-center">
-          <Icons name="layers" className="h-12 w-12 mb-4 opacity-30 text-teal-500" />
-          <p className="text-lg font-medium text-slate-700 dark:text-slate-300">No quizzes found</p>
-          <p className="text-sm mt-1 mb-6">Click "Add" to create the first entry.</p>
+          <Icons
+            name="layers"
+            className="h-12 w-12 mb-4 opacity-30 text-teal-500"
+          />
+          <p className="text-lg font-medium text-slate-700 dark:text-slate-300">
+            No quizzes found
+          </p>
+          <p className="text-sm mt-1 mb-6">
+            Click "Add" to create the first entry.
+          </p>
         </div>
       )}
     </div>

@@ -10,4 +10,5 @@ export interface PortalProps<T = any> {
 export interface PortalInstance<T = any> extends PortalProps<T> {
   component: React.ComponentType<PortalProps<T>>;
   disableCloseByBackdrop?: boolean;
+  disableBackdrop?: boolean;
 }

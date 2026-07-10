@@ -8,8 +8,20 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import { Icons } from '@lumen/uikit/icons';
 
-import { Button, Input, Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@lumen/uikit/components';
-import { RegisterFormData, getRegisterSchema } from '@/features/auth/validations/auth';
+import {
+  Button,
+  Input,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@lumen/uikit/components';
+import {
+  RegisterFormData,
+  getRegisterSchema,
+} from '@/features/auth/validations/auth';
 import { authService } from '@/services/auth';
 import { RouteEnum } from '@/shared/constants';
 import { useTranslations } from 'next-intl';
@@ -34,9 +46,9 @@ export default function RegisterPage() {
       setIsLoading(true);
       await Promise.all([
         authService.register({ email: data.email, password: data.password }),
-        new Promise(resolve => setTimeout(resolve, 500))
+        new Promise((resolve) => setTimeout(resolve, 500)),
       ]);
-      
+
       toast.success(t('success'), {
         description: t('successDesc'),
       });
@@ -58,9 +70,7 @@ export default function RegisterPage() {
           </div>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-        <p className="text-sm text-muted-foreground">
-          {t('subtitle')}
-        </p>
+        <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       <Form {...form}>
@@ -72,12 +82,12 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>{t('email')}</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="name@example.com" 
-                    type="email" 
+                  <Input
+                    placeholder="name@example.com"
+                    type="email"
                     autoComplete="email"
-                    disabled={isLoading} 
-                    {...field} 
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -91,12 +101,12 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>{t('password')}</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="••••••••" 
-                    type="password" 
+                  <Input
+                    placeholder="••••••••"
+                    type="password"
                     autoComplete="new-password"
-                    disabled={isLoading} 
-                    {...field} 
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -110,12 +120,12 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>{t('confirmPassword')}</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="••••••••" 
-                    type="password" 
+                  <Input
+                    placeholder="••••••••"
+                    type="password"
                     autoComplete="new-password"
-                    disabled={isLoading} 
-                    {...field} 
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -137,7 +147,7 @@ export default function RegisterPage() {
 
       <div className="text-center text-sm text-muted-foreground mt-6">
         {t('hasAccount')}{' '}
-        <Link 
+        <Link
           href={RouteEnum.LOGIN}
           className="font-medium text-primary hover:underline hover:text-primary/90 transition-colors"
         >

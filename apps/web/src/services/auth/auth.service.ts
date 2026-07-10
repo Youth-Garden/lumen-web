@@ -24,7 +24,9 @@ export class AuthService extends CoreService {
     return this._get<UserInfo>(ApiEndpointEnum.GET_ME);
   }
 
-  updateProfile(payload: UpdateProfilePayload): Promise<BaseResponse<UserInfo>> {
+  updateProfile(
+    payload: UpdateProfilePayload,
+  ): Promise<BaseResponse<UserInfo>> {
     return this._post<UserInfo>(ApiEndpointEnum.UPDATE_PROFILE, payload);
   }
 

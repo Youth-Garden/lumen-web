@@ -22,7 +22,11 @@ interface VocabDefinitionItemProps {
   onRemove: () => void;
   onAddExample: () => void;
   onRemoveExample: (exIndex: number) => void;
-  onChangeExample: (exIndex: number, field: 'sentenceEn' | 'translationVi', value: string) => void;
+  onChangeExample: (
+    exIndex: number,
+    field: 'sentenceEn' | 'translationVi',
+    value: string,
+  ) => void;
 }
 
 export function VocabDefinitionItem({
@@ -58,7 +62,9 @@ export function VocabDefinitionItem({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
         <div className="space-y-2">
-          <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Part of Speech</Label>
+          <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            Part of Speech
+          </Label>
           <Input
             value={definition.partOfSpeech}
             onChange={(e) => onChange('partOfSpeech', e.target.value)}
@@ -67,7 +73,9 @@ export function VocabDefinitionItem({
           />
         </div>
         <div className="space-y-2">
-          <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">English Definition</Label>
+          <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            English Definition
+          </Label>
           <Input
             value={definition.definitionEn}
             onChange={(e) => onChange('definitionEn', e.target.value)}
@@ -76,7 +84,9 @@ export function VocabDefinitionItem({
           />
         </div>
         <div className="space-y-2">
-          <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Vietnamese Translation</Label>
+          <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            Vietnamese Translation
+          </Label>
           <Input
             value={definition.translationVi}
             onChange={(e) => onChange('translationVi', e.target.value)}
@@ -101,15 +111,19 @@ export function VocabDefinitionItem({
             <Icons name="plus" className="h-4 w-4 mr-1" /> Add Example
           </Button>
         </div>
-        
+
         <div className="space-y-1">
           {definition.examples.map((ex, exIndex) => (
             <VocabExampleItem
               key={ex.id}
               sentenceEn={ex.sentenceEn}
               translationVi={ex.translationVi}
-              onChangeEn={(value) => onChangeExample(exIndex, 'sentenceEn', value)}
-              onChangeVi={(value) => onChangeExample(exIndex, 'translationVi', value)}
+              onChangeEn={(value) =>
+                onChangeExample(exIndex, 'sentenceEn', value)
+              }
+              onChangeVi={(value) =>
+                onChangeExample(exIndex, 'translationVi', value)
+              }
               onRemove={() => onRemoveExample(exIndex)}
             />
           ))}

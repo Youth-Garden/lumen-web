@@ -18,7 +18,7 @@ function parseArgs() {
   const options = {
     config: null,
     output: null,
-    format: 'css' // css | tailwind
+    format: 'css', // css | tailwind
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -101,7 +101,9 @@ function flattenTokens(obj, tokens, prefix = [], result = {}) {
  * Generate CSS output
  */
 function generateCSS(tokens) {
-  const primitive = flattenTokens(tokens.primitive || {}, tokens, ['primitive']);
+  const primitive = flattenTokens(tokens.primitive || {}, tokens, [
+    'primitive',
+  ]);
   const semantic = flattenTokens(tokens.semantic || {}, tokens, []);
   const component = flattenTokens(tokens.component || {}, tokens, []);
   const darkSemantic = flattenTokens(tokens.dark?.semantic || {}, tokens, []);
@@ -111,17 +113,23 @@ function generateCSS(tokens) {
 
 /* === PRIMITIVES === */
 :root {
-${Object.entries(primitive).map(([k, v]) => `  ${k}: ${v};`).join('\n')}
+${Object.entries(primitive)
+  .map(([k, v]) => `  ${k}: ${v};`)
+  .join('\n')}
 }
 
 /* === SEMANTIC === */
 :root {
-${Object.entries(semantic).map(([k, v]) => `  ${k}: ${v};`).join('\n')}
+${Object.entries(semantic)
+  .map(([k, v]) => `  ${k}: ${v};`)
+  .join('\n')}
 }
 
 /* === COMPONENTS === */
 :root {
-${Object.entries(component).map(([k, v]) => `  ${k}: ${v};`).join('\n')}
+${Object.entries(component)
+  .map(([k, v]) => `  ${k}: ${v};`)
+  .join('\n')}
 }
 `;
 
@@ -129,7 +137,9 @@ ${Object.entries(component).map(([k, v]) => `  ${k}: ${v};`).join('\n')}
     css += `
 /* === DARK MODE === */
 .dark {
-${Object.entries(darkSemantic).map(([k, v]) => `  ${k}: ${v};`).join('\n')}
+${Object.entries(darkSemantic)
+  .map(([k, v]) => `  ${k}: ${v};`)
+  .join('\n')}
 }
 `;
   }

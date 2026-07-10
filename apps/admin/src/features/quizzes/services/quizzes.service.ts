@@ -1,5 +1,10 @@
 import { api } from '@/shared/services/api';
-import { PresetQuiz, PresetQuizListResponse, CreatePresetQuizDto, UpdatePresetQuizDto } from '../types';
+import {
+  PresetQuiz,
+  PresetQuizListResponse,
+  CreatePresetQuizDto,
+  UpdatePresetQuizDto,
+} from '../types';
 
 export const quizzesService = {
   getQuizzes: async (page = 1, limit = 20) => {

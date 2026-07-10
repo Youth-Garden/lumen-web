@@ -4,7 +4,8 @@ import { readingKeys, readingService } from '@/services/reading';
 export const useGetArticles = (page = 1, limit = 20) => {
   return useQuery({
     queryKey: readingKeys.lists(),
-    queryFn: () => readingService.getArticles(page, limit).then((res) => res.data),
+    queryFn: () =>
+      readingService.getArticles(page, limit).then((res) => res.data),
   });
 };
 

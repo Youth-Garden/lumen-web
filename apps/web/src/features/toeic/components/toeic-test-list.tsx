@@ -1,8 +1,15 @@
-"use client";
+'use client';
 
 import { useGetToeicTests } from '../hooks';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@lumen/uikit/components';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@lumen/uikit/components';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
@@ -22,7 +29,10 @@ export const ToeicTestList = () => {
   if (isError || !data) {
     return (
       <div className="flex h-[50vh] items-center justify-center text-destructive">
-        <p>Failed to load TOEIC tests. Please make sure the backend and database are running.</p>
+        <p>
+          Failed to load TOEIC tests. Please make sure the backend and database
+          are running.
+        </p>
       </div>
     );
   }
@@ -38,15 +48,20 @@ export const ToeicTestList = () => {
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
         <div className="relative z-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight md:text-5xl">TOEIC Simulation</h1>
+            <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
+              TOEIC Simulation
+            </h1>
             <p className="max-w-xl text-indigo-100 md:text-lg">
-              Practice with real TOEIC tests. Improve your listening and reading skills with our advanced AI-powered platform.
+              Practice with real TOEIC tests. Improve your listening and reading
+              skills with our advanced AI-powered platform.
             </p>
           </div>
           <div className="flex gap-4">
             <div className="flex flex-col items-center justify-center rounded-2xl bg-white/20 p-4 backdrop-blur-md">
               <span className="text-2xl font-bold">{data.total || 0}</span>
-              <span className="text-xs font-medium uppercase tracking-wider text-indigo-100">Available Tests</span>
+              <span className="text-xs font-medium uppercase tracking-wider text-indigo-100">
+                Available Tests
+              </span>
             </div>
           </div>
         </div>
@@ -70,12 +85,22 @@ export const ToeicTestList = () => {
                     Full Test
                   </span>
                   <div className="flex space-x-1">
-                    <Icons name="headphones" className="h-4 w-4 text-slate-400" />
-                    <Icons name="book-open" className="h-4 w-4 text-slate-400" />
+                    <Icons
+                      name="headphones"
+                      className="h-4 w-4 text-slate-400"
+                    />
+                    <Icons
+                      name="book-open"
+                      className="h-4 w-4 text-slate-400"
+                    />
                   </div>
                 </div>
-                <CardTitle className="line-clamp-1 text-xl">{test.title}</CardTitle>
-                <CardDescription className="line-clamp-2">{test.description}</CardDescription>
+                <CardTitle className="line-clamp-1 text-xl">
+                  {test.title}
+                </CardTitle>
+                <CardDescription className="line-clamp-2">
+                  {test.description}
+                </CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-2 gap-4 pb-4 pt-4 text-sm text-slate-500 dark:text-slate-400">
                 <div className="flex items-center gap-2">
@@ -93,7 +118,10 @@ export const ToeicTestList = () => {
                   onClick={() => router.push(`/dashboard/toeic/${test.id}`)}
                 >
                   Start Test
-                  <Icons name="arrow-right" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <Icons
+                    name="arrow-right"
+                    className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                  />
                 </Button>
               </CardFooter>
             </Card>

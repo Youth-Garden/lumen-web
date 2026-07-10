@@ -14,7 +14,12 @@ export interface MaterialDto {
 
 export interface MaterialListResponse {
   items: Omit<MaterialDto, 'content'>[];
-  meta: { currentPage: number; perPage: number; totalItems: number; totalPages: number };
+  meta: {
+    currentPage: number;
+    perPage: number;
+    totalItems: number;
+    totalPages: number;
+  };
 }
 
 export interface CreateMaterialPayload {

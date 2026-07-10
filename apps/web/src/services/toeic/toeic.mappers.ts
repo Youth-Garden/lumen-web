@@ -18,16 +18,22 @@ export const toeicTestMapper = (raw: any): ToeicTestDto => ({
   id: raw?.id || '',
   title: raw?.title || '',
   description: raw?.description || undefined,
-  questions: Array.isArray(raw?.questions) ? raw.questions.map(toeicQuestionMapper) : [],
+  questions: Array.isArray(raw?.questions)
+    ? raw.questions.map(toeicQuestionMapper)
+    : [],
 });
 
-export const toeicTestListItemMapper = (raw: any): Omit<ToeicTestDto, 'questions'> => ({
+export const toeicTestListItemMapper = (
+  raw: any,
+): Omit<ToeicTestDto, 'questions'> => ({
   id: raw?.id || '',
   title: raw?.title || '',
   description: raw?.description || undefined,
 });
 
 export const toeicTestListMapper = (raw: any): ToeicTestListResponse => ({
-  items: Array.isArray(raw?.items) ? raw.items.map(toeicTestListItemMapper) : [],
+  items: Array.isArray(raw?.items)
+    ? raw.items.map(toeicTestListItemMapper)
+    : [],
   total: raw?.total || 0,
 });

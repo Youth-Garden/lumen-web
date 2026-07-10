@@ -101,5 +101,95 @@
       "dueToday": "Due today",
       "studyNow": "Study Now"
     }
+  },
+  "ToeicTestPlayer": {
+    "startTest": "Start Test",
+    "submitTest": "Submit Test",
+    "question": "Question",
+    "of": "of",
+    "part": "Part",
+    "flagForReview": "Flag for review",
+    "previous": "Previous",
+    "next": "Next",
+    "audioTrack": "Audio Track",
+    "listenInstruction": "Listen to the audio and select the best response.",
+    "questionsCount": "{count} questions",
+    "questionNavigation": "Question Navigation",
+    "failedToLoadTest": "Failed to load test data."
+  },
+  "ExamPractice": {
+    "startFailed": "Failed to start the test. Please try again.",
+    "saveAnswerFailed": "Failed to save answer.",
+    "finishSuccess": "Test submitted successfully!",
+    "finishFailed": "Failed to submit the test. Please try again."
+  },
+  "Reading": {
+    "translation": "Translation",
+    "translating": "Translating...",
+    "failedTranslation": "Failed to load translation.",
+    "noTranslation": "No translation available.",
+    "addedToDecks": "Added to Decks",
+    "addToFlashcards": "Add to Flashcards",
+    "backToArticles": "Back to Articles",
+    "vocabBuilding": "Vocabulary Building",
+    "instruction": "Read carefully. Select any word or phrase you don't know to translate it instantly.",
+    "failedLoadArticle": "Failed to load article.",
+    "goBack": "Go Back"
+  },
+  "Dictation": {
+    "failedSubmit": "Failed to submit dictation. Please try again.",
+    "scoreResult": "You scored {score}%!",
+    "loadingAudio": "Loading audio...",
+    "materialNotFound": "Material not found.",
+    "emptySubmission": "Please type at least one answer before submitting.",
+    "checking": "Checking...",
+    "score": "Score: {score}%",
+    "checkAnswers": "Check Answers",
+    "sentence": "Sentence {index}",
+    "typeWhatYouHear": "Type what you hear...",
+    "correctAnswer": "Correct Answer:",
+    "translation": "Translation:",
+    "backToList": "Back to List",
+    "dailyDictation": {
+      "title": "Daily Dictation",
+      "description": "Sharpen your listening skills by typing exactly what you hear."
+    }
+  },
+  "Settings": {
+    "title": "Settings",
+    "profileUpdateSuccess": "Profile updated successfully",
+    "profileUpdateFailed": "Failed to update profile",
+    "goalsUpdateSuccess": "Study goals updated successfully",
+    "goalsUpdateFailed": "Failed to update study goals",
+    "tabs": {
+      "profile": "Profile",
+      "studyGoals": "Study Goals",
+      "account": "Account"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "description": "Update your personal information and public profile.",
+      "fullName": "Full Name",
+      "phone": "Phone Number",
+      "avatarUrl": "Avatar URL"
+    },
+    "goals": {
+      "title": "Study Goals",
+      "description": "Set your daily learning target to maintain your streak.",
+      "dailyGoalMinutes": "Daily Goal (Minutes)"
+    },
+    "account": {
+      "title": "Account Settings",
+      "description": "Manage your email, password, and security preferences.",
+      "email": "Email Address",
+      "currentPassword": "Current Password",
+      "comingSoon": "Coming soon...",
+      "changePassword": "Change Password (Coming soon)"
+    },
+    "buttons": {
+      "saving": "Saving...",
+      "saveChanges": "Save changes",
+      "saveGoals": "Save goals"
+    }
   }
 }

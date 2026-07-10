@@ -2,7 +2,7 @@ import { ActivityItem, ActivityType } from './progress.types';
 
 export const recentActivitiesMapper = (raw: any): ActivityItem[] => {
   if (!Array.isArray(raw)) return [];
-  
+
   return raw.map((item: any) => ({
     id: item.id || '',
     type: (Object.values(ActivityType).includes(item.type as ActivityType)

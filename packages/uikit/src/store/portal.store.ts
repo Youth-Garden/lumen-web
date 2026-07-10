@@ -22,13 +22,17 @@ export const usePortalStore = create<LayoutState>((set, get) => ({
 
   onPresent: (instance) => {
     const { portals } = get();
-    const existingIndex = portals.findIndex((portal) => portal.id === instance.id);
+    const existingIndex = portals.findIndex(
+      (portal) => portal.id === instance.id,
+    );
 
     if (existingIndex > -1) {
       // If it exists (maybe closing), reopen it and update data
       set({
         portals: portals.map((portal, i) =>
-          i === existingIndex ? { ...portal, ...instance, isOpen: true } : portal
+          i === existingIndex
+            ? { ...portal, ...instance, isOpen: true }
+            : portal,
         ),
       });
       return;
@@ -47,7 +51,7 @@ export const usePortalStore = create<LayoutState>((set, get) => ({
 
     set({
       portals: portals.map((portal) =>
-        portal.id === targetId ? { ...portal, isOpen: false } : portal
+        portal.id === targetId ? { ...portal, isOpen: false } : portal,
       ),
     });
 

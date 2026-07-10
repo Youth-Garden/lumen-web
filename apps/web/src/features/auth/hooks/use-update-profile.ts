@@ -8,7 +8,8 @@ export const useUpdateProfile = () => {
   const updateUserInStore = useAuthStore((state) => state.updateUser);
 
   return useMutation({
-    mutationFn: (payload: UpdateProfilePayload) => authService.updateProfile(payload),
+    mutationFn: (payload: UpdateProfilePayload) =>
+      authService.updateProfile(payload),
     onSuccess: (res) => {
       // Update auth store with new user info
       if (res.data) {

@@ -18,11 +18,11 @@ export function useWindowSize(): WindowSize {
         height: window.innerHeight,
       });
     }
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     handleResize();
-    
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 

@@ -21,7 +21,9 @@ export const quizDetailMapper = (raw: any): QuizDetailResponseDto => ({
   id: raw?.id || '',
   status: raw?.status || '',
   score: raw?.score ?? 0,
-  questions: Array.isArray(raw?.questions) ? raw.questions.map(questionDetailMapper) : [],
+  questions: Array.isArray(raw?.questions)
+    ? raw.questions.map(questionDetailMapper)
+    : [],
   createdAt: raw?.createdAt || '',
   completedAt: raw?.completedAt ?? undefined,
 });
@@ -40,8 +42,6 @@ export const quizListMapper = (raw: any): QuizListResponseDto => ({
   page: raw?.page || 1,
   limit: raw?.limit || 10,
 });
-
-
 
 export const finishQuizResponseMapper = (raw: any): FinishQuizResponseDto => ({
   score: raw?.score || 0,

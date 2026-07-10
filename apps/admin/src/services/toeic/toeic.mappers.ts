@@ -1,5 +1,10 @@
 import { passThroughMapper } from '../core';
-import type { ToeicTestDto, ToeicTestListResponse, ToeicTestListItem, ToeicQuestionDto } from './toeic.types';
+import type {
+  ToeicTestDto,
+  ToeicTestListResponse,
+  ToeicTestListItem,
+  ToeicQuestionDto,
+} from './toeic.types';
 
 export const toeicQuestionMapper = (raw: any): ToeicQuestionDto => ({
   ...raw,
@@ -14,7 +19,9 @@ export const toeicTestMapper = (raw: any): ToeicTestDto => ({
   ...raw,
   id: raw?.id ? String(raw.id) : '',
   description: raw?.description ?? null,
-  questions: Array.isArray(raw?.questions) ? raw.questions.map(toeicQuestionMapper) : [],
+  questions: Array.isArray(raw?.questions)
+    ? raw.questions.map(toeicQuestionMapper)
+    : [],
 });
 
 export const toeicTestListItemMapper = (raw: any): ToeicTestListItem => ({
@@ -24,7 +31,9 @@ export const toeicTestListItemMapper = (raw: any): ToeicTestListItem => ({
 });
 
 export const toeicTestListMapper = (raw: any): ToeicTestListResponse => ({
-  items: Array.isArray(raw?.items) ? raw.items.map(toeicTestListItemMapper) : [],
+  items: Array.isArray(raw?.items)
+    ? raw.items.map(toeicTestListItemMapper)
+    : [],
   meta: raw?.meta ?? {
     currentPage: 1,
     perPage: 10,

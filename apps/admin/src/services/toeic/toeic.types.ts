@@ -26,7 +26,12 @@ export interface ToeicTestListItem extends Omit<ToeicTestDto, 'questions'> {
 
 export interface ToeicTestListResponse {
   items: ToeicTestListItem[];
-  meta: { currentPage: number; perPage: number; totalItems: number; totalPages: number };
+  meta: {
+    currentPage: number;
+    perPage: number;
+    totalItems: number;
+    totalPages: number;
+  };
 }
 
 export interface CreateToeicTestPayload {

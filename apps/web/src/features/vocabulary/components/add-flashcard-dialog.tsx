@@ -42,10 +42,14 @@ export interface AddFlashcardDialogProps extends PortalProps {
   term: string;
 }
 
-export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddFlashcardDialogProps>) {
+export function AddFlashcardDialog({
+  isOpen,
+  onDismiss,
+  data,
+}: PortalProps<AddFlashcardDialogProps>) {
   const { wordId, term } = data || { wordId: '', term: '' };
   const t = useTranslations('Vocabulary.List');
-  
+
   const { data: decksData, isLoading: isLoadingDecks } = useVocabularyDecks();
   const { mutateAsync: createFlashcard, isPending } = useCreateFlashcard();
 
@@ -62,11 +66,13 @@ export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddF
         deckId: data.deckId,
         wordId,
       });
-      toast.success(t('addDeckSuccess', { term, fallback: 'Added to deck successfully!' }));
+      toast.success(
+        t('addDeckSuccess', { term }),
+      );
       onDismiss?.();
       form.reset();
     } catch (error) {
-      toast.error(t('addError', { fallback: 'Failed to add to deck.' }));
+      toast.error(t('addError'));
     }
   };
 
@@ -78,12 +84,14 @@ export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddF
         <DialogHeader>
           <DialogTitle>{t('addToDeck')}</DialogTitle>
           <DialogDescription>
-            {t('addToDeckDescription', { fallback: 'Select a deck to add the word to.' })}
+            {t('addToDeckDescription')}
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="py-4">
-          <p className="text-lg font-medium text-center mb-6">&quot;{term}&quot;</p>
+          <p className="text-lg font-medium text-center mb-6">
+            &quot;{term}&quot;
+          </p>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -91,18 +99,29 @@ export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddF
                 name="deckId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('selectDeck', { fallback: 'Select Deck' })}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
+                    <FormLabel>
+                      {t('selectDeck')}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || ''}
+                    >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder={t('selectDeckPlaceholder', { fallback: 'Select a deck...' })} />
+                          <SelectValue
+                            placeholder={t('selectDeckPlaceholder')}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {isLoadingDecks ? (
-                          <div className="p-2 text-sm text-muted-foreground">{t('loadingDecks', { fallback: 'Loading decks...' })}</div>
+                          <div className="p-2 text-sm text-muted-foreground">
+                            {t('loadingDecks')}
+                          </div>
                         ) : decks.length === 0 ? (
-                          <div className="p-2 text-sm text-muted-foreground">{t('noDecksAvailable', { fallback: 'No decks available.' })}</div>
+                          <div className="p-2 text-sm text-muted-foreground">
+                            {t('noDecksAvailable')}
+                          </div>
                         ) : (
                           decks.map((deck) => (
                             <SelectItem key={deck.id} value={deck.id}>
@@ -116,19 +135,27 @@ export function AddFlashcardDialog({ isOpen, onDismiss, data }: PortalProps<AddF
                   </FormItem>
                 )}
               />
-              
+
               <div className="flex justify-end pt-4 space-x-2">
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => onDismiss?.()}
                   disabled={isPending}
                 >
-                  {t('cancel', { fallback: 'Cancel' })}
+                  {t('cancel')}
                 </Button>
-                <Button type="submit" disabled={isPending || decks.length === 0}>
-                  {isPending && <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />}
-                  {t('add', { fallback: 'Add' })}
+                <Button
+                  type="submit"
+                  disabled={isPending || decks.length === 0}
+                >
+                  {isPending && (
+                    <Icons
+                      name="loader-2"
+                      className="mr-2 h-4 w-4 animate-spin"
+                    />
+                  )}
+                  {t('add')}
                 </Button>
               </div>
             </form>

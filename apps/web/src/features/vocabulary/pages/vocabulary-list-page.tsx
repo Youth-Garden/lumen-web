@@ -2,14 +2,21 @@
 
 import { useState } from 'react';
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
-import { Input, Button, Card, CardContent, ScrollArea, Skeleton } from '@lumen/uikit/components';
+import {
+  Input,
+  Button,
+  Card,
+  CardContent,
+  ScrollArea,
+  Skeleton,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
 import { usePortal } from '@lumen/uikit/portal';
 import { useDebounce } from '@lumen/hooks';
 
-export function VocabularyList() {
+export function VocabularyListPage() {
   const t = useTranslations('Vocabulary.List');
   const [search, setSearch] = useState('');
   const [cefrLevel, setCefrLevel] = useState<string>('');
@@ -17,7 +24,10 @@ export function VocabularyList() {
 
   const [presentAddFlashcard] = usePortal(AddFlashcardDialog);
 
-  const { data, isLoading } = useVocabularyWords({ search: debouncedSearch, cefrLevel });
+  const { data, isLoading } = useVocabularyWords({
+    search: debouncedSearch,
+    cefrLevel,
+  });
 
   const playAudio = (url: string) => {
     const audio = new Audio(url);
@@ -41,7 +51,7 @@ export function VocabularyList() {
   };
 
   return (
-    <div className="flex flex-col h-full space-y-6">
+    <div className="flex h-[calc(100vh-4rem)] flex-col space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
@@ -51,9 +61,12 @@ export function VocabularyList() {
 
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Icons name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder={t('searchPlaceholder')} 
+          <Icons
+            name="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
+          <Input
+            placeholder={t('searchPlaceholder')}
             className="pl-9"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -77,20 +90,27 @@ export function VocabularyList() {
             </div>
           ) : (
             data?.data.items.map((word) => (
-              <Card key={word.id} className="group overflow-hidden transition-all hover:border-primary/50">
+              <Card
+                key={word.id}
+                className="group overflow-hidden transition-all hover:border-primary/50"
+              >
                 <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-gradient-to-r from-card to-card/50">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-foreground">{word.term}</h3>
+                      <h3 className="text-xl font-semibold text-foreground">
+                        {word.term}
+                      </h3>
                       {word.cefrLevel && (
-                        <div className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getCefrColor(word.cefrLevel)}`}>
+                        <div
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getCefrColor(word.cefrLevel)}`}
+                        >
                           {word.cefrLevel}
                         </div>
                       )}
                       {word.audioUrl && (
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full"
                           onClick={() => playAudio(word.audioUrl!)}
                         >
@@ -99,21 +119,39 @@ export function VocabularyList() {
                       )}
                     </div>
                     {word.phonetic && (
-                      <p className="text-sm text-muted-foreground font-mono mb-2">/{word.phonetic}/</p>
+                      <p className="text-sm text-muted-foreground font-mono mb-2">
+                        /{word.phonetic}/
+                      </p>
                     )}
                     <div className="space-y-1">
                       {word.definitions.slice(0, 2).map((def) => (
                         <div key={def.id} className="text-sm">
-                          <span className="italic text-muted-foreground mr-2">{def.partOfSpeech}.</span>
-                          <span className="text-foreground">{def.definitionEn}</span>
-                          <span className="text-muted-foreground ml-2">({def.translationVi})</span>
+                          <span className="italic text-muted-foreground mr-2">
+                            {def.partOfSpeech}.
+                          </span>
+                          <span className="text-foreground">
+                            {def.definitionEn}
+                          </span>
+                          <span className="text-muted-foreground ml-2">
+                            ({def.translationVi})
+                          </span>
                         </div>
                       ))}
                     </div>
                     <div className="flex items-center gap-2 mt-4">
-                      <Button variant="outline" size="sm" className="gap-2" onClick={() => presentAddFlashcard({ wordId: word.id, term: word.term })}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        onClick={() =>
+                          presentAddFlashcard({
+                            wordId: word.id,
+                            term: word.term,
+                          })
+                        }
+                      >
                         <Icons name="plus" className="h-4 w-4" />
-                        {t('addToDeck', { fallback: 'Add to Deck' })}
+                        {t('addToDeck')}
                       </Button>
                     </div>
                   </div>

@@ -20,7 +20,7 @@ export function VocabExampleItem({
     <div className="group flex items-center gap-3 relative rounded-lg p-2 transition-all duration-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50">
       {/* Decorative vertical line */}
       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-full bg-slate-200 dark:bg-slate-700 group-hover:bg-blue-400 transition-colors duration-300" />
-      
+
       <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 pl-3">
         <Input
           placeholder="English sentence"
@@ -35,7 +35,7 @@ export function VocabExampleItem({
           className="bg-transparent border-slate-200 shadow-none transition-all duration-200 focus-visible:ring-1 focus-visible:ring-blue-500 hover:border-blue-300 dark:border-slate-800"
         />
       </div>
-      
+
       <Button
         size="icon"
         variant="ghost"

@@ -16,13 +16,15 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           className="object-cover opacity-60"
         />
         <div className="absolute bottom-16 left-16 z-20 text-white max-w-lg animate-in slide-in-from-bottom-8 duration-700">
-          <h1 className="text-5xl font-bold mb-4 tracking-tight">{t('title')}</h1>
+          <h1 className="text-5xl font-bold mb-4 tracking-tight">
+            {t('title')}
+          </h1>
           <p className="text-zinc-300 text-lg leading-relaxed">
             {t('subtitle')}
           </p>
         </div>
       </div>
-      
+
       {/* Right side - Auth Form */}
       <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-12 lg:px-24">
         <div className="w-full max-w-[420px] animate-in fade-in zoom-in-95 duration-500">

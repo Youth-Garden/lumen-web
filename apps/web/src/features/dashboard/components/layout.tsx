@@ -8,7 +8,7 @@ export function DashboardLayout({ children }: PropsWithChildren) {
       {/* Glassmorphism ambient glows */}
       <div className="absolute top-0 left-0 -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 -z-10 h-[600px] w-[600px] rounded-full bg-blue-500/10 opacity-30 blur-[100px] pointer-events-none" />
-      
+
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden z-10">
         <Header />

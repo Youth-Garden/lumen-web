@@ -20,33 +20,54 @@ export class VocabularyService extends CoreService {
     search?: string;
     cefrLevel?: string;
   }): Promise<BaseResponse<WordListResponse>> {
-    return this._get<WordListResponse>(ApiEndpointEnum.VOCABULARY_WORDS, { params });
+    return this._get<WordListResponse>(ApiEndpointEnum.VOCABULARY_WORDS, {
+      params,
+    });
   }
 
   getWord(id: string): Promise<BaseResponse<VocabularyWord>> {
-    return this._get<VocabularyWord>(ApiEndpointEnum.VOCABULARY_WORD_DETAIL, undefined, {
-      pathParams: { id },
-    });
+    return this._get<VocabularyWord>(
+      ApiEndpointEnum.VOCABULARY_WORD_DETAIL,
+      undefined,
+      {
+        pathParams: { id },
+      },
+    );
   }
 
   listDecks(): Promise<BaseResponse<Deck[]>> {
     return this._get<Deck[]>(ApiEndpointEnum.VOCABULARY_DECKS);
   }
 
-  createDeck(payload: CreateDeckPayload): Promise<BaseResponse<{ id: string }>> {
-    return this._post<{ id: string }>(ApiEndpointEnum.VOCABULARY_DECKS, payload);
+  createDeck(
+    payload: CreateDeckPayload,
+  ): Promise<BaseResponse<{ id: string }>> {
+    return this._post<{ id: string }>(
+      ApiEndpointEnum.VOCABULARY_DECKS,
+      payload,
+    );
   }
 
-  createFlashcard(payload: CreateFlashcardPayload): Promise<BaseResponse<{ id: string }>> {
-    return this._post<{ id: string }>(ApiEndpointEnum.VOCABULARY_FLASHCARDS, payload);
+  createFlashcard(
+    payload: CreateFlashcardPayload,
+  ): Promise<BaseResponse<{ id: string }>> {
+    return this._post<{ id: string }>(
+      ApiEndpointEnum.VOCABULARY_FLASHCARDS,
+      payload,
+    );
   }
 
   listDueFlashcards(): Promise<BaseResponse<DueFlashcard[]>> {
     return this._get<DueFlashcard[]>(ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE);
   }
 
-  reviewFlashcard(payload: ReviewFlashcardPayload): Promise<BaseResponse<void>> {
-    return this._post<void>(ApiEndpointEnum.VOCABULARY_FLASHCARDS_REVIEW, payload);
+  reviewFlashcard(
+    payload: ReviewFlashcardPayload,
+  ): Promise<BaseResponse<void>> {
+    return this._post<void>(
+      ApiEndpointEnum.VOCABULARY_FLASHCARDS_REVIEW,
+      payload,
+    );
   }
 }
 

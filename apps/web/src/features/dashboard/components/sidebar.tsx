@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from '@lumen/uikit/icons';
 
-import { 
-  Button, 
+import {
+  Button,
   ScrollArea,
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
   Avatar,
   AvatarFallback,
-  AvatarImage
+  AvatarImage,
 } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
 import { useAuthStore } from '@/store/auth.store';
@@ -50,14 +50,17 @@ export function Sidebar() {
   return (
     <div className="flex h-full w-64 flex-col border-r border-white/10 bg-background/60 backdrop-blur-xl text-card-foreground shadow-xl">
       <div className="p-6">
-        <Link href={RouteEnum.DASHBOARD} className="flex items-center gap-2 font-bold text-xl">
+        <Link
+          href={RouteEnum.DASHBOARD}
+          className="flex items-center gap-2 font-bold text-xl"
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Icons name="command" className="h-5 w-5" />
           </div>
           Lumen
         </Link>
       </div>
-      
+
       <ScrollArea className="flex-1 px-4">
         <nav className="flex flex-col gap-2">
           {navigationKeys.map((item) => {
@@ -66,12 +69,16 @@ export function Sidebar() {
               <Link key={item.key} href={item.href}>
                 <Button
                   variant={isActive ? 'secondary' : 'ghost'}
-                  className={cn("w-full justify-start gap-3 transition-all duration-300 hover:-translate-y-0.5", isActive ? "bg-primary/20 text-primary font-semibold shadow-sm" : "text-muted-foreground hover:bg-white/5")}
+                  className={cn(
+                    'w-full justify-start gap-3 transition-all duration-300 hover:-translate-y-0.5',
+                    isActive
+                      ? 'bg-primary/20 text-primary font-semibold shadow-sm'
+                      : 'text-muted-foreground hover:bg-white/5',
+                  )}
                 >
                   <Icons name={item.icon as any} className="h-5 w-5" />
                   {t(item.key)}
                 </Button>
-
               </Link>
             );
           })}
@@ -82,10 +89,18 @@ export function Sidebar() {
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Button variant="ghost" className="w-full justify-start gap-3 h-14 px-2">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 h-14 px-2"
+              >
                 <Avatar className="h-9 w-9 border border-border">
-                  <AvatarImage src="https://github.com/shadcn.png" alt="@lumen" />
-                  <AvatarFallback><Icons name="user" className="h-4 w-4" /></AvatarFallback>
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@lumen"
+                  />
+                  <AvatarFallback>
+                    <Icons name="user" className="h-4 w-4" />
+                  </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start text-left flex-1 overflow-hidden">
                   <span className="text-sm font-medium leading-none mb-1 truncate w-full">
@@ -95,7 +110,10 @@ export function Sidebar() {
                     {user?.email || 'admin@lumen.com'}
                   </span>
                 </div>
-                <Icons name="chevron-up" className="h-4 w-4 text-muted-foreground" />
+                <Icons
+                  name="chevron-up"
+                  className="h-4 w-4 text-muted-foreground"
+                />
               </Button>
             }
           />
@@ -105,7 +123,10 @@ export function Sidebar() {
             <DropdownMenuItem>{t('profile')}</DropdownMenuItem>
             <DropdownMenuItem>{t('settings')}</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-destructive"
+            >
               <Icons name="log-out" className="mr-2 h-4 w-4" />
               <span>{t('logout')}</span>
             </DropdownMenuItem>

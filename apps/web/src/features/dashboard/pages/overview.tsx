@@ -1,7 +1,18 @@
-"use client";
+'use client';
 
 import { Icons } from '@lumen/uikit/icons';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@lumen/uikit/components';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Button,
+} from '@lumen/uikit/components';
 import { MetricCard } from '../components/metric-card';
 import { RecentActivity } from '../components/recent-activity';
 import { XpProgressChart } from '../components/charts/xp-progress-chart';
@@ -18,19 +29,23 @@ export function OverviewPage() {
   const dueCount = dueFlashcards?.data?.length || 0;
 
   // Generate fake weekly data for the chart if backend doesn't provide it yet
-  const chartData = progressData?.weeklyData || Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
-    return {
-      date: d.toISOString(),
-      xp: Math.floor(Math.random() * 200) + 50,
-    };
-  });
+  const chartData =
+    progressData?.weeklyData ||
+    Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      return {
+        date: d.toISOString(),
+        xp: Math.floor(Math.random() * 200) + 50,
+      };
+    });
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6 animate-in fade-in duration-500">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Your Learning Dashboard</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Your Learning Dashboard
+        </h2>
         <div className="flex items-center space-x-2">
           <Button>Download Report</Button>
         </div>
@@ -71,18 +86,21 @@ export function OverviewPage() {
               icon="clock"
             />
           </div>
-          
+
           {dueCount > 0 && (
             <Card className="border-orange-500/20 bg-orange-500/10 shadow-lg backdrop-blur-md hover:-translate-y-1 hover:shadow-orange-500/10 transition-all duration-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Icons name="flame" className="h-5 w-5 text-orange-500" />
-                    <CardTitle className="text-orange-700 dark:text-orange-400">Review Due Today</CardTitle>
+                    <CardTitle className="text-orange-700 dark:text-orange-400">
+                      Review Due Today
+                    </CardTitle>
                   </div>
                 </div>
                 <CardDescription className="text-orange-600/80 dark:text-orange-400/80">
-                  You have {dueCount} flashcard{dueCount !== 1 && 's'} pending for review based on spaced repetition.
+                  You have {dueCount} flashcard{dueCount !== 1 && 's'} pending
+                  for review based on spaced repetition.
                 </CardDescription>
               </CardHeader>
               <CardContent>

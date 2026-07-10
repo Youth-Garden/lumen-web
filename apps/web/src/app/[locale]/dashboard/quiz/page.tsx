@@ -1,6 +1,4 @@
 import React from 'react';
-import { QuizList } from '@/features/quiz/pages/quiz-list';
+import { QuizListPage } from '@/features/quiz/pages/quiz-list-page';
 
-export default function QuizListPage() {
-  return <QuizList />;
-}
+export default QuizListPage;

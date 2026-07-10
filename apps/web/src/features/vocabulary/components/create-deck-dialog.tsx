@@ -51,11 +51,13 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
         name: data.name,
         description: data.description,
       });
-      toast.success(t('createSuccess', { fallback: 'Deck created successfully!' }));
+      toast.success(
+        t('createSuccess'),
+      );
       onDismiss?.();
       form.reset();
     } catch (error) {
-      toast.error(t('createError', { fallback: 'Failed to create deck.' }));
+      toast.error(t('createError'));
     }
   };
 
@@ -65,10 +67,10 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
         <DialogHeader>
           <DialogTitle>{t('createDeck')}</DialogTitle>
           <DialogDescription>
-            {t('createDeckDescription', { fallback: 'Create a new deck to organize your flashcards.' })}
+            {t('createDeckDescription')}
           </DialogDescription>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -76,9 +78,14 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('deckName', { fallback: 'Deck Name' })}</FormLabel>
+                  <FormLabel>
+                    {t('deckName')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('deckNamePlaceholder', { fallback: 'e.g. IELTS Vocabulary' })} {...field} />
+                    <Input
+                      placeholder={t('deckNamePlaceholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -89,27 +96,37 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('deckDescription', { fallback: 'Description (Optional)' })}</FormLabel>
+                  <FormLabel>
+                    {t('deckDescription')}
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder={t('deckDescriptionPlaceholder', { fallback: 'What is this deck about?' })} {...field} />
+                    <Input
+                      placeholder={t('deckDescriptionPlaceholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end pt-4 space-x-2">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => onDismiss?.()}
                 disabled={isPending}
               >
-                {t('cancel', { fallback: 'Cancel' })}
+                {t('cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending && <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />}
-                {t('save', { fallback: 'Save' })}
+                {isPending && (
+                  <Icons
+                    name="loader-2"
+                    className="mr-2 h-4 w-4 animate-spin"
+                  />
+                )}
+                {t('save')}
               </Button>
             </div>
           </form>

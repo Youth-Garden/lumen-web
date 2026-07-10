@@ -26,7 +26,10 @@ export class MaterialService extends CoreService {
   async submitDictation(
     data: DictationSubmissionDto,
   ): Promise<BaseResponse<DictationResultDto>> {
-    return this._post<DictationResultDto>(ApiEndpointEnum.MATERIAL_DICTATION, data);
+    return this._post<DictationResultDto>(
+      ApiEndpointEnum.MATERIAL_DICTATION,
+      data,
+    );
   }
 }
 

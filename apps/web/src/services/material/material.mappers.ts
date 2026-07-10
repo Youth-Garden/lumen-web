@@ -1,4 +1,8 @@
-import { MaterialDto, DictationResultDto, TranscriptDto } from './material.types';
+import {
+  MaterialDto,
+  DictationResultDto,
+  TranscriptDto,
+} from './material.types';
 
 export const transcriptMapper = (raw: any): TranscriptDto => ({
   id: raw?.id || '',
@@ -19,7 +23,9 @@ export const materialMapper = (raw: any): MaterialDto => ({
   difficultyLevel: raw?.difficultyLevel || '',
   category: raw?.category || '',
   tags: Array.isArray(raw?.tags) ? raw.tags : [],
-  transcripts: Array.isArray(raw?.transcripts) ? raw.transcripts.map(transcriptMapper) : [],
+  transcripts: Array.isArray(raw?.transcripts)
+    ? raw.transcripts.map(transcriptMapper)
+    : [],
 });
 
 export const materialListMapper = (raw: any): MaterialDto[] => {
@@ -30,11 +36,13 @@ export const materialListMapper = (raw: any): MaterialDto[] => {
 export const dictationResultMapper = (raw: any): DictationResultDto => ({
   materialId: raw?.materialId || '',
   score: raw?.score || 0,
-  results: Array.isArray(raw?.results) ? raw.results.map((result: any) => ({
-    transcriptId: result?.transcriptId || '',
-    userInput: result?.userInput || '',
-    correctAnswer: result?.correctAnswer || '',
-    isCorrect: Boolean(result?.isCorrect),
-    diff: result?.diff || null,
-  })) : [],
+  results: Array.isArray(raw?.results)
+    ? raw.results.map((result: any) => ({
+        transcriptId: result?.transcriptId || '',
+        userInput: result?.userInput || '',
+        correctAnswer: result?.correctAnswer || '',
+        isCorrect: Boolean(result?.isCorrect),
+        diff: result?.diff || null,
+      }))
+    : [],
 });

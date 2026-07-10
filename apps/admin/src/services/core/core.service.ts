@@ -23,7 +23,10 @@ export abstract class CoreService extends BaseApiService {
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 401 || error.response?.data?.statusCode === 401) {
+        if (
+          error.response?.status === 401 ||
+          error.response?.data?.statusCode === 401
+        ) {
           const authStore = useAuthStore.getState();
           if (authStore.isAuthenticated) {
             toast.error('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.');
@@ -31,7 +34,7 @@ export abstract class CoreService extends BaseApiService {
           }
         }
         return Promise.reject(error);
-      }
+      },
     );
   }
 }

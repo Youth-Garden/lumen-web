@@ -5,7 +5,8 @@ import type { CreateToeicTestPayload } from '@/services/toeic';
 export const useCreateToeicTest = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: CreateToeicTestPayload) => toeicAdminService.createTest(payload),
+    mutationFn: (payload: CreateToeicTestPayload) =>
+      toeicAdminService.createTest(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: toeicAdminKeys.lists() });
     },
@@ -45,14 +46,22 @@ export const usePublishToeicTest = () => {
   });
 };
 
-export const useToeicTests = (params?: { page?: number; limit?: number; search?: string; status?: string }) => {
+export const useToeicTests = (params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}) => {
   return useQuery({
     queryKey: toeicAdminKeys.list(params),
     queryFn: () => toeicAdminService.listTests(params),
   });
 };
 
-export const useToeicTestDetail = (id: string, options?: { enabled?: boolean }) => {
+export const useToeicTestDetail = (
+  id: string,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: toeicAdminKeys.detail(id),
     queryFn: () => toeicAdminService.getTestById(id),

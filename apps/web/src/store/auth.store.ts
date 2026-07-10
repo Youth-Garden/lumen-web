@@ -16,7 +16,7 @@ interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+
   setAuth: (user: User, token: string, refreshToken?: string) => void;
   updateUser: (user: Partial<User>) => void;
   loadProfile: () => Promise<void>;
@@ -40,16 +40,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true, // Start in loading state until profile is fetched
 
   setAuth: (user, token, refreshToken) => {
-    Cookies.set('access_token', token, { expires: 7, secure: true, sameSite: 'lax' });
+    Cookies.set('access_token', token, {
+      expires: 7,
+      secure: true,
+      sameSite: 'lax',
+    });
     if (refreshToken) {
-      Cookies.set('refresh_token', refreshToken, { expires: 30, secure: true, sameSite: 'lax' });
+      Cookies.set('refresh_token', refreshToken, {
+        expires: 30,
+        secure: true,
+        sameSite: 'lax',
+      });
     }
     set({ user, accessToken: token, isAuthenticated: true });
   },
-  
-  updateUser: (userUpdates) => set((state) => ({
-    user: state.user ? { ...state.user, ...userUpdates } : null
-  })),
+
+  updateUser: (userUpdates) =>
+    set((state) => ({
+      user: state.user ? { ...state.user, ...userUpdates } : null,
+    })),
 
   loadProfile: async () => {
     const { accessToken } = get();
@@ -75,7 +84,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     const refreshToken = Cookies.get('refresh_token');
-    
+
     // Optimistically clear local state immediately for snappy UI
     Cookies.remove('access_token');
     Cookies.remove('refresh_token');

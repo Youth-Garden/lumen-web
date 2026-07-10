@@ -101,5 +101,95 @@
       "dueToday": "Đến hạn hôm nay",
       "studyNow": "Học ngay"
     }
+  },
+  "ToeicTestPlayer": {
+    "startTest": "Bắt đầu làm bài",
+    "submitTest": "Nộp bài",
+    "question": "Câu",
+    "of": "trên",
+    "part": "Phần",
+    "flagForReview": "Đánh dấu xem lại",
+    "previous": "Trở lại",
+    "next": "Tiếp theo",
+    "audioTrack": "Bản thu âm",
+    "listenInstruction": "Nghe đoạn băng và chọn đáp án đúng nhất.",
+    "questionsCount": "{count} câu hỏi",
+    "questionNavigation": "Bảng câu hỏi",
+    "failedToLoadTest": "Không thể tải dữ liệu bài thi."
+  },
+  "ExamPractice": {
+    "startFailed": "Lỗi khi bắt đầu bài thi. Vui lòng thử lại.",
+    "saveAnswerFailed": "Lỗi khi lưu đáp án.",
+    "finishSuccess": "Nộp bài thi thành công!",
+    "finishFailed": "Lỗi khi nộp bài thi. Vui lòng thử lại."
+  },
+  "Reading": {
+    "translation": "Bản dịch",
+    "translating": "Đang dịch...",
+    "failedTranslation": "Lỗi khi tải bản dịch.",
+    "noTranslation": "Không có bản dịch.",
+    "addedToDecks": "Đã thêm vào bộ thẻ",
+    "addToFlashcards": "Thêm vào Flashcard",
+    "backToArticles": "Quay lại Bài đọc",
+    "vocabBuilding": "Xây dựng Từ vựng",
+    "instruction": "Đọc cẩn thận. Bôi đen bất kỳ từ hoặc cụm từ nào bạn không biết để dịch ngay lập tức.",
+    "failedLoadArticle": "Không thể tải bài đọc.",
+    "goBack": "Quay lại"
+  },
+  "Dictation": {
+    "failedSubmit": "Lỗi khi nộp bài nghe chép. Vui lòng thử lại.",
+    "scoreResult": "Bạn đạt {score}% điểm!",
+    "loadingAudio": "Đang tải bản ghi âm...",
+    "materialNotFound": "Không tìm thấy bài nghe.",
+    "emptySubmission": "Vui lòng nhập ít nhất một câu trả lời trước khi nộp.",
+    "checking": "Đang chấm...",
+    "score": "Điểm: {score}%",
+    "checkAnswers": "Chấm điểm",
+    "sentence": "Câu {index}",
+    "typeWhatYouHear": "Gõ những gì bạn nghe được...",
+    "correctAnswer": "Đáp án đúng:",
+    "translation": "Bản dịch:",
+    "backToList": "Quay lại danh sách",
+    "dailyDictation": {
+      "title": "Chép chính tả hàng ngày",
+      "description": "Rèn luyện kỹ năng nghe của bạn bằng cách gõ lại chính xác những gì bạn nghe được."
+    }
+  },
+  "Settings": {
+    "title": "Cài đặt",
+    "profileUpdateSuccess": "Cập nhật hồ sơ thành công",
+    "profileUpdateFailed": "Cập nhật hồ sơ thất bại",
+    "goalsUpdateSuccess": "Cập nhật mục tiêu học tập thành công",
+    "goalsUpdateFailed": "Cập nhật mục tiêu học tập thất bại",
+    "tabs": {
+      "profile": "Hồ sơ",
+      "studyGoals": "Mục tiêu học tập",
+      "account": "Tài khoản"
+    },
+    "profile": {
+      "title": "Thông tin hồ sơ",
+      "description": "Cập nhật thông tin cá nhân và hồ sơ công khai của bạn.",
+      "fullName": "Họ và tên",
+      "phone": "Số điện thoại",
+      "avatarUrl": "URL ảnh đại diện"
+    },
+    "goals": {
+      "title": "Mục tiêu học tập",
+      "description": "Thiết lập mục tiêu học tập hàng ngày để duy trì chuỗi ngày học của bạn.",
+      "dailyGoalMinutes": "Mục tiêu hàng ngày (Phút)"
+    },
+    "account": {
+      "title": "Cài đặt tài khoản",
+      "description": "Quản lý email, mật khẩu và các tùy chọn bảo mật của bạn.",
+      "email": "Địa chỉ Email",
+      "currentPassword": "Mật khẩu hiện tại",
+      "comingSoon": "Sắp ra mắt...",
+      "changePassword": "Đổi mật khẩu (Sắp ra mắt)"
+    },
+    "buttons": {
+      "saving": "Đang lưu...",
+      "saveChanges": "Lưu thay đổi",
+      "saveGoals": "Lưu mục tiêu"
+    }
   }
 }

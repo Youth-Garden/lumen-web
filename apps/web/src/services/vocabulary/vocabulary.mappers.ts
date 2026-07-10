@@ -1,4 +1,9 @@
-import { VocabularyWord, WordListResponse, Deck, DueFlashcard } from './vocabulary.types';
+import {
+  VocabularyWord,
+  WordListResponse,
+  Deck,
+  DueFlashcard,
+} from './vocabulary.types';
 
 export const wordListMapper = (raw: any): WordListResponse => {
   return {

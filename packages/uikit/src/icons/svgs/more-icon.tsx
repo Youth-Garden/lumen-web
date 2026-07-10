@@ -1,4 +1,3 @@
-;
 import type { IconProps } from '../types';
 
 const MoreIcon = ({

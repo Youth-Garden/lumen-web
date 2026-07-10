@@ -6,9 +6,17 @@ import { RouteEnum } from './shared/constants';
 const intlMiddleware = createMiddleware(routing);
 
 // Routes that require the user to be logged in
-const protectedRoutes = [RouteEnum.DASHBOARD, RouteEnum.PROFILE, RouteEnum.SETTINGS];
+const protectedRoutes = [
+  RouteEnum.DASHBOARD,
+  RouteEnum.PROFILE,
+  RouteEnum.SETTINGS,
+];
 // Routes that logged in users should NOT access
-const publicOnlyRoutes = [RouteEnum.LOGIN, RouteEnum.REGISTER, RouteEnum.FORGOT_PASSWORD];
+const publicOnlyRoutes = [
+  RouteEnum.LOGIN,
+  RouteEnum.REGISTER,
+  RouteEnum.FORGOT_PASSWORD,
+];
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get('access_token')?.value;
@@ -23,8 +31,12 @@ export default function middleware(req: NextRequest) {
     }
   }
 
-  const isProtected = protectedRoutes.some((route) => normalizedPath.startsWith(route));
-  const isPublicOnly = publicOnlyRoutes.some((route) => normalizedPath.startsWith(route));
+  const isProtected = protectedRoutes.some((route) =>
+    normalizedPath.startsWith(route),
+  );
+  const isPublicOnly = publicOnlyRoutes.some((route) =>
+    normalizedPath.startsWith(route),
+  );
 
   if (isProtected && !token) {
     const loginUrl = new URL(RouteEnum.LOGIN, req.url);

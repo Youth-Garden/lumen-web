@@ -39,4 +39,10 @@ export enum ApiEndpointEnum {
   MATERIALS = '/api/materials',
   MATERIAL_DETAIL = '/api/materials/:id',
   MATERIAL_DICTATION = '/api/materials/dictation',
+
+  // Exam Practice
+  EXAM_PRACTICE_ATTEMPTS = '/api/exam-practice/attempts',
+  EXAM_PRACTICE_ATTEMPT_DETAIL = '/api/exam-practice/attempts/:id',
+  EXAM_PRACTICE_ATTEMPT_ANSWERS = '/api/exam-practice/attempts/:id/answers',
+  EXAM_PRACTICE_ATTEMPT_FINISH = '/api/exam-practice/attempts/:id/finish',
 }

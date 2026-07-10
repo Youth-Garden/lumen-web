@@ -15,7 +15,12 @@ export interface AdminVocabularyWord {
 
 export interface VocabularyWordListResponse {
   items: AdminVocabularyWord[];
-  meta: { currentPage: number; perPage: number; totalItems: number; totalPages: number };
+  meta: {
+    currentPage: number;
+    perPage: number;
+    totalItems: number;
+    totalPages: number;
+  };
 }
 
 export interface CreateVocabularyWordPayload {

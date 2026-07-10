@@ -1,12 +1,17 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { vocabularyService, vocabularyKeys } from '@/services/vocabulary';
-import { CreateDeckPayload, CreateFlashcardPayload, ReviewFlashcardPayload } from '@/services/vocabulary';
+import {
+  CreateDeckPayload,
+  CreateFlashcardPayload,
+  ReviewFlashcardPayload,
+} from '@/services/vocabulary';
 
 export const useCreateDeck = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: CreateDeckPayload) => vocabularyService.createDeck(payload),
+    mutationFn: (payload: CreateDeckPayload) =>
+      vocabularyService.createDeck(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.decks() });
     },
@@ -17,10 +22,13 @@ export const useCreateFlashcard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: CreateFlashcardPayload) => vocabularyService.createFlashcard(payload),
+    mutationFn: (payload: CreateFlashcardPayload) =>
+      vocabularyService.createFlashcard(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.decks() });
-      queryClient.invalidateQueries({ queryKey: vocabularyKeys.dueFlashcards() });
+      queryClient.invalidateQueries({
+        queryKey: vocabularyKeys.dueFlashcards(),
+      });
     },
   });
 };
@@ -29,21 +37,30 @@ export const useReviewFlashcard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: ReviewFlashcardPayload) => vocabularyService.reviewFlashcard(payload),
+    mutationFn: (payload: ReviewFlashcardPayload) =>
+      vocabularyService.reviewFlashcard(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: vocabularyKeys.dueFlashcards() });
+      queryClient.invalidateQueries({
+        queryKey: vocabularyKeys.dueFlashcards(),
+      });
     },
   });
 };
 
-export const useVocabularyWords = (params?: { search?: string; cefrLevel?: string }) => {
+export const useVocabularyWords = (params?: {
+  search?: string;
+  cefrLevel?: string;
+}) => {
   return useQuery({
     queryKey: vocabularyKeys.wordList(params),
     queryFn: () => vocabularyService.listWords(params),
   });
 };
 
-export const useVocabularyWordDetail = (id: string, options?: { enabled?: boolean }) => {
+export const useVocabularyWordDetail = (
+  id: string,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: vocabularyKeys.wordDetail(id),
     queryFn: () => vocabularyService.getWord(id),

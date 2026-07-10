@@ -9,8 +9,20 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import { Icons } from '@lumen/uikit/icons';
 
-import { Button, Input, Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@lumen/uikit/components';
-import { LoginFormData, getLoginSchema } from '@/features/auth/validations/auth';
+import {
+  Button,
+  Input,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@lumen/uikit/components';
+import {
+  LoginFormData,
+  getLoginSchema,
+} from '@/features/auth/validations/auth';
 import { authService } from '@/services/auth';
 import { useAuthStore } from '@/store/auth.store';
 import { RouteEnum } from '@/shared/constants';
@@ -21,7 +33,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const setAuth = useAuthStore((state) => state.setAuth);
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormData>({
@@ -38,12 +50,12 @@ export default function LoginPage() {
       // Wait for at least 500ms to show loading state nicely
       const [res] = await Promise.all([
         authService.login(data),
-        new Promise(resolve => setTimeout(resolve, 500))
+        new Promise((resolve) => setTimeout(resolve, 500)),
       ]);
-      
+
       const tokens = res.data; // Since BaseResponse is { code, message, data }
       setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
-      
+
       toast.success(t('success'), {
         description: t('successDesc'),
       });
@@ -67,9 +79,7 @@ export default function LoginPage() {
           </div>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-        <p className="text-sm text-muted-foreground">
-          {t('subtitle')}
-        </p>
+        <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       <Form {...form}>
@@ -81,12 +91,12 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel>{t('email')}</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="name@example.com" 
-                    type="email" 
+                  <Input
+                    placeholder="name@example.com"
+                    type="email"
                     autoComplete="email"
-                    disabled={isLoading} 
-                    {...field} 
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -100,7 +110,7 @@ export default function LoginPage() {
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel>{t('password')}</FormLabel>
-                  <Link 
+                  <Link
                     href={RouteEnum.FORGOT_PASSWORD}
                     className="text-sm font-medium text-primary hover:underline"
                   >
@@ -108,12 +118,12 @@ export default function LoginPage() {
                   </Link>
                 </div>
                 <FormControl>
-                  <Input 
-                    placeholder="••••••••" 
-                    type="password" 
+                  <Input
+                    placeholder="••••••••"
+                    type="password"
                     autoComplete="current-password"
-                    disabled={isLoading} 
-                    {...field} 
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -135,7 +145,7 @@ export default function LoginPage() {
 
       <div className="text-center text-sm text-muted-foreground mt-6">
         {t('noAccount')}{' '}
-        <Link 
+        <Link
           href={RouteEnum.REGISTER}
           className="font-medium text-primary hover:underline hover:text-primary/90 transition-colors"
         >

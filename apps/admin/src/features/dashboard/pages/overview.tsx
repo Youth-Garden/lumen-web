@@ -63,7 +63,10 @@ export default function DashboardPage() {
         <Card className="border-0 ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Icons name="users" className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+            <Icons
+              name="users"
+              className="h-4 w-4 text-indigo-600 dark:text-indigo-400"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3,100</div>
@@ -77,7 +80,10 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Tests Completed
             </CardTitle>
-            <Icons name="file-text" className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <Icons
+              name="file-text"
+              className="h-4 w-4 text-blue-600 dark:text-blue-400"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">12,453</div>
@@ -91,7 +97,10 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Material Views
             </CardTitle>
-            <Icons name="book-open" className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            <Icons
+              name="book-open"
+              className="h-4 w-4 text-amber-600 dark:text-amber-400"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">45,231</div>
@@ -103,7 +112,10 @@ export default function DashboardPage() {
         <Card className="border-0 ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-            <Icons name="activity" className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+            <Icons
+              name="activity"
+              className="h-4 w-4 text-rose-600 dark:text-rose-400"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">573</div>

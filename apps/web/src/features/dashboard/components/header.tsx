@@ -1,9 +1,9 @@
 'use client';
 
 import { Icons } from '@lumen/uikit/icons';
-import { 
-  Input, 
-  Button, 
+import {
+  Input,
+  Button,
   ThemeSwitcher,
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
   Avatar,
   AvatarFallback,
-  AvatarImage
+  AvatarImage,
 } from '@lumen/uikit/components';
 import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/auth.store';
@@ -26,7 +26,7 @@ export function Header() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
-  
+
   const { data: progressData } = useProgressDashboard();
 
   const handleLogout = async () => {
@@ -34,15 +34,23 @@ export function Header() {
     router.push(RouteEnum.LOGIN);
   };
 
-  const userInitials = user?.fullName 
-    ? user.fullName.split(' ').map((namePart) => namePart[0]).join('').toUpperCase().slice(0, 2)
+  const userInitials = user?.fullName
+    ? user.fullName
+        .split(' ')
+        .map((namePart) => namePart[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
     : user?.email?.substring(0, 2).toUpperCase() || 'U';
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-white/10 bg-background/60 backdrop-blur-md px-6 sticky top-0 z-50">
       <div className="flex items-center gap-4 flex-1">
         <div className="relative w-full max-w-md hidden sm:flex group">
-          <Icons name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <Icons
+            name="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors"
+          />
           <Input
             type="search"
             placeholder={t('search')}
@@ -62,19 +70,24 @@ export function Header() {
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive"></span>
         </Button>
         <ThemeSwitcher />
-        
+
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger className="relative h-8 w-8 rounded-full outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
               <Avatar className="h-8 w-8 border border-white/20 shadow-sm">
-                <AvatarImage src={user.avatarUrl} alt={user.fullName || user.email} />
+                <AvatarImage
+                  src={user.avatarUrl}
+                  alt={user.fullName || user.email}
+                />
                 <AvatarFallback>{userInitials}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user.fullName || 'User'}</p>
+                  <p className="text-sm font-medium leading-none">
+                    {user.fullName || 'User'}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user.email}
                   </p>
@@ -86,7 +99,10 @@ export function Header() {
                 <span>Profile</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+              >
                 <Icons name="log-out" className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>

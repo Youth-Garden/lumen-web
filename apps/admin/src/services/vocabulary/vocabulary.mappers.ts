@@ -1,5 +1,8 @@
 import { passThroughMapper } from '../core';
-import type { AdminVocabularyWord, VocabularyWordListResponse } from './vocabulary.types';
+import type {
+  AdminVocabularyWord,
+  VocabularyWordListResponse,
+} from './vocabulary.types';
 
 export const vocabWordMapper = (raw: any): AdminVocabularyWord => ({
   ...raw,

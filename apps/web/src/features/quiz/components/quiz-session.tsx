@@ -16,7 +16,9 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ quiz }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
     // Find the first unanswered question
-    const idx = quiz.questions.findIndex((questionItem) => !questionItem.userAnswer);
+    const idx = quiz.questions.findIndex(
+      (questionItem) => !questionItem.userAnswer,
+    );
     return idx === -1 ? quiz.questions.length - 1 : idx;
   });
 

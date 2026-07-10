@@ -4,12 +4,22 @@ import { PortalProps } from '../../types/portal.types';
 
 export function usePortal<T = any>(
   Component: React.ComponentType<PortalProps<T>>,
-  options: { key?: string; disableCloseByBackdrop?: boolean } = {}
+  options: {
+    key?: string;
+    disableCloseByBackdrop?: boolean;
+    disableBackdrop?: boolean;
+  } = {},
 ): [(data?: T) => void, () => void, boolean] {
   const { onPresent, onDismiss, portals } = usePortalStore();
-  const { key, disableCloseByBackdrop = false } = options;
+  const {
+    key,
+    disableCloseByBackdrop = false,
+    disableBackdrop = false,
+  } = options;
 
-  const [generatedId] = useState(() => key || `portal_${Math.random().toString(36).substring(7)}`);
+  const [generatedId] = useState(
+    () => key || `portal_${Math.random().toString(36).substring(7)}`,
+  );
 
   const handlePresent = useCallback(
     (data?: T) => {
@@ -18,9 +28,16 @@ export function usePortal<T = any>(
         component: Component,
         data,
         disableCloseByBackdrop,
+        disableBackdrop,
       });
     },
-    [onPresent, Component, generatedId, disableCloseByBackdrop]
+    [
+      onPresent,
+      Component,
+      generatedId,
+      disableCloseByBackdrop,
+      disableBackdrop,
+    ],
   );
 
   const handleDismiss = useCallback(() => {
@@ -42,4 +59,11 @@ export function useCloseAllPortals() {
 export function useClosePortalById() {
   const { onDismiss } = usePortalStore();
   return useCallback((id: string) => onDismiss(id), [onDismiss]);
+}
+
+export function usePortalWithoutBackdrop<T = any>(
+  Component: React.ComponentType<PortalProps<T>>,
+  options: { key?: string; disableCloseByBackdrop?: boolean } = {},
+) {
+  return usePortal(Component, { ...options, disableBackdrop: true });
 }

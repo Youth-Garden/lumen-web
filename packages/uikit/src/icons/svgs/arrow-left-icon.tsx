@@ -10,8 +10,23 @@ const ArrowLeftIcon = ({
   ...props
 }: IconProps) => {
   return (
-    <svg width={size} height={size} viewBox={viewBox} color={color} style={style} data-testid={testID} fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/>
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M19 12H5" />
+      <polyline points="12 19 5 12 12 5" />
     </svg>
   );
 };
