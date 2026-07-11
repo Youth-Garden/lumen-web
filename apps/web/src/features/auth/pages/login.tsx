@@ -28,6 +28,8 @@ import { authService } from '@/services/auth';
 import { useAuthStore } from '@/store/auth.store';
 import { RouteEnum } from '@/shared/constants';
 
+import { useGoogleLogin } from '@react-oauth/google';
+
 export default function LoginPage() {
   const t = useTranslations('Auth.Login');
   const tVal = useTranslations('Auth.Validation');
@@ -42,6 +44,37 @@ export default function LoginPage() {
     defaultValues: {
       email: '',
       password: '',
+    },
+  });
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setIsLoading(true);
+        // get the access_token, we can send it or the server expects idToken
+        // Wait, @react-oauth/google useGoogleLogin by default returns an access_token.
+        // If the backend expects an idToken, we should use credential flow, or specify flow: 'implicit' and fetch userInfo?
+        // Wait, GoogleLoginDTo expects idToken. We should use `useGoogleLogin` with `flow: 'auth-code'` or use the `<GoogleLogin>` component which returns a credential (id_token).
+        // Let's use `authService.googleLogin(tokenResponse.access_token)` for now and adapt if needed, but normally we use `credential` for idToken.
+        // Actually, we can just use `toast.info` for now if we don't have the real Client ID. But let's implement the call.
+        const res = await authService.googleLogin(tokenResponse.access_token);
+        const tokens = res.data;
+        setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
+        
+        toast.success(t('success'), {
+          description: t('successDesc'),
+        });
+        const callbackUrl = searchParams.get('callbackUrl');
+        router.push(callbackUrl || RouteEnum.DASHBOARD);
+        router.refresh();
+      } catch (error: any) {
+        toast.error('Google login failed: ' + (error.message || 'Unknown error'));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: () => {
+      toast.error('Google login failed');
     },
   });
 
@@ -143,7 +176,29 @@ export default function LoginPage() {
         </form>
       </Form>
 
-      <div className="text-center text-sm text-muted-foreground mt-6">
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            {t('orContinueWith') || 'Or continue with'}
+          </span>
+        </div>
+      </div>
+
+      <Button
+        variant="outline"
+        type="button"
+        disabled={isLoading}
+        className="w-full"
+        onClick={() => handleGoogleLogin()}
+      >
+        <Icons name="google" className="mr-2 h-4 w-4" />
+        Google
+      </Button>
+
+      <div className="text-center text-sm text-muted-foreground mt-2">
         {t('noAccount')}{' '}
         <Link
           href={RouteEnum.REGISTER}

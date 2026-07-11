@@ -14,6 +14,7 @@
     "@lumen/hooks": "workspace:*",
     "@lumen/shared-api": "workspace:*",
     "@lumen/uikit": "workspace:*",
+    "@react-oauth/google": "^0.13.5",
     "@tanstack/react-query": "^5.101.2",
     "axios": "^1.18.1",
     "class-variance-authority": "^0.7.1",

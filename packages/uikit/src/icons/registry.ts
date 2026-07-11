@@ -190,6 +190,20 @@ export const registry = {
   'panel-left-open': lazy(() =>
     import('./svgs').then((mod) => ({ default: mod.PanelLeftOpenIcon })),
   ),
+  overview: lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.OverviewIcon })),
+  ),
+  study: lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.StudyIcon })),
+  ),
+  quiz: lazy(() => import('./svgs').then((mod) => ({ default: mod.QuizIcon }))),
+  vocabulary: lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.VocabularyIcon })),
+  ),
+  deck: lazy(() => import('./svgs').then((mod) => ({ default: mod.DeckIcon }))),
+  google: lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.GoogleIcon })),
+  ),
 } as const;
 
 export type IconName = keyof typeof registry;

@@ -18,11 +18,11 @@ import { useTranslations } from 'next-intl';
 import { useUiStore } from '@/store/ui.store';
 
 const navigationKeys = [
-  { key: 'overview', href: RouteEnum.DASHBOARD, icon: 'layout-dashboard' },
-  { key: 'study', href: RouteEnum.STUDY, icon: 'brain' },
-  { key: 'quiz', href: RouteEnum.QUIZ, icon: 'file-question' },
-  { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: 'book' },
-  { key: 'decks', href: RouteEnum.DECKS, icon: 'layers' },
+  { key: 'overview', href: RouteEnum.DASHBOARD, icon: 'overview' },
+  { key: 'study', href: RouteEnum.STUDY, icon: 'study' },
+  { key: 'quiz', href: RouteEnum.QUIZ, icon: 'quiz' },
+  { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: 'vocabulary' },
+  { key: 'decks', href: RouteEnum.DECKS, icon: 'deck' },
   { key: 'toeic', href: RouteEnum.TOEIC, icon: 'headphones' },
   { key: 'reading', href: RouteEnum.READING, icon: 'newspaper' },
   { key: 'dictation', href: RouteEnum.DICTATION, icon: 'mic' },

@@ -1,10 +1,10 @@
-import React from 'react';
 import type { IconProps } from '../types';
 
 const MicIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
+  variant = 'linear',
   style,
   testID,
   ...props
@@ -17,17 +17,22 @@ const MicIcon = ({
       color={color}
       style={style}
       data-testid={testID}
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="none"
       {...props}
     >
-      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-      <line x1="12" x2="12" y1="19" y2="22" />
+      <g clipPath="url(#clip0_4418_3134)">
+        <path d="M7.99951 10.02V11.5C7.99951 13.71 9.78951 15.5 11.9995 15.5C14.2095 15.5 15.9995 13.71 15.9995 11.5V6C15.9995 3.79 14.2095 2 11.9995 2C9.78951 2 7.99951 3.79 7.99951 6" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4.34961 9.65039V11.3504C4.34961 15.5704 7.77961 19.0004 11.9996 19.0004C16.2196 19.0004 19.6496 15.5704 19.6496 11.3504V9.65039" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M10.6094 6.43012C11.5094 6.10012 12.4894 6.10012 13.3894 6.43012" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M11.1997 8.55031C11.7297 8.41031 12.2797 8.41031 12.8097 8.55031" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M11.9995 19V22" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </g>
+      <defs>
+        <clipPath id="clip0_4418_3134">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
+      </defs>
     </svg>
   );
 };
