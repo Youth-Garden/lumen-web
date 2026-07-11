@@ -4,7 +4,8 @@
 
 @custom-variant dark (&:is([data-theme='ocean-dark'] *, [data-theme='forest-dark'] *));
 
-:root, [data-theme='ocean-light'] {
+:root,
+[data-theme='ocean-light'] {
   --background: #ffffff;
   --foreground: #1c3a41;
   --card: #ffffff;
@@ -49,11 +50,21 @@
   --shadow-color: #f53100;
   --shadow-2xs: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.03);
   --shadow-xs: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.03);
-  --shadow-sm: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06), 1.5px 1px 2px -2px hsl(12 100% 48.0392% / 0.06);
-  --shadow: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06), 1.5px 1px 2px -2px hsl(12 100% 48.0392% / 0.06);
-  --shadow-md: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06), 1.5px 2px 4px -2px hsl(12 100% 48.0392% / 0.06);
-  --shadow-lg: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06), 1.5px 4px 6px -2px hsl(12 100% 48.0392% / 0.06);
-  --shadow-xl: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06), 1.5px 8px 10px -2px hsl(12 100% 48.0392% / 0.06);
+  --shadow-sm:
+    1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06),
+    1.5px 1px 2px -2px hsl(12 100% 48.0392% / 0.06);
+  --shadow:
+    1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06),
+    1.5px 1px 2px -2px hsl(12 100% 48.0392% / 0.06);
+  --shadow-md:
+    1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06),
+    1.5px 2px 4px -2px hsl(12 100% 48.0392% / 0.06);
+  --shadow-lg:
+    1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06),
+    1.5px 4px 6px -2px hsl(12 100% 48.0392% / 0.06);
+  --shadow-xl:
+    1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.06),
+    1.5px 8px 10px -2px hsl(12 100% 48.0392% / 0.06);
   --shadow-2xl: 1.5px 5.5px 50px -1px hsl(12 100% 48.0392% / 0.15);
   --tracking-normal: -0.025em;
   --spacing: 0.25rem;

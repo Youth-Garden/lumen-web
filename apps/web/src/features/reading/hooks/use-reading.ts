@@ -17,6 +17,14 @@ export const useGetArticleById = (id: string) => {
   });
 };
 
+export const useGetPublicArticles = (page = 1, limit = 6) => {
+  return useQuery({
+    queryKey: readingKeys.publicList({ page, limit }),
+    queryFn: () =>
+      readingService.getPublicArticles(page, limit).then((res) => res.data),
+  });
+};
+
 export const useTranslateText = (text: string) => {
   return useQuery({
     queryKey: [...readingKeys.all, 'translate', text],

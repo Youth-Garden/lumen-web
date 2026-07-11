@@ -18,8 +18,10 @@ const publicOnlyRoutes = [
   RouteEnum.FORGOT_PASSWORD,
 ];
 
+import { JWT_ACCESS_TOKEN_KEY } from './shared/constants';
+
 export default function middleware(req: NextRequest) {
-  const token = req.cookies.get('access_token')?.value;
+  const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;
   const path = req.nextUrl.pathname;
 
   // We need to check the path ignoring the locale prefix (e.g. /vi/dashboard -> /dashboard)

@@ -1,4 +1,10 @@
 @import '@lumen/uikit/styles';
 
+/* Use the app-loaded Be Vietnam Pro (set via next/font in layout.tsx).
+   Falls back to the system sans-serif if the font variable is absent. */
+:root {
+  --font-sans: var(--app-font-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
 /* Scan UI Kit components for Tailwind classes */
 @source "../../../../packages/uikit/src";

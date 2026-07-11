@@ -30,6 +30,7 @@ export enum ApiEndpointEnum {
 
   // Reading
   READING_ARTICLES = '/api/reading/articles',
+  READING_ARTICLES_PUBLIC = '/api/reading/articles/public',
   READING_ARTICLE_DETAIL = '/api/reading/articles/:id',
   READING_TRANSLATE = '/api/reading/translate',
 

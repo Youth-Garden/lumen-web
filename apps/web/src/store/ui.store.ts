@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, devtools } from 'zustand/middleware';
 
 interface UiState {
   sidebarCollapsed: boolean;
@@ -8,7 +8,8 @@ interface UiState {
 }
 
 export const useUiStore = create<UiState>()(
-  persist(
+  devtools(
+    persist(
     (set) => ({
       sidebarCollapsed: false,
       toggleSidebar: () =>
@@ -19,4 +20,5 @@ export const useUiStore = create<UiState>()(
       name: 'lumen-ui-storage',
     },
   ),
-);
+  { name: 'UiStore' }
+));

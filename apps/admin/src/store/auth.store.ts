@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 interface AuthState {
   accessToken: string | null;
@@ -7,15 +8,15 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  accessToken: localStorage.getItem('admin_access_token'),
-  isAuthenticated: Boolean(localStorage.getItem('admin_access_token')),
+export const useAuthStore = create<AuthState>()(devtools((set) => ({
+  accessToken: localStorage.getItem('admin_jwta'),
+  isAuthenticated: Boolean(localStorage.getItem('admin_jwta')),
   setToken: (token) => {
-    localStorage.setItem('admin_access_token', token);
+    localStorage.setItem('admin_jwta', token);
     set({ accessToken: token, isAuthenticated: true });
   },
   logout: () => {
-    localStorage.removeItem('admin_access_token');
+    localStorage.removeItem('admin_jwta');
     set({ accessToken: null, isAuthenticated: false });
   },
-}));
+}), { name: 'AdminAuthStore' }));

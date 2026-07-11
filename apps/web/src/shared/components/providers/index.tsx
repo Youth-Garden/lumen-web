@@ -18,7 +18,7 @@ export function Providers({ children }: PropsWithChildren) {
       <ThemeProvider>
         <TooltipProvider>
           <QueryProvider>
-            <NextTopLoader color="#6366f1" showSpinner={false} />
+            <NextTopLoader color="var(--primary)" showSpinner={false} />
             {children}
             <Updater />
             <PortalRenderer />

@@ -1,5 +1,6 @@
 import { PortalInstance } from '../types/portal.types';
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 interface LayoutState {
   portals: PortalInstance[];
@@ -17,7 +18,7 @@ const initialState = {
   portals: [],
 };
 
-export const usePortalStore = create<LayoutState>((set, get) => ({
+export const usePortalStore = create<LayoutState>()(devtools((set, get) => ({
   ...initialState,
 
   onPresent: (instance) => {
@@ -76,4 +77,4 @@ export const usePortalStore = create<LayoutState>((set, get) => ({
       portals: portals.filter((portal) => portal.id !== id),
     });
   },
-}));
+}), { name: 'PortalStore' }));

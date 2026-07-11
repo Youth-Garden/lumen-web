@@ -19,13 +19,14 @@ import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
 import { RouteEnum } from '@/shared/constants';
+import { useLogout } from '@/features/auth/hooks';
 import { useUiStore } from '@/store/ui.store';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 
 export function Header() {
   const t = useTranslations('Dashboard.Header');
   const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
+  const { logout } = useLogout();
   const { toggleSidebar } = useUiStore();
   const router = useRouter();
 

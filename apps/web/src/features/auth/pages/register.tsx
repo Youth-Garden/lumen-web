@@ -66,9 +66,7 @@ export default function RegisterPage() {
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2 text-center mb-4">
         <div className="flex justify-center mb-4">
-          <div className="p-3 bg-zinc-900 rounded-xl shadow-lg ring-1 ring-zinc-800">
-            <Icons name="command" className="w-8 h-8 text-white" />
-          </div>
+          <Icons name="logo" className="w-14 h-14" />
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>

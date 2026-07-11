@@ -7,8 +7,10 @@ import { Icons } from '@lumen/uikit/icons';
 import {
   Button,
   ScrollArea,
+  Logo,
 } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
+import { useLogout } from '@/features/auth/hooks';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
 import { cn } from '@lumen/uikit/utils';
@@ -33,7 +35,8 @@ export function Sidebar() {
   const t = useTranslations('Dashboard.Sidebar');
   const pathname = usePathname();
   const router = useRouter();
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+  const { logout } = useLogout();
   const { sidebarCollapsed, toggleSidebar } = useUiStore();
 
   const handleLogout = () => {
@@ -61,12 +64,9 @@ export function Sidebar() {
       <div className={cn("p-6 flex items-center h-20", sidebarCollapsed ? "justify-center px-0" : "")}>
         <Link
           href={RouteEnum.DASHBOARD}
-          className="flex items-center gap-2 font-bold text-xl"
+          className="flex items-center"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
-            <Icons name="command" className="h-5 w-5" />
-          </div>
-          {!sidebarCollapsed && <span>Lumen</span>}
+          <Logo showText={!sidebarCollapsed} />
         </Link>
       </div>
 

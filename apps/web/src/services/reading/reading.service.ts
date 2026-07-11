@@ -33,6 +33,15 @@ export class ReadingService extends CoreService {
     return this._post<{ id: string }>(ApiEndpointEnum.READING_ARTICLES, dto);
   }
 
+  getPublicArticles(
+    page: number = 1,
+    limit: number = 6,
+  ): Promise<BaseResponse<ArticleListResponse>> {
+    return this._get<ArticleListResponse>(ApiEndpointEnum.READING_ARTICLES_PUBLIC, {
+      params: { page, limit },
+    });
+  }
+
   translateText(
     text: string,
     targetLanguage: string = 'vi',

@@ -204,6 +204,7 @@ export const registry = {
   google: lazy(() =>
     import('./svgs').then((mod) => ({ default: mod.GoogleIcon })),
   ),
+  logo: lazy(() => import('./svgs').then((mod) => ({ default: mod.LogoIcon }))),
 } as const;
 
 export type IconName = keyof typeof registry;

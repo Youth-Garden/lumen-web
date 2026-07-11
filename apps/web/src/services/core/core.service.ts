@@ -1,10 +1,14 @@
 import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
 import { useAuthStore } from '@/store/auth.store';
 import { toast } from 'sonner';
-import { ApiEndpointEnum, RouteEnum } from '@/shared/constants';
+import {
+  ApiEndpointEnum,
+  RouteEnum,
+  JWT_REFRESH_TOKEN_KEY,
+} from '@/shared/constants';
 
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { cookieHelper } from '@lumen/utils';
 
 export abstract class CoreService extends BaseApiService {
   protected static isRefreshing = false;
@@ -46,7 +50,7 @@ export abstract class CoreService extends BaseApiService {
           !originalRequest._retry
         ) {
           const authStore = useAuthStore.getState();
-          const refreshToken = Cookies.get('refresh_token');
+          const refreshToken = cookieHelper.get(JWT_REFRESH_TOKEN_KEY);
 
           if (authStore.isAuthenticated && refreshToken) {
             if (CoreService.isRefreshing) {
@@ -95,9 +99,15 @@ export abstract class CoreService extends BaseApiService {
               toast.error(
                 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
               );
-              authStore.logout().then(() => {
-                window.location.href = RouteEnum.LOGIN;
-              });
+              authStore.clearAuth();
+              import('@/services/auth')
+                .then(({ authService }) => {
+                  return authService.logout({ refreshToken });
+                })
+                .catch(() => {})
+                .finally(() => {
+                  window.location.href = RouteEnum.LOGIN;
+                });
               return Promise.reject(refreshError);
             } finally {
               CoreService.isRefreshing = false;
@@ -108,9 +118,20 @@ export abstract class CoreService extends BaseApiService {
               toast.error(
                 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
               );
-              authStore.logout().then(() => {
+              authStore.clearAuth();
+              const refreshToken = cookieHelper.get(JWT_REFRESH_TOKEN_KEY);
+              if (refreshToken) {
+                import('@/services/auth')
+                  .then(({ authService }) => {
+                    return authService.logout({ refreshToken });
+                  })
+                  .catch(() => {})
+                  .finally(() => {
+                    window.location.href = RouteEnum.LOGIN;
+                  });
+              } else {
                 window.location.href = RouteEnum.LOGIN;
-              });
+              }
             }
           }
         } else {
