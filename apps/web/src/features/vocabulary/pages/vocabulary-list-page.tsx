@@ -124,7 +124,7 @@ export function VocabularyListPage() {
                       </p>
                     )}
                     <div className="space-y-1">
-                      {word.definitions.slice(0, 2).map((def) => (
+                      {(word.definitions || []).slice(0, 2).map((def) => (
                         <div key={def.id} className="text-sm">
                           <span className="italic text-muted-foreground mr-2">
                             {def.partOfSpeech}.

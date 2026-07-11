@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import Cookies from 'js-cookie';
-import { authService } from '@/services/auth';
 
 export interface User {
   id: string;
@@ -68,6 +67,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     try {
+      const { authService } = await import('@/services/auth');
       const res = await authService.getMe();
       if (res.data) {
         set({ user: res.data as User, isAuthenticated: true });
@@ -93,6 +93,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Call API in background if refresh token exists
     if (refreshToken) {
       try {
+        const { authService } = await import('@/services/auth');
         await authService.logout({ refreshToken });
       } catch (error) {
         // Ignore logout errors

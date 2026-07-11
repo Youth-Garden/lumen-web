@@ -27,13 +27,32 @@ export interface BaseApiServiceConfig {
 function flattenApiErrors(errors: unknown): string[] {
   if (!errors) return [];
   if (typeof errors === 'string') return [errors];
-  if (Array.isArray(errors)) return errors.map((error) => String(error));
+  
+  if (Array.isArray(errors)) {
+    return errors.map((error) => {
+      if (typeof error === 'string') return error;
+      if (typeof error === 'object' && error !== null) {
+        if ('message' in error) return String(error.message);
+        return JSON.stringify(error);
+      }
+      return String(error);
+    });
+  }
+  
   if (typeof errors !== 'object') return [String(errors)];
 
   return Object.entries(errors as Record<string, unknown>).flatMap(
     ([field, value]) => {
       if (Array.isArray(value)) {
-        return value.map((message) => `${field}: ${String(message)}`);
+        return value.map((message) => {
+          if (typeof message === 'object' && message !== null) {
+             return `${field}: ${message.message || JSON.stringify(message)}`;
+          }
+          return `${field}: ${String(message)}`;
+        });
+      }
+      if (typeof value === 'object' && value !== null) {
+        return [`${field}: ${JSON.stringify(value)}`];
       }
       return [`${field}: ${String(value)}`];
     },

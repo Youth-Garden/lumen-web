@@ -1,6 +1,19 @@
 {
   "Index": {
-    "title": "Chào mừng đến với Lumen"
+    "title": "Chào mừng đến với Lumen",
+    "heroTitle1": "Làm chủ Tiếng Anh,",
+    "heroTitle2": "Chinh phục TOEIC",
+    "heroSubtitle": "Nền tảng học tập toàn diện tích hợp thi thử TOEIC chuẩn IIG, luyện nghe chép chính tả và xây dựng vốn từ vựng thông minh.",
+    "startFree": "Bắt đầu miễn phí",
+    "exploreFeatures": "Khám phá tính năng",
+    "featuresTitle": "Tính năng nổi bật",
+    "featuresSubtitle": "Mọi công cụ bạn cần để nâng cao trình độ Tiếng Anh đều được tích hợp sẵn sàng.",
+    "featureToeicTitle": "Thi thử TOEIC chuẩn IIG",
+    "featureToeicDesc": "Trải nghiệm giao diện thi thật với hệ thống đề thi đa dạng, có chấm điểm và giải thích chi tiết.",
+    "featureDictationTitle": "Nghe chép chính tả",
+    "featureDictationDesc": "Rèn luyện kỹ năng nghe với các bài tập chép chính tả hàng ngày từ nhiều chủ đề khác nhau.",
+    "featureVocabTitle": "Từ vựng Flashcard",
+    "featureVocabDesc": "Học từ vựng hiệu quả hơn với hệ thống thẻ nhớ thông minh dựa trên đường cong quên Ebbinghaus."
   },
   "Dashboard": {
     "Overview": {
@@ -31,13 +44,16 @@
     },
     "Sidebar": {
       "overview": "Tổng quan",
+      "study": "Chế độ học",
+      "quiz": "Trắc nghiệm",
       "vocabulary": "Từ vựng",
-      "decks": "Bộ thẻ",
-      "toeic": "Luyện thi TOEIC",
+      "decks": "Bộ thẻ (Decks)",
+      "toeic": "Thi thử TOEIC",
       "reading": "Đọc & Dịch",
+      "dictation": "Nghe chép chính tả",
       "settings": "Cài đặt",
       "customers": "Khách hàng",
-      "billing": "Giao dịch",
+      "billing": "Thanh toán",
       "myAccount": "Tài khoản của tôi",
       "profile": "Hồ sơ",
       "logout": "Đăng xuất"
@@ -49,7 +65,7 @@
   "Auth": {
     "Login": {
       "success": "Đăng nhập thành công",
-      "successDesc": "Chào mừng bạn quay trở lại Lumen Platform.",
+      "successDesc": "Chào mừng bạn quay lại với Lumen Platform.",
       "title": "Đăng nhập",
       "subtitle": "Nhập email và mật khẩu của bạn để truy cập hệ thống",
       "email": "Email",
@@ -69,38 +85,70 @@
       "password": "Mật khẩu",
       "confirmPassword": "Xác nhận mật khẩu",
       "processing": "Đang xử lý...",
-      "submit": "Đăng ký tài khoản",
+      "submit": "Đăng ký",
       "hasAccount": "Đã có tài khoản?",
       "loginNow": "Đăng nhập"
     },
     "Layout": {
       "title": "Lumen Platform",
-      "subtitle": "Khám phá hệ sinh thái toàn diện và mạnh mẽ nhất để quản lý doanh nghiệp của bạn. Tinh giản quy trình, tối ưu hiệu suất."
+      "subtitle": "Khám phá hệ sinh thái toàn diện và mạnh mẽ nhất để quản lý doanh nghiệp của bạn. Tối ưu hóa quy trình, nâng cao hiệu suất."
     },
     "Validation": {
       "invalidEmail": "Email không hợp lệ",
       "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
-      "passwordMismatch": "Mật khẩu xác nhận không khớp"
+      "passwordMismatch": "Mật khẩu không khớp"
     }
   },
   "Vocabulary": {
+    "Study": {
+      "title": "Buổi học",
+      "description": "Ôn tập thẻ flashcard và kiểm tra trí nhớ của bạn.",
+      "loading": "Đang tải bộ thẻ...",
+      "allCaughtUp": "Bạn đã hoàn thành!",
+      "allCaughtUpDescription": "Bạn đã ôn tập xong tất cả thẻ đến hạn hôm nay. Tuyệt vời!",
+      "backToWords": "Quay lại Từ vựng",
+      "backToDecks": "Quay lại Bộ thẻ"
+    },
     "List": {
       "title": "Kho từ vựng",
       "description": "Khám phá và lưu trữ các từ vựng mới vào bộ thẻ của bạn.",
       "searchPlaceholder": "Tìm kiếm từ vựng...",
-      "filterByLevel": "Lọc theo CEFR",
+      "filterByLevel": "Lọc theo cấp độ CEFR",
       "noResults": "Không tìm thấy từ vựng nào.",
-      "addToDeck": "Thêm vào thẻ"
+      "addToDeck": "Thêm vào bộ thẻ",
+      "addToDeckDescription": "Chọn một bộ thẻ để thêm từ vựng này vào.",
+      "cancel": "Hủy",
+      "add": "Thêm",
+      "selectDeck": "Chọn bộ thẻ",
+      "selectDeckPlaceholder": "Chọn một bộ thẻ...",
+      "loadingDecks": "Đang tải danh sách...",
+      "noDecksAvailable": "Chưa có bộ thẻ nào. Vui lòng tạo mới trước."
     },
     "Decks": {
       "title": "Bộ thẻ của tôi",
       "description": "Quản lý và ôn tập các thẻ flashcard của bạn.",
       "createDeck": "Tạo bộ thẻ",
+      "createDeckDescription": "Tạo một bộ thẻ mới để sắp xếp từ vựng của bạn.",
+      "deckName": "Tên bộ thẻ",
+      "deckNamePlaceholder": "VD: Từ vựng TOEIC cơ bản",
+      "deckDescription": "Mô tả",
+      "deckDescriptionPlaceholder": "Mô tả không bắt buộc cho bộ thẻ này",
+      "cancel": "Hủy",
+      "save": "Lưu",
       "noDecks": "Bạn chưa có bộ thẻ nào.",
       "cards": "thẻ",
       "dueToday": "Đến hạn hôm nay",
       "studyNow": "Học ngay"
     }
+  },
+  "quiz": {
+    "title": "Trắc nghiệm",
+    "description": "Kiểm tra kiến thức của bạn với các bài trắc nghiệm.",
+    "generateQuiz": "Tạo bài tập",
+    "startQuiz": "Bắt đầu làm",
+    "noQuizzes": "Chưa có bài tập nào.",
+    "quizTitle": "Trắc nghiệm",
+    "startNewQuiz": "Tạo bài tập mới"
   },
   "ToeicTestPlayer": {
     "startTest": "Bắt đầu làm bài",

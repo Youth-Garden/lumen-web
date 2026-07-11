@@ -22,6 +22,7 @@ export enum ApiEndpointEnum {
 
   // Quiz
   QUIZZES = '/api/quizzes',
+  QUIZ_GENERATE = '/api/quizzes/generate',
   QUIZ_DETAIL = '/api/quizzes/:id',
   QUIZ_ANSWER = '/api/quizzes/:id/questions/:questionId/answers',
   QUIZ_FINISH = '/api/quizzes/:id/finish',

@@ -9,6 +9,7 @@ import {
   ScrollArea,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -118,10 +119,12 @@ export function Sidebar() {
             }
           />
           <DropdownMenuContent className="w-56" align="end" side="top">
-            <DropdownMenuLabel>{t('myAccount')}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>{t('profile')}</DropdownMenuItem>
-            <DropdownMenuItem>{t('settings')}</DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{t('myAccount')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>{t('profile')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('settings')}</DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleLogout}

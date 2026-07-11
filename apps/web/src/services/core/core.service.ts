@@ -30,7 +30,9 @@ export abstract class CoreService extends BaseApiService {
           const authStore = useAuthStore.getState();
           if (authStore.isAuthenticated) {
             toast.error('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.');
-            authStore.logout();
+            authStore.logout().then(() => {
+              window.location.href = '/en/login';
+            });
           }
         }
         return Promise.reject(error);

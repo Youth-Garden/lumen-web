@@ -1,6 +1,19 @@
 {
   "Index": {
-    "title": "Welcome to Lumen"
+    "title": "Welcome to Lumen",
+    "heroTitle1": "Master English,",
+    "heroTitle2": "Conquer TOEIC",
+    "heroSubtitle": "The comprehensive learning platform integrating standard TOEIC mock tests, daily dictation, and smart vocabulary building.",
+    "startFree": "Start for free",
+    "exploreFeatures": "Explore features",
+    "featuresTitle": "Outstanding Features",
+    "featuresSubtitle": "Every tool you need to elevate your English proficiency is built-in and ready.",
+    "featureToeicTitle": "Standard TOEIC Mock Tests",
+    "featureToeicDesc": "Experience real test interface with diverse exams, automatic grading, and detailed explanations.",
+    "featureDictationTitle": "Daily Dictation",
+    "featureDictationDesc": "Improve your listening skills with daily dictation exercises from various topics.",
+    "featureVocabTitle": "Smart Flashcards",
+    "featureVocabDesc": "Learn vocabulary efficiently with an intelligent spaced repetition system based on the Ebbinghaus forgetting curve."
   },
   "Dashboard": {
     "Overview": {
@@ -31,10 +44,13 @@
     },
     "Sidebar": {
       "overview": "Overview",
+      "study": "Study Mode",
+      "quiz": "Quiz",
       "vocabulary": "Vocabulary",
       "decks": "Decks",
       "toeic": "TOEIC Tests",
       "reading": "Reading & Translate",
+      "dictation": "Dictation",
       "settings": "Settings",
       "customers": "Customers",
       "billing": "Billing",
@@ -84,23 +100,55 @@
     }
   },
   "Vocabulary": {
+    "Study": {
+      "title": "Study Session",
+      "description": "Review your flashcards and test your memory.",
+      "loading": "Loading flashcards...",
+      "allCaughtUp": "You're all caught up!",
+      "allCaughtUpDescription": "You have reviewed all due flashcards for today. Great job!",
+      "backToWords": "Back to Vocabulary Bank",
+      "backToDecks": "Back to My Decks"
+    },
     "List": {
       "title": "Vocabulary Bank",
       "description": "Discover and save new words to your flashcard decks.",
       "searchPlaceholder": "Search for words...",
       "filterByLevel": "Filter by CEFR",
       "noResults": "No vocabulary found.",
-      "addToDeck": "Add to Deck"
+      "addToDeck": "Add to Deck",
+      "addToDeckDescription": "Select a deck to add this flashcard to.",
+      "cancel": "Cancel",
+      "add": "Add",
+      "selectDeck": "Select Deck",
+      "selectDeckPlaceholder": "Choose a deck...",
+      "loadingDecks": "Loading decks...",
+      "noDecksAvailable": "No decks available. Please create one first."
     },
     "Decks": {
       "title": "My Decks",
       "description": "Manage and review your flashcard decks.",
       "createDeck": "Create Deck",
+      "createDeckDescription": "Create a new deck to organize your flashcards.",
+      "deckName": "Deck Name",
+      "deckNamePlaceholder": "e.g., TOEIC Essential Words",
+      "deckDescription": "Description",
+      "deckDescriptionPlaceholder": "Optional description for this deck",
+      "cancel": "Cancel",
+      "save": "Save",
       "noDecks": "You don't have any decks yet.",
       "cards": "cards",
       "dueToday": "Due today",
       "studyNow": "Study Now"
     }
+  },
+  "quiz": {
+    "title": "Quizzes",
+    "description": "Test your knowledge with these quizzes.",
+    "generateQuiz": "Generate Quiz",
+    "startQuiz": "Start Quiz",
+    "noQuizzes": "No quizzes available.",
+    "quizTitle": "Quizzes",
+    "startNewQuiz": "Start New Quiz"
   },
   "ToeicTestPlayer": {
     "startTest": "Start Test",
