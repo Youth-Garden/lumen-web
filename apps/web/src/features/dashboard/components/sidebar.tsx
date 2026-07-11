@@ -7,16 +7,6 @@ import { Icons } from '@lumen/uikit/icons';
 import {
   Button,
   ScrollArea,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
 } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
 import { useAuthStore } from '@/store/auth.store';
@@ -24,6 +14,8 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@lumen/uikit/utils';
 
 import { useTranslations } from 'next-intl';
+
+import { useUiStore } from '@/store/ui.store';
 
 const navigationKeys = [
   { key: 'overview', href: RouteEnum.DASHBOARD, icon: 'layout-dashboard' },
@@ -42,6 +34,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const { sidebarCollapsed, toggleSidebar } = useUiStore();
 
   const handleLogout = () => {
     logout();
@@ -49,16 +42,31 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r border-white/10 bg-background/60 backdrop-blur-xl text-card-foreground shadow-xl">
-      <div className="p-6">
+    <div 
+      className={cn(
+        "relative z-20 flex h-full flex-col border-r border-border bg-background/95 backdrop-blur-xl text-card-foreground shadow-sm transition-all duration-300 ease-in-out",
+        sidebarCollapsed ? "w-20" : "w-64"
+      )}
+    >
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleSidebar}
+        className="absolute -right-4 top-6 z-30 h-8 w-8 rounded-full border bg-background text-muted-foreground hover:text-foreground hover:bg-muted shadow-sm transition-transform hover:scale-105"
+      >
+        <Icons name={sidebarCollapsed ? "panel-left-open" : "panel-left-close"} className="h-5 w-5" />
+        <span className="sr-only">Toggle Sidebar</span>
+      </Button>
+
+      <div className={cn("p-6 flex items-center h-20", sidebarCollapsed ? "justify-center px-0" : "")}>
         <Link
           href={RouteEnum.DASHBOARD}
           className="flex items-center gap-2 font-bold text-xl"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
             <Icons name="command" className="h-5 w-5" />
           </div>
-          Lumen
+          {!sidebarCollapsed && <span>Lumen</span>}
         </Link>
       </div>
 
@@ -71,14 +79,18 @@ export function Sidebar() {
                 <Button
                   variant={isActive ? 'secondary' : 'ghost'}
                   className={cn(
-                    'w-full justify-start gap-3 transition-all duration-300 hover:-translate-y-0.5',
+                    'relative transition-all duration-300 h-12',
+                    sidebarCollapsed ? 'w-12 justify-center px-0 mx-auto flex' : 'w-full justify-start gap-3 px-4',
                     isActive
-                      ? 'bg-primary/20 text-primary font-semibold shadow-sm'
-                      : 'text-muted-foreground hover:bg-white/5',
+                      ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   )}
                 >
-                  <Icons name={item.icon as any} className="h-5 w-5" />
-                  {t(item.key)}
+                  {isActive && !sidebarCollapsed && (
+                    <div className="absolute left-0 top-1/2 h-8 -translate-y-1/2 w-1 rounded-r-full bg-primary" />
+                  )}
+                  <Icons name={item.icon as any} className="h-5 w-5 shrink-0" />
+                  {!sidebarCollapsed && <span>{t(item.key)}</span>}
                 </Button>
               </Link>
             );
@@ -86,56 +98,6 @@ export function Sidebar() {
         </nav>
       </ScrollArea>
 
-      <div className="p-4 border-t border-white/10">
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3 h-14 px-2"
-              >
-                <Avatar className="h-9 w-9 border border-border">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@lumen"
-                  />
-                  <AvatarFallback>
-                    <Icons name="user" className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col items-start text-left flex-1 overflow-hidden">
-                  <span className="text-sm font-medium leading-none mb-1 truncate w-full">
-                    {user?.email ? user.email.split('@')[0] : 'Admin'}
-                  </span>
-                  <span className="text-xs text-muted-foreground truncate w-full">
-                    {user?.email || 'admin@lumen.com'}
-                  </span>
-                </div>
-                <Icons
-                  name="chevron-up"
-                  className="h-4 w-4 text-muted-foreground"
-                />
-              </Button>
-            }
-          />
-          <DropdownMenuContent className="w-56" align="end" side="top">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>{t('myAccount')}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>{t('profile')}</DropdownMenuItem>
-              <DropdownMenuItem>{t('settings')}</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="text-destructive"
-            >
-              <Icons name="log-out" className="mr-2 h-4 w-4" />
-              <span>{t('logout')}</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
     </div>
   );
 }

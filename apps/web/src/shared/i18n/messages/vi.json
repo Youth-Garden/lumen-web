@@ -13,7 +13,14 @@
     "featureDictationTitle": "Nghe chép chính tả",
     "featureDictationDesc": "Rèn luyện kỹ năng nghe với các bài tập chép chính tả hàng ngày từ nhiều chủ đề khác nhau.",
     "featureVocabTitle": "Từ vựng Flashcard",
-    "featureVocabDesc": "Học từ vựng hiệu quả hơn với hệ thống thẻ nhớ thông minh dựa trên đường cong quên Ebbinghaus."
+    "featureVocabDesc": "Học từ vựng hiệu quả hơn với hệ thống thẻ nhớ thông minh dựa trên đường cong quên Ebbinghaus.",
+    "login": "Đăng nhập",
+    "startNow": "Bắt đầu ngay",
+    "versionLaunched": "Phiên bản 1.0 đã chính thức ra mắt",
+    "allRightsReserved": "Tất cả quyền được bảo lưu.",
+    "terms": "Điều khoản",
+    "privacy": "Bảo mật",
+    "contact": "Liên hệ"
   },
   "Dashboard": {
     "Overview": {

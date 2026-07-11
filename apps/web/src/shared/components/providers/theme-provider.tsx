@@ -10,9 +10,9 @@ export function ThemeProvider({
   return (
     <NextThemesProvider
       attribute="data-theme"
-      defaultTheme="light"
+      defaultTheme="ocean-light"
       enableSystem={false}
-      themes={['light', 'dark', 'ocean', 'rose']}
+      themes={['ocean-light', 'ocean-dark', 'forest-light', 'forest-dark']}
       {...props}
     >
       {children}

@@ -1,4 +1,7 @@
 import { lazy } from 'react';
+import { CommandIcon } from './svgs/command-icon';
+import { SunIcon } from './svgs/sun-icon';
+import { MoonIcon } from './svgs/moon-icon';
 
 export const registry = {
   home: lazy(() => import('./svgs').then((mod) => ({ default: mod.HomeIcon }))),
@@ -47,9 +50,7 @@ export const registry = {
   clock: lazy(() =>
     import('./svgs').then((mod) => ({ default: mod.ClockIcon })),
   ),
-  command: lazy(() =>
-    import('./svgs').then((mod) => ({ default: mod.CommandIcon })),
-  ),
+  command: CommandIcon,
   flame: lazy(() =>
     import('./svgs').then((mod) => ({ default: mod.FlameIcon })),
   ),
@@ -175,6 +176,19 @@ export const registry = {
   redo: lazy(() => import('./svgs').then((mod) => ({ default: mod.RedoIcon }))),
   'list-ordered': lazy(() =>
     import('./svgs').then((mod) => ({ default: mod.ListOrderedIcon })),
+  ),
+  menu: lazy(() => import('./svgs').then((mod) => ({ default: mod.MenuIcon }))),
+  eye: lazy(() => import('./svgs').then((mod) => ({ default: mod.EyeIcon }))),
+  'eye-off': lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.EyeOffIcon })),
+  ),
+  sun: SunIcon,
+  moon: MoonIcon,
+  'panel-left-close': lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.PanelLeftCloseIcon })),
+  ),
+  'panel-left-open': lazy(() =>
+    import('./svgs').then((mod) => ({ default: mod.PanelLeftOpenIcon })),
   ),
 } as const;
 

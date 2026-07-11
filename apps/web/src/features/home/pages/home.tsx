@@ -31,12 +31,12 @@ export default function HomePage() {
           <nav className="flex items-center space-x-4">
             <Link href={RouteEnum.LOGIN}>
               <Button variant="ghost" className="hidden sm:inline-flex min-h-[44px]">
-                Đăng nhập
+                {t('login')}
               </Button>
             </Link>
             <Link href={RouteEnum.REGISTER}>
               <Button className="min-h-[44px] rounded-full px-6 shadow-sm hover:shadow-md transition-all">
-                Bắt đầu ngay
+                {t('startNow')}
               </Button>
             </Link>
           </nav>
@@ -66,7 +66,7 @@ export default function HomePage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                Phiên bản 1.0 đã chính thức ra mắt
+                {t('versionLaunched')}
               </motion.div>
               
               <motion.h1 variants={fadeUpVariants} className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 leading-[1.1]">
@@ -178,17 +178,17 @@ export default function HomePage() {
             <span className="font-bold text-lg">Lumen Platform</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Lumen Inc. Tất cả quyền được bảo lưu.
+            &copy; {new Date().getFullYear()} Lumen Inc. {t('allRightsReserved')}
           </p>
           <div className="flex space-x-6 text-sm font-medium text-muted-foreground">
             <Link href="#" className="hover:text-primary transition-colors py-2">
-              Điều khoản
+              {t('terms')}
             </Link>
             <Link href="#" className="hover:text-primary transition-colors py-2">
-              Bảo mật
+              {t('privacy')}
             </Link>
             <Link href="#" className="hover:text-primary transition-colors py-2">
-              Liên hệ
+              {t('contact')}
             </Link>
           </div>
         </div>

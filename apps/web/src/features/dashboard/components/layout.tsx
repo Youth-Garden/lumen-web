@@ -12,7 +12,7 @@ export function DashboardLayout({ children }: PropsWithChildren) {
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden z-10">
         <Header />
-        <main className="flex-1 overflow-y-auto bg-transparent">
+        <main className="flex-1 overflow-y-auto bg-transparent p-6">
           {children}
         </main>
       </div>

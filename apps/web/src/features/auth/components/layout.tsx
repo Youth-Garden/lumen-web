@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { OpenEffect } from '@lumen/uikit/components';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const t = useTranslations('Auth.Layout');
@@ -27,9 +28,9 @@ export default function AuthLayout({ children }: PropsWithChildren) {
 
       {/* Right side - Auth Form */}
       <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-12 lg:px-24">
-        <div className="w-full max-w-[420px] animate-in fade-in zoom-in-95 duration-500">
+        <OpenEffect className="w-full max-w-[420px]">
           {children}
-        </div>
+        </OpenEffect>
       </div>
     </div>
   );

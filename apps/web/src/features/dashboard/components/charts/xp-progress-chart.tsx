@@ -45,37 +45,37 @@ export function XpProgressChart({ data }: XpProgressChartProps) {
           <CartesianGrid
             strokeDasharray="3 3"
             vertical={false}
-            stroke="hsl(var(--border))"
+            stroke="var(--border)"
           />
           <XAxis
             dataKey="name"
-            stroke="hsl(var(--muted-foreground))"
+            stroke="var(--muted-foreground)"
             fontSize={12}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke="hsl(var(--muted-foreground))"
+            stroke="var(--muted-foreground)"
             fontSize={12}
             tickLine={false}
             axisLine={false}
             tickFormatter={(value) => `${value}`}
           />
           <Tooltip
-            cursor={{ fill: 'hsl(var(--muted)/0.5)' }}
+            cursor={{ fill: 'var(--muted)' }}
             contentStyle={{
-              backgroundColor: 'hsl(var(--background))',
-              borderColor: 'hsl(var(--border))',
+              backgroundColor: 'var(--background)',
+              borderColor: 'var(--border)',
               borderRadius: '8px',
               boxShadow:
                 '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
             }}
-            labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
-            itemStyle={{ color: 'hsl(var(--primary))' }}
+            labelStyle={{ color: 'var(--foreground)', fontWeight: 'bold' }}
+            itemStyle={{ color: 'var(--primary)' }}
           />
           <Bar
             dataKey="xp"
-            fill="hsl(var(--primary))"
+            fill="var(--primary)"
             radius={[4, 4, 0, 0]}
             maxBarSize={40}
           />

@@ -12,6 +12,7 @@ import { Icons } from '@lumen/uikit/icons';
 import {
   Button,
   Input,
+  PasswordInput,
   Form,
   FormControl,
   FormField,
@@ -118,9 +119,8 @@ export default function LoginPage() {
                   </Link>
                 </div>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder="••••••••"
-                    type="password"
                     autoComplete="current-password"
                     disabled={isLoading}
                     {...field}

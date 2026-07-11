@@ -13,7 +13,14 @@
     "featureDictationTitle": "Daily Dictation",
     "featureDictationDesc": "Improve your listening skills with daily dictation exercises from various topics.",
     "featureVocabTitle": "Smart Flashcards",
-    "featureVocabDesc": "Learn vocabulary efficiently with an intelligent spaced repetition system based on the Ebbinghaus forgetting curve."
+    "featureVocabDesc": "Learn vocabulary efficiently with an intelligent spaced repetition system based on the Ebbinghaus forgetting curve.",
+    "login": "Log in",
+    "startNow": "Start now",
+    "versionLaunched": "Version 1.0 has officially launched",
+    "allRightsReserved": "All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "contact": "Contact"
   },
   "Dashboard": {
     "Overview": {

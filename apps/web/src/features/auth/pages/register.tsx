@@ -11,6 +11,7 @@ import { Icons } from '@lumen/uikit/icons';
 import {
   Button,
   Input,
+  PasswordInput,
   Form,
   FormControl,
   FormField,
@@ -101,9 +102,8 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>{t('password')}</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder="••••••••"
-                    type="password"
                     autoComplete="new-password"
                     disabled={isLoading}
                     {...field}
@@ -120,9 +120,8 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>{t('confirmPassword')}</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder="••••••••"
-                    type="password"
                     autoComplete="new-password"
                     disabled={isLoading}
                     {...field}
