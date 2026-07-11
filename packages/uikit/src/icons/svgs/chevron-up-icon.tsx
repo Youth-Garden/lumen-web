@@ -1,10 +1,10 @@
-import React from 'react';
 import type { IconProps } from '../types';
 
 const ChevronUpIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
+  variant = 'linear',
   style,
   testID,
   ...props
@@ -19,13 +19,9 @@ const ChevronUpIcon = ({
       data-testid={testID}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
-      <path d="m18 15-6-6-6 6" />
+      <path fill="currentColor" d="M19.92 15.8c-.19 0-.38-.07-.53-.22l-6.52-6.52c-.48-.48-1.26-.48-1.74 0l-6.52 6.52c-.29.29-.77.29-1.06 0a.754.754 0 010-1.06L10.07 8a2.74 2.74 0 013.86 0l6.52 6.52c.29.29.29.77 0 1.06-.15.14-.34.22-.53.22z"></path>
     </svg>
   );
 };

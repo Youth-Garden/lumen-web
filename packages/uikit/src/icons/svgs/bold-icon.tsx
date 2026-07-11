@@ -1,6 +1,6 @@
 import type { IconProps } from '../types';
 
-export const BoldIcon = ({
+const BoldIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
@@ -8,22 +8,22 @@ export const BoldIcon = ({
   style,
   testID,
   ...props
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    color={color}
-    style={style}
-    data-testid={testID}
-    fill={variant === 'bold' ? color : 'none'}
-    xmlns="http://www.w3.org/2000/svg"
-    stroke={variant === 'linear' ? color : 'none'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />
-  </svg>
-);
+}: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M11.999 12.75h-7.12c-.41 0-.75-.34-.75-.75V4.5c0-1.52 1.23-2.75 2.75-2.75h5.12c3.03 0 5.5 2.47 5.5 5.5s-2.47 5.5-5.5 5.5Zm-6.38-1.5h6.38c2.21 0 4-1.79 4-4s-1.79-4-4-4h-5.12c-.69 0-1.25.56-1.25 1.25v6.75h-.01Z" fill="currentColor"></path><path d="M14.379 22.25h-7.5c-1.52 0-2.75-1.23-2.75-2.75V12c0-.41.34-.75.75-.75h9.5c3.03 0 5.5 2.47 5.5 5.5s-2.47 5.5-5.5 5.5Zm-8.76-9.5v6.75c0 .69.56 1.25 1.25 1.25h7.5c2.21 0 4-1.79 4-4s-1.79-4-4-4h-8.75Z" fill="currentColor"></path>
+    </svg>
+  );
+};
+
+export { BoldIcon };

@@ -4,6 +4,7 @@ const ChevronDownIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
+  variant = 'linear',
   style,
   testID,
   ...props
@@ -20,14 +21,7 @@ const ChevronDownIcon = ({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit="10"
-        strokeWidth="1.5"
-        d="M19.92 8.95l-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
-      ></path>
+      <path fill="currentColor" d="M12 16.8c-.7 0-1.4-.27-1.93-.8L3.55 9.48a.754.754 0 010-1.06c.29-.29.77-.29 1.06 0l6.52 6.52c.48.48 1.26.48 1.74 0l6.52-6.52c.29-.29.77-.29 1.06 0 .29.29.29.77 0 1.06L13.93 16c-.53.53-1.23.8-1.93.8z"></path>
     </svg>
   );
 };

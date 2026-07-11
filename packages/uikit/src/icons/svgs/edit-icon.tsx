@@ -1,6 +1,6 @@
 import type { IconProps } from '../types';
 
-export const EditIcon = ({
+const EditIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
@@ -8,23 +8,22 @@ export const EditIcon = ({
   style,
   testID,
   ...props
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    color={color}
-    style={style}
-    data-testid={testID}
-    fill={variant === 'bold' ? color : 'none'}
-    xmlns="http://www.w3.org/2000/svg"
-    stroke={variant === 'linear' ? color : 'none'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-  </svg>
-);
+}: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M5.54 19.52c-.61 0-1.18-.21-1.59-.6-.52-.49-.77-1.23-.68-2.03l.37-3.24c.07-.61.44-1.42.87-1.86l8.21-8.69c2.05-2.17 4.19-2.23 6.36-.18s2.23 4.19.18 6.36l-8.21 8.69c-.42.45-1.2.87-1.81.97l-3.22.55c-.17.01-.32.03-.48.03ZM15.93 2.91c-.77 0-1.44.48-2.12 1.2l-8.21 8.7c-.2.21-.43.71-.47 1l-.37 3.24c-.04.33.04.6.22.77.18.17.45.23.78.18l3.22-.55c.29-.05.77-.31.97-.52l8.21-8.69C19.4 6.92 19.85 5.7 18.04 4c-.8-.77-1.49-1.09-2.11-1.09Z" fill="currentColor"></path><path d="M17.34 10.949h-.07a6.86 6.86 0 0 1-6.11-5.78c-.06-.41.22-.79.63-.86.41-.06.79.22.86.63a5.372 5.372 0 0 0 4.78 4.52c.41.04.71.41.67.82-.05.38-.38.67-.76.67ZM21 22.75H3c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h18c.41 0 .75.34.75.75s-.34.75-.75.75Z" fill="currentColor"></path>
+    </svg>
+  );
+};
+
+export { EditIcon };

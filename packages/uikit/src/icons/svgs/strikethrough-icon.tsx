@@ -1,6 +1,6 @@
 import type { IconProps } from '../types';
 
-export const StrikethroughIcon = ({
+const StrikethroughIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
@@ -8,24 +8,22 @@ export const StrikethroughIcon = ({
   style,
   testID,
   ...props
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    color={color}
-    style={style}
-    data-testid={testID}
-    fill={variant === 'bold' ? color : 'none'}
-    xmlns="http://www.w3.org/2000/svg"
-    stroke={variant === 'linear' ? color : 'none'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M16 4H9a3 3 0 0 0-2.83 4" />
-    <path d="M14 12a4 4 0 0 1 0 8H6" />
-    <line x1="4" x2="20" y1="12" y2="12" />
-  </svg>
-);
+}: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M15 22.75H9c-5.43 0-7.75-2.32-7.75-7.75V9c0-5.43 2.32-7.75 7.75-7.75h6c5.43 0 7.75 2.32 7.75 7.75v6c0 5.43-2.32 7.75-7.75 7.75Zm-6-20C4.39 2.75 2.75 4.39 2.75 9v6c0 4.61 1.64 6.25 6.25 6.25h6c4.61 0 6.25-1.64 6.25-6.25V9c0-4.61-1.64-6.25-6.25-6.25H9Z" fill="currentColor"></path><path d="M6.999 9.63a.75.75 0 0 1-.34-1.42c3.34-1.67 7.33-1.67 10.67 0 .37.19.52.64.34 1.01a.76.76 0 0 1-1.01.34 10.485 10.485 0 0 0-9.33 0c-.1.05-.22.07-.33.07Z" fill="currentColor"></path><path d="M12 17.04c-.41 0-.75-.34-.75-.75V7.93c0-.41.34-.75.75-.75s.75.34.75.75v8.37c0 .41-.34.74-.75.74Z" fill="currentColor"></path>
+    </svg>
+  );
+};
+
+export { StrikethroughIcon };

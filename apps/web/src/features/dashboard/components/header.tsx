@@ -102,8 +102,9 @@ export function Header() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              variant="destructive"
               onClick={handleLogout}
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+              className="cursor-pointer"
             >
               <Icons name="log-out" className="mr-2 h-4 w-4" />
               <span>Log out</span>

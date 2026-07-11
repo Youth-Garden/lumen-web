@@ -4,6 +4,7 @@ const CheckIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
+  variant = 'linear',
   style,
   testID,
   ...props
@@ -20,13 +21,7 @@ const CheckIcon = ({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path
-        d="M5 12l5 5L20 7"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      ></path>
+      <polyline points="20 6 9 17 4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 };

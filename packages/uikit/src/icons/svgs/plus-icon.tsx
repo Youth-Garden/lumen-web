@@ -1,10 +1,10 @@
-import React from 'react';
 import type { IconProps } from '../types';
 
 const PlusIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
+  variant = 'linear',
   style,
   testID,
   ...props
@@ -19,14 +19,9 @@ const PlusIcon = ({
       data-testid={testID}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
-      <path d="M12 5v14" />
-      <path d="M5 12h14" />
+      <path d="M18 12.75H6c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h12c.41 0 .75.34.75.75s-.34.75-.75.75Z" fill="currentColor"></path><path d="M12 18.75c-.41 0-.75-.34-.75-.75V6c0-.41.34-.75.75-.75s.75.34.75.75v12c0 .41-.34.75-.75.75Z" fill="currentColor"></path>
     </svg>
   );
 };

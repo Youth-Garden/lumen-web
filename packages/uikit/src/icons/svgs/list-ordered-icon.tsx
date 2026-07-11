@@ -1,6 +1,6 @@
 import type { IconProps } from '../types';
 
-export const ListOrderedIcon = ({
+const ListOrderedIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
@@ -8,27 +8,22 @@ export const ListOrderedIcon = ({
   style,
   testID,
   ...props
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    color={color}
-    style={style}
-    data-testid={testID}
-    fill={variant === 'bold' ? color : 'none'}
-    xmlns="http://www.w3.org/2000/svg"
-    stroke={variant === 'linear' ? color : 'none'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M11 5h10" />
-    <path d="M11 12h10" />
-    <path d="M11 19h10" />
-    <path d="M4 4h1v5" />
-    <path d="M4 9h2" />
-    <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
-  </svg>
-);
+}: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M21 5.25h-9c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h9c.41 0 .75.34.75.75s-.34.75-.75.75ZM21 10.25h-9c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h9c.41 0 .75.34.75.75s-.34.75-.75.75ZM21 15.25H3c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h18c.41 0 .75.34.75.75s-.34.75-.75.75ZM21 20.25H3c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h18c.41 0 .75.34.75.75s-.34.75-.75.75Z" fill="currentColor"></path>
+    </svg>
+  );
+};
+
+export { ListOrderedIcon };

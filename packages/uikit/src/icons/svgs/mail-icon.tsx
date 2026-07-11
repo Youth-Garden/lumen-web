@@ -1,6 +1,6 @@
 import type { IconProps } from '../types';
 
-export const MailIcon = ({
+const MailIcon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
@@ -8,23 +8,22 @@ export const MailIcon = ({
   style,
   testID,
   ...props
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    color={color}
-    style={style}
-    data-testid={testID}
-    fill={variant === 'bold' ? color : 'none'}
-    xmlns="http://www.w3.org/2000/svg"
-    stroke={variant === 'linear' ? color : 'none'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
-    <rect x="2" y="4" width="20" height="16" rx="2" />
-  </svg>
-);
+}: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M17 21.25H7c-3.65 0-5.75-2.1-5.75-5.75v-7c0-3.65 2.1-5.75 5.75-5.75h10c3.65 0 5.75 2.1 5.75 5.75v7c0 3.65-2.1 5.75-5.75 5.75Zm-10-17c-2.86 0-4.25 1.39-4.25 4.25v7c0 2.86 1.39 4.25 4.25 4.25h10c2.86 0 4.25-1.39 4.25-4.25v-7c0-2.86-1.39-4.25-4.25-4.25H7Z" fill="currentColor"></path><path d="M11.999 12.868c-.84 0-1.69-.26-2.34-.79l-3.13-2.5a.748.748 0 0 1 .93-1.17l3.13 2.5c.76.61 2.05.61 2.81 0l3.13-2.5c.32-.26.8-.21 1.05.12.26.32.21.8-.12 1.05l-3.13 2.5c-.64.53-1.49.79-2.33.79Z" fill="currentColor"></path>
+    </svg>
+  );
+};
+
+export { MailIcon };

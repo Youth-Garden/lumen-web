@@ -1,6 +1,6 @@
 import type { IconProps } from '../types';
 
-export const Heading2Icon = ({
+const Heading2Icon = ({
   size = 24,
   color = 'currentColor',
   viewBox = '0 0 24 24',
@@ -8,25 +8,22 @@ export const Heading2Icon = ({
   style,
   testID,
   ...props
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    color={color}
-    style={style}
-    data-testid={testID}
-    fill={variant === 'bold' ? color : 'none'}
-    xmlns="http://www.w3.org/2000/svg"
-    stroke={variant === 'linear' ? color : 'none'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M4 12h8" />
-    <path d="M4 18V6" />
-    <path d="M12 18V6" />
-    <path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1" />
-  </svg>
-);
+}: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      color={color}
+      style={style}
+      data-testid={testID}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M21.332 7.921c-.41 0-.75-.34-.75-.75v-1.82c0-.73-.59-1.32-1.32-1.32H4.742c-.73 0-1.32.59-1.32 1.32v1.83c0 .41-.34.75-.75.75s-.75-.34-.75-.76v-1.82c0-1.56 1.27-2.82 2.82-2.82h14.52c1.56 0 2.82 1.27 2.82 2.82v1.83c0 .41-.33.74-.75.74Z" fill="currentColor"></path><path d="M12 21.47c-.41 0-.75-.34-.75-.75V4.11c0-.41.34-.75.75-.75s.75.34.75.75v16.61c0 .42-.34.75-.75.75Z" fill="currentColor"></path><path d="M15.939 21.469h-7.88c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h7.88c.41 0 .75.34.75.75s-.34.75-.75.75Z" fill="currentColor"></path>
+    </svg>
+  );
+};
+
+export { Heading2Icon };
