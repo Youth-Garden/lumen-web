@@ -16,7 +16,6 @@
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background-color: var(--muted-foreground);
     opacity: 0.3;
     transition: opacity 0.2s ease;
   }
@@ -29,7 +28,6 @@
 @supports (scrollbar-width: thin) {
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--muted-foreground) transparent;
   }
 }
 
@@ -268,11 +266,40 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* Thicken stroke-based icons */
+  svg[stroke="currentColor"] {
+    stroke-width: 2.5px;
+  }
+  
+  /* Thicken fill-based icons by adding a tiny stroke to their filled paths */
+  path[fill="currentColor"],
+  rect[fill="currentColor"],
+  circle[fill="currentColor"] {
+    stroke: currentColor;
+    stroke-width: 0.5px;
+  }
+
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Scale the whole UI up slightly on desktop. Spacing/text are rem-based,
+   so bumping the root font-size grows paddings, heights, gaps and type
+   proportionally without touching each component. */
+@media (min-width: 1024px) {
+  :root {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1536px) {
+  :root {
+    font-size: 18px;
   }
 }

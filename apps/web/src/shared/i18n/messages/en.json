@@ -116,7 +116,8 @@
       "logout": "Log out"
     },
     "Header": {
-      "search": "Search..."
+      "search": "Search...",
+      "language": "Language"
     }
   },
   "Auth": {
@@ -263,10 +264,25 @@
   },
   "Settings": {
     "title": "Settings",
+    "subtitle": "Manage your account, preferences, and appearance.",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateFailed": "Failed to update profile",
     "goalsUpdateSuccess": "Study goals updated successfully",
     "goalsUpdateFailed": "Failed to update study goals",
+    "sections": {
+      "profile": "Profile",
+      "goals": "Study Goals",
+      "appearance": "Appearance",
+      "account": "Account"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize how Lumen looks and reads.",
+      "theme": "Theme",
+      "themeDescription": "Choose a color scheme and light or dark mode.",
+      "language": "Language",
+      "languageDescription": "Choose the language used across the app."
+    },
     "tabs": {
       "profile": "Profile",
       "studyGoals": "Study Goals",

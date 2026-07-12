@@ -2,6 +2,8 @@ import React from 'react';
 import { registry, type IconName } from './registry';
 import type { IconProps } from './types';
 
+export type { IconName };
+
 export interface IconsProps extends IconProps {
   name: IconName;
 }

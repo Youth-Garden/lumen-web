@@ -4,7 +4,6 @@ import { Icons } from '@lumen/uikit/icons';
 import {
   Input,
   Button,
-  ThemeSwitcher,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -15,8 +14,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@lumen/uikit/components';
-import { useTranslations, useLocale } from 'next-intl';
-import { usePathname, useRouter } from '@/shared/i18n/routing';
+import { useRouter } from '@/shared/i18n/routing';
 import { useAuthStore } from '@/store/auth.store';
 import { RouteEnum } from '@/shared/constants';
 import { useLogout } from '@/features/auth/hooks';
@@ -25,19 +23,11 @@ import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 import { NotificationsPopover } from './notifications-popover';
 
 export function Header() {
-  const t = useTranslations('Dashboard.Header');
-  const locale = useLocale();
-  const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
   const { logout } = useLogout();
   const router = useRouter();
 
   const { data: progressData } = useProgressDashboard();
-
-  const changeLang = () => {
-    const nextLocale = locale === 'en' ? 'vi' : 'en';
-    router.replace(pathname, { locale: nextLocale });
-  };
 
   const handleLogout = async () => {
     await logout();
@@ -66,15 +56,6 @@ export function Header() {
           </div>
         )}
         <NotificationsPopover />
-        <ThemeSwitcher />
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-sm font-medium gap-1"
-          onClick={() => changeLang()}
-        >
-          <Icons name="languages" className="h-4 w-4" /> {t('language')}
-        </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger className="relative h-8 w-8 rounded-full outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">

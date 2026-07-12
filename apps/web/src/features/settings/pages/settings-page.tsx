@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
@@ -12,20 +12,30 @@ import {
   Button,
   Input,
   Label,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+  ThemeSwitcher,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { cn } from '@lumen/uikit/utils';
 import { useAuthStore } from '@/store/auth.store';
 import { useUpdateProfile } from '@/features/auth/hooks/use-update-profile';
 import { useProgressSettings } from '@/features/dashboard/hooks/use-progress-settings';
 import { useProgressDashboard } from '@/features/dashboard/hooks/use-progress-dashboard';
 import { useTranslations } from 'next-intl';
+import type { IconName } from '@lumen/uikit/icons';
+import { LanguageSwitcher } from '../components/language-switcher';
+
+type SectionKey = 'profile' | 'goals' | 'appearance' | 'account';
+
+const SECTIONS: { key: SectionKey; icon: IconName }[] = [
+  { key: 'profile', icon: 'user' },
+  { key: 'goals', icon: 'flag' },
+  { key: 'appearance', icon: 'languages' },
+  { key: 'account', icon: 'shield' },
+];
 
 export const SettingsPage = () => {
   const t = useTranslations('Settings');
+  const [section, setSection] = useState<SectionKey>('profile');
   const user = useAuthStore((state) => state.user);
   const { mutate: updateProfile, isPending: isUpdatingProfile } =
     useUpdateProfile();
@@ -92,123 +102,176 @@ export const SettingsPage = () => {
   });
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
-          <Icons name="settings" className="h-8 w-8 text-primary" />
+    <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
+      <div className="mb-8">
+        <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+          <Icons name="settings" className="h-7 w-7 text-primary" />
           {t('title')}
-        </h2>
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
 
-      <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="profile" className="flex gap-2">
-            <Icons name="user" className="h-4 w-4" /> {t('tabs.profile')}
-          </TabsTrigger>
-          <TabsTrigger value="goals" className="flex gap-2">
-            <Icons name="flag" className="h-4 w-4" /> {t('tabs.studyGoals')}
-          </TabsTrigger>
-          <TabsTrigger value="account" className="flex gap-2">
-            <Icons name="shield" className="h-4 w-4" /> {t('tabs.account')}
-          </TabsTrigger>
-        </TabsList>
+      <div className="flex flex-col gap-8 md:flex-row">
+        {/* Section nav */}
+        <nav className="md:w-56 md:shrink-0">
+          <ul className="flex gap-1 overflow-x-auto md:sticky md:top-6 md:flex-col md:overflow-visible">
+            {SECTIONS.map((item) => {
+              const isActive = section === item.key;
+              return (
+                <li key={item.key} className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setSection(item.key)}
+                    className={cn(
+                      'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors outline-none focus-visible:ring-4 focus-visible:ring-primary/20',
+                      isActive
+                        ? 'bg-muted font-medium text-foreground'
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+                    )}
+                  >
+                    <Icons name={item.icon} className="h-4 w-4 shrink-0" />
+                    {t(`sections.${item.key}`)}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-        <TabsContent value="profile" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('profile.title')}</CardTitle>
-              <CardDescription>{t('profile.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={onProfileSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">{t('profile.fullName')}</Label>
-                  <Input id="fullName" {...profileForm.register('fullName')} />
+        {/* Content panel */}
+        <div className="min-w-0 flex-1 space-y-6">
+          {section === 'profile' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('profile.title')}</CardTitle>
+                <CardDescription>{t('profile.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={onProfileSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">{t('profile.fullName')}</Label>
+                    <Input id="fullName" {...profileForm.register('fullName')} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">{t('profile.phone')}</Label>
+                    <Input id="phone" {...profileForm.register('phone')} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="avatarUrl">{t('profile.avatarUrl')}</Label>
+                    <Input
+                      id="avatarUrl"
+                      {...profileForm.register('avatarUrl')}
+                    />
+                  </div>
+                  <Button type="submit" disabled={isUpdatingProfile}>
+                    {isUpdatingProfile
+                      ? t('buttons.saving')
+                      : t('buttons.saveChanges')}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          {section === 'goals' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('goals.title')}</CardTitle>
+                <CardDescription>{t('goals.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={onProgressSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="dailyGoalMinutes">
+                      {t('goals.dailyGoalMinutes')}
+                    </Label>
+                    <Input
+                      id="dailyGoalMinutes"
+                      type="number"
+                      min="1"
+                      {...progressForm.register('dailyGoalMinutes')}
+                    />
+                  </div>
+                  <Button type="submit" disabled={isUpdatingProgress}>
+                    {isUpdatingProgress
+                      ? t('buttons.saving')
+                      : t('buttons.saveGoals')}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          {section === 'appearance' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('appearance.title')}</CardTitle>
+                <CardDescription>
+                  {t('appearance.description')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="divide-y divide-border">
+                <div className="flex items-center justify-between gap-4 py-4 first:pt-0">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">
+                      {t('appearance.theme')}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('appearance.themeDescription')}
+                    </p>
+                  </div>
+                  <ThemeSwitcher />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">{t('profile.phone')}</Label>
-                  <Input id="phone" {...profileForm.register('phone')} />
+                <div className="flex items-center justify-between gap-4 py-4 last:pb-0">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">
+                      {t('appearance.language')}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('appearance.languageDescription')}
+                    </p>
+                  </div>
+                  <LanguageSwitcher />
                 </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {section === 'account' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('account.title')}</CardTitle>
+                <CardDescription>{t('account.description')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="avatarUrl">{t('profile.avatarUrl')}</Label>
+                  <Label htmlFor="email">{t('account.email')}</Label>
                   <Input
-                    id="avatarUrl"
-                    {...profileForm.register('avatarUrl')}
+                    id="email"
+                    type="email"
+                    disabled
+                    value={user?.email || ''}
                   />
                 </div>
-                <Button type="submit" disabled={isUpdatingProfile}>
-                  {isUpdatingProfile
-                    ? t('buttons.saving')
-                    : t('buttons.saveChanges')}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="goals" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('goals.title')}</CardTitle>
-              <CardDescription>{t('goals.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={onProgressSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="dailyGoalMinutes">
-                    {t('goals.dailyGoalMinutes')}
+                  <Label htmlFor="current-password">
+                    {t('account.currentPassword')}
                   </Label>
                   <Input
-                    id="dailyGoalMinutes"
-                    type="number"
-                    min="1"
-                    {...progressForm.register('dailyGoalMinutes')}
+                    id="current-password"
+                    type="password"
+                    placeholder={t('account.comingSoon')}
+                    disabled
                   />
                 </div>
-                <Button type="submit" disabled={isUpdatingProgress}>
-                  {isUpdatingProgress
-                    ? t('buttons.saving')
-                    : t('buttons.saveGoals')}
+                <Button variant="destructive" disabled>
+                  {t('account.changePassword')}
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="account" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('account.title')}</CardTitle>
-              <CardDescription>{t('account.description')}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">{t('account.email')}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  disabled
-                  value={user?.email || ''}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="current-password">
-                  {t('account.currentPassword')}
-                </Label>
-                <Input
-                  id="current-password"
-                  type="password"
-                  placeholder={t('account.comingSoon')}
-                  disabled
-                />
-              </div>
-              <Button variant="destructive" disabled>
-                {t('account.changePassword')}
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

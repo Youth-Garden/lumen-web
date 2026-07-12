@@ -49,14 +49,14 @@ export function Sidebar() {
         {/* OPEN STATE */}
         <div
           className={cn(
-            'absolute inset-0 flex items-center justify-between px-6 transition-all duration-300',
+            'absolute inset-0 flex items-center justify-between pl-[30px] pr-6 transition-all duration-300',
             sidebarCollapsed
               ? 'opacity-0 invisible scale-95'
               : 'opacity-100 visible scale-100',
           )}
         >
           <Link href={RouteEnum.DASHBOARD} className="flex items-center">
-            <Logo showText={true} />
+            <Logo showText={true} iconSize={28} />
           </Link>
           <Button
             variant="ghost"
@@ -132,22 +132,18 @@ export function Sidebar() {
                         <Button
                           variant="ghost"
                           className={cn(
-                            'relative flex items-center h-11 w-full rounded-xl transition-all duration-300 overflow-hidden mx-auto justify-start',
-                            sidebarCollapsed ? 'max-w-[44px] pl-[10px]' : 'max-w-[250px] px-4',
+                            'relative flex items-center h-11 w-full rounded-xl transition-all duration-300 overflow-hidden mx-auto justify-start gap-0',
+                            sidebarCollapsed ? 'max-w-[44px] pl-[12px]' : 'max-w-[250px] pl-[18px]',
                             isActive
                               ? 'bg-primary/10 text-primary font-medium shadow-none hover:bg-primary/15'
                               : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
                           )}
                         >
-                          {isActive && (
-                            <div className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary" />
-                          )}
-
                           <Icons
                             name={item.icon as any}
                             className={cn(
                               'shrink-0 transition-all duration-300',
-                              sidebarCollapsed ? 'h-6 w-6' : 'h-5 w-5',
+                              'h-5 w-5'
                             )}
                           />
                           

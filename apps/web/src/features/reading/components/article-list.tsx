@@ -91,7 +91,7 @@ export const ArticleList = () => {
               </CardHeader>
               <CardContent className="flex-1 text-sm text-slate-500 dark:text-slate-400">
                 <p className="line-clamp-3">
-                  {article.content.substring(0, 150)}...
+                  {article.content?.substring(0, 150) || ''}...
                 </p>
                 <div className="mt-4 flex items-center gap-4 text-xs font-medium">
                   <div className="flex items-center gap-1 text-teal-600 dark:text-teal-400">

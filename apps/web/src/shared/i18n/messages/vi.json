@@ -116,7 +116,8 @@
       "logout": "Đăng xuất"
     },
     "Header": {
-      "search": "Tìm kiếm..."
+      "search": "Tìm kiếm...",
+      "language": "Ngôn ngữ"
     }
   },
   "Auth": {
@@ -263,10 +264,25 @@
   },
   "Settings": {
     "title": "Cài đặt",
+    "subtitle": "Quản lý tài khoản, tùy chọn và giao diện của bạn.",
     "profileUpdateSuccess": "Cập nhật hồ sơ thành công",
     "profileUpdateFailed": "Cập nhật hồ sơ thất bại",
     "goalsUpdateSuccess": "Cập nhật mục tiêu học tập thành công",
     "goalsUpdateFailed": "Cập nhật mục tiêu học tập thất bại",
+    "sections": {
+      "profile": "Hồ sơ",
+      "goals": "Mục tiêu học tập",
+      "appearance": "Giao diện",
+      "account": "Tài khoản"
+    },
+    "appearance": {
+      "title": "Giao diện",
+      "description": "Tùy chỉnh giao diện và cách hiển thị của Lumen.",
+      "theme": "Chủ đề",
+      "themeDescription": "Chọn bảng màu và chế độ sáng hoặc tối.",
+      "language": "Ngôn ngữ",
+      "languageDescription": "Chọn ngôn ngữ sử dụng trong toàn ứng dụng."
+    },
     "tabs": {
       "profile": "Hồ sơ",
       "studyGoals": "Mục tiêu học tập",

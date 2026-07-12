@@ -48,9 +48,9 @@ export function DeckListPage() {
             <p>{t('noDecks')}</p>
           </div>
         ) : (
-          data?.data.map((deck) => (
+          data?.data.map((deck, index) => (
             <Card
-              key={deck.id}
+              key={deck.id || index}
               className="group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg hover:border-primary/50 cursor-pointer"
             >
               {/* Glassmorphism gradient background */}
