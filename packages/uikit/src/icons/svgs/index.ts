@@ -86,4 +86,3 @@ export * from './quiz-icon';
 export * from './vocabulary-icon';  
 export * from './deck-icon'; 
 export * from './google-icon'; 
-export * from './logo-icon';

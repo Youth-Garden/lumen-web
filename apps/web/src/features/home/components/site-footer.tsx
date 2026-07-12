@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@lumen/uikit/icons';
+import { Logo } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
 
 export function SiteFooter() {
@@ -44,7 +45,7 @@ export function SiteFooter() {
               aria-label="Lumen home"
             >
               <div className="flex h-9 w-9 items-center justify-center">
-                <Icons name="logo" className="h-8 w-8 text-primary" />
+                <Logo showText={false} iconSize={32} />
               </div>
               <span className="text-lg font-bold">Lumen Platform</span>
             </Link>

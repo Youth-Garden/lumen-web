@@ -15,22 +15,29 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@lumen/uikit/components';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { usePathname, useRouter } from '@/shared/i18n/routing';
 import { useAuthStore } from '@/store/auth.store';
-import { useRouter } from 'next/navigation';
 import { RouteEnum } from '@/shared/constants';
 import { useLogout } from '@/features/auth/hooks';
 import { useUiStore } from '@/store/ui.store';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
+import { NotificationsPopover } from './notifications-popover';
 
 export function Header() {
   const t = useTranslations('Dashboard.Header');
+  const locale = useLocale();
+  const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
   const { logout } = useLogout();
-  const { toggleSidebar } = useUiStore();
   const router = useRouter();
 
   const { data: progressData } = useProgressDashboard();
+
+  const changeLang = () => {
+    const nextLocale = locale === 'en' ? 'vi' : 'en';
+    router.replace(pathname, { locale: nextLocale });
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -49,17 +56,7 @@ export function Header() {
   return (
     <header className="flex h-16 items-center justify-between border-b border-border bg-background/80 backdrop-blur-md px-6 sticky top-0 z-50">
       <div className="flex items-center gap-4 flex-1">
-        <div className="relative w-full max-w-md hidden sm:flex group">
-          <Icons
-            name="search"
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors"
-          />
-          <Input
-            type="search"
-            placeholder={t('search')}
-            className="w-full bg-muted/50 border-input pl-10 md:w-[300px] lg:w-[400px] focus:bg-background focus:border-primary transition-all rounded-full"
-          />
-        </div>
+        {/* Placeholder for future left-side items or breadcrumbs */}
       </div>
       <div className="flex items-center gap-4">
         {progressData && (
@@ -68,11 +65,16 @@ export function Header() {
             <span>{progressData.streak}</span>
           </div>
         )}
-        <Button variant="ghost" size="icon" className="relative">
-          <Icons name="bell" className="h-5 w-5" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive"></span>
-        </Button>
+        <NotificationsPopover />
         <ThemeSwitcher />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-sm font-medium gap-1"
+          onClick={() => changeLang()}
+        >
+          <Icons name="languages" className="h-4 w-4" /> {t('language')}
+        </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger className="relative h-8 w-8 rounded-full outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
@@ -88,7 +90,8 @@ export function Header() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {user?.fullName || (user?.email ? user.email.split('@')[0] : 'Admin')}
+                  {user?.fullName ||
+                    (user?.email ? user.email.split('@')[0] : 'Admin')}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
                   {user?.email || 'admin@lumen.com'}
@@ -96,7 +99,10 @@ export function Header() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => router.push(RouteEnum.SETTINGS)}
+            >
               <Icons name="user" className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </DropdownMenuItem>

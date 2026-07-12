@@ -89,9 +89,9 @@ export function VocabularyListPage() {
               {t('noResults')}
             </div>
           ) : (
-            data?.data.items.map((word) => (
+            data?.data.items.map((word, index) => (
               <Card
-                key={word.id}
+                key={word.id || `word-${index}`}
                 className="group overflow-hidden transition-all hover:border-primary/50"
               >
                 <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-gradient-to-r from-card to-card/50">
@@ -124,8 +124,8 @@ export function VocabularyListPage() {
                       </p>
                     )}
                     <div className="space-y-1">
-                      {(word.definitions || []).slice(0, 2).map((def) => (
-                        <div key={def.id} className="text-sm">
+                      {(word.definitions || []).slice(0, 2).map((def, defIndex) => (
+                        <div key={def.id || `def-${defIndex}`} className="text-sm">
                           <span className="italic text-muted-foreground mr-2">
                             {def.partOfSpeech}.
                           </span>

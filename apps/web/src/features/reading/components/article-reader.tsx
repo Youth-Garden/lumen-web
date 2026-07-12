@@ -7,9 +7,7 @@ import { Button } from '@lumen/uikit/components';
 import { useRouter } from 'next/navigation';
 import {
   TranslationPopover,
-  TranslationPopoverData,
 } from './translation-popover';
-import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 
 export const ArticleReader = ({ articleId }: { articleId: string }) => {
@@ -17,33 +15,29 @@ export const ArticleReader = ({ articleId }: { articleId: string }) => {
   const { data: article, isLoading, isError } = useGetArticleById(articleId);
   const router = useRouter();
 
-  const [presentTranslationPopover] =
-    usePortalWithoutBackdrop<TranslationPopoverData>(TranslationPopover);
+  const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
 
   const handleMouseUp = () => {
-    const selection = window.getSelection();
-    if (!selection || selection.isCollapsed) {
+    const textSelection = window.getSelection();
+    if (!textSelection || textSelection.isCollapsed) {
+      setSelection(null);
       return;
     }
 
-    const text = selection.toString().trim();
+    const text = textSelection.toString().trim();
 
     // Only translate if word count is reasonable (e.g. max 50 words to avoid huge blocks)
     if (text.length > 0 && text.split(/\s+/).length <= 50) {
-      const range = selection.getRangeAt(0);
+      const range = textSelection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
 
-      presentTranslationPopover({
+      setSelection({
         text,
-        position: {
-          x: rect.left + rect.width / 2, // Center of selection horizontally
-          y: rect.top, // Top of selection
-        },
-        onAddToFlashcard: (word, translation) => {
-          // In a real app, we would call the vocabularyService mutation here.
-          console.log('Added to flashcard:', word, translation);
-        },
+        x: rect.left + rect.width / 2,
+        y: rect.top,
       });
+    } else {
+      setSelection(null);
     }
   };
 
@@ -114,6 +108,18 @@ export const ArticleReader = ({ articleId }: { articleId: string }) => {
             ) : null,
           )}
         </div>
+        {selection && (
+          <div
+            className="fixed z-50 animate-in fade-in zoom-in-95 duration-200"
+            style={{
+              left: selection.x,
+              top: selection.y - 40,
+              transform: 'translateX(-50%)',
+            }}
+          >
+            <TranslationPopover text={selection.text} compact />
+          </div>
+        )}
       </article>
     </div>
   );

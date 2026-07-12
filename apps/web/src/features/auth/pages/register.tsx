@@ -18,6 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  Logo,
 } from '@lumen/uikit/components';
 import {
   RegisterFormData,
@@ -66,7 +67,7 @@ export default function RegisterPage() {
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2 text-center mb-4">
         <div className="flex justify-center mb-4">
-          <Icons name="logo" className="w-14 h-14" />
+          <Logo showText={false} iconSize={56} />
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>

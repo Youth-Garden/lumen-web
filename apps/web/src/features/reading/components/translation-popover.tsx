@@ -9,23 +9,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@lumen/uikit/components';
-import { PortalProps } from '@lumen/uikit/portal';
-
 import { useTranslations } from 'next-intl';
 
-export interface TranslationPopoverData {
+export interface TranslationPopoverProps {
+  /** Text to translate */
   text: string;
-  position: { x: number; y: number } | null;
+  /** Optional callback when user adds to flashcards */
   onAddToFlashcard?: (word: string, translation: string) => void;
+  /** Optional custom trigger label (defaults to showing the text) */
+  triggerLabel?: string;
+  /** Whether to show the trigger as a compact icon-only button */
+  compact?: boolean;
 }
 
 export const TranslationPopover = ({
-  isOpen,
-  onDismiss,
-  data,
-}: PortalProps<TranslationPopoverData>) => {
+  text,
+  onAddToFlashcard,
+  triggerLabel,
+  compact = false,
+}: TranslationPopoverProps) => {
   const t = useTranslations('Reading');
-  const { text = '', position = null, onAddToFlashcard } = data || {};
   const {
     data: translationResult,
     isLoading,
@@ -33,7 +36,7 @@ export const TranslationPopover = ({
   } = useTranslateText(text);
   const [added, setAdded] = useState(false);
 
-  if (!text || !position) return null;
+  if (!text) return null;
 
   const handleAdd = () => {
     if (translationResult?.translation) {
@@ -43,17 +46,40 @@ export const TranslationPopover = ({
     }
   };
 
+  const displayText = triggerLabel || text;
+  const truncatedText =
+    displayText.length > 30 ? displayText.slice(0, 30) + '…' : displayText;
+
   return (
-    <Popover open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <PopoverTrigger
-        className="fixed z-[-1] opacity-0 pointer-events-none"
-        style={{
-          left: position.x,
-          top: position.y,
-          width: 0,
-          height: 0,
-        }}
-      />
+    <Popover>
+      <PopoverTrigger>
+        <Button
+          variant={compact ? 'ghost' : 'outline'}
+          size={compact ? 'icon' : 'sm'}
+          className={
+            compact ? 'h-8 w-8 p-0 rounded-full' : 'gap-1.5 whitespace-nowrap'
+          }
+          aria-label={t('translateText')}
+        >
+          {compact ? (
+            <Icons
+              name="languages"
+              className="h-4 w-4 text-teal-600 dark:text-teal-400"
+            />
+          ) : (
+            <>
+              <Icons
+                name="languages"
+                className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400 shrink-0"
+              />
+              <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                {t('translate')}: "{truncatedText}"
+              </span>
+            </>
+          )}
+        </Button>
+      </PopoverTrigger>
+
       <PopoverContent
         align="center"
         side="top"
@@ -65,7 +91,7 @@ export const TranslationPopover = ({
             <Icons name="languages" className="h-4 w-4" /> {t('translation')}
           </div>
           <div className="mt-1 line-clamp-2 text-sm font-medium text-slate-800 dark:text-slate-200">
-            &quot;{text}&quot;
+            "{text}"
           </div>
         </div>
 

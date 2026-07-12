@@ -4,6 +4,35 @@
 
 @custom-variant dark (&:is([data-theme='ocean-dark'] *, [data-theme='forest-dark'] *));
 
+/* Custom scrollbars */
+@layer base {
+  /* Webkit (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: var(--muted-foreground);
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    opacity: 0.6;
+  }
+}
+
+/* Firefox */
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted-foreground) transparent;
+  }
+}
+
 :root,
 [data-theme='ocean-light'] {
   --background: #ffffff;

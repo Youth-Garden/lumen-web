@@ -2,6 +2,8 @@ export * from './ui/avatar';
 export * from './ui/backdrop';
 export * from './ui/open-effect';
 export * from './ui/button';
+export * from './ui/command';
+export * from './ui/radial-progress';
 export * from './ui/card';
 export * from './ui/checkbox';
 export * from './ui/dialog';

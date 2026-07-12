@@ -12,6 +12,7 @@ export interface DashboardProgressResponse {
   streak: number;
   totalPoints: number;
   dailyGoalMinutes: number;
+  todayStudyMinutes: number;
   weeklyData?: { date: string; xp: number }[];
 }
 

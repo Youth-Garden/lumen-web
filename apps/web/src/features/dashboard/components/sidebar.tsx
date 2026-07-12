@@ -4,24 +4,16 @@ import { Link, usePathname, useRouter } from '@/shared/i18n/routing';
 import { useTranslations } from 'next-intl';
 
 import { Icons } from '@lumen/uikit/icons';
-import {
-  Button,
-  ScrollArea,
-  Logo,
-} from '@lumen/uikit/components';
+import { Button, ScrollArea, Logo } from '@lumen/uikit/components';
 import { cn } from '@lumen/uikit/utils';
 
 import { RouteEnum } from '@/shared/constants';
-import { useLogout } from '@/features/auth/hooks';
-import { useAuthStore } from '@/store/auth.store';
 import { useUiStore } from '@/store/ui.store';
 
 const navigationGroups = [
   {
     group: 'Main',
-    items: [
-      { key: 'overview', href: RouteEnum.DASHBOARD, icon: 'overview' },
-    ],
+    items: [{ key: 'overview', href: RouteEnum.DASHBOARD, icon: 'overview' }],
   },
   {
     group: 'Learning',
@@ -37,100 +29,138 @@ const navigationGroups = [
   },
   {
     group: 'System',
-    items: [
-      { key: 'settings', href: RouteEnum.SETTINGS, icon: 'settings' },
-    ],
+    items: [{ key: 'settings', href: RouteEnum.SETTINGS, icon: 'settings' }],
   },
 ];
 
 export function Sidebar() {
   const t = useTranslations('Dashboard.Sidebar');
   const pathname = usePathname();
-  const router = useRouter();
-  
-  const { user } = useAuthStore();
-  const { logout } = useLogout();
   const { sidebarCollapsed, toggleSidebar } = useUiStore();
-
-  const handleLogout = () => {
-    logout();
-    router.push(RouteEnum.LOGIN);
-  };
-
-  const getInitials = (name?: string) => {
-    if (!name) return 'U';
-    return name.slice(0, 2).toUpperCase();
-  };
 
   return (
     <div
       className={cn(
-        "relative flex h-full flex-col border-r border-border bg-background text-card-foreground transition-all duration-300 ease-in-out",
-        sidebarCollapsed ? "w-[88px]" : "w-64"
+        'relative flex h-full flex-col border-r border-border bg-background text-card-foreground transition-all duration-300 ease-in-out',
+        sidebarCollapsed ? 'w-[88px]' : 'w-64',
       )}
     >
-      {/* Toggle Button */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={toggleSidebar}
-        className="absolute -right-4 top-6 z-30 h-8 w-8 rounded-full border bg-background text-muted-foreground hover:text-foreground hover:bg-accent shadow-sm transition-transform hover:scale-105"
-      >
-        <Icons
-          name={sidebarCollapsed ? "panel-left-open" : "panel-left-close"}
-          className="h-4 w-4"
-        />
-        <span className="sr-only">Toggle Sidebar</span>
-      </Button>
+      <div className="relative flex h-20 w-full shrink-0 items-center overflow-hidden">
+        {/* OPEN STATE */}
+        <div
+          className={cn(
+            'absolute inset-0 flex items-center justify-between px-6 transition-all duration-300',
+            sidebarCollapsed
+              ? 'opacity-0 invisible scale-95'
+              : 'opacity-100 visible scale-100',
+          )}
+        >
+          <Link href={RouteEnum.DASHBOARD} className="flex items-center">
+            <Logo showText={true} />
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="text-muted-foreground hover:text-foreground -mr-2"
+            title="Close sidebar"
+          >
+            <Icons name="panel-left-close" className="h-5 w-5" />
+          </Button>
+        </div>
 
-      {/* Header / Logo */}
-      <div className={cn("p-6 flex items-center h-20 shrink-0", sidebarCollapsed ? "justify-center px-0" : "")}>
-        <Link href={RouteEnum.DASHBOARD} className="flex items-center">
-          <Logo showText={!sidebarCollapsed} />
-        </Link>
+        {/* CLOSED STATE */}
+        <div
+          className={cn(
+            'absolute inset-0 flex items-center justify-center transition-all duration-300',
+            sidebarCollapsed
+              ? 'opacity-100 visible scale-100'
+              : 'opacity-0 invisible scale-110',
+          )}
+        >
+          <Button
+            variant="ghost"
+            className="w-12 h-12 rounded-xl hover:bg-accent group relative overflow-hidden"
+            onClick={toggleSidebar}
+            title="Open sidebar"
+          >
+            <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-200 group-hover:opacity-0">
+              <Logo showText={false} iconSize={28} />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 text-muted-foreground">
+              <Icons name="panel-left-open" className="h-6 w-6" />
+            </div>
+          </Button>
+        </div>
       </div>
 
-      {/* Navigation */}
       <ScrollArea className="flex-1">
         <nav className="flex flex-col gap-2 py-4">
           {navigationGroups.map((group, groupIdx) => (
-            <div key={groupIdx} className={cn("flex flex-col", sidebarCollapsed ? "gap-2" : "gap-1")}>
-              {!sidebarCollapsed && (
-                <span className="px-6 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+            <div
+              key={groupIdx}
+              className="flex flex-col gap-1"
+            >
+              <div 
+                className={cn(
+                  "relative flex items-center justify-center transition-all duration-300",
+                  sidebarCollapsed && groupIdx === 0 ? "h-0 opacity-0 overflow-hidden" : "h-8 opacity-100"
+                )}
+              >
+                <span className={cn(
+                  "absolute left-6 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 transition-all duration-300 whitespace-nowrap",
+                  sidebarCollapsed ? "opacity-0 scale-95 invisible" : "opacity-100 scale-100 visible"
+                )}>
                   {group.group}
                 </span>
-              )}
-              {sidebarCollapsed && groupIdx !== 0 && <div className="mx-auto w-8 border-t border-border/50 my-2" />}
-              
+                
+                {groupIdx !== 0 && (
+                  <div className={cn(
+                    "absolute w-8 border-t border-border/50 transition-all duration-300",
+                    sidebarCollapsed ? "opacity-100 scale-100 visible" : "opacity-0 scale-50 invisible"
+                  )} />
+                )}
+              </div>
+
               <ul className="flex flex-col gap-1.5 px-4">
                 {group.items.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                  
+                  const isActive = pathname === item.href;
+
                   return (
                     <li key={item.key}>
                       <Link href={item.href} className="block w-full">
                         <Button
                           variant="ghost"
                           className={cn(
-                            "relative flex w-full items-center h-11 rounded-xl transition-all duration-200",
-                            sidebarCollapsed
-                              ? "justify-center px-0 w-11 mx-auto"
-                              : "justify-start gap-3 px-4",
+                            'relative flex items-center h-11 w-full rounded-xl transition-all duration-300 overflow-hidden mx-auto justify-start',
+                            sidebarCollapsed ? 'max-w-[44px] pl-[10px]' : 'max-w-[250px] px-4',
                             isActive
-                              ? "bg-primary/10 text-primary font-medium shadow-none hover:bg-primary/15"
-                              : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                              ? 'bg-primary/10 text-primary font-medium shadow-none hover:bg-primary/15'
+                              : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
                           )}
                         >
-                          {/* Active indicator bar */}
-                          {isActive && sidebarCollapsed && (
-                             <div className="absolute left-[-16px] top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-primary" />
+                          {isActive && (
+                            <div className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary" />
                           )}
-                          
+
                           <Icons
                             name={item.icon as any}
-                            className={cn("shrink-0", sidebarCollapsed ? "h-6 w-6" : "h-5 w-5")}
+                            className={cn(
+                              'shrink-0 transition-all duration-300',
+                              sidebarCollapsed ? 'h-6 w-6' : 'h-5 w-5',
+                            )}
                           />
-                          {!sidebarCollapsed && <span>{t(item.key)}</span>}
+                          
+                          <div
+                            className={cn(
+                              'whitespace-nowrap transition-all duration-300 overflow-hidden',
+                              sidebarCollapsed
+                                ? 'max-w-0 opacity-0 ml-0'
+                                : 'max-w-[200px] opacity-100 ml-3'
+                            )}
+                          >
+                            {t(item.key)}
+                          </div>
                         </Button>
                       </Link>
                     </li>
@@ -141,57 +171,6 @@ export function Sidebar() {
           ))}
         </nav>
       </ScrollArea>
-
-      {/* User Footer */}
-      <div className="p-4 shrink-0 border-t border-border/50">
-        <div
-          className={cn(
-            "flex items-center gap-3 rounded-xl p-2 transition-colors",
-            sidebarCollapsed ? "justify-center" : "hover:bg-accent/50"
-          )}
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-            {getInitials(user?.email || user?.name || 'User')}
-          </div>
-          
-          {!sidebarCollapsed && (
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <span className="truncate text-sm font-medium">
-                {user?.name || 'Lumen User'}
-              </span>
-              <span className="truncate text-xs text-muted-foreground">
-                {user?.email || 'admin@example.com'}
-              </span>
-            </div>
-          )}
-
-          {!sidebarCollapsed && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
-              onClick={handleLogout}
-              title="Logout"
-            >
-              <Icons name="log-out" className="h-4 w-4" />
-              <span className="sr-only">Logout</span>
-            </Button>
-          )}
-        </div>
-        
-        {/* If collapsed, logout button below avatar */}
-        {sidebarCollapsed && (
-           <Button
-             variant="ghost"
-             size="icon"
-             className="mx-auto mt-2 flex h-10 w-10 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-             onClick={handleLogout}
-             title="Logout"
-           >
-             <Icons name="log-out" className="h-5 w-5" />
-           </Button>
-        )}
-      </div>
     </div>
   );
 }

@@ -6,13 +6,13 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
-import { Button, ThemeSwitcher } from '@lumen/uikit/components';
+import { Button, ThemeSwitcher, Logo } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
 import { cn } from '@lumen/uikit/utils';
 import { Hero } from '../components/hero';
 import { FeatureGrid } from '../components/feature-grid';
 import { HowItWorks } from '../components/how-it-works';
-import { BlogSection } from '../components/blog-section';
+import { ReadingSection } from '../components/reading-section';
 import { Faq } from '../components/faq';
 import { FinalCta } from '../components/final-cta';
 import { SiteFooter } from '../components/site-footer';
@@ -32,7 +32,7 @@ export default function HomePage() {
             aria-label="Lumen home"
           >
             <div className="flex h-9 w-9 items-center justify-center">
-              <Icons name="logo" className="h-8 w-8 text-primary" />
+              <Logo showText={false} iconSize={32} />
             </div>
             <span className="text-lg font-bold tracking-tight">Lumen</span>
           </Link>
@@ -62,50 +62,34 @@ export default function HomePage() {
               variant="ghost"
               size="icon"
               className="h-10 w-10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label="Toggle menu"
             >
-              <Icons
-                name={mobileMenuOpen ? 'close' : 'menu'}
-                className="h-5 w-5"
-              />
+              <Icons name={mobileMenuOpen ? 'close' : 'menu'} className="h-5 w-5" />
             </Button>
           </div>
         </div>
 
-        {/* Mobile menu panel */}
+        {/* Mobile Navigation Menu */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              key="mobile-menu"
-              initial={{ opacity: 0, y: -12 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 30 }}
-              className="border-t border-border/40 bg-background/95 backdrop-blur-md sm:hidden"
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute left-0 right-0 top-16 z-40 border-b border-border bg-background p-4 shadow-lg sm:hidden"
             >
-              <nav className="container mx-auto flex flex-col gap-2 px-4 py-4">
-                <Link
-                  href={RouteEnum.LOGIN}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Button
-                    variant="ghost"
-                    className="w-full min-h-[44px] justify-start focus-visible:ring-2 focus-visible:ring-ring"
-                  >
+              <div className="flex flex-col space-y-3">
+                <Link href={RouteEnum.LOGIN} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-center">
                     {t('login')}
                   </Button>
                 </Link>
-                <Link
-                  href={RouteEnum.REGISTER}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Button className="w-full min-h-[44px] justify-start rounded-full focus-visible:ring-2 focus-visible:ring-ring">
-                    {t('startNow')}
-                  </Button>
+                <Link href={RouteEnum.REGISTER} onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full justify-center">{t('startNow')}</Button>
                 </Link>
-              </nav>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -115,7 +99,7 @@ export default function HomePage() {
         <Hero />
         <FeatureGrid />
         <HowItWorks />
-        <BlogSection />
+        <ReadingSection />
         <Faq />
         <FinalCta />
       </main>

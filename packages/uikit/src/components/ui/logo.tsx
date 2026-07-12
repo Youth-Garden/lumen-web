@@ -27,9 +27,17 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
         className={cn('flex items-center gap-2', className)}
         {...props}
       >
-        <Icons name="logo" className={cn('shrink-0', iconClassName)} size={iconSize} />
+        <img
+          src="/logo.png"
+          alt="Lumen Logo"
+          width={iconSize}
+          height={iconSize}
+          className={cn('rounded-md', iconClassName)}
+        />
         {showText && (
-          <span className={cn('font-bold text-xl tracking-tight', textClassName)}>
+          <span
+            className={cn('font-bold text-xl tracking-tight', textClassName)}
+          >
             Lumen
           </span>
         )}

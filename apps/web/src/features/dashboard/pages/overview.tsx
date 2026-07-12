@@ -15,6 +15,7 @@ import {
 } from '@lumen/uikit/components';
 import { MetricCard } from '../components/metric-card';
 import { RecentActivity } from '../components/recent-activity';
+import { DailyGoalWidget } from '../components/daily-goal-widget';
 import { XpProgressChart } from '../components/charts/xp-progress-chart';
 import { useTranslations } from 'next-intl';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
@@ -125,7 +126,13 @@ export function OverviewPage() {
                 <XpProgressChart data={chartData} />
               </CardContent>
             </Card>
-            <Card className="col-span-3 bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
+            <div className="col-span-3">
+              <DailyGoalWidget />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-1">
+            <Card className="bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>
