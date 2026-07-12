@@ -11,7 +11,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
       type={type}
       data-slot="input"
       className={cn(
-        'flex h-10 w-full min-w-0 rounded-lg border border-transparent bg-muted/40 px-3 py-2 text-sm transition-all duration-200 outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:ring-4 focus-visible:ring-primary/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40',
+        'flex h-10 w-full min-w-0 rounded-lg border border-transparent bg-muted/40 px-3 py-2 text-sm transition-all duration-200 outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:ring-4 focus-visible:ring-primary/20 focus-visible:border-primary disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 focus:bg-muted/70 dark:focus:bg-input/50',
         className,
       )}
       {...props}
@@ -19,8 +19,9 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
   );
 }
 
-export interface PasswordInputProps
-  extends React.ComponentProps<typeof Input> {}
+export interface PasswordInputProps extends React.ComponentProps<
+  typeof Input
+> {}
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ className, ...props }, ref) => {
@@ -42,15 +43,15 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           className="absolute right-0 top-0 h-full px-3 py-2 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           tabIndex={-1}
         >
-          <Icons 
-            name="eye-off" 
-            className={cn("h-4 w-4", !showPassword && "hidden")} 
-            aria-hidden="true" 
+          <Icons
+            name="eye-off"
+            className={cn('h-4 w-4', !showPassword && 'hidden')}
+            aria-hidden="true"
           />
-          <Icons 
-            name="eye" 
-            className={cn("h-4 w-4", showPassword && "hidden")} 
-            aria-hidden="true" 
+          <Icons
+            name="eye"
+            className={cn('h-4 w-4', showPassword && 'hidden')}
+            aria-hidden="true"
           />
           <span className="sr-only">
             {showPassword ? 'Hide password' : 'Show password'}
@@ -58,7 +59,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         </Button>
       </div>
     );
-  }
+  },
 );
 PasswordInput.displayName = 'PasswordInput';
 

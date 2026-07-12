@@ -52,16 +52,10 @@ export default function LoginPage() {
     onSuccess: async (tokenResponse) => {
       try {
         setIsLoading(true);
-        // get the access_token, we can send it or the server expects idToken
-        // Wait, @react-oauth/google useGoogleLogin by default returns an access_token.
-        // If the backend expects an idToken, we should use credential flow, or specify flow: 'implicit' and fetch userInfo?
-        // Wait, GoogleLoginDTo expects idToken. We should use `useGoogleLogin` with `flow: 'auth-code'` or use the `<GoogleLogin>` component which returns a credential (id_token).
-        // Let's use `authService.googleLogin(tokenResponse.access_token)` for now and adapt if needed, but normally we use `credential` for idToken.
-        // Actually, we can just use `toast.info` for now if we don't have the real Client ID. But let's implement the call.
         const res = await authService.googleLogin(tokenResponse.access_token);
         const tokens = res.data;
         setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
-        
+
         toast.success(t('success'), {
           description: t('successDesc'),
         });
@@ -69,7 +63,9 @@ export default function LoginPage() {
         router.push(callbackUrl || RouteEnum.DASHBOARD);
         router.refresh();
       } catch (error: any) {
-        toast.error('Google login failed: ' + (error.message || 'Unknown error'));
+        toast.error(
+          'Google login failed: ' + (error.message || 'Unknown error'),
+        );
       } finally {
         setIsLoading(false);
       }
@@ -82,13 +78,12 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormData) {
     try {
       setIsLoading(true);
-      // Wait for at least 500ms to show loading state nicely
       const [res] = await Promise.all([
         authService.login(data),
         new Promise((resolve) => setTimeout(resolve, 500)),
       ]);
 
-      const tokens = res.data; // Since BaseResponse is { code, message, data }
+      const tokens = res.data;
       setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
 
       toast.success(t('success'), {
@@ -99,7 +94,6 @@ export default function LoginPage() {
       router.push(callbackUrl || RouteEnum.DASHBOARD);
       router.refresh();
     } catch (error) {
-      // Errors are handled by the API interceptors/toast
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +103,7 @@ export default function LoginPage() {
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2 text-center mb-4">
         <div className="flex justify-center mb-4">
-          <Logo showText={false} iconSize={56} />
+          <Logo showText={false} iconSize={80} />
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>

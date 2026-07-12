@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { formatDistanceToNow } from 'date-fns';
 import { Icons } from '@lumen/uikit/icons';
 import {
   Popover,
@@ -9,33 +10,15 @@ import {
   Button,
   ScrollArea,
 } from '@lumen/uikit/components';
+import { useNotifications, useMarkAllNotificationsRead } from '../hooks/use-notifications';
 
-const MOCK_NOTIFICATIONS = [
-  {
-    id: '1',
-    title: 'Streak Warning! 🔥',
-    description: "You haven't practiced today. Don't lose your 12-day streak!",
-    time: '2 hours ago',
-    unread: true,
-  },
-  {
-    id: '2',
-    title: 'Weekly Goal Achieved 🏆',
-    description: 'You reached 500 XP this week. Outstanding work!',
-    time: '1 day ago',
-    unread: false,
-  },
-  {
-    id: '3',
-    title: 'New Vocabulary Deck Available',
-    description: 'The "Advanced Business English" deck has been added to your library.',
-    time: '2 days ago',
-    unread: false,
-  },
-];
 
 export function NotificationsPopover() {
-  const unreadCount = MOCK_NOTIFICATIONS.filter((n) => n.unread).length;
+  const { data, isLoading } = useNotifications();
+  const { mutate: markAllRead } = useMarkAllNotificationsRead();
+
+  const notifications = data?.data ?? [];
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
     <Popover>
@@ -57,29 +40,39 @@ export function NotificationsPopover() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <h4 className="font-semibold text-sm">Notifications</h4>
           {unreadCount > 0 && (
-            <span className="text-xs text-primary font-medium cursor-pointer hover:underline">
+            <span
+              className="text-xs text-primary font-medium cursor-pointer hover:underline"
+              onClick={() => markAllRead()}
+            >
               Mark all as read
             </span>
           )}
         </div>
         <ScrollArea className="h-[300px]">
-          {MOCK_NOTIFICATIONS.length === 0 ? (
-            <div className="p-4 text-center text-sm text-muted-foreground">
-              No new notifications.
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full p-8">
+              <Icons name="loader-2" className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full p-8 gap-2 text-center">
+              <Icons name="bell" className="h-8 w-8 text-muted-foreground/40" />
+              <p className="text-sm text-muted-foreground">No notifications yet.</p>
             </div>
           ) : (
             <div className="flex flex-col">
-              {MOCK_NOTIFICATIONS.map((notification) => (
+              {notifications.map((notification) => (
                 <div
                   key={notification.id}
                   className={`flex flex-col gap-1 p-4 border-b border-border transition-colors hover:bg-muted/50 cursor-pointer ${
-                    notification.unread ? 'bg-primary/5' : ''
+                    !notification.isRead ? 'bg-primary/5' : ''
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-medium text-sm">{notification.title}</span>
                     <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {notification.time}
+                      {formatDistanceToNow(new Date(notification.createdAt), {
+                        addSuffix: true,
+                      })}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground line-clamp-2">

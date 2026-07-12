@@ -48,4 +48,10 @@ export enum ApiEndpointEnum {
   EXAM_PRACTICE_ATTEMPT_DETAIL = '/api/exam-practice/attempts/:id',
   EXAM_PRACTICE_ATTEMPT_ANSWERS = '/api/exam-practice/attempts/:id/answers',
   EXAM_PRACTICE_ATTEMPT_FINISH = '/api/exam-practice/attempts/:id/finish',
+
+  // Notifications
+  NOTIFICATIONS = '/api/notifications',
+  NOTIFICATION_MARK_READ = '/api/notifications/:id/read',
+  NOTIFICATION_MARK_ALL_READ = '/api/notifications/read-all',
+  NOTIFICATION_DEBUG = '/api/notifications/debug',
 }

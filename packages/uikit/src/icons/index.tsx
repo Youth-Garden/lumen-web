@@ -19,7 +19,10 @@ export function Icons({ name, ...props }: IconsProps) {
   return (
     <React.Suspense
       fallback={
-        <div style={{ width: props.size || 24, height: props.size || 24 }} />
+        <div
+          style={{ width: props.size || 24, height: props.size || 24 }}
+          className={props.className}
+        />
       }
     >
       <Icon {...props} />

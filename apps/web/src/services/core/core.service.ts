@@ -132,6 +132,20 @@ export abstract class CoreService extends BaseApiService {
               } else {
                 window.location.href = RouteEnum.LOGIN;
               }
+            } else {
+              // Show toast for 401 errors when not authenticated (e.g. login failure)
+              if (!originalRequest.disabledToast && error.response) {
+                const message =
+                  error.response.data?.message || error.message || 'Unauthorized';
+                const errorData = error.response.data;
+                const errors = errorData?.error ?? errorData?.errors ?? [];
+                toast.error(message, {
+                  description:
+                    Array.isArray(errors) && errors.length > 0
+                      ? errors.map((e: any) => typeof e === 'string' ? e : e.message || JSON.stringify(e)).join('\n')
+                      : undefined,
+                });
+              }
             }
           }
         } else {
@@ -147,7 +161,7 @@ export abstract class CoreService extends BaseApiService {
             toast.error(message, {
               description:
                 Array.isArray(errors) && errors.length > 0
-                  ? errors.join('\n')
+                  ? errors.map((e: any) => typeof e === 'string' ? e : e.message || JSON.stringify(e)).join('\n')
                   : undefined,
             });
           }

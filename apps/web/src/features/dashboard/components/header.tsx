@@ -44,7 +44,7 @@ export function Header() {
     : user?.email?.substring(0, 2).toUpperCase() || 'U';
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-background/80 backdrop-blur-md px-6 sticky top-0 z-50">
+    <header className="flex h-16 items-center justify-between bg-transparent px-6 sticky top-0 z-50">
       <div className="flex items-center gap-4 flex-1">
         {/* Placeholder for future left-side items or breadcrumbs */}
       </div>

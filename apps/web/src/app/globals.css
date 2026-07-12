@@ -8,3 +8,12 @@
 
 /* Scan UI Kit components for Tailwind classes */
 @source "../../../../packages/uikit/src";
+
+/* Hide scrollbars globally but allow scrolling */
+*::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

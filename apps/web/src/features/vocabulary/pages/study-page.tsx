@@ -9,6 +9,7 @@ import { useDueFlashcards } from '@/features/vocabulary/hooks';
 import { useReviewFlashcard } from '@/features/vocabulary/hooks';
 import { FlashcardReview } from '../components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
+import { OpenEffect } from '@lumen/uikit/components';
 
 export function StudyPage() {
   const t = useTranslations('Vocabulary.Study');
@@ -68,7 +69,10 @@ export function StudyPage() {
 
   if (dueFlashcards.length === 0 || isFinished) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)] w-full animate-in fade-in zoom-in duration-500">
+      <OpenEffect 
+        variant="grow"
+        className="flex flex-col items-center justify-center h-[calc(100vh-10rem)] w-full"
+      >
         <div className="bg-primary/10 p-6 rounded-full mb-6">
           <Icons name="check-circle" className="h-20 w-20 text-primary" />
         </div>
@@ -87,7 +91,7 @@ export function StudyPage() {
             {t('backToDecks')}
           </Button>
         </div>
-      </div>
+      </OpenEffect>
     );
   }
 

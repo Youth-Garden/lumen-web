@@ -102,7 +102,7 @@ export const SettingsPage = () => {
   });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
+    <div className="space-y-6">
       <div className="mb-8">
         <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
           <Icons name="settings" className="h-7 w-7 text-primary" />

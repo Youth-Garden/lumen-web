@@ -268,17 +268,17 @@
   }
 
   /* Thicken stroke-based icons */
-  svg[stroke="currentColor"] {
+  /* svg[stroke="currentColor"] {
     stroke-width: 2.5px;
   }
-  
+   */
   /* Thicken fill-based icons by adding a tiny stroke to their filled paths */
-  path[fill="currentColor"],
+  /* path[fill="currentColor"],
   rect[fill="currentColor"],
   circle[fill="currentColor"] {
     stroke: currentColor;
     stroke-width: 0.5px;
-  }
+  } */
 
   body {
     @apply bg-background text-foreground;

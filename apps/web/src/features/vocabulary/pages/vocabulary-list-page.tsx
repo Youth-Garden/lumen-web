@@ -51,7 +51,7 @@ export function VocabularyListPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col space-y-6 p-6">
+    <div className="flex flex-col space-y-6 h-full min-h-[calc(100vh-8rem)]">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
