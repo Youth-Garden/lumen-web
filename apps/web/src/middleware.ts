@@ -50,6 +50,11 @@ export default function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
   }
 
+  // Redirect authenticated users from home to dashboard
+  if (normalizedPath === '/' && token) {
+    return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
+  }
+
   // Pass to next-intl middleware for locale handling
   return intlMiddleware(req);
 }

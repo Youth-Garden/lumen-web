@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
@@ -8,109 +9,134 @@ import { Button } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
 import { fadeUpVariants, staggerContainer } from './animations';
 
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80';
+
 export function Hero() {
   const t = useTranslations('Index');
 
   return (
     <section className="relative overflow-hidden pt-24 pb-20 lg:pt-32 lg:pb-28">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-      <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[400px] w-[600px] rounded-full bg-primary/20 opacity-30 blur-[120px]" />
-      <div className="absolute -left-32 top-32 -z-10 h-[300px] w-[300px] rounded-full bg-indigo-500/20 opacity-30 blur-[100px]" />
-      <div className="absolute -right-32 top-64 -z-10 h-[300px] w-[300px] rounded-full bg-emerald-500/20 opacity-30 blur-[100px]" />
+      {/* Soft decorative background glows (calmer than before) */}
+      <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[360px] w-[560px] rounded-full bg-primary/10 opacity-40 blur-[120px]" />
+      <div className="absolute -right-40 top-40 -z-10 h-[280px] w-[280px] rounded-full bg-sky-500/10 opacity-40 blur-[100px]" />
 
       <motion.div
         initial="hidden"
         animate="show"
         variants={staggerContainer}
-        className="container relative z-10 mx-auto px-4 text-center"
+        className="container relative z-10 mx-auto px-4"
       >
-        <div className="mx-auto flex max-w-4xl flex-col items-center">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* Left: copy + CTAs */}
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+            <motion.div
+              variants={fadeUpVariants}
+              className="mb-6 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary shadow-sm backdrop-blur-sm"
+            >
+              <span className="relative mr-2.5 flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+              </span>
+              {t('versionLaunched')}
+            </motion.div>
+
+            <motion.h1
+              variants={fadeUpVariants}
+              className="mb-6 text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            >
+              <span className="block text-foreground">{t('heroTitle1')}</span>
+              <span className="mt-2 block bg-gradient-to-r from-primary to-sky-500 bg-clip-text text-transparent">
+                {t('heroTitle2')}
+              </span>
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUpVariants}
+              className="mb-8 max-w-xl text-lg font-medium leading-relaxed text-muted-foreground sm:text-xl"
+            >
+              {t('heroSubtitle')}
+            </motion.p>
+
+            <motion.div
+              variants={fadeUpVariants}
+              className="flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row lg:justify-start"
+            >
+              <Link href={RouteEnum.REGISTER} className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="group w-full gap-2 rounded-full px-8 text-lg min-h-[56px] shadow-lg transition-all hover:shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
+                >
+                  {t('startFree')}
+                  <Icons
+                    name="arrow-right"
+                    className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                  />
+                </Button>
+              </Link>
+              <Link href="#features" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full min-h-[56px] rounded-full border-border/60 px-8 text-lg hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
+                >
+                  {t('exploreFeatures')}
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Right: hero visual with floating thumbnails */}
           <motion.div
             variants={fadeUpVariants}
-            className="mb-8 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary shadow-sm backdrop-blur-sm"
+            className="relative mx-auto w-full max-w-xl"
           >
-            <span className="relative mr-2.5 flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-            </span>
-            {t('versionLaunched')}
-          </motion.div>
+            {/* Main image */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-border/60 bg-card shadow-2xl">
+              <Image
+                src={HERO_IMAGE}
+                alt={t('heroTitle1') + ' ' + t('heroTitle2')}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
 
-          <motion.h1
-            variants={fadeUpVariants}
-            className="mb-8 text-5xl font-black leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
-          >
-            <span className="block text-foreground">{t('heroTitle1')}</span>
-            <span className="mt-2 block bg-gradient-to-r from-primary via-indigo-500 to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-              {t('heroTitle2')}
-            </span>
-          </motion.h1>
+            {/* Floating thumbnail — bottom left */}
+            <div className="absolute -bottom-6 -left-4 hidden h-28 w-28 overflow-hidden rounded-2xl border-4 border-background bg-card shadow-xl sm:block md:-left-8">
+              <Image
+                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=200&q=80"
+                alt="Study materials"
+                fill
+                sizes="112px"
+                className="object-cover transition-transform duration-500 hover:scale-110"
+              />
+            </div>
 
-          <motion.p
-            variants={fadeUpVariants}
-            className="mb-10 max-w-2xl text-xl font-medium leading-relaxed text-muted-foreground sm:text-2xl"
-          >
-            {t('heroSubtitle')}
-          </motion.p>
+            {/* Floating thumbnail — top right */}
+            <div className="absolute -right-4 -top-6 hidden h-24 w-24 overflow-hidden rounded-2xl border-4 border-background bg-card shadow-xl sm:block md:-right-8">
+              <Image
+                src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=200&q=80"
+                alt="Reading books"
+                fill
+                sizes="96px"
+                className="object-cover transition-transform duration-500 hover:scale-110"
+              />
+            </div>
 
-          <motion.div
-            variants={fadeUpVariants}
-            className="flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row"
-          >
-            <Link href={RouteEnum.REGISTER} className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="group w-full gap-2 rounded-full px-8 text-lg min-h-[56px] shadow-lg transition-all hover:shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
-              >
-                {t('startFree')}
-                <Icons
-                  name="arrow-right"
-                  className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                />
-              </Button>
-            </Link>
-            <Link href="#features" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full min-h-[56px] rounded-full border-border/60 px-8 text-lg hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
-              >
-                {t('exploreFeatures')}
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Product visual mockup */}
-        <motion.div
-          variants={fadeUpVariants}
-          className="mx-auto mt-20 max-w-5xl"
-        >
-          <div className="relative rounded-3xl border border-border/60 bg-card/60 p-2 shadow-2xl backdrop-blur-sm">
-            <div className="overflow-hidden rounded-2xl border border-border/40 bg-background">
-              <div className="flex items-center gap-1.5 border-b border-border/40 px-4 py-3">
-                <span className="h-3 w-3 rounded-full bg-red-400/80" />
-                <span className="h-3 w-3 rounded-full bg-yellow-400/80" />
-                <span className="h-3 w-3 rounded-full bg-green-400/80" />
-                <div className="ml-3 h-5 flex-1 rounded-md bg-muted" />
-              </div>
-              <div className="grid gap-4 p-6 sm:grid-cols-3">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="space-y-3 rounded-xl border border-border/40 bg-card p-4"
-                  >
-                    <div className="h-9 w-9 rounded-lg bg-primary/10" />
-                    <div className="h-3 w-3/4 rounded bg-muted" />
-                    <div className="h-3 w-full rounded bg-muted/70" />
-                    <div className="h-3 w-5/6 rounded bg-muted/70" />
-                  </div>
-                ))}
+            {/* Floating rating card */}
+            <div className="absolute -bottom-5 right-2 hidden items-center gap-2 rounded-2xl border border-border/60 bg-card px-4 py-3 shadow-xl sm:flex">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary">
+                ★
+              </span>
+              <div className="leading-tight">
+                <p className="text-sm font-bold text-foreground">4.9/5</p>
+                <p className="text-xs text-muted-foreground">{t('heroRatingLabel')}</p>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </motion.div>
     </section>
   );

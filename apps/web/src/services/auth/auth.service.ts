@@ -8,7 +8,10 @@ import {
   RegisterPayload,
   UserInfo,
   UpdateProfilePayload,
+  UpdateProfilePayload,
   LogoutPayload,
+  ForgotPasswordPayload,
+  ResetPasswordPayload,
 } from './auth.types';
 
 export class AuthService extends CoreService {
@@ -36,6 +39,14 @@ export class AuthService extends CoreService {
 
   logout(payload: LogoutPayload): Promise<BaseResponse<void>> {
     return this._post<void>(ApiEndpointEnum.LOGOUT, payload);
+  }
+
+  forgotPassword(payload: ForgotPasswordPayload): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.FORGOT_PASSWORD, payload);
+  }
+
+  resetPassword(payload: ResetPasswordPayload): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.RESET_PASSWORD, payload);
   }
 }
 

@@ -45,53 +45,37 @@ export function Sidebar() {
         sidebarCollapsed ? 'w-[88px]' : 'w-64',
       )}
     >
-      <div className="relative flex h-20 w-full shrink-0 items-center overflow-hidden">
-        {/* OPEN STATE */}
-        <div
-          className={cn(
-            'absolute inset-0 flex items-center justify-between pl-[30px] pr-6 transition-all duration-300',
-            sidebarCollapsed
-              ? 'opacity-0 invisible scale-95'
-              : 'opacity-100 visible scale-100',
-          )}
+      <div className="relative flex h-20 shrink-0 items-center overflow-hidden">
+        <Link 
+          href={RouteEnum.DASHBOARD} 
+          className="absolute left-[30px] flex items-center group"
+          onClick={(e) => {
+            if (sidebarCollapsed) {
+              e.preventDefault();
+              toggleSidebar();
+            }
+          }}
         >
-          <Link href={RouteEnum.DASHBOARD} className="flex items-center">
-            <Logo showText={true} iconSize={28} />
-          </Link>
+          <div className={cn("transition-opacity duration-200 flex items-center", sidebarCollapsed && "group-hover:opacity-0")}>
+            <Logo showText={!sidebarCollapsed} iconSize={28} />
+          </div>
+          {sidebarCollapsed && (
+            <div className="absolute left-0 top-0 w-[28px] h-[28px] flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 text-muted-foreground">
+              <Icons name="panel-left-open" className="h-6 w-6" />
+            </div>
+          )}
+        </Link>
+        {!sidebarCollapsed && (
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="text-muted-foreground hover:text-foreground -mr-2"
+            className="absolute right-6 text-muted-foreground hover:text-foreground shrink-0"
             title="Close sidebar"
           >
             <Icons name="panel-left-close" className="h-6 w-6" />
           </Button>
-        </div>
-
-        {/* CLOSED STATE */}
-        <div
-          className={cn(
-            'absolute inset-0 flex items-center justify-center transition-all duration-300',
-            sidebarCollapsed
-              ? 'opacity-100 visible scale-100'
-              : 'opacity-0 invisible scale-110',
-          )}
-        >
-          <Button
-            variant="ghost"
-            className="w-12 h-12 rounded-xl hover:bg-accent group relative overflow-hidden"
-            onClick={toggleSidebar}
-            title="Open sidebar"
-          >
-            <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-200 group-hover:opacity-0">
-              <Logo showText={false} iconSize={28} />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 text-muted-foreground">
-              <Icons name="panel-left-open" className="h-6 w-6" />
-            </div>
-          </Button>
-        </div>
+        )}
       </div>
 
       <ScrollArea className="flex-1">
@@ -100,38 +84,27 @@ export function Sidebar() {
             <div key={groupIdx} className="flex flex-col gap-1">
               <div
                 className={cn(
-                  'relative flex items-center justify-center transition-all duration-300',
-                  sidebarCollapsed && groupIdx === 0
+                  'relative flex items-center transition-all duration-300',
+                  sidebarCollapsed
                     ? 'h-0 opacity-0 overflow-hidden'
                     : 'h-8 opacity-100',
                 )}
               >
                 <span
                   className={cn(
-                    'absolute left-6 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 transition-all duration-300 whitespace-nowrap',
+                    'absolute left-[30px] text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 transition-all duration-300 whitespace-nowrap',
                     sidebarCollapsed
-                      ? 'opacity-0 scale-95 invisible'
-                      : 'opacity-100 scale-100 visible',
+                      ? 'opacity-0 invisible'
+                      : 'opacity-100 visible',
                   )}
                 >
                   {group.group}
                 </span>
-
-                {groupIdx !== 0 && (
-                  <div
-                    className={cn(
-                      'absolute w-8 border-t border-border/50 transition-all duration-300',
-                      sidebarCollapsed
-                        ? 'opacity-100 scale-100 visible'
-                        : 'opacity-0 scale-50 invisible',
-                    )}
-                  />
-                )}
               </div>
 
-              <ul className="flex flex-col gap-1.5 px-4">
+              <ul className="flex flex-col gap-1.5 w-full">
                 {group.items.map((item) => {
-                  const isActive = pathname === item.href;
+                  const isActive = pathname === item.href || (item.href !== RouteEnum.DASHBOARD && pathname.startsWith(item.href + '/'));
 
                   return (
                     <li key={item.key}>
@@ -139,10 +112,8 @@ export function Sidebar() {
                         <Button
                           variant="ghost"
                           className={cn(
-                            'relative flex items-center h-11 w-full rounded-xl transition-all duration-300 overflow-hidden mx-auto justify-start gap-0',
-                            sidebarCollapsed
-                              ? 'max-w-[44px] pl-[12px]'
-                              : 'max-w-[250px] pl-[18px]',
+                            'flex items-center h-11 justify-start rounded-xl overflow-hidden transition-all duration-300 ml-[22px] pl-[12px] gap-0',
+                            sidebarCollapsed ? 'w-11' : 'w-[212px]',
                             isActive
                               ? 'bg-primary/10 text-primary font-medium shadow-none hover:bg-primary/15'
                               : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
@@ -150,22 +121,18 @@ export function Sidebar() {
                         >
                           <Icons
                             name={item.icon as any}
-                            className={cn(
-                              'shrink-0 transition-all duration-300',
-                              'h-8 w-8',
-                            )}
+                            className="h-5 w-5 shrink-0"
                           />
-
-                          <div
+                          <span
                             className={cn(
-                              'whitespace-nowrap transition-all duration-300 overflow-hidden',
+                              'whitespace-nowrap overflow-hidden transition-all duration-300 text-sm',
                               sidebarCollapsed
                                 ? 'max-w-0 opacity-0 ml-0'
-                                : 'max-w-[200px] opacity-100 ml-3',
+                                : 'max-w-[180px] opacity-100 ml-3',
                             )}
                           >
                             {t(item.key)}
-                          </div>
+                          </span>
                         </Button>
                       </Link>
                     </li>

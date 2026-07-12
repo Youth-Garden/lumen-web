@@ -6,6 +6,8 @@ export enum ApiEndpointEnum {
   UPDATE_PROFILE = '/api/iam/profile',
   LOGOUT = '/api/iam/logout',
   GOOGLE_LOGIN = '/api/iam/google-login',
+  FORGOT_PASSWORD = '/api/iam/forgot-password',
+  RESET_PASSWORD = '/api/iam/reset-password',
 
   // Progress
   PROGRESS_DASHBOARD = '/api/progress/dashboard',

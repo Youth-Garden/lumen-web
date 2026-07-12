@@ -44,7 +44,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
 
       {/* Right side - Auth Form */}
       <div className="w-full lg:w-5/12 flex flex-col justify-center items-center px-4 sm:px-12 xl:px-24">
-        <OpenEffect className="w-full max-w-[500px]">{children}</OpenEffect>
+        <OpenEffect className="w-full max-w-[550px]">{children}</OpenEffect>
       </div>
     </div>
   );

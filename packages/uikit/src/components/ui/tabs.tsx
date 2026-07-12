@@ -28,7 +28,7 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted',
+        default: 'bg-foreground/5',
         line: 'gap-1 bg-transparent',
       },
     },
@@ -53,11 +53,11 @@ function TabsList({
     >
       <TabsPrimitive.Indicator
         className={cn(
-          "absolute z-0 transition-all duration-300 ease-out",
-          "w-[var(--active-tab-width)] left-[var(--active-tab-left)]",
+          'absolute z-0 transition-all duration-300 ease-out',
+          'w-[var(--active-tab-width)] left-[var(--active-tab-left)]',
           variant === 'default'
-            ? "inset-y-[3px] rounded-md bg-background shadow-sm dark:bg-input/30"
-            : "bottom-0 h-[2px] bg-primary"
+            ? 'inset-y-[3px] rounded-md bg-background shadow-sm ring-1 ring-foreground/5 dark:ring-foreground/10'
+            : 'bottom-0 h-[2px] bg-primary',
         )}
       />
       {children}
@@ -89,4 +89,4 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   );
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants };
+export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger };

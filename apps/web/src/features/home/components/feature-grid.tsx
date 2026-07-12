@@ -42,17 +42,6 @@ const FEATURES = [
   },
 ] as const;
 
-const ICON_COLORS = [
-  'bg-primary/10 text-primary',
-  'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
-  'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-  'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-  'bg-rose-500/10 text-rose-600 dark:text-rose-400',
-  'bg-sky-500/10 text-sky-600 dark:text-sky-400',
-  'bg-violet-500/10 text-violet-600 dark:text-violet-400',
-  'bg-teal-500/10 text-teal-600 dark:text-teal-400',
-];
-
 export function FeatureGrid() {
   const t = useTranslations('Index');
 
@@ -72,16 +61,16 @@ export function FeatureGrid() {
           viewport={{ once: true, amount: 0.15 }}
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
-          {FEATURES.map((feature, i) => (
+          {FEATURES.map((feature) => (
             <motion.div key={feature.titleKey} variants={fadeUpVariants}>
-              <Card className="group h-full border-border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
+              <Card className="group h-full border-border/60 bg-card p-6 shadow-sm ring-1 ring-foreground/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
                 <CardContent className="space-y-4 p-0">
-                  <div
-                    className={`flex h-14 w-14 items-center justify-center rounded-2xl ${ICON_COLORS[i % ICON_COLORS.length]}`}
-                  >
-                    <Icons name={feature.icon} className="h-7 w-7" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icons name={feature.icon} className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-bold">{t(feature.titleKey)}</h3>
+                  <h3 className="text-lg font-semibold tracking-tight">
+                    {t(feature.titleKey)}
+                  </h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {t(feature.descKey)}
                   </p>

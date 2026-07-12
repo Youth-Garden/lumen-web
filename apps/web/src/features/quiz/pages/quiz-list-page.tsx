@@ -63,7 +63,7 @@ export const QuizListPage = () => {
               <div className="flex justify-between items-center text-sm mt-1">
                 <span className="text-muted-foreground">Score:</span>
                 <span className="font-bold text-primary">
-                  {quiz.score.toFixed(0)}%
+                  {quiz.score != null ? `${quiz.score.toFixed(0)}%` : '-'}
                 </span>
               </div>
             </CardContent>
