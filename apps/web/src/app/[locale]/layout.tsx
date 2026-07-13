@@ -1,13 +1,12 @@
+import { Providers } from '@/shared/components/providers';
+import { routing } from '@/shared/i18n/routing';
 import type { Metadata } from 'next';
-import { Be_Vietnam_Pro } from 'next/font/google';
-import '../globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { Be_Vietnam_Pro } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { routing } from '@/shared/i18n/routing';
-import { Providers } from '@/shared/components/providers';
 import { PropsWithChildren } from 'react';
-
+import '../globals.css';
 
 const beVietnamPro = Be_Vietnam_Pro({
   variable: '--app-font-sans',

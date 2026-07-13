@@ -1,8 +1,6 @@
 'use client';
 
-import React from 'react';
-import { useQuizzes, useGenerateQuiz } from '../hooks';
-import { useTranslations } from 'next-intl';
+import { RouteEnum } from '@/shared/constants';
 import {
   Button,
   Card,
@@ -10,8 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@lumen/uikit/components';
-import { RouteEnum } from '@/shared/constants';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useGenerateQuiz, useQuizzes } from '../hooks';
 
 export const QuizListPage = () => {
   const t = useTranslations('quiz');
@@ -35,9 +34,7 @@ export const QuizListPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {t('quizTitle')}
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('quizTitle')}</h1>
         <Button onClick={handleStartQuiz} disabled={isPending}>
           {t('startNewQuiz')}
         </Button>

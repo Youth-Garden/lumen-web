@@ -48,7 +48,7 @@ export function CommandPalette() {
         
         <CommandGroup heading="Suggestions">
           <CommandItem
-            onSelect={() => runCommand(() => router.push('/dashboard/overview'))}
+            onSelect={() => runCommand(() => router.push(RouteEnum.DASHBOARD))}
           >
             <Icons name="home" />
             <span>Overview Dashboard</span>
@@ -71,13 +71,13 @@ export function CommandPalette() {
 
         <CommandGroup heading="Settings">
           <CommandItem
-            onSelect={() => runCommand(() => router.push('/dashboard/settings'))}
+            onSelect={() => runCommand(() => router.push(RouteEnum.SETTINGS))}
           >
             <Icons name="user" />
             <span>Profile Settings</span>
           </CommandItem>
           <CommandItem
-            onSelect={() => runCommand(() => router.push('/dashboard/settings'))}
+            onSelect={() => runCommand(() => router.push(RouteEnum.SETTINGS))}
           >
             <Icons name="flag" />
             <span>Learning Goals</span>

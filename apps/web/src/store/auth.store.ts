@@ -6,7 +6,7 @@ import { JWT_ACCESS_TOKEN_KEY, JWT_REFRESH_TOKEN_KEY } from '@/shared/constants'
 export interface User {
   id: string;
   email: string;
-  role?: string;
+  role: string;
   fullName?: string;
   avatarUrl?: string;
   phone?: string;

@@ -38,3 +38,7 @@
 
 - **Casing**: File names must be strictly `kebab-case.tsx` or `kebab-case.ts`. Component names and exported functions/interfaces must be strictly `PascalCase`.
 - **Pages Naming**: Any file residing in a `features/[module]/pages/` directory must be suffixed with `-page.tsx` (e.g., `deck-list-page.tsx`). The exported React component inside must strictly be suffixed with `Page` (e.g., `export const DeckListPage = ...`). This ensures that the component name and filename are synchronized.
+
+## DTO & Model Types Convention
+
+- **Enums for Strict Values**: Do NOT use inline string literal unions (e.g. `type: 'VIDEO' | 'AUDIO' | 'TEXT'`) for strict data model fields or DTO properties. You MUST define and use TypeScript Enums (e.g. `export enum MaterialTypeEnum { ... }`) to ensure type safety and reusability across the application.

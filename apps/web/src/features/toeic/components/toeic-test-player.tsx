@@ -1,23 +1,25 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslations } from 'next-intl';
 import { Icons } from '@lumen/uikit/icons';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { useGetToeicTestById } from '../hooks/use-toeic';
 import {
+  useFinishExamAttempt,
   useStartExamAttempt,
   useSubmitExamAnswer,
-  useFinishExamAttempt,
 } from '@/features/exam-practice/hooks/use-exam-practice';
+import { RouteEnum } from '@/shared/constants/route';
+import { useCountdown } from '@/shared/hooks';
+import { useGetToeicTestById } from '../hooks/use-toeic';
 
-import { ToeicTestIntro } from './toeic-test-intro';
+import { ToeicQuestionRenderer } from './player/toeic-question-renderer';
 import { ToeicTestHeader } from './player/toeic-test-header';
 import { ToeicTestSidebar } from './player/toeic-test-sidebar';
-import { ToeicQuestionRenderer } from './player/toeic-question-renderer';
+import { ToeicTestIntro } from './toeic-test-intro';
 
 interface ToeicTestPlayerProps {
   testId: string;
@@ -27,7 +29,6 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const router = useRouter();
   const t = useTranslations('ToeicTestPlayer');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(120 * 60); // 120 minutes
 
   const form = useForm<{ answers: Record<string, string> }>({
     defaultValues: { answers: {} },
@@ -37,24 +38,21 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const startAttemptMutation = useStartExamAttempt();
 
   const [attemptId, setAttemptId] = useState<string | null>(null);
-  const submitAnswerMutation = useSubmitExamAnswer(attemptId ?? '');
-  const finishAttemptMutation = useFinishExamAttempt(attemptId ?? '');
+  const [isFinished, setIsFinished] = useState(false);
+  const submitAnswerMutation = useSubmitExamAnswer(attemptId);
+  const finishAttemptMutation = useFinishExamAttempt(attemptId);
 
-  // Timer logic
-  useEffect(() => {
-    if (!attemptId || timeRemaining <= 0) return;
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleFinishTest();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [attemptId, timeRemaining]);
+  const handleFinishTest = () => {
+    finishAttemptMutation.mutate(undefined, {
+      onSuccess: () => setIsFinished(true),
+    });
+  };
+
+  const { secondsRemaining: timeRemaining, start: startTimer } = useCountdown({
+    initialSeconds: 120 * 60,
+    autoStart: false,
+    onComplete: handleFinishTest,
+  });
 
   if (isLoading) {
     return (
@@ -86,11 +84,52 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
           startAttemptMutation.mutate(
             { testId, testType: 'TOEIC' },
             {
-              onSuccess: (data) => setAttemptId(data.id),
+              onSuccess: (data) => {
+                setAttemptId(data.id);
+                startTimer();
+              },
             },
           );
         }}
       />
+    );
+  }
+
+  // Test Completed Screen
+  if (isFinished) {
+    const totalQuestions = test.questions.length;
+    const answeredCount = Object.keys(form.getValues().answers || {}).length;
+
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-50/50 dark:bg-background">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full p-8 bg-card rounded-2xl shadow-lg border text-center space-y-6"
+        >
+          <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+            <Icons name="check-circle" className="w-10 h-10 text-primary" />
+          </div>
+          <h2 className="text-3xl font-bold text-foreground">
+            Test Completed!
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            You have successfully finished the test.
+          </p>
+          <div className="bg-muted p-4 rounded-xl flex justify-between items-center text-sm">
+            <span className="font-medium">Questions Answered:</span>
+            <span className="font-bold text-primary">
+              {answeredCount} / {totalQuestions}
+            </span>
+          </div>
+          <button
+            onClick={() => router.push(RouteEnum.DASHBOARD)}
+            className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition"
+          >
+            Return to Dashboard
+          </button>
+        </motion.div>
+      </div>
     );
   }
 
@@ -111,14 +150,6 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
         setCurrentQuestionIndex((prev) => prev + 1);
       }
     }, 500);
-  };
-
-  const handleFinishTest = () => {
-    finishAttemptMutation.mutate(undefined, {
-      onSuccess: () => {
-        router.push(`/dashboard`); // Navigate back to dashboard or results page
-      },
-    });
   };
 
   const questionStatuses = test.questions.map((q) => ({

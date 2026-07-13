@@ -7,7 +7,7 @@ export const loginMapper = (raw: any): AuthTokens => {
     user: {
       id: raw?.user?.id || '',
       email: raw?.user?.email || '',
-      role: raw?.user?.role || '',
+      role: raw?.user?.role || 'User',
     },
   };
 };
@@ -16,6 +16,6 @@ export const getMeMapper = (raw: any): AuthTokens['user'] => {
   return {
     id: raw?.id || '',
     email: raw?.email || '',
-    role: raw?.role || '',
+    role: raw?.role || 'User',
   };
 };

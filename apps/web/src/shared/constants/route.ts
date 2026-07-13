@@ -10,8 +10,13 @@ export enum RouteEnum {
   STUDY = '/study',
   QUIZ = '/quiz',
   TOEIC = '/toeic',
+  TOEIC_TEST = '/toeic/test',
   READING = '/reading',
+  ARTICLE_READER = '/reading/article',
   DICTATION = '/dictation',
+  DICTATION_EXERCISE = '/dictation/exercise',
+  QUIZ_SESSION = '/quiz/session',
+  FLASHCARD_REVIEW = '/vocabulary/review',
   PROFILE = '/profile',
   SETTINGS = '/settings',
 }

@@ -304,10 +304,11 @@
     "goalsUpdateSuccess": "Study goals updated successfully",
     "goalsUpdateFailed": "Failed to update study goals",
     "sections": {
-      "profile": "Profile",
-      "goals": "Study Goals",
+      "profile": "My Profile",
+      "goals": "Learning Goals",
       "appearance": "Appearance",
-      "account": "Account"
+      "account": "Account",
+      "security": "Password & Security"
     },
     "appearance": {
       "title": "Appearance",
@@ -325,6 +326,7 @@
     "profile": {
       "title": "Profile Information",
       "description": "Update your personal information and public profile.",
+      "personalInfo": "Personal Information",
       "fullName": "Full Name",
       "phone": "Phone Number",
       "avatarUrl": "Avatar URL"
@@ -335,17 +337,20 @@
       "dailyGoalMinutes": "Daily Goal (Minutes)"
     },
     "account": {
-      "title": "Account Settings",
+      "title": "Password & Security",
       "description": "Manage your email, password, and security preferences.",
       "email": "Email Address",
+      "emailHint": "Your email address cannot be changed.",
       "currentPassword": "Current Password",
-      "comingSoon": "Coming soon...",
-      "changePassword": "Change Password (Coming soon)"
+      "comingSoon": "Password change is coming soon.",
+      "changePassword": "Change Password"
     },
     "buttons": {
       "saving": "Saving...",
       "saveChanges": "Save changes",
-      "saveGoals": "Save goals"
+      "saveGoals": "Save goals",
+      "edit": "Edit",
+      "cancel": "Cancel"
     }
   }
 }

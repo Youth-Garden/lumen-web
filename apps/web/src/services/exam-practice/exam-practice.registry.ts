@@ -1,6 +1,6 @@
-import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
-import { ApiEndpointEnum } from '@/shared/constants';
 import { idResponseMapper } from '@/services/core';
+import { ApiEndpointEnum } from '@/shared/constants';
+import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
 import { examAttemptDetailMapper } from './exam-practice.mappers';
 
 export const registry: MapperRegistry = {

@@ -1,3 +1,9 @@
+export enum MaterialTypeEnum {
+  VIDEO = 'VIDEO',
+  AUDIO = 'AUDIO',
+  TEXT = 'TEXT',
+}
+
 export interface TranscriptDto {
   id: string;
   materialId: string;
@@ -13,7 +19,7 @@ export interface MaterialDto {
   title: string;
   description: string;
   sourceUrl: string;
-  type: 'VIDEO' | 'AUDIO' | 'TEXT';
+  type: MaterialTypeEnum;
   difficultyLevel: string;
   category: string;
   tags: string[];

@@ -304,10 +304,11 @@
     "goalsUpdateSuccess": "Cập nhật mục tiêu học tập thành công",
     "goalsUpdateFailed": "Cập nhật mục tiêu học tập thất bại",
     "sections": {
-      "profile": "Hồ sơ",
+      "profile": "Hồ sơ của tôi",
       "goals": "Mục tiêu học tập",
       "appearance": "Giao diện",
-      "account": "Tài khoản"
+      "account": "Tài khoản",
+      "security": "Mật khẩu & Bảo mật"
     },
     "appearance": {
       "title": "Giao diện",
@@ -325,6 +326,7 @@
     "profile": {
       "title": "Thông tin hồ sơ",
       "description": "Cập nhật thông tin cá nhân và hồ sơ công khai của bạn.",
+      "personalInfo": "Thông tin cá nhân",
       "fullName": "Họ và tên",
       "phone": "Số điện thoại",
       "avatarUrl": "URL ảnh đại diện"
@@ -335,17 +337,20 @@
       "dailyGoalMinutes": "Mục tiêu hàng ngày (Phút)"
     },
     "account": {
-      "title": "Cài đặt tài khoản",
+      "title": "Mật khẩu & Bảo mật",
       "description": "Quản lý email, mật khẩu và các tùy chọn bảo mật của bạn.",
       "email": "Địa chỉ Email",
+      "emailHint": "Địa chỉ email của bạn không thể thay đổi.",
       "currentPassword": "Mật khẩu hiện tại",
-      "comingSoon": "Sắp ra mắt...",
-      "changePassword": "Đổi mật khẩu (Sắp ra mắt)"
+      "comingSoon": "Tính năng đổi mật khẩu sắp ra mắt.",
+      "changePassword": "Đổi mật khẩu"
     },
     "buttons": {
       "saving": "Đang lưu...",
       "saveChanges": "Lưu thay đổi",
-      "saveGoals": "Lưu mục tiêu"
+      "saveGoals": "Lưu mục tiêu",
+      "edit": "Chỉnh sửa",
+      "cancel": "Hủy"
     }
   }
 }

@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
 import { Logo } from '@lumen/uikit/components';
+import { ReactNode } from 'react';
+
 export default function MockTestLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-green-500/30">
