@@ -27,7 +27,7 @@ export interface BaseApiServiceConfig {
 function flattenApiErrors(errors: unknown): string[] {
   if (!errors) return [];
   if (typeof errors === 'string') return [errors];
-  
+
   if (Array.isArray(errors)) {
     return errors.map((error) => {
       if (typeof error === 'string') return error;
@@ -38,7 +38,7 @@ function flattenApiErrors(errors: unknown): string[] {
       return String(error);
     });
   }
-  
+
   if (typeof errors !== 'object') return [String(errors)];
 
   return Object.entries(errors as Record<string, unknown>).flatMap(
@@ -46,7 +46,7 @@ function flattenApiErrors(errors: unknown): string[] {
       if (Array.isArray(value)) {
         return value.map((message) => {
           if (typeof message === 'object' && message !== null) {
-             return `${field}: ${message.message || JSON.stringify(message)}`;
+            return `${field}: ${message.message || JSON.stringify(message)}`;
           }
           return `${field}: ${String(message)}`;
         });

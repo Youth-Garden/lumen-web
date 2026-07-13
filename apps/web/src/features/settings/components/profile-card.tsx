@@ -1,9 +1,8 @@
 'use client';
 
-import { Button, Input, Label } from '@lumen/uikit/components';
+import { Avatar, AvatarFallback, AvatarImage, Button, Input, Label } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -68,19 +67,16 @@ export function ProfileCard({ user }: ProfileCardProps) {
       </div>
 
       <div className="mt-4 flex items-center gap-4">
-        {user?.avatarUrl ? (
-          <Image
-            src={user.avatarUrl}
-            alt={user.fullName ?? 'Avatar'}
-            width={64}
-            height={64}
-            className="h-16 w-16 rounded-full object-cover ring-2 ring-border"
+        <Avatar className="h-16 w-16 border border-border shadow-sm">
+          <AvatarImage
+            src={user?.avatarUrl}
+            seed={user?.email}
+            alt={user?.fullName ?? 'Avatar'}
           />
-        ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xl font-bold text-primary">
+          <AvatarFallback className="text-xl font-bold bg-primary/10 text-primary">
             {initials}
-          </div>
-        )}
+          </AvatarFallback>
+        </Avatar>
         <div>
           <p className="text-lg font-semibold text-foreground">
             {user?.fullName ?? '—'}

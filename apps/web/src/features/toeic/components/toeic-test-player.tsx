@@ -12,11 +12,13 @@ import {
   useStartExamAttempt,
   useSubmitExamAnswer,
 } from '@/features/exam-practice/hooks/use-exam-practice';
-import { RouteEnum } from '@/shared/constants/route';
+import { ExamType } from '@/services/exam-practice/exam-practice.types';
+import { ToeicQuestionDto } from '@/services/toeic';
 import { useCountdown } from '@/shared/hooks';
-import { useGetToeicTestById } from '../hooks/use-toeic';
 
-import { ToeicQuestionRenderer } from './player/toeic-question-renderer';
+import { useGetToeicTestById } from '../hooks/use-toeic';
+import { ToeicResultDashboard } from './analytics/toeic-result-dashboard';
+import { ToeicQuestionGroupRenderer } from './player/toeic-question-group-renderer';
 import { ToeicTestHeader } from './player/toeic-test-header';
 import { ToeicTestSidebar } from './player/toeic-test-sidebar';
 import { ToeicTestIntro } from './toeic-test-intro';
@@ -82,7 +84,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
         isStarting={startAttemptMutation.isPending}
         onStart={() => {
           startAttemptMutation.mutate(
-            { testId, testType: 'TOEIC' },
+            { testId, testType: ExamType.TOEIC },
             {
               onSuccess: (data) => {
                 setAttemptId(data.id);
@@ -97,59 +99,82 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
 
   // Test Completed Screen
   if (isFinished) {
-    const totalQuestions = test.questions.length;
-    const answeredCount = Object.keys(form.getValues().answers || {}).length;
-
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-50/50 dark:bg-background">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full p-8 bg-card rounded-2xl shadow-lg border text-center space-y-6"
-        >
-          <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-            <Icons name="check-circle" className="w-10 h-10 text-primary" />
-          </div>
-          <h2 className="text-3xl font-bold text-foreground">
-            Test Completed!
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            You have successfully finished the test.
-          </p>
-          <div className="bg-muted p-4 rounded-xl flex justify-between items-center text-sm">
-            <span className="font-medium">Questions Answered:</span>
-            <span className="font-bold text-primary">
-              {answeredCount} / {totalQuestions}
-            </span>
-          </div>
-          <button
-            onClick={() => router.push(RouteEnum.DASHBOARD)}
-            className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition"
-          >
-            Return to Dashboard
-          </button>
-        </motion.div>
+      <div className="flex min-h-screen bg-slate-50/50 dark:bg-background">
+        <ToeicResultDashboard
+          questions={test.questions}
+          userAnswers={form.getValues().answers || {}}
+          timeSpentSeconds={120 * 60 - timeRemaining}
+        />
       </div>
     );
   }
 
-  const currentQuestion = test.questions[currentQuestionIndex];
-  const totalQuestions = test.questions.length;
+  // Grouping logic
+  const groups: ToeicQuestionDto[][] = [];
+  if (test && test.questions) {
+    let currentGroup: ToeicQuestionDto[] = [];
+    let lastContext: {
+      audioUrl?: string;
+      imageUrl?: string;
+      transcript?: string;
+    } | null = null;
+
+    test.questions.forEach((q) => {
+      const hasContext = !!(q.audioUrl || q.imageUrl || q.transcript);
+      const isSameContext =
+        hasContext &&
+        lastContext &&
+        q.audioUrl === lastContext.audioUrl &&
+        q.imageUrl === lastContext.imageUrl &&
+        q.transcript === lastContext.transcript;
+
+      if (isSameContext) {
+        currentGroup.push(q);
+      } else {
+        if (currentGroup.length > 0) {
+          groups.push(currentGroup);
+        }
+        currentGroup = [q];
+        lastContext = hasContext
+          ? {
+              audioUrl: q.audioUrl,
+              imageUrl: q.imageUrl,
+              transcript: q.transcript,
+            }
+          : null;
+      }
+    });
+    if (currentGroup.length > 0) {
+      groups.push(currentGroup);
+    }
+  }
+
+  const currentGroup = groups[currentQuestionIndex] || [];
+  const totalGroups = groups.length;
   const currentAnswers = form.watch('answers');
 
-  const handleSelectOption = (option: string) => {
-    form.setValue(`answers.${currentQuestion.id}`, option);
+  const handleSelectOption = (questionId: string, option: string) => {
+    form.setValue(`answers.${questionId}`, option);
     submitAnswerMutation.mutate({
-      questionId: currentQuestion.id,
+      questionId,
       userAnswer: option,
     });
+    // Removed auto advance to allow user to answer multiple questions in the group
+  };
 
-    // Auto advance after 500ms for smoothness
-    setTimeout(() => {
-      if (currentQuestionIndex < totalQuestions - 1) {
-        setCurrentQuestionIndex((prev) => prev + 1);
+  const handleNavigateQuestion = (index: number) => {
+    // index is the absolute question index from sidebar (0-199)
+    // We need to find which group this question belongs to
+    const targetQuestion = test.questions[index];
+    if (targetQuestion) {
+      const groupIndex = groups.findIndex((g) =>
+        g.some((q) => q.id === targetQuestion.id),
+      );
+      if (groupIndex !== -1) {
+        setCurrentQuestionIndex(groupIndex);
       }
-    }, 500);
+    }
   };
 
   const questionStatuses = test.questions.map((q) => ({
@@ -169,21 +194,35 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
 
       <div className="flex flex-1 mx-auto w-full max-w-[1600px] items-start">
         {/* Main Content Area */}
-        <div className="flex-1 px-4 py-8 md:px-8 overflow-hidden">
+        <div className="flex-1 px-4 py-8 md:px-8 overflow-hidden h-[calc(100vh-64px)]">
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentQuestion.id}
+              key={currentQuestionIndex} // Key by group index
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
               className="h-full"
             >
-              <ToeicQuestionRenderer
-                question={currentQuestion}
-                userAnswer={currentAnswers[currentQuestion.id]}
-                onSelectOption={handleSelectOption}
-              />
+              {currentGroup.length > 0 && (
+                <ToeicQuestionGroupRenderer
+                  questions={currentGroup}
+                  userAnswers={currentAnswers}
+                  onSelectOption={handleSelectOption}
+                  onNextGroup={() =>
+                    setCurrentQuestionIndex(
+                      Math.min(totalGroups - 1, currentQuestionIndex + 1),
+                    )
+                  }
+                  onPrevGroup={() =>
+                    setCurrentQuestionIndex(
+                      Math.max(0, currentQuestionIndex - 1),
+                    )
+                  }
+                  isFirstGroup={currentQuestionIndex === 0}
+                  isLastGroup={currentQuestionIndex === totalGroups - 1}
+                />
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -192,8 +231,10 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
         <ToeicTestSidebar
           questions={questionStatuses}
           answers={currentAnswers}
-          currentQuestionIndex={currentQuestionIndex}
-          onNavigate={(index) => setCurrentQuestionIndex(index)}
+          currentQuestionIndices={currentGroup.map((q) =>
+            test.questions.findIndex((tq) => tq.id === q.id),
+          )}
+          onNavigate={handleNavigateQuestion}
         />
       </div>
     </div>

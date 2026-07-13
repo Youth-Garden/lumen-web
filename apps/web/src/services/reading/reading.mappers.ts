@@ -19,5 +19,5 @@ export const articleListMapper = (raw: any): ArticleListResponse => ({
 });
 
 export const translateResponseMapper = (raw: any): TranslateResponse => ({
-  translation: raw?.translation || '',
+  translatedText: raw?.translatedText || '',
 });

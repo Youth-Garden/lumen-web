@@ -40,6 +40,7 @@ export function Sidebar() {
 
   return (
     <div
+      id="sidebar"
       className={cn(
         'relative flex h-full flex-col bg-background text-card-foreground transition-all duration-300 ease-in-out',
         sidebarCollapsed ? 'w-[88px]' : 'w-64',

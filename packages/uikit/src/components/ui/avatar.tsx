@@ -1,9 +1,10 @@
 'use client';
 
-import * as React from 'react';
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
+import * as React from 'react';
 
 import { cn } from '@lumen/uikit/utils';
+import { AvatarStyles, getAvatarUrl } from '@lumen/utils';
 
 function Avatar({
   className,
@@ -25,10 +26,21 @@ function Avatar({
   );
 }
 
-function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
+function AvatarImage({
+  className,
+  seed,
+  avatarStyle = 'avataaars',
+  ...props
+}: AvatarPrimitive.Image.Props & {
+  seed?: string;
+  avatarStyle?: (typeof AvatarStyles)[number];
+}) {
+  const src = seed ? getAvatarUrl(avatarStyle, seed) : props.src;
+
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
+      src={src}
       className={cn(
         'aspect-square size-full rounded-full object-cover',
         className,
@@ -101,9 +113,9 @@ function AvatarGroupCount({
 
 export {
   Avatar,
-  AvatarImage,
+  AvatarBadge,
   AvatarFallback,
   AvatarGroup,
   AvatarGroupCount,
-  AvatarBadge,
+  AvatarImage,
 };

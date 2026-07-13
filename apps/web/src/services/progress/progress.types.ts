@@ -10,14 +10,14 @@ export enum ActivityType {
 
 export interface DashboardProgressResponse {
   streak: number;
+  lastActivityDate?: string;
   totalPoints: number;
   dailyGoalMinutes: number;
   todayStudyMinutes: number;
-  weeklyData?: { date: string; xp: number }[];
 }
 
 export interface UpdateProgressSettingsPayload {
-  dailyGoalMinutes?: number;
+  dailyGoalMinutes: number;
 }
 
 export interface ActivityItem {
@@ -26,5 +26,5 @@ export interface ActivityItem {
   title: string;
   description: string;
   xpEarned: number;
-  timestamp: Date;
+  timestamp: string;
 }

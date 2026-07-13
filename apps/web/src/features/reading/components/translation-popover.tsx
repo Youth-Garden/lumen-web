@@ -39,8 +39,8 @@ export const TranslationPopover = ({
   if (!text) return null;
 
   const handleAdd = () => {
-    if (translationResult?.translation) {
-      onAddToFlashcard?.(text, translationResult.translation);
+    if (translationResult?.translatedText) {
+      onAddToFlashcard?.(text, translationResult.translatedText);
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
     }
@@ -106,7 +106,7 @@ export const TranslationPopover = ({
           ) : (
             <div className="space-y-4">
               <p className="text-base text-slate-700 dark:text-slate-300">
-                {translationResult?.translation || t('noTranslation')}
+                {translationResult?.translatedText || t('noTranslation')}
               </p>
 
               <Button

@@ -10,12 +10,16 @@ import {
   Button,
   ScrollArea,
 } from '@lumen/uikit/components';
-import { useNotifications, useMarkAllNotificationsRead } from '../hooks/use-notifications';
-
+import {
+  useNotifications,
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+} from '../hooks/use-notifications';
 
 export function NotificationsPopover() {
   const { data, isLoading } = useNotifications();
   const { mutate: markAllRead } = useMarkAllNotificationsRead();
+  const { mutate: markAsRead } = useMarkNotificationRead();
 
   const notifications = data?.data ?? [];
   const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -66,6 +70,9 @@ export function NotificationsPopover() {
                   className={`flex flex-col gap-1 p-4 border-b border-border transition-colors hover:bg-muted/50 cursor-pointer ${
                     !notification.isRead ? 'bg-primary/5' : ''
                   }`}
+                  onClick={() => {
+                    if (!notification.isRead) markAsRead(notification.id);
+                  }}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-medium text-sm">{notification.title}</span>

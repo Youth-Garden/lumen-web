@@ -243,6 +243,15 @@
     "quizTitle": "Trắc nghiệm",
     "startNewQuiz": "Tạo bài tập mới"
   },
+  "ToeicResultDashboard": {
+    "title": "Kết quả bài thi",
+    "subtitle": "Dưới đây là phân tích chi tiết về hiệu suất của bạn.",
+    "performanceByPart": "Hiệu suất theo từng phần",
+    "accuracy": "Độ chính xác",
+    "detailedBreakdown": "Chi tiết từng phần",
+    "part": "Phần",
+    "returnToDashboard": "Trở về bảng điều khiển"
+  },
   "ToeicTestPlayer": {
     "startTest": "Bắt đầu làm bài",
     "submitTest": "Nộp bài",
@@ -253,7 +262,12 @@
     "previous": "Trở lại",
     "next": "Tiếp theo",
     "audioTrack": "Bản thu âm",
+    "audioPlayerHelp": "Sử dụng nút phát/tạm dừng để điều khiển.",
     "listenInstruction": "Nghe đoạn băng và chọn đáp án đúng nhất.",
+    "option": "Lựa chọn",
+    "listenAndChoose": "Nghe đoạn băng và chọn đáp án đúng.",
+    "previousGroup": "Trang trước",
+    "nextGroup": "Trang sau",
     "questionsCount": "{count} câu hỏi",
     "questionNavigation": "Bảng câu hỏi",
     "failedToLoadTest": "Không thể tải dữ liệu bài thi."
@@ -352,5 +366,13 @@
       "edit": "Chỉnh sửa",
       "cancel": "Hủy"
     }
+  },
+  "ToeicTestList": {
+    "errorLoad": "Không thể tải danh sách bài thi TOEIC. Vui lòng đảm bảo backend và cơ sở dữ liệu đang hoạt động.",
+    "title": "Mô phỏng thi TOEIC",
+    "description": "Luyện tập với các đề thi TOEIC thực tế. Cải thiện kỹ năng Nghe và Đọc với nền tảng tích hợp AI tiên tiến của chúng tôi.",
+    "availableTests": "Đề thi hiện có",
+    "fullTest": "Đề thi đầy đủ",
+    "startTest": "Bắt đầu làm bài"
   }
 }

@@ -30,16 +30,14 @@ export function OverviewPage() {
   const dueCount = dueFlashcards?.data?.length || 0;
 
   // Generate fake weekly data for the chart if backend doesn't provide it yet
-  const chartData =
-    progressData?.weeklyData ||
-    Array.from({ length: 7 }).map((_, i) => {
-      const d = new Date();
-      d.setDate(d.getDate() - (6 - i));
-      return {
-        date: d.toISOString(),
-        xp: Math.floor(Math.random() * 200) + 50,
-      };
-    });
+  const chartData = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return {
+      date: d.toISOString(),
+      xp: Math.floor(Math.random() * 200) + 50,
+    };
+  });
 
   return (
     <div className="space-y-4">
@@ -74,16 +72,16 @@ export function OverviewPage() {
             />
             <MetricCard
               title="Words Learned"
-              value="342"
+              value="0"
               trend="from last month"
-              trendValue={12}
+              trendValue={0}
               icon="book-open"
             />
             <MetricCard
               title="Study Time"
-              value="12h 30m"
-              trend="this week"
-              trendValue={5.2}
+              value={`${progressData?.todayStudyMinutes || 0}m`}
+              trend="today"
+              trendValue={0}
               icon="clock"
             />
           </div>
@@ -136,7 +134,7 @@ export function OverviewPage() {
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>
-                  You&apos;ve earned 450 XP this week.
+                  Your latest learning achievements and milestones.
                 </CardDescription>
               </CardHeader>
               <CardContent>

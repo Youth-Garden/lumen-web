@@ -14,6 +14,8 @@ import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { RouteEnum } from '@/shared/constants';
+import { formatUrl } from '@/shared/utils';
 
 export const ArticleList = () => {
   const { data, isLoading, isError } = useGetArticles();
@@ -107,7 +109,7 @@ export const ArticleList = () => {
                 <Button
                   className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 font-semibold text-white transition-all hover:from-teal-600 hover:to-emerald-700"
                   onClick={() =>
-                    router.push(`/dashboard/reading/${article.id}`)
+                    router.push(formatUrl(RouteEnum.ARTICLE_READER, { id: article.id }))
                   }
                 >
                   Start Reading

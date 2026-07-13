@@ -6,18 +6,24 @@ import {
 
 export const toeicQuestionMapper = (raw: any): ToeicQuestionDto => ({
   id: raw?.id || '',
+  testId: raw?.testId || '',
   part: raw?.part ?? 0,
   questionNumber: raw?.questionNumber ?? 0,
-  audioUrl: raw?.audioUrl ?? undefined,
-  imageUrl: raw?.imageUrl ?? undefined,
-  questionText: raw?.questionText ?? undefined,
-  options: Array.isArray(raw?.options) ? raw.options : [],
+  audioUrl: raw?.audioUrl ?? null,
+  imageUrl: raw?.imageUrl ?? null,
+  transcript: raw?.transcript ?? null,
+  questionText: raw?.questionText ?? null,
+  options: Array.isArray(raw?.options) ? raw.options : null,
+  correctAnswer: raw?.correctAnswer || '',
+  explanation: raw?.explanation ?? null,
 });
 
 export const toeicTestMapper = (raw: any): ToeicTestDto => ({
   id: raw?.id || '',
   title: raw?.title || '',
-  description: raw?.description || undefined,
+  description: raw?.description || null,
+  isPublished: !!raw?.isPublished,
+  createdAt: raw?.createdAt || '',
   questions: Array.isArray(raw?.questions)
     ? raw.questions.map(toeicQuestionMapper)
     : [],
@@ -28,7 +34,9 @@ export const toeicTestListItemMapper = (
 ): Omit<ToeicTestDto, 'questions'> => ({
   id: raw?.id || '',
   title: raw?.title || '',
-  description: raw?.description || undefined,
+  description: raw?.description || null,
+  isPublished: !!raw?.isPublished,
+  createdAt: raw?.createdAt || '',
 });
 
 export const toeicTestListMapper = (raw: any): ToeicTestListResponse => ({

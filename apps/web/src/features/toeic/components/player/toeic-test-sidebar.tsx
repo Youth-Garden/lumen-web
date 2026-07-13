@@ -24,14 +24,14 @@ interface ToeicQuestionStatus {
 interface ToeicTestSidebarProps {
   questions: ToeicQuestionStatus[];
   answers: Record<string, string>;
-  currentQuestionIndex: number;
+  currentQuestionIndices: number[];
   onNavigate: (index: number) => void;
 }
 
 export const ToeicTestSidebar = ({
   questions,
   answers,
-  currentQuestionIndex,
+  currentQuestionIndices,
   onNavigate,
 }: ToeicTestSidebarProps) => {
   const t = useTranslations('ToeicTestPlayer');
@@ -43,7 +43,7 @@ export const ToeicTestSidebar = ({
   const parts = Array.from({ length: 7 }, (_, i) => i + 1);
 
   const getQuestionState = (question: ToeicQuestionStatus, index: number) => {
-    if (currentQuestionIndex === index) return 'current';
+    if (currentQuestionIndices.includes(index)) return 'current';
     if (answers[question.id]) return 'answered';
     return 'unanswered';
   };
@@ -66,14 +66,15 @@ export const ToeicTestSidebar = ({
                   const state = getQuestionState(q, index);
 
                   return (
-                    <button
+                    <Button
                       key={q.id}
+                      variant="outline"
                       onClick={() => {
                         onNavigate(index);
                         if (!isDesktop) setOpen(false);
                       }}
                       className={cn(
-                        'flex h-10 w-full items-center justify-center rounded-md border text-sm font-medium transition-colors hover:bg-muted',
+                        'flex h-10 w-full p-0 items-center justify-center rounded-md border text-sm font-medium transition-colors hover:bg-muted',
                         {
                           'border-primary bg-primary text-primary-foreground hover:bg-primary/90':
                             state === 'current',
@@ -85,7 +86,7 @@ export const ToeicTestSidebar = ({
                       )}
                     >
                       {q.questionNumber}
-                    </button>
+                    </Button>
                   );
                 })}
               </div>

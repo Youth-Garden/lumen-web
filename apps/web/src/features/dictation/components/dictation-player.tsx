@@ -113,7 +113,7 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
           <audio
             ref={audioRef}
             src={
-              material.sourceUrl ||
+              material.mediaUrl ||
               'https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg'
             }
             onEnded={() => setIsPlaying(false)}
@@ -142,7 +142,7 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
       {/* Transcripts List */}
       <div className="space-y-6 pb-20">
         {material.transcripts
-          .sort((a, b) => a.order - b.order)
+          .sort((a, b) => a.sequenceNumber - b.sequenceNumber)
           .map((transcript, index) => {
             const result = results.find(
               (res) => res.transcriptId === transcript.id,
@@ -231,7 +231,7 @@ export const DictationPlayer = ({ materialId }: { materialId: string }) => {
                             )}
                             <p>{result.correctAnswer}</p>
                             <p className="text-muted-foreground mt-2 italic">
-                              {t('translation')} {transcript.textVi}
+                              {t('translation')} {transcript.translation}
                             </p>
                           </div>
                         </div>

@@ -1,22 +1,26 @@
 'use client';
 
-import { useGetToeicTests } from '../hooks';
-import { motion } from 'framer-motion';
+import { RouteEnum } from '@/shared/constants';
+import { formatUrl } from '@/shared/utils';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@lumen/uikit/components';
-import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useGetToeicTests } from '../hooks';
 
 export const ToeicTestList = () => {
   const { data, isLoading, isError } = useGetToeicTests();
   const router = useRouter();
+  const t = useTranslations('ToeicTestList');
 
   if (isLoading) {
     return (
@@ -30,8 +34,7 @@ export const ToeicTestList = () => {
     return (
       <div className="flex h-[50vh] items-center justify-center text-destructive">
         <p>
-          Failed to load TOEIC tests. Please make sure the backend and database
-          are running.
+          {t('errorLoad')}
         </p>
       </div>
     );
@@ -49,18 +52,17 @@ export const ToeicTestList = () => {
         <div className="relative z-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
-              TOEIC Simulation
+              {t('title')}
             </h1>
             <p className="max-w-xl text-indigo-100 md:text-lg">
-              Practice with real TOEIC tests. Improve your listening and reading
-              skills with our advanced AI-powered platform.
+              {t('description')}
             </p>
           </div>
           <div className="flex gap-4">
             <div className="flex flex-col items-center justify-center rounded-2xl bg-white/20 p-4 backdrop-blur-md">
               <span className="text-2xl font-bold">{data.total || 0}</span>
               <span className="text-xs font-medium uppercase tracking-wider text-indigo-100">
-                Available Tests
+                {t('availableTests')}
               </span>
             </div>
           </div>
@@ -82,7 +84,7 @@ export const ToeicTestList = () => {
               <CardHeader className="relative bg-gradient-to-b from-indigo-50 to-transparent pb-4 dark:from-indigo-950/50">
                 <div className="mb-2 flex items-center justify-between">
                   <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-semibold text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300">
-                    Full Test
+                    {t('fullTest')}
                   </span>
                   <div className="flex space-x-1">
                     <Icons
@@ -115,9 +117,13 @@ export const ToeicTestList = () => {
               <CardFooter className="pt-2">
                 <Button
                   className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 font-semibold text-white transition-all hover:from-indigo-600 hover:to-purple-700"
-                  onClick={() => router.push(`/dashboard/toeic/${test.id}`)}
+                  onClick={() =>
+                    router.push(
+                      formatUrl(RouteEnum.TOEIC_TEST, { id: test.id }),
+                    )
+                  }
                 >
-                  Start Test
+                  {t('startTest')}
                   <Icons
                     name="arrow-right"
                     className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"

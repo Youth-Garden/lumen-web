@@ -25,9 +25,9 @@ export interface FinishQuizResponseDto {
 
 export interface QuestionDetailDto {
   id: string;
-  type: QuestionType | string;
+  type: QuestionType;
   questionText: string;
-  options?: string[];
+  options: string[];
   userAnswer?: string;
   correctAnswer?: string;
   isCorrect?: boolean;
@@ -35,7 +35,7 @@ export interface QuestionDetailDto {
 
 export interface QuizDetailResponseDto {
   id: string;
-  status: QuizStatus | string;
+  status: QuizStatus;
   score: number;
   questions: QuestionDetailDto[];
   createdAt: string;
@@ -44,7 +44,7 @@ export interface QuizDetailResponseDto {
 
 export interface QuizListItemDto {
   id: string;
-  status: QuizStatus | string;
+  status: QuizStatus;
   score: number;
   createdAt: string;
   completedAt?: string;

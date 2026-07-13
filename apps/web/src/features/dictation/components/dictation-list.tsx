@@ -12,6 +12,8 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
+import { RouteEnum } from '@/shared/constants';
+import { formatUrl } from '@/shared/utils';
 
 export const DictationList = () => {
   const router = useRouter();
@@ -42,10 +44,10 @@ export const DictationList = () => {
           <CardHeader>
             <div className="flex justify-between items-start mb-2">
               <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary/5 text-primary">
-                {material.category || 'General'}
+                {material.tags?.[0] || 'General'}
               </span>
               <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                {material.difficultyLevel}
+                {material.level || 'A1'}
               </span>
             </div>
             <CardTitle className="line-clamp-2">{material.title}</CardTitle>
@@ -68,7 +70,7 @@ export const DictationList = () => {
               </div>
               <Button
                 onClick={() =>
-                  router.push(`/dashboard/dictation/${material.id}`)
+                  router.push(formatUrl(RouteEnum.DICTATION_EXERCISE, { id: material.id }))
                 }
                 className="w-full group-hover:bg-primary/90"
               >

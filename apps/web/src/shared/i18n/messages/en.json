@@ -243,6 +243,15 @@
     "quizTitle": "Quizzes",
     "startNewQuiz": "Start New Quiz"
   },
+  "ToeicResultDashboard": {
+    "title": "Test Results",
+    "subtitle": "Here is the detailed analysis of your performance.",
+    "performanceByPart": "Performance by Part",
+    "accuracy": "Accuracy",
+    "detailedBreakdown": "Detailed Breakdown",
+    "part": "Part",
+    "returnToDashboard": "Return to Dashboard"
+  },
   "ToeicTestPlayer": {
     "startTest": "Start Test",
     "submitTest": "Submit Test",
@@ -253,7 +262,12 @@
     "previous": "Previous",
     "next": "Next",
     "audioTrack": "Audio Track",
+    "audioPlayerHelp": "Use the play/pause button to control the audio.",
     "listenInstruction": "Listen to the audio and select the best response.",
+    "option": "Option",
+    "listenAndChoose": "Listen to the audio and choose the correct answer.",
+    "previousGroup": "Previous",
+    "nextGroup": "Next",
     "questionsCount": "{count} questions",
     "questionNavigation": "Question Navigation",
     "failedToLoadTest": "Failed to load test data."
@@ -352,5 +366,13 @@
       "edit": "Edit",
       "cancel": "Cancel"
     }
+  },
+  "ToeicTestList": {
+    "errorLoad": "Failed to load TOEIC tests. Please make sure the backend and database are running.",
+    "title": "TOEIC Simulation",
+    "description": "Practice with real TOEIC tests. Improve your listening and reading skills with our advanced AI-powered platform.",
+    "availableTests": "Available Tests",
+    "fullTest": "Full Test",
+    "startTest": "Start Test"
   }
 }

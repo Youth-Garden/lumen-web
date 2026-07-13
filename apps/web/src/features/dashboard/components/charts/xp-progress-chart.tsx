@@ -1,15 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, BarChartData } from '@/shared/components/charts/bar-chart';
 
 export interface XpProgressChartProps {
   data: { date: string; xp: number }[];
@@ -17,12 +9,13 @@ export interface XpProgressChartProps {
 
 export function XpProgressChart({ data }: XpProgressChartProps) {
   // Format dates for display
-  const formattedData = useMemo(() => {
+  const formattedData: BarChartData[] = useMemo(() => {
     return data.map((item) => {
       const d = new Date(item.date);
       return {
         ...item,
         name: d.toLocaleDateString('en-US', { weekday: 'short' }), // e.g., 'Mon', 'Tue'
+        value: item.xp,
       };
     });
   }, [data]);
@@ -37,50 +30,10 @@ export function XpProgressChart({ data }: XpProgressChartProps) {
 
   return (
     <div className="h-[350px] w-full pt-4">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={formattedData}
-          margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
-        >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            vertical={false}
-            stroke="var(--border)"
-          />
-          <XAxis
-            dataKey="name"
-            stroke="var(--muted-foreground)"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            stroke="var(--muted-foreground)"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-            tickFormatter={(value) => `${value}`}
-          />
-          <Tooltip
-            cursor={{ fill: 'var(--muted)' }}
-            contentStyle={{
-              backgroundColor: 'var(--background)',
-              borderColor: 'var(--border)',
-              borderRadius: '8px',
-              boxShadow:
-                '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-            }}
-            labelStyle={{ color: 'var(--foreground)', fontWeight: 'bold' }}
-            itemStyle={{ color: 'var(--primary)' }}
-          />
-          <Bar
-            dataKey="xp"
-            fill="var(--primary)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={40}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+      <BarChart
+        data={formattedData}
+        tooltipFormatter={(value: number) => [value, 'XP']}
+      />
     </div>
   );
 }

@@ -1,12 +1,12 @@
-import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { BaseResponse } from '@lumen/shared-api';
+import { CoreService } from '../core';
 import { registry } from './exam-practice.registry';
 import {
+  ExamAttemptDetailResponse,
   StartExamAttemptRequest,
   StartExamAttemptResponse,
   SubmitExamAnswerRequest,
-  ExamAttemptDetailResponse,
 } from './exam-practice.types';
 
 export class ExamPracticeService extends CoreService {

@@ -11,6 +11,6 @@ export const recentActivitiesMapper = (raw: any): ActivityItem[] => {
     title: item.title || '',
     description: item.description || '',
     xpEarned: item.xpEarned || 0,
-    timestamp: new Date(item.timestamp),
+    timestamp: item.timestamp || '',
   }));
 };

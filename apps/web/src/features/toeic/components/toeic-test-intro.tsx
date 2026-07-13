@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button } from '@lumen/uikit/components';
+import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 

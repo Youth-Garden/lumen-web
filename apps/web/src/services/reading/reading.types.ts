@@ -18,5 +18,5 @@ export interface CreateArticleDto {
 }
 
 export interface TranslateResponse {
-  translation: string;
+  translatedText: string;
 }

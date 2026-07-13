@@ -1,17 +1,15 @@
 import createMiddleware from 'next-intl/middleware';
-import { routing } from './shared/i18n/routing';
 import { NextRequest, NextResponse } from 'next/server';
 import { RouteEnum } from './shared/constants';
+import { routing } from './shared/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-// Routes that require the user to be logged in
 const protectedRoutes = [
   RouteEnum.DASHBOARD,
   RouteEnum.PROFILE,
   RouteEnum.SETTINGS,
 ];
-// Routes that logged in users should NOT access
 const publicOnlyRoutes = [
   RouteEnum.LOGIN,
   RouteEnum.REGISTER,

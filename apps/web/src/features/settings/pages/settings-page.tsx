@@ -101,19 +101,20 @@ export const SettingsPage = () => {
               const isActive = section === item.key;
               return (
                 <li key={item.key} className="shrink-0">
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={() => setSection(item.key)}
                     className={cn(
-                      'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors outline-none focus-visible:ring-4 focus-visible:ring-primary/20',
+                      'flex h-auto w-full justify-start items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors outline-none focus-visible:ring-4 focus-visible:ring-primary/20 font-normal hover:bg-transparent',
                       isActive
-                        ? 'bg-primary/10 font-medium text-primary'
+                        ? 'bg-primary/10 font-medium text-primary hover:bg-primary/10 hover:text-primary'
                         : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
                     )}
                   >
                     <Icons name={item.icon} className="h-4 w-4 shrink-0" />
                     {t(`sections.${item.key}`)}
-                  </button>
+                  </Button>
                 </li>
               );
             })}
