@@ -10,6 +10,7 @@ export interface ToeicQuestionDto {
   options?: string[];
   correctAnswer: string;
   explanation?: string;
+  mediaUrls?: string[];
 }
 
 export interface ToeicTestDto {

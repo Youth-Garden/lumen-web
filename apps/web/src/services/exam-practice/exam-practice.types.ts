@@ -11,6 +11,9 @@ export enum ExamType {
 export interface StartExamAttemptRequest {
   testId: string;
   testType: ExamType;
+  mode?: string;
+  partsAttempted?: number[];
+  customTimeLimit?: number;
 }
 
 export interface StartExamAttemptResponse {
@@ -20,7 +23,10 @@ export interface StartExamAttemptResponse {
 export interface SubmitExamAnswerRequest {
   questionId: string;
   userAnswer: string;
+  timeSpent?: number;
+  flaggedHard?: boolean;
 }
+
 
 export interface ExamPracticeAnswer {
   questionId: string;

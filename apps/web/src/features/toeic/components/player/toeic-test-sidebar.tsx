@@ -35,6 +35,7 @@ export const ToeicTestSidebar = ({
   answers,
   flaggedQuestions,
   currentQuestionIndices,
+  isReviewMode = false,
   onNavigate,
 }: ToeicTestSidebarProps) => {
   const t = useTranslations('ToeicTestPlayer');
@@ -45,10 +46,31 @@ export const ToeicTestSidebar = ({
   // Group questions by part
   const parts = Array.from({ length: 7 }, (_, i) => i + 1);
 
-  const getQuestionState = (question: ToeicQuestionStatus, index: number) => {
-    if (currentQuestionIndices.includes(index)) return 'current';
-    if (answers[question.id]) return 'answered';
-    return 'unanswered';
+  const getQuestionStyle = (q: any, index: number) => {
+    const isCurrent = currentQuestionIndices.includes(index);
+    if (isCurrent) {
+      return 'border-primary bg-primary text-primary-foreground hover:bg-primary/90';
+    }
+
+    if (isReviewMode) {
+      const userAnswer = answers[q.id];
+      const isCorrect = userAnswer === q.correctAnswer;
+      const hasAnswered = !!userAnswer;
+
+      if (!hasAnswered) {
+        return 'border-slate-200 bg-slate-100/50 text-slate-500 dark:border-slate-800 dark:bg-slate-900/30 dark:text-slate-500';
+      }
+      if (isCorrect) {
+        return 'border-green-300 bg-green-50 text-green-700 dark:border-green-900/50 dark:bg-green-950/20 dark:text-green-400';
+      }
+      return 'border-red-300 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400';
+    }
+
+    // Normal Test mode
+    if (answers[q.id]) {
+      return 'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-300';
+    }
+    return 'bg-card text-card-foreground';
   };
 
   const SidebarContent = () => (
@@ -66,7 +88,7 @@ export const ToeicTestSidebar = ({
               <div className="grid grid-cols-5 gap-2">
                 {partQuestions.map((q) => {
                   const index = questions.findIndex((xq) => xq.id === q.id);
-                  const state = getQuestionState(q, index);
+                  const styleClasses = getQuestionStyle(q, index);
 
                   return (
                     <div key={q.id} className="relative">
@@ -78,14 +100,7 @@ export const ToeicTestSidebar = ({
                         }}
                         className={cn(
                           'flex h-10 w-full p-0 items-center justify-center rounded-md border text-sm font-medium transition-colors hover:bg-muted',
-                          {
-                            'border-primary bg-primary text-primary-foreground hover:bg-primary/90':
-                              state === 'current',
-                            'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-300':
-                              state === 'answered',
-                            'bg-card text-card-foreground':
-                              state === 'unanswered',
-                          },
+                          styleClasses,
                         )}
                       >
                         {q.questionNumber}
@@ -111,20 +126,37 @@ export const ToeicTestSidebar = ({
       <div className="hidden lg:block w-80 shrink-0 border-l bg-card h-[calc(100vh-64px)] sticky top-16">
         <div className="p-4 border-b">
           <h2 className="font-semibold text-lg">{t('questionNavigation')}</h2>
-          <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <div className="h-3 w-3 rounded-sm border bg-card" />
-              <span>{t('unanswered')}</span>
+          {isReviewMode ? (
+            <div className="mt-4 flex flex-wrap gap-2 text-[10px] text-muted-foreground font-semibold">
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 rounded border border-green-300 bg-green-50 dark:border-green-900/50 dark:bg-green-950/20" />
+                <span>Correct</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 rounded border border-red-300 bg-red-50 dark:border-red-900/50 dark:bg-red-950/20" />
+                <span>Incorrect</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 rounded border border-slate-200 bg-slate-100/50 dark:border-slate-800 dark:bg-slate-900/30" />
+                <span>Skipped</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <div className="h-3 w-3 rounded-sm border border-indigo-200 bg-indigo-50 dark:border-indigo-900 dark:bg-indigo-950/50" />
-              <span>{t('answered')}</span>
+          ) : (
+            <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <div className="h-3 w-3 rounded-sm border bg-card" />
+                <span>{t('unanswered')}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="h-3 w-3 rounded-sm border border-indigo-200 bg-indigo-50 dark:border-indigo-900 dark:bg-indigo-950/50" />
+                <span>{t('answered')}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="h-3 w-3 rounded-sm border border-primary bg-primary" />
+                <span>{t('current')}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <div className="h-3 w-3 rounded-sm border border-primary bg-primary" />
-              <span>{t('current')}</span>
-            </div>
-          </div>
+          )}
         </div>
         <div className="h-[calc(100%-120px)]">
           <SidebarContent />

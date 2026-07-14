@@ -41,6 +41,8 @@ export enum ApiEndpointEnum {
   // TOEIC
   TOEIC_TESTS = '/api/toeic/tests',
   TOEIC_TEST_DETAIL = '/api/toeic/tests/:id',
+  TOEIC_NOTES = '/api/toeic/notes',
+  TOEIC_QUESTION_EXPLANATION = '/api/toeic/questions/:id/explanation',
 
   // Material
   MATERIALS = '/api/materials',

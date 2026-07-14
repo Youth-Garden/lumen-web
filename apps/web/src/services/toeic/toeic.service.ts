@@ -18,6 +18,37 @@ export class ToeicService extends CoreService {
       },
     );
   }
+
+  getNotes(testId?: string): Promise<BaseResponse<any[]>> {
+    return this._get<any[]>(
+      ApiEndpointEnum.TOEIC_NOTES,
+      testId ? { testId } : undefined,
+    );
+  }
+
+  saveNote(noteData: {
+    questionId: string;
+    testId: string;
+    content: string;
+    category: string;
+    tags: string[];
+  }): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.TOEIC_NOTES, noteData);
+  }
+
+  updateExplanation(
+    questionId: string,
+    explanationData: { explanation: string; mediaUrls?: string[] },
+  ): Promise<BaseResponse<void>> {
+    return this._put<void>(
+      ApiEndpointEnum.TOEIC_QUESTION_EXPLANATION,
+      explanationData,
+      {
+        pathParams: { id: questionId },
+      },
+    );
+  }
 }
 
 export const toeicService = ToeicService.getInstance(registry);
+

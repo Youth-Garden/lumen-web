@@ -23,6 +23,7 @@ import { ToeicQuestionGroupRenderer } from './player/toeic-question-group-render
 import { ToeicTestHeader } from './player/toeic-test-header';
 import { ToeicTestSidebar } from './player/toeic-test-sidebar';
 import { ToeicTestIntro } from './toeic-test-intro';
+import { ToeicNotePanel } from './player/toeic-note-panel';
 
 interface ToeicTestPlayerProps {
   testId: string;
@@ -33,6 +34,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const t = useTranslations('ToeicTestPlayer');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
+  const [showNotePanel, setShowNotePanel] = useState(false);
 
   const form = useForm<{ answers: Record<string, string> }>({
     defaultValues: { answers: {} },
@@ -56,6 +58,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
     secondsRemaining: timeRemaining,
     start: startTimer,
     pause: pauseTimer,
+    reset: resetTimer,
     isActive: isTimerActive,
   } = useCountdown({
     initialSeconds: 120 * 60,
@@ -100,12 +103,25 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
         title={test.title}
         questionCount={test.questions.length}
         isStarting={startAttemptMutation.isPending}
-        onStart={() => {
+        onStart={(config) => {
           startAttemptMutation.mutate(
-            { testId, testType: ExamType.TOEIC },
+            {
+              testId,
+              testType: ExamType.TOEIC,
+              mode: config.mode,
+              partsAttempted: config.partsAttempted,
+              customTimeLimit: config.customTimeLimit || undefined,
+            },
             {
               onSuccess: (data) => {
                 setAttemptId(data.id);
+                if (config.customTimeLimit) {
+                  resetTimer(config.customTimeLimit);
+                } else if (config.customTimeLimit === null && config.mode === 'PART') {
+                  resetTimer(config.partsAttempted.length * 15 * 60);
+                } else {
+                  resetTimer(120 * 60);
+                }
                 startTimer();
               },
             },
@@ -218,10 +234,20 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
             <h1 className="truncate text-lg font-semibold md:text-xl">
               {test.title} - {t('reviewMode')}
             </h1>
-            <Button onClick={() => setMode('result')} variant="outline">
-              <Icons name="arrow-left" className="mr-2 h-4 w-4" />
-              Back
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setShowNotePanel(!showNotePanel)}
+                variant={showNotePanel ? 'default' : 'outline'}
+                className="gap-2"
+              >
+                <Icons name="book-open" className="h-4 w-4" />
+                Notes
+              </Button>
+              <Button onClick={() => setMode('result')} variant="outline">
+                <Icons name="arrow-left" className="mr-2 h-4 w-4" />
+                Back
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
@@ -248,55 +274,64 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-1 mx-auto w-full max-w-[1600px] items-start">
+        <div className="flex flex-1 mx-auto w-full max-w-[1600px] items-start relative">
           {/* Main Content Area */}
-        <div className="flex-1 px-4 py-8 md:px-8 overflow-hidden h-[calc(100vh-64px)]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentQuestionIndex} // Key by group index
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-              className="h-full"
-            >
-              {currentGroup.length > 0 && (
-                <ToeicQuestionGroupRenderer
-                  questions={currentGroup}
-                  userAnswers={currentAnswers}
-                  flaggedQuestions={flaggedQuestions}
-                  isReviewMode={mode === 'review'}
-                  onSelectOption={handleSelectOption}
-                  onToggleFlag={handleToggleFlag}
-                  onNextGroup={() =>
-                    setCurrentQuestionIndex(
-                      Math.min(totalGroups - 1, currentQuestionIndex + 1),
-                    )
-                  }
-                  onPrevGroup={() =>
-                    setCurrentQuestionIndex(
-                      Math.max(0, currentQuestionIndex - 1),
-                    )
-                  }
-                  isFirstGroup={currentQuestionIndex === 0}
-                  isLastGroup={currentQuestionIndex === totalGroups - 1}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+          <div className="flex-1 px-4 py-8 md:px-8 overflow-hidden h-[calc(100vh-64px)]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentQuestionIndex} // Key by group index
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                className="h-full"
+              >
+                {currentGroup.length > 0 && (
+                  <ToeicQuestionGroupRenderer
+                    questions={currentGroup}
+                    userAnswers={currentAnswers}
+                    flaggedQuestions={flaggedQuestions}
+                    isReviewMode={mode === 'review'}
+                    onSelectOption={handleSelectOption}
+                    onToggleFlag={handleToggleFlag}
+                    onNextGroup={() =>
+                      setCurrentQuestionIndex(
+                        Math.min(totalGroups - 1, currentQuestionIndex + 1),
+                      )
+                    }
+                    onPrevGroup={() =>
+                      setCurrentQuestionIndex(
+                        Math.max(0, currentQuestionIndex - 1),
+                      )
+                    }
+                    isFirstGroup={currentQuestionIndex === 0}
+                    isLastGroup={currentQuestionIndex === totalGroups - 1}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-        {/* Sidebar */}
-        <ToeicTestSidebar
-          questions={questionStatuses}
-          answers={currentAnswers}
-          flaggedQuestions={flaggedQuestions}
-          isReviewMode={mode === 'review'}
-          currentQuestionIndices={currentGroup.map((q) =>
-            test.questions.findIndex((tq) => tq.id === q.id),
-          )}
-          onNavigate={handleNavigateQuestion}
+          {/* Sidebar */}
+          <ToeicTestSidebar
+            questions={test.questions}
+            answers={currentAnswers}
+            flaggedQuestions={flaggedQuestions}
+            isReviewMode={mode === 'review'}
+            currentQuestionIndices={currentGroup.map((q) =>
+              test.questions.findIndex((tq) => tq.id === q.id),
+            )}
+            onNavigate={handleNavigateQuestion}
           />
+
+          {/* Notes Sidebar Drawer */}
+          {showNotePanel && currentGroup[0] && (
+            <ToeicNotePanel
+              questionId={currentGroup[0].id}
+              testId={testId}
+              onClose={() => setShowNotePanel(false)}
+            />
+          )}
         </div>
       )}
     </div>
