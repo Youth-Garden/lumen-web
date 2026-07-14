@@ -1,7 +1,7 @@
-export const toeicAdminKeys = {
+export const toeicKeys = {
   all: ['admin-toeic'] as const,
-  lists: () => [...toeicAdminKeys.all, 'list'] as const,
+  lists: () => [...toeicKeys.all, 'list'] as const,
   list: (params?: Record<string, unknown>) =>
-    [...toeicAdminKeys.lists(), params] as const,
-  detail: (id: string) => [...toeicAdminKeys.all, 'detail', id] as const,
+    [...toeicKeys.lists(), params] as const,
+  detail: (id: string) => [...toeicKeys.all, 'detail', id] as const,
 };

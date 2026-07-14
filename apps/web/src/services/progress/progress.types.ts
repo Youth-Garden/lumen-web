@@ -43,8 +43,8 @@ export enum BadgeType {
 
 export interface LeaderboardUser {
   userId: string;
-  fullName: string | null;
-  avatarUrl: string | null;
+  fullName?: string;
+  avatarUrl?: string;
   totalPoints: number;
   streak: number;
   unlockedBadges: BadgeType[];
@@ -52,5 +52,5 @@ export interface LeaderboardUser {
 
 export interface LeaderboardResponse {
   topUsers: LeaderboardUser[];
-  currentUserRank: number | null;
+  currentUserRank?: number;
 }

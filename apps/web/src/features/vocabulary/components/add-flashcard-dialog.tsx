@@ -66,9 +66,7 @@ export function AddFlashcardDialog({
         deckId: data.deckId,
         wordId,
       });
-      toast.success(
-        t('addDeckSuccess', { term }),
-      );
+      toast.success(t('addDeckSuccess', { term }));
       onDismiss?.();
       form.reset();
     } catch (error) {
@@ -83,9 +81,7 @@ export function AddFlashcardDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t('addToDeck')}</DialogTitle>
-          <DialogDescription>
-            {t('addToDeckDescription')}
-          </DialogDescription>
+          <DialogDescription>{t('addToDeckDescription')}</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">
@@ -99,9 +95,7 @@ export function AddFlashcardDialog({
                 name="deckId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t('selectDeck')}
-                    </FormLabel>
+                    <FormLabel>{t('selectDeck')}</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       value={field.value || ''}

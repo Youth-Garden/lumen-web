@@ -124,19 +124,24 @@ export function VocabularyListPage() {
                       </p>
                     )}
                     <div className="space-y-1">
-                      {(word.definitions || []).slice(0, 2).map((def, defIndex) => (
-                        <div key={def.id || `def-${defIndex}`} className="text-sm">
-                          <span className="italic text-muted-foreground mr-2">
-                            {def.partOfSpeech}.
-                          </span>
-                          <span className="text-foreground">
-                            {def.definitionEn}
-                          </span>
-                          <span className="text-muted-foreground ml-2">
-                            ({def.translationVi})
-                          </span>
-                        </div>
-                      ))}
+                      {(word.definitions || [])
+                        .slice(0, 2)
+                        .map((def, defIndex) => (
+                          <div
+                            key={def.id || `def-${defIndex}`}
+                            className="text-sm"
+                          >
+                            <span className="italic text-muted-foreground mr-2">
+                              {def.partOfSpeech}.
+                            </span>
+                            <span className="text-foreground">
+                              {def.definitionEn}
+                            </span>
+                            <span className="text-muted-foreground ml-2">
+                              ({def.translationVi})
+                            </span>
+                          </div>
+                        ))}
                     </div>
                     <div className="flex items-center gap-2 mt-4">
                       <Button

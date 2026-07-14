@@ -1,5 +1,14 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Avatar, AvatarFallback, AvatarImage } from '@lumen/uikit/components';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useLeaderboard } from '../hooks/use-leaderboard';
 import { useTranslations } from 'next-intl';
@@ -11,7 +20,10 @@ export const Leaderboard = () => {
   if (isLoading) {
     return (
       <Card className="w-full h-[400px] flex items-center justify-center bg-background/40 backdrop-blur-md">
-        <Icons name="loader-2" className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Icons
+          name="loader-2"
+          className="h-8 w-8 animate-spin text-muted-foreground"
+        />
       </Card>
     );
   }
@@ -38,10 +50,20 @@ export const Leaderboard = () => {
               >
                 <div className="flex items-center gap-4">
                   <div className="flex items-center justify-center w-8 h-8 font-bold">
-                    {index === 0 && <Icons name="award" className="text-yellow-500 w-7 h-7" />}
-                    {index === 1 && <Icons name="award" className="text-gray-400 w-7 h-7" />}
-                    {index === 2 && <Icons name="award" className="text-amber-600 w-7 h-7" />}
-                    {index > 2 && <span className="text-muted-foreground text-sm">#{index + 1}</span>}
+                    {index === 0 && (
+                      <Icons name="award" className="text-yellow-500 w-7 h-7" />
+                    )}
+                    {index === 1 && (
+                      <Icons name="award" className="text-gray-400 w-7 h-7" />
+                    )}
+                    {index === 2 && (
+                      <Icons name="award" className="text-amber-600 w-7 h-7" />
+                    )}
+                    {index > 2 && (
+                      <span className="text-muted-foreground text-sm">
+                        #{index + 1}
+                      </span>
+                    )}
                   </div>
                   <Avatar className="h-10 w-10 border border-white/10">
                     <AvatarImage src={user.avatarUrl || ''} />
@@ -52,7 +74,8 @@ export const Leaderboard = () => {
                       {user.fullName || t('anonymous')}
                     </span>
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Icons name="flame" className="w-3 h-3 text-orange-500" /> {user.streak} {t('dayStreak')}
+                      <Icons name="flame" className="w-3 h-3 text-orange-500" />{' '}
+                      {user.streak} {t('dayStreak')}
                     </span>
                   </div>
                 </div>

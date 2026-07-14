@@ -80,7 +80,9 @@ export const ToeicScoreSummary = ({
           <Icons name="clock" className="w-6 h-6 text-orange-500" />
         </div>
         <h3 className="text-muted-foreground font-medium mb-1">Time Spent</h3>
-        <div className="text-2xl font-bold">{formatDuration(timeSpentSeconds)}</div>
+        <div className="text-2xl font-bold">
+          {formatDuration(timeSpentSeconds)}
+        </div>
       </motion.div>
     </div>
   );

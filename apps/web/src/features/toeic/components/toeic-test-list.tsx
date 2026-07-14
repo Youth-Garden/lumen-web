@@ -33,9 +33,7 @@ export const ToeicTestList = () => {
   if (isError || !data) {
     return (
       <div className="flex h-[50vh] items-center justify-center text-destructive">
-        <p>
-          {t('errorLoad')}
-        </p>
+        <p>{t('errorLoad')}</p>
       </div>
     );
   }

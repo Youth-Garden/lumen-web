@@ -6,7 +6,11 @@ interface UseCountdownOptions {
   autoStart?: boolean;
 }
 
-export function useCountdown({ initialSeconds, onComplete, autoStart = true }: UseCountdownOptions) {
+export function useCountdown({
+  initialSeconds,
+  onComplete,
+  autoStart = true,
+}: UseCountdownOptions) {
   const [secondsRemaining, setSecondsRemaining] = useState(initialSeconds);
   const [isActive, setIsActive] = useState(autoStart);
 
@@ -28,10 +32,13 @@ export function useCountdown({ initialSeconds, onComplete, autoStart = true }: U
 
   const start = useCallback(() => setIsActive(true), []);
   const pause = useCallback(() => setIsActive(false), []);
-  const reset = useCallback((newSeconds?: number) => {
-    setIsActive(false);
-    setSecondsRemaining(newSeconds ?? initialSeconds);
-  }, [initialSeconds]);
+  const reset = useCallback(
+    (newSeconds?: number) => {
+      setIsActive(false);
+      setSecondsRemaining(newSeconds ?? initialSeconds);
+    },
+    [initialSeconds],
+  );
 
   const minutes = Math.floor(secondsRemaining / 60);
   const seconds = secondsRemaining % 60;

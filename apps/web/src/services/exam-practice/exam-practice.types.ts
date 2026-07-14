@@ -8,10 +8,22 @@ export enum ExamType {
   IELTS = 'IELTS',
 }
 
+export enum TestPlayerMode {
+  TEST = 'test',
+  RESULT = 'result',
+  REVIEW = 'review',
+}
+
+export enum ExamAttemptMode {
+  FULL = 'FULL',
+  PART = 'PART',
+  RETEST = 'RETEST',
+}
+
 export interface StartExamAttemptRequest {
   testId: string;
   testType: ExamType;
-  mode?: string;
+  mode?: ExamAttemptMode;
   partsAttempted?: number[];
   customTimeLimit?: number;
 }
@@ -27,7 +39,6 @@ export interface SubmitExamAnswerRequest {
   flaggedHard?: boolean;
 }
 
-
 export interface ExamPracticeAnswer {
   questionId: string;
   userAnswer: string;
@@ -36,14 +47,42 @@ export interface ExamPracticeAnswer {
 
 export interface ExamAttemptDetailResponse {
   id: string;
-  testId: string;
   userId: string;
+  testId: string;
   testType: ExamType;
   status: ExamAttemptStatus;
   listeningScore: number;
   readingScore: number;
   totalScore: number;
   startedAt: string;
-  completedAt?: string;
+  completedAt: string | null;
+  mode: ExamAttemptMode;
+  questionIds: string[] | null;
   answers: ExamPracticeAnswer[];
+}
+
+export interface AttemptSummary {
+  id: string;
+  testId: string;
+  testType: ExamType;
+  status: ExamAttemptStatus;
+  mode: ExamAttemptMode;
+  listeningScore: number;
+  readingScore: number;
+  totalScore: number;
+  startedAt: string;
+  completedAt?: string;
+  totalAnswered: number;
+  totalCorrect: number;
+}
+
+export interface PagingMeta {
+  offset: number;
+  limit: number;
+  total: number;
+}
+
+export interface AttemptHistoryResponse {
+  items: AttemptSummary[];
+  paging: PagingMeta;
 }

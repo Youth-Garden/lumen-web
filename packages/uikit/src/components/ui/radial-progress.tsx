@@ -30,7 +30,7 @@ export function RadialProgress({
 }: RadialProgressProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
-  
+
   const safeValue = Math.min(Math.max(value, 0), max);
   const percent = max > 0 ? safeValue / max : 0;
   const offset = circumference - percent * circumference;
@@ -49,7 +49,10 @@ export function RadialProgress({
       >
         {/* Track */}
         <circle
-          className={cn('transition-all duration-300 ease-in-out', trackColorClass)}
+          className={cn(
+            'transition-all duration-300 ease-in-out',
+            trackColorClass,
+          )}
           stroke="currentColor"
           fill="transparent"
           strokeWidth={strokeWidth}
@@ -74,7 +77,9 @@ export function RadialProgress({
       {showValue && (
         <div className="absolute flex flex-col items-center justify-center text-center">
           <span className="text-2xl font-bold tracking-tighter">
-            {valuePrefix}{safeValue}{valueSuffix}
+            {valuePrefix}
+            {safeValue}
+            {valueSuffix}
           </span>
         </div>
       )}

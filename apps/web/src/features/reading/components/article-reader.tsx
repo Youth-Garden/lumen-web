@@ -5,9 +5,7 @@ import { useGetArticleById } from '../hooks';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { useRouter } from 'next/navigation';
-import {
-  TranslationPopover,
-} from './translation-popover';
+import { TranslationPopover } from './translation-popover';
 import { useTranslations } from 'next-intl';
 
 export const ArticleReader = ({ articleId }: { articleId: string }) => {
@@ -15,7 +13,11 @@ export const ArticleReader = ({ articleId }: { articleId: string }) => {
   const { data: article, isLoading, isError } = useGetArticleById(articleId);
   const router = useRouter();
 
-  const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
+  const [selection, setSelection] = useState<{
+    text: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const handleMouseUp = () => {
     const textSelection = window.getSelection();

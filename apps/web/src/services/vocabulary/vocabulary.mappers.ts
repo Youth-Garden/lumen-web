@@ -21,9 +21,9 @@ export const wordMapper = (raw: any): VocabularyWord => {
   return {
     id: raw?.id || '',
     term: raw?.term || '',
-    phonetic: raw?.phonetic || null,
-    audioUrl: raw?.audioUrl || null,
-    cefrLevel: raw?.cefrLevel || null,
+    phonetic: raw?.phonetic,
+    audioUrl: raw?.audioUrl,
+    cefrLevel: raw?.cefrLevel,
     definitions: (raw?.definitions || []).map((definition: any) => ({
       id: definition?.id || '',
       partOfSpeech: definition?.partOfSpeech || '',
@@ -43,7 +43,7 @@ export const deckListMapper = (raw: any): Deck[] => {
   return raw.map((deck: any) => ({
     id: deck?.id || '',
     name: deck?.name || '',
-    description: deck?.description ?? null,
+    description: deck?.description,
     flashcardCount: deck?.flashcardCount ?? 0,
   }));
 };

@@ -34,7 +34,8 @@ const openEffectVariants = cva('animate-in fade-in fill-mode-both', {
 });
 
 export interface OpenEffectProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof openEffectVariants> {}
 
 export function OpenEffect({
@@ -47,7 +48,10 @@ export function OpenEffect({
 }: OpenEffectProps) {
   return (
     <div
-      className={cn(openEffectVariants({ variant, duration, delay }), className)}
+      className={cn(
+        openEffectVariants({ variant, duration, delay }),
+        className,
+      )}
       {...props}
     >
       {children}

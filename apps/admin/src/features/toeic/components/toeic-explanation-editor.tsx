@@ -1,9 +1,7 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useUpdateExplanation } from '../../toeic/hooks/use-toeic';
+import { useUpdateExplanation } from '../hooks/use-toeic';
 import { toast } from 'sonner';
 
 interface ToeicExplanationEditorProps {
@@ -24,6 +22,52 @@ export const ToeicExplanationEditor = ({
   const [explanation, setExplanation] = useState(initialExplanation);
   const [mediaUrls, setMediaUrls] = useState<string[]>(initialMediaUrls);
   const [newMediaUrl, setNewMediaUrl] = useState('');
+
+  const TEMPLATES = [
+    {
+      name: 'Grammar Rule',
+      content: `**Grammar Rule:** [Rule Name]\n\n- Definition: ...\n- Example: ...\n\n*Why it is correct:* ...\n*Why other options are wrong:* ...`,
+    },
+    {
+      name: 'Vocabulary List',
+      content: `**Key Vocabulary:**\n\n- **Word 1** (/pronunciation/): Definition. *Example sentence.*\n- **Word 2**: Definition.\n\n*Analysis of choices:* ...`,
+    },
+  ];
+
+  const insertTextAtCursor = (prefix: string, suffix: string = '') => {
+    const textarea = document.getElementById(
+      'explanation-editor',
+    ) as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = explanation.substring(start, end);
+    const replacement = prefix + selectedText + suffix;
+
+    const newText =
+      explanation.substring(0, start) +
+      replacement +
+      explanation.substring(end);
+    setExplanation(newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+    }, 0);
+  };
+
+  const applyTemplate = (content: string) => {
+    if (
+      explanation.trim() !== '' &&
+      !window.confirm(
+        'This will append the template to your current explanation. Proceed?',
+      )
+    ) {
+      return;
+    }
+    setExplanation((prev) => (prev ? prev + '\n\n' + content : content));
+  };
 
   const updateExplanationMutation = useUpdateExplanation();
 
@@ -52,11 +96,7 @@ export const ToeicExplanationEditor = ({
       },
       {
         onSuccess: () => {
-          toast.success('Explanation saved successfully!');
           onSuccess?.();
-        },
-        onError: () => {
-          toast.error('Failed to save explanation.');
         },
       },
     );
@@ -67,11 +107,20 @@ export const ToeicExplanationEditor = ({
       {/* Header */}
       <div className="flex items-center justify-between border-b px-6 py-4 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
         <div>
-          <h3 className="text-lg font-bold text-foreground">Edit Question Explanation</h3>
-          <p className="text-xs text-muted-foreground">Modify markdown notes and explanation graphics for this question.</p>
+          <h3 className="text-lg font-bold text-foreground">
+            Edit Question Explanation
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            Modify markdown notes and explanation graphics for this question.
+          </p>
         </div>
         {onClose && (
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-9 w-9">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-9 w-9"
+          >
             <Icons name="close" className="h-5 w-5" />
           </Button>
         )}
@@ -83,14 +132,79 @@ export const ToeicExplanationEditor = ({
         <div className="p-6 border-r dark:border-slate-800 flex flex-col space-y-4 overflow-y-auto">
           {/* Explanation Area */}
           <div className="flex-1 flex flex-col space-y-2">
-            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              Explanation Markdown
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                Explanation Markdown
+              </label>
+              <div className="flex gap-2">
+                <select
+                  className="text-xs rounded border bg-background px-2 py-1 dark:border-slate-800 focus:outline-none"
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      applyTemplate(
+                        TEMPLATES[parseInt(e.target.value)].content,
+                      );
+                      e.target.value = ''; // reset
+                    }
+                  }}
+                >
+                  <option value="">Insert Template...</option>
+                  {TEMPLATES.map((t, idx) => (
+                    <option key={idx} value={idx}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Markdown Toolbar */}
+            <div className="flex items-center gap-1 border border-b-0 rounded-t-xl bg-slate-50 dark:bg-slate-900 px-2 py-1.5 dark:border-slate-800">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => insertTextAtCursor('**', '**')}
+              >
+                <span className="font-bold">B</span>
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => insertTextAtCursor('*', '*')}
+              >
+                <span className="italic">I</span>
+              </Button>
+              <div className="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-1" />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => insertTextAtCursor('\n- ')}
+              >
+                <Icons name="list" className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => insertTextAtCursor('[', '](url)')}
+              >
+                <Icons name="link" className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+
             <textarea
+              id="explanation-editor"
               value={explanation}
               onChange={(e) => setExplanation(e.target.value)}
               placeholder="Provide context and explain grammar rules... (Markdown supported: **bold**, *italic*, - list, [link](url))"
-              className="w-full flex-1 min-h-[220px] rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-800 leading-relaxed font-mono"
+              className="w-full flex-1 min-h-[220px] rounded-b-xl border border-t-0 bg-background p-3 text-sm focus:outline-none dark:border-slate-800 leading-relaxed font-mono resize-none"
             />
           </div>
 
@@ -107,7 +221,11 @@ export const ToeicExplanationEditor = ({
                 placeholder="https://example.com/image.jpg"
                 className="flex-1 rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-800"
               />
-              <Button type="button" onClick={handleAddMediaUrl} className="shrink-0">
+              <Button
+                type="button"
+                onClick={handleAddMediaUrl}
+                className="shrink-0"
+              >
                 <Icons name="plus" className="h-4 w-4 mr-1.5" />
                 Add Image
               </Button>
@@ -144,19 +262,32 @@ export const ToeicExplanationEditor = ({
             {explanation.trim() ? (
               <div
                 className="prose dark:prose-invert max-w-none text-sm leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(explanation) }}
+                dangerouslySetInnerHTML={{
+                  __html: renderMarkdownToHtml(explanation),
+                }}
               />
             ) : (
-              <p className="text-sm text-muted-foreground italic">Type in the editor to see explanation preview here.</p>
+              <p className="text-sm text-muted-foreground italic">
+                Type in the editor to see explanation preview here.
+              </p>
             )}
 
             {mediaUrls.length > 0 && (
               <div className="mt-4 pt-4 border-t dark:border-slate-800">
-                <span className="text-xs font-bold text-primary block mb-2">Explanatory Graphics Preview:</span>
+                <span className="text-xs font-bold text-primary block mb-2">
+                  Explanatory Graphics Preview:
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {mediaUrls.map((url, i) => (
-                    <div key={i} className="border rounded-lg overflow-hidden bg-background p-1 max-w-[120px]">
-                      <img src={url} alt={`Graphic ${i + 1}`} className="max-h-20 object-contain mx-auto" />
+                    <div
+                      key={i}
+                      className="border rounded-lg overflow-hidden bg-background p-1 max-w-[120px]"
+                    >
+                      <img
+                        src={url}
+                        alt={`Graphic ${i + 1}`}
+                        className="max-h-20 object-contain mx-auto"
+                      />
                     </div>
                   ))}
                 </div>
@@ -169,7 +300,11 @@ export const ToeicExplanationEditor = ({
       {/* Footer Actions */}
       <div className="border-t px-6 py-4 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50">
         {onClose && (
-          <Button variant="outline" onClick={onClose} disabled={updateExplanationMutation.isPending}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={updateExplanationMutation.isPending}
+          >
             Cancel
           </Button>
         )}
@@ -202,12 +337,15 @@ const renderMarkdownToHtml = (markdown: string): string => {
 
   // Bold **text**
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
+
   // Italic *text*
   html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
   // Links [text](url)
-  html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">$1</a>');
+  html = html.replace(
+    /\[(.*?)\]\((.*?)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">$1</a>',
+  );
 
   // Lists
   const lines = html.split('\n');

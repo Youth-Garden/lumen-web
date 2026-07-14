@@ -74,7 +74,9 @@ export default function ForgotPasswordPage() {
           <Icons name="check-circle" className="h-10 w-10 text-primary" />
           <div className="space-y-1">
             <h3 className="font-medium text-foreground">{t('checkEmail')}</h3>
-            <p className="text-sm text-muted-foreground">{t('checkEmailDesc')}</p>
+            <p className="text-sm text-muted-foreground">
+              {t('checkEmailDesc')}
+            </p>
           </div>
           <Button
             variant="outline"
@@ -111,7 +113,10 @@ export default function ForgotPasswordPage() {
               />
               <Button className="w-full" type="submit" disabled={isLoading}>
                 {isLoading && (
-                  <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />
+                  <Icons
+                    name="loader-2"
+                    className="mr-2 h-4 w-4 animate-spin"
+                  />
                 )}
                 {t('submit')}
               </Button>

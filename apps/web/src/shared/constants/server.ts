@@ -43,6 +43,7 @@ export enum ApiEndpointEnum {
   TOEIC_TEST_DETAIL = '/api/toeic/tests/:id',
   TOEIC_NOTES = '/api/toeic/notes',
   TOEIC_QUESTION_EXPLANATION = '/api/toeic/questions/:id/explanation',
+  TOEIC_MISSING_EXPLANATIONS = '/api/toeic/admin/missing-explanations',
 
   // Material
   MATERIALS = '/api/materials',
@@ -51,9 +52,11 @@ export enum ApiEndpointEnum {
 
   // Exam Practice
   EXAM_PRACTICE_ATTEMPTS = '/api/exam-practice/attempts',
+  EXAM_PRACTICE_MY_ATTEMPTS = '/api/exam-practice/attempts/me',
   EXAM_PRACTICE_ATTEMPT_DETAIL = '/api/exam-practice/attempts/:id',
   EXAM_PRACTICE_ATTEMPT_ANSWERS = '/api/exam-practice/attempts/:id/answers',
   EXAM_PRACTICE_ATTEMPT_FINISH = '/api/exam-practice/attempts/:id/finish',
+  EXAM_PRACTICE_RETEST = '/api/exam-practice/attempts/:id/retest',
 
   // Notifications
   NOTIFICATIONS = '/api/notifications',

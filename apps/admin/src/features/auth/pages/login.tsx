@@ -1,52 +1,46 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Button,
-  Input,
-  Label,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@lumen/uikit/components';
-import { useLogin } from '../hooks';
+import { useGoogleLoginMutation } from '../hooks';
 import { useAuthStore } from '@/store/auth.store';
 import { Icons } from '@lumen/uikit/icons';
 import { toast } from 'sonner';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function Login() {
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
-  const loginMutation = useLogin();
+  const loginMutation = useGoogleLoginMutation();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      toast.error('Please enter email and password');
+  const handleGoogleSuccess = (credentialResponse: any) => {
+    if (!credentialResponse.credential) {
+      toast.error('Google Sign-In failed');
       return;
     }
 
-    loginMutation.mutate(
-      { email, password },
-      {
-        onSuccess: (response) => {
-          if (response.data?.accessToken) {
-            setToken(response.data.accessToken);
-            toast.success('Welcome back to Lumen Admin!');
-            navigate('/dashboard');
-          }
-        },
-        onError: () => {
-          toast.error('Invalid credentials. Please try again.');
-        },
+    loginMutation.mutate(credentialResponse.credential, {
+      onSuccess: (response) => {
+        if (response.data?.accessToken) {
+          setToken(response.data.accessToken);
+          toast.success('Welcome back to Lumen Admin!');
+          navigate('/dashboard');
+        }
       },
-    );
+      onError: () => {
+        toast.error(
+          'Google authentication failed. Please try again or use an authorized account.',
+        );
+      },
+    });
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google Sign-In failed. Please try again.');
   };
 
   return (
@@ -68,73 +62,32 @@ export default function Login() {
       <Card className="w-full max-w-md shadow-xl border-0 ring-1 ring-slate-200 dark:ring-slate-800">
         <CardHeader className="space-y-1 pb-6">
           <CardTitle className="text-2xl font-semibold text-center">
-            Admin Login
+            Authorized Access
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your email below to login to your account
+            Please sign in with your corporate Google account
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Icons
-                  name="mail"
-                  className="absolute left-3 top-3 h-4 w-4 text-muted-foreground"
-                />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@lumen.com"
-                  className="pl-10 h-11"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={loginMutation.isPending}
-                />
-              </div>
+        <CardContent className="space-y-4 flex flex-col items-center pb-8 pt-4">
+          {loginMutation.isPending ? (
+            <div className="flex flex-col items-center justify-center space-y-4 py-4">
+              <Icons
+                name="loader-2"
+                className="h-8 w-8 animate-spin text-primary"
+              />
+              <p className="text-sm text-muted-foreground">Authenticating...</p>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-              </div>
-              <div className="relative">
-                <Icons
-                  name="lock"
-                  className="absolute left-3 top-3 h-4 w-4 text-muted-foreground"
-                />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className="pl-10 h-11"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={loginMutation.isPending}
-                />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="pt-2 pb-6">
-            <Button
-              className="w-full h-11 text-base font-medium shadow-md transition-all"
-              type="submit"
-              disabled={loginMutation.isPending}
-            >
-              {loginMutation.isPending ? (
-                <>
-                  <Icons
-                    name="loader-2"
-                    className="mr-2 h-5 w-5 animate-spin"
-                  />{' '}
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </Button>
-          </CardFooter>
-        </form>
+          ) : (
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              useOneTap
+              theme="filled_black"
+              shape="rectangular"
+              text="continue_with"
+            />
+          )}
+        </CardContent>
       </Card>
 
       <p className="mt-8 text-sm text-muted-foreground text-center">

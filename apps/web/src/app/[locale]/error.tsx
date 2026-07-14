@@ -34,7 +34,9 @@ export default function ErrorPage({
         </div>
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">500</h1>
-          <h2 className="text-2xl font-semibold tracking-tight">{t('title')}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            {t('title')}
+          </h2>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <div className="mt-8 flex gap-4">

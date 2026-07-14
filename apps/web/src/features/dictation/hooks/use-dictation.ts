@@ -19,7 +19,7 @@ export function useDictationMaterial(materialId: string) {
 
 export function useSubmitDictation() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: DictationSubmissionDto) =>
       materialService.submitDictation(data),

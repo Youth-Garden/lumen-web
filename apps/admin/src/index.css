@@ -1,5 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
-
 @theme {
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -52,66 +52,37 @@
 }
 
 @layer base {
-  :root {
-    --background: 171 100% 96.5%; /* #F0FDFA */
-    --foreground: 176 61% 19%; /* #134E4A */
-
-    --card: 0 0% 100%;
-    --card-foreground: 176 61% 19%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 176 61% 19%;
-
-    --primary: 174 83.3% 29.4%; /* #0D9488 */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 173 66.7% 50.6%; /* #2DD4BF */
-    --secondary-foreground: 174 83.3% 29.4%;
-
-    --muted: 195 29% 94%; /* #E8F1F4 */
-    --muted-foreground: 176 61% 40%;
-
-    --accent: 38 94.6% 43.9%; /* #D97706 */
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 72.2% 50.6%; /* #DC2626 */
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 171 76.5% 64.9%; /* #5EEAD4 */
-    --input: 171 76.5% 64.9%;
-    --ring: 174 83.3% 29.4%;
-
-    --radius: 0.5rem;
-  }
-
+  :root,
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 228 83% 5%; /* #020617 */
+    --foreground: 210 40% 98%; /* #F8FAFC */
 
-    --card: 222.2 84% 4.9%;
+    --card: 228 83% 5%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 228 83% 5%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 174 83.3% 29.4%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 222 47% 11%; /* #0F172A */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --secondary: 173 66.7% 50.6%;
-    --secondary-foreground: 222.2 84% 4.9%;
+    --secondary: 217 33% 17%; /* #1E293B */
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 228 29% 14%; /* #1A1E2F */
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 38 94.6% 43.9%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 142 71% 45%; /* #22C55E */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%; /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 174 83.3% 29.4%;
+    --border: 215 25% 27%; /* #334155 */
+    --input: 215 25% 27%;
+    --ring: 222 47% 11%;
+
+    --radius: 0.5rem;
   }
 }
 

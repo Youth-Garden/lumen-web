@@ -176,7 +176,10 @@ function DropdownMenuCheckboxItem({
   );
 }
 
-function DropdownMenuRadioGroup({ className, ...props }: MenuPrimitive.RadioGroup.Props) {
+function DropdownMenuRadioGroup({
+  className,
+  ...props
+}: MenuPrimitive.RadioGroup.Props) {
   return (
     <MenuPrimitive.RadioGroup
       data-slot="dropdown-menu-radio-group"

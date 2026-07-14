@@ -132,7 +132,9 @@ export function Hero() {
               </span>
               <div className="leading-tight">
                 <p className="text-sm font-bold text-foreground">4.9/5</p>
-                <p className="text-xs text-muted-foreground">{t('heroRatingLabel')}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t('heroRatingLabel')}
+                </p>
               </div>
             </div>
           </motion.div>

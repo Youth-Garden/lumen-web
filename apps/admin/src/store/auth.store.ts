@@ -8,15 +8,20 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(devtools((set) => ({
-  accessToken: localStorage.getItem('admin_jwta'),
-  isAuthenticated: Boolean(localStorage.getItem('admin_jwta')),
-  setToken: (token) => {
-    localStorage.setItem('admin_jwta', token);
-    set({ accessToken: token, isAuthenticated: true });
-  },
-  logout: () => {
-    localStorage.removeItem('admin_jwta');
-    set({ accessToken: null, isAuthenticated: false });
-  },
-}), { name: 'AdminAuthStore' }));
+export const useAuthStore = create<AuthState>()(
+  devtools(
+    (set) => ({
+      accessToken: localStorage.getItem('access_token'),
+      isAuthenticated: Boolean(localStorage.getItem('access_token')),
+      setToken: (token) => {
+        localStorage.setItem('access_token', token);
+        set({ accessToken: token, isAuthenticated: true });
+      },
+      logout: () => {
+        localStorage.removeItem('access_token');
+        set({ accessToken: null, isAuthenticated: false });
+      },
+    }),
+    { name: 'AuthStore' },
+  ),
+);

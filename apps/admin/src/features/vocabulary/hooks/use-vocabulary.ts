@@ -1,8 +1,5 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import {
-  vocabularyAdminService,
-  vocabularyAdminKeys,
-} from '@/services/vocabulary';
+import { vocabularyService, vocabularyKeys } from '@/services/vocabulary';
 import type {
   CreateVocabularyWordPayload,
   UpdateVocabularyWordPayload,
@@ -12,9 +9,9 @@ export const useCreateVocabularyWord = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: CreateVocabularyWordPayload) =>
-      vocabularyAdminService.createWord(payload),
+      vocabularyService.createWord(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: vocabularyAdminKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: vocabularyKeys.lists() });
     },
   });
 };
@@ -28,11 +25,11 @@ export const useUpdateVocabularyWord = () => {
     }: {
       id: string;
       payload: UpdateVocabularyWordPayload;
-    }) => vocabularyAdminService.updateWord(id, payload),
+    }) => vocabularyService.updateWord(id, payload),
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: vocabularyAdminKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: vocabularyKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: vocabularyAdminKeys.detail(id),
+        queryKey: vocabularyKeys.detail(id),
       });
     },
   });
@@ -41,9 +38,9 @@ export const useUpdateVocabularyWord = () => {
 export const useDeleteVocabularyWord = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => vocabularyAdminService.deleteWord(id),
+    mutationFn: (id: string) => vocabularyService.deleteWord(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: vocabularyAdminKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: vocabularyKeys.lists() });
     },
   });
 };
@@ -55,8 +52,8 @@ export const useVocabularyWords = (params?: {
   cefrLevel?: string;
 }) => {
   return useQuery({
-    queryKey: vocabularyAdminKeys.list(params),
-    queryFn: () => vocabularyAdminService.listWords(params),
+    queryKey: vocabularyKeys.list(params),
+    queryFn: () => vocabularyService.listWords(params),
   });
 };
 
@@ -65,8 +62,8 @@ export const useVocabularyWordDetail = (
   options?: { enabled?: boolean },
 ) => {
   return useQuery({
-    queryKey: vocabularyAdminKeys.detail(id),
-    queryFn: () => vocabularyAdminService.getWordById(id),
+    queryKey: vocabularyKeys.detail(id),
+    queryFn: () => vocabularyService.getWordById(id),
     enabled: options?.enabled ?? Boolean(id),
   });
 };

@@ -3,6 +3,7 @@ import { BaseResponse } from '@lumen/shared-api';
 import { CoreService } from '../core';
 import { registry } from './exam-practice.registry';
 import {
+  AttemptHistoryResponse,
   ExamAttemptDetailResponse,
   StartExamAttemptRequest,
   StartExamAttemptResponse,
@@ -50,6 +51,28 @@ export class ExamPracticeService extends CoreService {
       undefined,
       {
         pathParams: { id: attemptId },
+      },
+    );
+  }
+
+  getMyAttempts(
+    page: number,
+    limit: number,
+  ): Promise<BaseResponse<AttemptHistoryResponse>> {
+    return this._get<AttemptHistoryResponse>(
+      ApiEndpointEnum.EXAM_PRACTICE_MY_ATTEMPTS,
+      { page, limit },
+    );
+  }
+
+  startRetest(
+    sourceAttemptId: string,
+  ): Promise<BaseResponse<StartExamAttemptResponse>> {
+    return this._post<StartExamAttemptResponse>(
+      ApiEndpointEnum.EXAM_PRACTICE_RETEST,
+      undefined,
+      {
+        pathParams: { id: sourceAttemptId },
       },
     );
   }

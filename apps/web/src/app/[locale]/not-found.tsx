@@ -24,10 +24,16 @@ export default function NotFound() {
         </div>
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">404</h1>
-          <h2 className="text-2xl font-semibold tracking-tight">{t('title')}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            {t('title')}
+          </h2>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button onClick={() => router.push('/')} size="lg" className="mt-8 gap-2">
+        <Button
+          onClick={() => router.push('/')}
+          size="lg"
+          className="mt-8 gap-2"
+        >
           <Icons name="home" className="h-4 w-4" />
           {t('backHome')}
         </Button>

@@ -1,9 +1,9 @@
 import {
-  MaterialDto,
   DictationResultDto,
-  TranscriptDto,
-  MaterialTypeEnum,
+  MaterialDto,
   MaterialLevelEnum,
+  MaterialTypeEnum,
+  TranscriptDto,
 } from './material.types';
 
 export const transcriptMapper = (raw: any): TranscriptDto => ({
@@ -21,8 +21,8 @@ export const materialMapper = (raw: any): MaterialDto => ({
   description: raw?.description || undefined,
   mediaUrl: raw?.mediaUrl || undefined,
   thumbnailUrl: raw?.thumbnailUrl || undefined,
-  type: raw?.type as MaterialTypeEnum || MaterialTypeEnum.TEXT,
-  level: raw?.level as MaterialLevelEnum || undefined,
+  type: (raw?.type as MaterialTypeEnum) || MaterialTypeEnum.TEXT,
+  level: (raw?.level as MaterialLevelEnum) || undefined,
   tags: Array.isArray(raw?.tags) ? raw.tags : undefined,
   duration: raw?.duration || undefined,
   transcripts: Array.isArray(raw?.transcripts)

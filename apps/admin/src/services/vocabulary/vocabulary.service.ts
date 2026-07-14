@@ -3,13 +3,13 @@ import { ApiEndpointEnum } from '@/shared/constants';
 import { registry } from './vocabulary.registry';
 import type { BaseResponse } from '@lumen/shared-api';
 import type {
-  AdminVocabularyWord,
+  VocabularyWord,
   CreateVocabularyWordPayload,
   UpdateVocabularyWordPayload,
   VocabularyWordListResponse,
 } from './vocabulary.types';
 
-export class VocabularyAdminService extends CoreService {
+export class VocabularyService extends CoreService {
   listWords(params?: {
     page?: number;
     limit?: number;
@@ -22,8 +22,8 @@ export class VocabularyAdminService extends CoreService {
     );
   }
 
-  getWordById(id: string): Promise<BaseResponse<AdminVocabularyWord>> {
-    return this._get<AdminVocabularyWord>(
+  getWordById(id: string): Promise<BaseResponse<VocabularyWord>> {
+    return this._get<VocabularyWord>(
       ApiEndpointEnum.VOCABULARY_WORD_DETAIL,
       undefined,
       { pathParams: { id } },
@@ -32,8 +32,8 @@ export class VocabularyAdminService extends CoreService {
 
   createWord(
     payload: CreateVocabularyWordPayload,
-  ): Promise<BaseResponse<AdminVocabularyWord>> {
-    return this._post<AdminVocabularyWord>(
+  ): Promise<BaseResponse<VocabularyWord>> {
+    return this._post<VocabularyWord>(
       ApiEndpointEnum.VOCABULARY_WORDS,
       payload,
     );
@@ -42,8 +42,8 @@ export class VocabularyAdminService extends CoreService {
   updateWord(
     id: string,
     payload: UpdateVocabularyWordPayload,
-  ): Promise<BaseResponse<AdminVocabularyWord>> {
-    return this._put<AdminVocabularyWord>(
+  ): Promise<BaseResponse<VocabularyWord>> {
+    return this._put<VocabularyWord>(
       ApiEndpointEnum.VOCABULARY_WORD_DETAIL,
       payload,
       { pathParams: { id } },
@@ -57,5 +57,4 @@ export class VocabularyAdminService extends CoreService {
   }
 }
 
-export const vocabularyAdminService =
-  VocabularyAdminService.getInstance(registry);
+export const vocabularyService = VocabularyService.getInstance(registry);

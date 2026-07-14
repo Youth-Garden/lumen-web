@@ -1,4 +1,4 @@
-export interface AdminUser {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -8,7 +8,7 @@ export interface AdminUser {
 }
 
 export interface UserListResponse {
-  items: AdminUser[];
+  items: User[];
   meta: {
     currentPage: number;
     perPage: number;

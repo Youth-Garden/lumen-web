@@ -109,7 +109,9 @@ export const ArticleList = () => {
                 <Button
                   className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 font-semibold text-white transition-all hover:from-teal-600 hover:to-emerald-700"
                   onClick={() =>
-                    router.push(formatUrl(RouteEnum.ARTICLE_READER, { id: article.id }))
+                    router.push(
+                      formatUrl(RouteEnum.ARTICLE_READER, { id: article.id }),
+                    )
                   }
                 >
                   Start Reading

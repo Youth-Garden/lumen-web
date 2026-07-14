@@ -54,7 +54,9 @@ export function OverviewPage() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
-          <TabsTrigger value="gamification">{t('tabs.gamification')}</TabsTrigger>
+          <TabsTrigger value="gamification">
+            {t('tabs.gamification')}
+          </TabsTrigger>
           <TabsTrigger value="analytics">{t('tabs.analytics')}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">

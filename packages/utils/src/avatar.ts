@@ -72,7 +72,9 @@ export function getAvatarUrl(
 export async function getAvatarDataUri(
   style: (typeof AvatarStyles)[number],
   seed: string,
-  options: (typeof AvatarStyles)[number] extends never ? never : Record<string, string | number> = {},
+  options: (typeof AvatarStyles)[number] extends never
+    ? never
+    : Record<string, string | number> = {},
 ): Promise<string> {
   const url = getAvatarUrl(style, seed, options);
   const response = await fetch(url);

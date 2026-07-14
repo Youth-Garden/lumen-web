@@ -4,7 +4,7 @@ import {
   StartExamAttemptRequest,
   SubmitExamAnswerRequest,
 } from '@/services/exam-practice';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -26,13 +26,12 @@ export const useStartExamAttempt = () => {
 
 export const useSubmitExamAnswer = (attemptId: string) => {
   const t = useTranslations('ExamPractice');
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: SubmitExamAnswerRequest) =>
       examPracticeService.submitAnswer(attemptId, data),
     onSuccess: () => {
-      // Background save, no need to invalidate the whole attsempt details to avoid UI flickers.
+      // Background save, no need to invalidate the whole attempt details to avoid UI flickers.
     },
     onError: () => {
       toast.error(t('saveAnswerFailed'));
@@ -54,6 +53,38 @@ export const useFinishExamAttempt = (attemptId: string) => {
     },
     onError: () => {
       toast.error(t('finishFailed'));
+    },
+  });
+};
+
+export const useMyAttempts = (page: number = 1, limit: number = 10) => {
+  return useQuery({
+    queryKey: examPracticeKeys.myAttempts(page),
+    queryFn: () =>
+      examPracticeService.getMyAttempts(page, limit).then((res) => res.data),
+  });
+};
+
+export const useGetExamAttemptDetail = (attemptId: string) => {
+  return useQuery({
+    queryKey: examPracticeKeys.attemptDetail(attemptId),
+    queryFn: () =>
+      examPracticeService.getAttempt(attemptId).then((res) => res.data),
+    enabled: !!attemptId,
+  });
+};
+
+export const useStartRetest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (sourceAttemptId: string) =>
+      examPracticeService.startRetest(sourceAttemptId).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: examPracticeKeys.attempts() });
+    },
+    onError: () => {
+      toast.error('Failed to start retest. Please try again.');
     },
   });
 };

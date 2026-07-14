@@ -1,5 +1,11 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@lumen/uikit/components';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useBadges } from '../hooks/use-badges';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
@@ -10,11 +16,14 @@ export const BadgesList = () => {
   const t = useTranslations('Gamification.Badges');
   const { data: allBadges, isLoading: loadingBadges } = useBadges();
   const { data: progress } = useProgressDashboard();
-  
+
   if (loadingBadges) {
     return (
       <Card className="w-full h-[400px] flex items-center justify-center bg-background/40 backdrop-blur-md">
-        <Icons name="loader-2" className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Icons
+          name="loader-2"
+          className="h-8 w-8 animate-spin text-muted-foreground"
+        />
       </Card>
     );
   }
@@ -49,7 +58,9 @@ export const BadgesList = () => {
                 <div
                   className={cn(
                     'w-16 h-16 rounded-full flex items-center justify-center mb-3',
-                    isUnlocked ? 'bg-primary text-primary-foreground' : 'bg-muted-foreground/20 text-muted-foreground',
+                    isUnlocked
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted-foreground/20 text-muted-foreground',
                   )}
                 >
                   <Icons name={badge.icon as any} className="w-8 h-8" />

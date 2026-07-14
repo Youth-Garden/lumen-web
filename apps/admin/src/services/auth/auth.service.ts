@@ -9,6 +9,10 @@ export class AuthService extends CoreService {
     return this._post<AuthResponse>(ApiEndpointEnum.LOGIN, payload);
   }
 
+  googleLogin(idToken: string): Promise<BaseResponse<AuthResponse>> {
+    return this._post<AuthResponse>(ApiEndpointEnum.GOOGLE_LOGIN, { idToken });
+  }
+
   logout(): Promise<BaseResponse<void>> {
     return this._post<void>(ApiEndpointEnum.LOGOUT, {});
   }

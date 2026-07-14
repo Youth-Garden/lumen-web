@@ -1,4 +1,4 @@
-export interface AdminVocabularyWord {
+export interface VocabularyWord {
   id: string;
   term: string;
   phonetic: string | null;
@@ -14,7 +14,7 @@ export interface AdminVocabularyWord {
 }
 
 export interface VocabularyWordListResponse {
-  items: AdminVocabularyWord[];
+  items: VocabularyWord[];
   meta: {
     currentPage: number;
     perPage: number;

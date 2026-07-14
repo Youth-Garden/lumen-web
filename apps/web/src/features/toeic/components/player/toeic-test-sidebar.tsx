@@ -19,6 +19,7 @@ interface ToeicQuestionStatus {
   id: string;
   questionNumber: number;
   part: number;
+  correctAnswer: string;
 }
 
 interface ToeicTestSidebarProps {
@@ -107,7 +108,10 @@ export const ToeicTestSidebar = ({
                       </Button>
                       {flaggedQuestions.has(q.id) && (
                         <div className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 shadow-sm border-2 border-background">
-                          <Icons name="flag" className="h-2 w-2 text-white fill-current" />
+                          <Icons
+                            name="flag"
+                            className="h-2 w-2 text-white fill-current"
+                          />
                         </div>
                       )}
                     </div>

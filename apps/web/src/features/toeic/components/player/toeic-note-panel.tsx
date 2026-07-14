@@ -10,12 +10,14 @@ interface ToeicNotePanelProps {
   questionId: string;
   testId: string;
   onClose: () => void;
+  initialQuote?: string;
 }
 
 export const ToeicNotePanel = ({
   questionId,
   testId,
   onClose,
+  initialQuote,
 }: ToeicNotePanelProps) => {
   const { data: notes = [], isLoading } = useGetToeicNotes(testId);
   const saveNoteMutation = useSaveToeicNote();
@@ -26,8 +28,11 @@ export const ToeicNotePanel = ({
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('REMINDER');
   const [tagsInput, setTagsInput] = useState('');
+  const [quote, setQuote] = useState(initialQuote || '');
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
+    'idle',
+  );
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -37,19 +42,22 @@ export const ToeicNotePanel = ({
       setContent(currentNote.content || '');
       setCategory(currentNote.category || 'REMINDER');
       setTagsInput((currentNote.tags || []).join(' '));
+      setQuote(currentNote.quote || initialQuote || '');
     } else {
       setContent('');
       setCategory('REMINDER');
       setTagsInput('');
+      setQuote(initialQuote || '');
     }
     setSaveStatus('idle');
-  }, [questionId, currentNote]);
+  }, [questionId, currentNote, initialQuote]);
 
   // Debounced auto-save logic
   const triggerAutoSave = (
     updatedContent: string,
     updatedCategory: string,
     updatedTagsInput: string,
+    updatedQuote: string,
   ) => {
     setSaveStatus('saving');
     if (timeoutRef.current) {
@@ -70,6 +78,7 @@ export const ToeicNotePanel = ({
           content: updatedContent,
           category: updatedCategory,
           tags: parsedTags,
+          quote: updatedQuote,
         },
         {
           onSuccess: () => {
@@ -85,17 +94,17 @@ export const ToeicNotePanel = ({
 
   const handleContentChange = (val: string) => {
     setContent(val);
-    triggerAutoSave(val, category, tagsInput);
+    triggerAutoSave(val, category, tagsInput, quote);
   };
 
   const handleCategoryChange = (val: string) => {
     setCategory(val);
-    triggerAutoSave(content, val, tagsInput);
+    triggerAutoSave(content, val, tagsInput, quote);
   };
 
   const handleTagsChange = (val: string) => {
     setTagsInput(val);
-    triggerAutoSave(content, category, val);
+    triggerAutoSave(content, category, val, quote);
   };
 
   useEffect(() => {
@@ -114,7 +123,12 @@ export const ToeicNotePanel = ({
           <Icons name="book-open" className="h-5 w-5 text-indigo-500" />
           <span>Question Notes</span>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="h-8 w-8"
+        >
           <Icons name="close" className="h-4 w-4" />
         </Button>
       </div>
@@ -137,6 +151,18 @@ export const ToeicNotePanel = ({
             <option value="REMINDER">Personal Reminder</option>
           </select>
         </div>
+
+        {/* Quote Block */}
+        {quote && (
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Quoted Text
+            </label>
+            <div className="rounded-lg border-l-4 border-indigo-500 bg-indigo-500/10 px-3 py-2 text-sm italic text-foreground dark:border-indigo-400">
+              {quote}
+            </div>
+          </div>
+        )}
 
         {/* Note Textarea */}
         <div className="flex-1 flex flex-col space-y-1">

@@ -23,8 +23,6 @@ export interface RegisterPayload {
   password: string;
 }
 
-
-
 export interface UpdateProfilePayload {
   fullName?: string;
   avatarUrl?: string;

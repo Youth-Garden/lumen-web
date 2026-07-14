@@ -1,6 +1,13 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage, Button, Input, Label } from '@lumen/uikit/components';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  Input,
+  Label,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -45,7 +52,7 @@ export function ProfileCard({ user }: ProfileCardProps) {
         .join('')
         .toUpperCase()
         .slice(0, 2)
-    : user?.email?.[0]?.toUpperCase() ?? '?';
+    : (user?.email?.[0]?.toUpperCase() ?? '?');
 
   return (
     <div className="rounded-xl border bg-card p-6">
@@ -82,7 +89,9 @@ export function ProfileCard({ user }: ProfileCardProps) {
             {user?.fullName ?? '—'}
           </p>
           <p className="text-sm text-muted-foreground">{user?.email}</p>
-          <p className="text-xs text-muted-foreground capitalize">{user?.role?.toLowerCase()}</p>
+          <p className="text-xs text-muted-foreground capitalize">
+            {user?.role?.toLowerCase()}
+          </p>
         </div>
       </div>
 

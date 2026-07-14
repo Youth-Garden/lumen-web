@@ -25,7 +25,7 @@ export const useLogout = () => {
         // Ignore logout errors
       }
     },
-    [clearAuth, router]
+    [clearAuth, router],
   );
 
   return { logout };

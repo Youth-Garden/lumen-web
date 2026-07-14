@@ -9,6 +9,11 @@ const navItems = [
   { to: '/dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
   { to: '/users', icon: 'users', label: 'Users' },
   { to: '/toeic', icon: 'file-text', label: 'TOEIC Tests' },
+  {
+    to: '/toeic/missing-explanations',
+    icon: 'file-warning',
+    label: 'QC Explanations',
+  },
   { to: '/vocabulary', icon: 'book-marked', label: 'Vocabulary' },
   { to: '/materials', icon: 'book-open', label: 'Materials' },
   { to: '/reading', icon: 'book', label: 'Reading' },
@@ -21,7 +26,7 @@ const navItems = [
   { to: '/quizzes', icon: 'check-circle', label: 'Quizzes' },
 ];
 
-export default function AdminLayout() {
+export default function MainLayout() {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
   const logoutMutation = useLogout();

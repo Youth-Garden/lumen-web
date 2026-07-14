@@ -9,7 +9,7 @@ import type {
   ToeicTestListResponse,
 } from './toeic.types';
 
-export class ToeicAdminService extends CoreService {
+export class ToeicService extends CoreService {
   listTests(params?: {
     page?: number;
     limit?: number;
@@ -57,6 +57,19 @@ export class ToeicAdminService extends CoreService {
       pathParams: { id },
     });
   }
+
+  getMissingExplanations(): Promise<BaseResponse<any[]>> {
+    return this._get<any[]>(ApiEndpointEnum.TOEIC_MISSING_EXPLANATIONS);
+  }
+
+  updateExplanation(
+    questionId: string,
+    payload: { explanation: string; mediaUrls?: string[] },
+  ): Promise<BaseResponse<void>> {
+    return this._put<void>(ApiEndpointEnum.TOEIC_UPDATE_EXPLANATION, payload, {
+      pathParams: { id: questionId },
+    });
+  }
 }
 
-export const toeicAdminService = ToeicAdminService.getInstance(registry);
+export const toeicService = ToeicService.getInstance(registry);

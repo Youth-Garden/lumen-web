@@ -4,7 +4,7 @@ import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useUsers } from '../hooks';
 import { useBanUser, useUnbanUser } from '../hooks';
-import type { AdminUser } from '@/services/users';
+import type { User } from '@/services/users';
 
 export default function UserList() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function UserList() {
   const banMutation = useBanUser();
   const unbanMutation = useUnbanUser();
 
-  const toggleBan = (user: AdminUser) => {
+  const toggleBan = (user: User) => {
     if (user.status === 'Active') {
       banMutation.mutate(user.id);
     } else {

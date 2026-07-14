@@ -1,6 +1,6 @@
 /**
  * Extracts initials from a full name or email address.
- * 
+ *
  * @param fullName The user's full name
  * @param email The user's email address
  * @param fallback A default fallback string if both are missing

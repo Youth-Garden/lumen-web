@@ -2,12 +2,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@lumen/uikit/components';
 
-import AdminLayout from './layout/admin-layout';
+import MainLayout from './layout/main-layout';
 import ProtectedRoute from './shared/components/protected-route';
 import LoginPage from './features/auth/pages/login';
 import DashboardPage from './features/dashboard/pages/overview';
 import TestList from './features/toeic/pages/test-list';
 import TestForm from './features/toeic/pages/test-form';
+import MissingExplanationsPage from './features/toeic/pages/missing-explanations';
 import VocabList from './features/vocabulary/pages/vocab-list';
 import VocabForm from './features/vocabulary/pages/vocab-form';
 import UserList from './features/users/pages/user-list';
@@ -33,7 +34,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<AdminLayout />}>
+            <Route path="/" element={<MainLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="users">
@@ -52,6 +53,10 @@ function App() {
                 <Route index element={<TestList />} />
                 <Route path="new" element={<TestForm />} />
                 <Route path=":id/edit" element={<TestForm />} />
+                <Route
+                  path="missing-explanations"
+                  element={<MissingExplanationsPage />}
+                />
               </Route>
 
               <Route path="vocabulary">

@@ -3,7 +3,7 @@ import { ApiEndpointEnum } from '@/shared/constants';
 import type { BaseResponse as BaseResponseType } from '@lumen/shared-api';
 import { registry } from './users.registry';
 import type {
-  AdminUser,
+  User,
   CreateUserPayload,
   UpdateUserPayload,
   UserListResponse,
@@ -20,21 +20,21 @@ export class UsersService extends CoreService {
     return this._get<UserListResponse>(ApiEndpointEnum.USERS, { params });
   }
 
-  getUserById(id: string): Promise<BaseResponseType<AdminUser>> {
-    return this._get<AdminUser>(ApiEndpointEnum.USER_DETAIL, undefined, {
+  getUserById(id: string): Promise<BaseResponseType<User>> {
+    return this._get<User>(ApiEndpointEnum.USER_DETAIL, undefined, {
       pathParams: { id },
     });
   }
 
-  createUser(payload: CreateUserPayload): Promise<BaseResponseType<AdminUser>> {
-    return this._post<AdminUser>(ApiEndpointEnum.USERS, payload);
+  createUser(payload: CreateUserPayload): Promise<BaseResponseType<User>> {
+    return this._post<User>(ApiEndpointEnum.USERS, payload);
   }
 
   updateUser(
     id: string,
     payload: UpdateUserPayload,
-  ): Promise<BaseResponseType<AdminUser>> {
-    return this._put<AdminUser>(ApiEndpointEnum.USER_DETAIL, payload, {
+  ): Promise<BaseResponseType<User>> {
+    return this._put<User>(ApiEndpointEnum.USER_DETAIL, payload, {
       pathParams: { id },
     });
   }

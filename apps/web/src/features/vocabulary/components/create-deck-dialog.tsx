@@ -51,9 +51,7 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
         name: data.name,
         description: data.description,
       });
-      toast.success(
-        t('createSuccess'),
-      );
+      toast.success(t('createSuccess'));
       onDismiss?.();
       form.reset();
     } catch (error) {
@@ -66,9 +64,7 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t('createDeck')}</DialogTitle>
-          <DialogDescription>
-            {t('createDeckDescription')}
-          </DialogDescription>
+          <DialogDescription>{t('createDeckDescription')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -78,14 +74,9 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t('deckName')}
-                  </FormLabel>
+                  <FormLabel>{t('deckName')}</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={t('deckNamePlaceholder')}
-                      {...field}
-                    />
+                    <Input placeholder={t('deckNamePlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,9 +87,7 @@ export function CreateDeckDialog({ isOpen, onDismiss }: PortalProps) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t('deckDescription')}
-                  </FormLabel>
+                  <FormLabel>{t('deckDescription')}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('deckDescriptionPlaceholder')}

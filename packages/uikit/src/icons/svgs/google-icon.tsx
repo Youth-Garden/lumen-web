@@ -1,11 +1,6 @@
 import type { IconProps } from '../types';
 
-const GoogleIcon = ({
-  size = 24,
-  style,
-  testID,
-  ...props
-}: IconProps) => {
+const GoogleIcon = ({ size = 24, style, testID, ...props }: IconProps) => {
   return (
     <svg
       width={size}

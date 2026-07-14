@@ -7,7 +7,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { ToeicQuestionDto } from '@/services/toeic';
-import { RadarChart, RadarChartData } from '@/shared/components/charts/radar-chart';
+import {
+  RadarChart,
+  RadarChartData,
+} from '@/shared/components/charts/radar-chart';
 import { RouteEnum } from '@/shared/constants/route';
 
 import { calculateToeicScore } from '../../utils';
@@ -32,16 +35,18 @@ export const ToeicResultDashboard = ({
   // Calculate scores on the frontend
   const scoreResult = calculateToeicScore(questions, userAnswers);
 
-  const radarData: RadarChartData[] = Object.keys(scoreResult.partScores).map((key) => {
-    const partNum = Number(key);
-    return {
-      subject: `Part ${partNum}`,
-      value: scoreResult.partScores[partNum].percentage,
-      fullMark: 100,
-      correct: scoreResult.partScores[partNum].correct,
-      total: scoreResult.partScores[partNum].total,
-    };
-  });
+  const radarData: RadarChartData[] = Object.keys(scoreResult.partScores).map(
+    (key) => {
+      const partNum = Number(key);
+      return {
+        subject: `Part ${partNum}`,
+        value: scoreResult.partScores[partNum].percentage,
+        fullMark: 100,
+        correct: scoreResult.partScores[partNum].correct,
+        total: scoreResult.partScores[partNum].total,
+      };
+    },
+  );
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8">
@@ -69,13 +74,15 @@ export const ToeicResultDashboard = ({
           transition={{ delay: 0.4 }}
           className="lg:col-span-1 bg-card border rounded-2xl shadow-sm p-6"
         >
-          <h3 className="font-semibold text-lg mb-4 text-center">{t('performanceByPart')}</h3>
+          <h3 className="font-semibold text-lg mb-4 text-center">
+            {t('performanceByPart')}
+          </h3>
           <div className="h-[300px]">
-            <RadarChart 
-              data={radarData} 
+            <RadarChart
+              data={radarData}
               tooltipFormatter={(value: number, name: string, props: any) => [
-                `${value}% (${props.payload.correct}/${props.payload.total})`, 
-                t('accuracy')
+                `${value}% (${props.payload.correct}/${props.payload.total})`,
+                t('accuracy'),
               ]}
             />
           </div>
@@ -88,16 +95,20 @@ export const ToeicResultDashboard = ({
           transition={{ delay: 0.5 }}
           className="lg:col-span-2 bg-card border rounded-2xl shadow-sm p-6"
         >
-          <h3 className="font-semibold text-lg mb-4">{t('detailedBreakdown')}</h3>
+          <h3 className="font-semibold text-lg mb-4">
+            {t('detailedBreakdown')}
+          </h3>
           <div className="space-y-4">
             {Object.entries(scoreResult.partScores).map(([part, stats]) => {
               const partNum = Number(part);
               const isListening = partNum <= 4;
               return (
                 <div key={part} className="flex items-center gap-4">
-                  <div className="w-20 font-medium text-sm">{t('part')} {partNum}</div>
+                  <div className="w-20 font-medium text-sm">
+                    {t('part')} {partNum}
+                  </div>
                   <div className="flex-1 bg-muted rounded-full h-3 overflow-hidden">
-                    <motion.div 
+                    <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${stats.percentage}%` }}
                       transition={{ duration: 1, delay: 0.6 + partNum * 0.1 }}

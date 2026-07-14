@@ -62,8 +62,7 @@ export function createMaterialIcon(symbol: string) {
         aria-hidden="true"
         onClick={
           onClick as unknown as
-            | React.MouseEventHandler<HTMLSpanElement>
-            | undefined
+            React.MouseEventHandler<HTMLSpanElement> | undefined
         }
       >
         {symbol}

@@ -65,7 +65,10 @@ export default function HomePage() {
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle menu"
             >
-              <Icons name={mobileMenuOpen ? 'close' : 'menu'} className="h-5 w-5" />
+              <Icons
+                name={mobileMenuOpen ? 'close' : 'menu'}
+                className="h-5 w-5"
+              />
             </Button>
           </div>
         </div>
@@ -80,13 +83,21 @@ export default function HomePage() {
               className="absolute left-0 right-0 top-16 z-40 border-b border-border bg-background p-4 shadow-lg sm:hidden"
             >
               <div className="flex flex-col space-y-3">
-                <Link href={RouteEnum.LOGIN} onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href={RouteEnum.LOGIN}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   <Button variant="outline" className="w-full justify-center">
                     {t('login')}
                   </Button>
                 </Link>
-                <Link href={RouteEnum.REGISTER} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full justify-center">{t('startNow')}</Button>
+                <Link
+                  href={RouteEnum.REGISTER}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Button className="w-full justify-center">
+                    {t('startNow')}
+                  </Button>
                 </Link>
               </div>
             </motion.div>

@@ -32,7 +32,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
             'backdrop-blur-none',
           ].join(' '),
           title: '!font-semibold !text-sm tracking-tight',
-          description: '!text-muted-foreground !text-xs !mt-0.5 leading-relaxed',
+          description:
+            '!text-muted-foreground !text-xs !mt-0.5 leading-relaxed',
           actionButton:
             '!bg-primary !text-primary-foreground rounded-lg !px-3 !py-1.5 !text-xs !font-semibold hover:!opacity-90 transition-opacity',
           cancelButton:

@@ -11,7 +11,7 @@ export default function NotFound() {
             </h1>
             <div className="absolute inset-0 bg-primary/20 blur-3xl -z-10 rounded-full scale-150"></div>
           </div>
-          
+
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">
               Page Not Found

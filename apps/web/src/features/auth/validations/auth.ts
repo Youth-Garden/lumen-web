@@ -38,5 +38,9 @@ export const getResetPasswordSchema = (translate: TranslateFn) =>
 
 export type LoginFormData = z.infer<ReturnType<typeof getLoginSchema>>;
 export type RegisterFormData = z.infer<ReturnType<typeof getRegisterSchema>>;
-export type ForgotPasswordFormData = z.infer<ReturnType<typeof getForgotPasswordSchema>>;
-export type ResetPasswordFormData = z.infer<ReturnType<typeof getResetPasswordSchema>>;
+export type ForgotPasswordFormData = z.infer<
+  ReturnType<typeof getForgotPasswordSchema>
+>;
+export type ResetPasswordFormData = z.infer<
+  ReturnType<typeof getResetPasswordSchema>
+>;

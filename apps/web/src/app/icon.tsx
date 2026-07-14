@@ -10,24 +10,22 @@ export default async function Icon() {
   const logoData = await readFile(join(process.cwd(), 'public/logo.png'));
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <img
-          // @ts-expect-error - NextJS img
-          src={logoData.buffer as ArrayBuffer}
-          alt="Icon"
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-        />
-      </div>
-    ),
-    { ...size }
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <img
+        // @ts-expect-error - NextJS img
+        src={logoData.buffer as ArrayBuffer}
+        alt="Icon"
+        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+      />
+    </div>,
+    { ...size },
   );
 }

@@ -2,7 +2,11 @@ import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './toeic.registry';
-import { ToeicTestDto, ToeicTestListResponse } from './toeic.types';
+import {
+  ToeicTestDto,
+  ToeicTestListResponse,
+  SaveToeicNoteRequest,
+} from './toeic.types';
 
 export class ToeicService extends CoreService {
   getTests(): Promise<BaseResponse<ToeicTestListResponse>> {
@@ -26,13 +30,7 @@ export class ToeicService extends CoreService {
     );
   }
 
-  saveNote(noteData: {
-    questionId: string;
-    testId: string;
-    content: string;
-    category: string;
-    tags: string[];
-  }): Promise<BaseResponse<void>> {
+  saveNote(noteData: SaveToeicNoteRequest): Promise<BaseResponse<void>> {
     return this._post<void>(ApiEndpointEnum.TOEIC_NOTES, noteData);
   }
 
@@ -48,7 +46,10 @@ export class ToeicService extends CoreService {
       },
     );
   }
+
+  getMissingExplanations(): Promise<BaseResponse<any[]>> {
+    return this._get<any[]>(ApiEndpointEnum.TOEIC_MISSING_EXPLANATIONS);
+  }
 }
 
 export const toeicService = ToeicService.getInstance(registry);
-

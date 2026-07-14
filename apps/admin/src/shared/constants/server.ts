@@ -1,6 +1,7 @@
 export const ApiEndpointEnum = {
   // Auth (Admin)
   LOGIN: '/api/iam/login',
+  GOOGLE_LOGIN: '/api/iam/google-login',
   LOGOUT: '/api/iam/logout',
   REFRESH_TOKEN: '/api/iam/refresh',
   GET_ME: '/api/iam/me',
@@ -15,6 +16,8 @@ export const ApiEndpointEnum = {
   TOEIC_TESTS: '/api/toeic/tests',
   TOEIC_TEST_DETAIL: '/api/toeic/tests/:id',
   TOEIC_TEST_PUBLISH: '/api/toeic/tests/:id/publish',
+  TOEIC_MISSING_EXPLANATIONS: '/api/toeic/admin/missing-explanations',
+  TOEIC_UPDATE_EXPLANATION: '/api/toeic/questions/:id/explanation',
 
   // Vocabulary (Admin management)
   VOCABULARY_WORDS: '/api/vocabulary/words',

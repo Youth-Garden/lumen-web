@@ -69,7 +69,7 @@ export function StudyPage() {
 
   if (dueFlashcards.length === 0 || isFinished) {
     return (
-      <OpenEffect 
+      <OpenEffect
         variant="grow"
         className="flex flex-col items-center justify-center h-[calc(100vh-10rem)] w-full"
       >

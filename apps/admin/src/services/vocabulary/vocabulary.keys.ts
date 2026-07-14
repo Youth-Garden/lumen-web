@@ -1,7 +1,7 @@
-export const vocabularyAdminKeys = {
+export const vocabularyKeys = {
   all: ['admin-vocabulary'] as const,
-  lists: () => [...vocabularyAdminKeys.all, 'list'] as const,
+  lists: () => [...vocabularyKeys.all, 'list'] as const,
   list: (params?: Record<string, unknown>) =>
-    [...vocabularyAdminKeys.lists(), params] as const,
-  detail: (id: string) => [...vocabularyAdminKeys.all, 'detail', id] as const,
+    [...vocabularyKeys.lists(), params] as const,
+  detail: (id: string) => [...vocabularyKeys.all, 'detail', id] as const,
 };

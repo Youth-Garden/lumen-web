@@ -15,9 +15,9 @@ export interface VocabularyDefinition {
 export interface VocabularyWord {
   id: string;
   term: string;
-  phonetic: string | null;
-  audioUrl: string | null;
-  cefrLevel: string | null;
+  phonetic?: string;
+  audioUrl?: string;
+  cefrLevel?: string;
   definitions: VocabularyDefinition[];
 }
 
@@ -34,7 +34,7 @@ export interface WordListResponse {
 export interface Deck {
   id: string;
   name: string;
-  description: string | null;
+  description?: string;
   flashcardCount: number;
 }
 

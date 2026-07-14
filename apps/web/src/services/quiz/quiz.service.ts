@@ -15,7 +15,10 @@ export class QuizService extends CoreService {
   generateQuiz(
     dto: GenerateQuizDto,
   ): Promise<BaseResponse<GenerateQuizResponseDto>> {
-    return this._post<GenerateQuizResponseDto>(ApiEndpointEnum.QUIZ_GENERATE, dto);
+    return this._post<GenerateQuizResponseDto>(
+      ApiEndpointEnum.QUIZ_GENERATE,
+      dto,
+    );
   }
 
   getQuiz(id: string): Promise<BaseResponse<QuizDetailResponseDto>> {

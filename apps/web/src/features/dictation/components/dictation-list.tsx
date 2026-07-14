@@ -70,7 +70,11 @@ export const DictationList = () => {
               </div>
               <Button
                 onClick={() =>
-                  router.push(formatUrl(RouteEnum.DICTATION_EXERCISE, { id: material.id }))
+                  router.push(
+                    formatUrl(RouteEnum.DICTATION_EXERCISE, {
+                      id: material.id,
+                    }),
+                  )
                 }
                 className="w-full group-hover:bg-primary/90"
               >

@@ -37,15 +37,18 @@ export function CommandPalette() {
       setCommandPaletteOpen(false);
       command();
     },
-    [setCommandPaletteOpen]
+    [setCommandPaletteOpen],
   );
 
   return (
-    <CommandDialog open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen}>
+    <CommandDialog
+      open={commandPaletteOpen}
+      onOpenChange={setCommandPaletteOpen}
+    >
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        
+
         <CommandGroup heading="Suggestions">
           <CommandItem
             onSelect={() => runCommand(() => router.push(RouteEnum.DASHBOARD))}
@@ -54,7 +57,9 @@ export function CommandPalette() {
             <span>Overview Dashboard</span>
           </CommandItem>
           <CommandItem
-            onSelect={() => runCommand(() => router.push(`${RouteEnum.VOCABULARY}/study`))}
+            onSelect={() =>
+              runCommand(() => router.push(`${RouteEnum.VOCABULARY}/study`))
+            }
           >
             <Icons name="book-open" />
             <span>Study Vocabulary</span>

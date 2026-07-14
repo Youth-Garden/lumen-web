@@ -37,9 +37,12 @@ export class ReadingService extends CoreService {
     page: number = 1,
     limit: number = 6,
   ): Promise<BaseResponse<ArticleListResponse>> {
-    return this._get<ArticleListResponse>(ApiEndpointEnum.READING_ARTICLES_PUBLIC, {
-      params: { page, limit },
-    });
+    return this._get<ArticleListResponse>(
+      ApiEndpointEnum.READING_ARTICLES_PUBLIC,
+      {
+        params: { page, limit },
+      },
+    );
   }
 
   translateText(

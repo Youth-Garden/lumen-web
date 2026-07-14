@@ -42,9 +42,7 @@ export const ToeicTestHeader = ({
   return (
     <div className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <h1 className="truncate text-lg font-semibold md:text-xl">
-          {title}
-        </h1>
+        <h1 className="truncate text-lg font-semibold md:text-xl">{title}</h1>
 
         <div className="flex items-center gap-4">
           <div
@@ -72,7 +70,10 @@ export const ToeicTestHeader = ({
             variant="outline"
             disabled={isSubmitting}
           >
-            <Icons name={isPaused ? "play" : "pause"} className="mr-2 h-4 w-4" />
+            <Icons
+              name={isPaused ? 'play' : 'pause'}
+              className="mr-2 h-4 w-4"
+            />
             {isPaused ? t('resumeTest') : t('pauseTest')}
           </Button>
           <Button

@@ -1,5 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toeicKeys, toeicService } from '@/services/toeic';
+import {
+  toeicKeys,
+  toeicService,
+  SaveToeicNoteRequest,
+} from '@/services/toeic';
 
 export const useGetToeicTests = () => {
   return useQuery({
@@ -26,16 +30,15 @@ export const useGetToeicNotes = (testId?: string) => {
 export const useSaveToeicNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (noteData: {
-      questionId: string;
-      testId: string;
-      content: string;
-      category: string;
-      tags: string[];
-    }) => toeicService.saveNote(noteData),
+    mutationFn: (noteData: SaveToeicNoteRequest) =>
+      toeicService.saveNote(noteData),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['toeic', 'notes', variables.testId] });
-      queryClient.invalidateQueries({ queryKey: ['toeic', 'notes', undefined] });
+      queryClient.invalidateQueries({
+        queryKey: ['toeic', 'notes', variables.testId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['toeic', 'notes', undefined],
+      });
     },
   });
 };
@@ -58,3 +61,10 @@ export const useUpdateExplanation = () => {
   });
 };
 
+export const useGetMissingExplanations = () => {
+  return useQuery({
+    queryKey: ['toeic', 'admin', 'missing-explanations'],
+    queryFn: () =>
+      toeicService.getMissingExplanations().then((res) => res.data),
+  });
+};

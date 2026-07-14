@@ -23,7 +23,11 @@ export interface BarChartProps {
   fillColor?: string;
   height?: number | string;
   showGrid?: boolean;
-  tooltipFormatter?: (value: number, name: string, props: any) => React.ReactNode[];
+  tooltipFormatter?: (
+    value: number,
+    name: string,
+    props: any,
+  ) => React.ReactNode[];
 }
 
 export const BarChart = ({
@@ -74,7 +78,9 @@ export const BarChart = ({
             }}
             labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
             itemStyle={{ color: 'hsl(var(--primary))' }}
-            formatter={tooltipFormatter || ((value: number) => [value, 'Value'])}
+            formatter={
+              tooltipFormatter || ((value: number) => [value, 'Value'])
+            }
           />
           <Bar
             dataKey={dataKey}

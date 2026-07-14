@@ -34,3 +34,12 @@ export interface ToeicTestListResponse {
   items: ToeicTestListItemDto[];
   total: number;
 }
+
+export interface SaveToeicNoteRequest {
+  questionId: string;
+  testId: string;
+  content: string;
+  category: string;
+  tags: string[];
+  quote?: string;
+}

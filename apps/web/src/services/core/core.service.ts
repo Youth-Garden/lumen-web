@@ -65,7 +65,7 @@ export abstract class CoreService extends BaseApiService {
                 (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') +
                   ApiEndpointEnum.REFRESH_TOKEN,
                 {}, // Send empty body, HttpOnly cookie 'jwtr' handles the token
-                { withCredentials: true } // Ensure cookies are sent with this plain axios instance
+                { withCredentials: true }, // Ensure cookies are sent with this plain axios instance
               );
 
               // Backend already set new cookies (HttpOnly) in response
@@ -118,13 +118,21 @@ export abstract class CoreService extends BaseApiService {
               // Show toast for 401 errors when not authenticated (e.g. login failure)
               if (!originalRequest.disabledToast && error.response) {
                 const message =
-                  error.response.data?.message || error.message || 'Unauthorized';
+                  error.response.data?.message ||
+                  error.message ||
+                  'Unauthorized';
                 const errorData = error.response.data;
                 const errors = errorData?.error ?? errorData?.errors ?? [];
                 toast.error(message, {
                   description:
                     Array.isArray(errors) && errors.length > 0
-                      ? errors.map((e: any) => typeof e === 'string' ? e : e.message || JSON.stringify(e)).join('\n')
+                      ? errors
+                          .map((e: any) =>
+                            typeof e === 'string'
+                              ? e
+                              : e.message || JSON.stringify(e),
+                          )
+                          .join('\n')
                       : undefined,
                 });
               }
@@ -143,7 +151,13 @@ export abstract class CoreService extends BaseApiService {
             toast.error(message, {
               description:
                 Array.isArray(errors) && errors.length > 0
-                  ? errors.map((e: any) => typeof e === 'string' ? e : e.message || JSON.stringify(e)).join('\n')
+                  ? errors
+                      .map((e: any) =>
+                        typeof e === 'string'
+                          ? e
+                          : e.message || JSON.stringify(e),
+                      )
+                      .join('\n')
                   : undefined,
             });
           }

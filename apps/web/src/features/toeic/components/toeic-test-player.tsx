@@ -5,18 +5,24 @@ import { Icons } from '@lumen/uikit/icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
   useFinishExamAttempt,
   useStartExamAttempt,
   useSubmitExamAnswer,
+  useGetExamAttemptDetail,
 } from '@/features/exam-practice/hooks/use-exam-practice';
-import { ExamType } from '@/services/exam-practice/exam-practice.types';
+import {
+  ExamType,
+  ExamAttemptMode,
+  TestPlayerMode,
+} from '@/services/exam-practice/exam-practice.types';
 import { ToeicQuestionDto } from '@/services/toeic';
 import { useCountdown } from '@lumen/hooks';
 
+import { RouteEnum } from '@/shared/constants';
 import { useGetToeicTestById } from '../hooks/use-toeic';
 import { ToeicResultDashboard } from './analytics/toeic-result-dashboard';
 import { ToeicQuestionGroupRenderer } from './player/toeic-question-group-renderer';
@@ -27,14 +33,25 @@ import { ToeicNotePanel } from './player/toeic-note-panel';
 
 interface ToeicTestPlayerProps {
   testId: string;
+  initialAttemptId?: string;
+  isReviewMode?: boolean;
 }
 
-export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
+export const ToeicTestPlayer = ({
+  testId,
+  initialAttemptId,
+  isReviewMode,
+}: ToeicTestPlayerProps) => {
   const router = useRouter();
   const t = useTranslations('ToeicTestPlayer');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
+  const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(
+    new Set(),
+  );
   const [showNotePanel, setShowNotePanel] = useState(false);
+  const [currentQuote, setCurrentQuote] = useState<string | undefined>(
+    undefined,
+  );
 
   const form = useForm<{ answers: Record<string, string> }>({
     defaultValues: { answers: {} },
@@ -43,14 +60,29 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const { data: test, isLoading, isError } = useGetToeicTestById(testId);
   const startAttemptMutation = useStartExamAttempt();
 
-  const [attemptId, setAttemptId] = useState<string | null>(null);
-  const [mode, setMode] = useState<'test' | 'result' | 'review'>('test');
+  const [attemptId, setAttemptId] = useState<string | null>(
+    initialAttemptId || null,
+  );
+  const [mode, setMode] = useState<TestPlayerMode>(
+    isReviewMode ? TestPlayerMode.REVIEW : TestPlayerMode.TEST,
+  );
   const submitAnswerMutation = useSubmitExamAnswer(attemptId);
   const finishAttemptMutation = useFinishExamAttempt(attemptId);
+  const { data: attemptDetail } = useGetExamAttemptDetail(attemptId || '');
+
+  useEffect(() => {
+    if (isReviewMode && attemptDetail) {
+      const answersRecord: Record<string, string> = {};
+      attemptDetail.answers.forEach((a) => {
+        answersRecord[a.questionId] = a.userAnswer;
+      });
+      form.reset({ answers: answersRecord });
+    }
+  }, [isReviewMode, attemptDetail, form]);
 
   const handleFinishTest = () => {
     finishAttemptMutation.mutate(undefined, {
-      onSuccess: () => setMode('result'),
+      onSuccess: () => setMode(TestPlayerMode.RESULT),
     });
   };
 
@@ -73,7 +105,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
 
   const handleExit = () => {
     if (window.confirm(t('confirmExit') || 'Are you sure you want to exit?')) {
-      router.push('/toeic');
+      router.push(RouteEnum.TOEIC);
     }
   };
 
@@ -117,7 +149,10 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                 setAttemptId(data.id);
                 if (config.customTimeLimit) {
                   resetTimer(config.customTimeLimit);
-                } else if (config.customTimeLimit === null && config.mode === 'PART') {
+                } else if (
+                  config.customTimeLimit === null &&
+                  config.mode === ExamAttemptMode.PART
+                ) {
                   resetTimer(config.partsAttempted.length * 15 * 60);
                 } else {
                   resetTimer(120 * 60);
@@ -131,15 +166,22 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
     );
   }
 
+  const displayQuestions =
+    test?.questions &&
+    attemptDetail?.mode === ExamAttemptMode.RETEST &&
+    attemptDetail.questionIds
+      ? test.questions.filter((q) => attemptDetail.questionIds!.includes(q.id))
+      : test?.questions || [];
+
   // Test Completed Screen
-  if (mode === 'result') {
+  if (mode === TestPlayerMode.RESULT) {
     return (
       <div className="flex min-h-screen bg-slate-50/50 dark:bg-background">
         <ToeicResultDashboard
-          questions={test.questions}
+          questions={displayQuestions}
           userAnswers={form.getValues().answers || {}}
           timeSpentSeconds={120 * 60 - timeRemaining}
-          onReview={() => setMode('review')}
+          onReview={() => setMode(TestPlayerMode.REVIEW)}
         />
       </div>
     );
@@ -147,7 +189,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
 
   // Grouping logic
   const groups: ToeicQuestionDto[][] = [];
-  if (test && test.questions) {
+  if (displayQuestions.length > 0) {
     let currentGroup: ToeicQuestionDto[] = [];
     let lastContext: {
       audioUrl?: string;
@@ -155,7 +197,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
       transcript?: string;
     } | null = null;
 
-    test.questions.forEach((q) => {
+    displayQuestions.forEach((q) => {
       const hasContext = !!(q.audioUrl || q.imageUrl || q.transcript);
       const isSameContext =
         hasContext &&
@@ -209,7 +251,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const handleNavigateQuestion = (index: number) => {
     // index is the absolute question index from sidebar (0-199)
     // We need to find which group this question belongs to
-    const targetQuestion = test.questions[index];
+    const targetQuestion = displayQuestions[index];
     if (targetQuestion) {
       const groupIndex = groups.findIndex((g) =>
         g.some((q) => q.id === targetQuestion.id),
@@ -220,15 +262,16 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
     }
   };
 
-  const questionStatuses = test.questions.map((q) => ({
+  const questionStatuses = displayQuestions.map((q) => ({
     id: q.id,
     questionNumber: q.questionNumber,
     part: q.part,
+    correctAnswer: q.correctAnswer,
   }));
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50/50 dark:bg-background">
-      {mode === 'review' ? (
+      {mode === TestPlayerMode.REVIEW ? (
         <div className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
             <h1 className="truncate text-lg font-semibold md:text-xl">
@@ -243,7 +286,10 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                 <Icons name="book-open" className="h-4 w-4" />
                 Notes
               </Button>
-              <Button onClick={() => setMode('result')} variant="outline">
+              <Button
+                onClick={() => setMode(TestPlayerMode.RESULT)}
+                variant="outline"
+              >
                 <Icons name="arrow-left" className="mr-2 h-4 w-4" />
                 Back
               </Button>
@@ -262,7 +308,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
         />
       )}
 
-      {mode === 'test' && !isTimerActive && attemptId !== null ? (
+      {mode === TestPlayerMode.TEST && !isTimerActive && attemptId !== null ? (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold">{t('testPaused')}</h2>
@@ -291,7 +337,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                     questions={currentGroup}
                     userAnswers={currentAnswers}
                     flaggedQuestions={flaggedQuestions}
-                    isReviewMode={mode === 'review'}
+                    isReviewMode={mode === TestPlayerMode.REVIEW}
                     onSelectOption={handleSelectOption}
                     onToggleFlag={handleToggleFlag}
                     onNextGroup={() =>
@@ -306,6 +352,10 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                     }
                     isFirstGroup={currentQuestionIndex === 0}
                     isLastGroup={currentQuestionIndex === totalGroups - 1}
+                    onTakeNote={(quote) => {
+                      setCurrentQuote(quote);
+                      setShowNotePanel(true);
+                    }}
                   />
                 )}
               </motion.div>
@@ -314,12 +364,12 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
 
           {/* Sidebar */}
           <ToeicTestSidebar
-            questions={test.questions}
+            questions={questionStatuses}
             answers={currentAnswers}
             flaggedQuestions={flaggedQuestions}
-            isReviewMode={mode === 'review'}
+            isReviewMode={mode === TestPlayerMode.REVIEW}
             currentQuestionIndices={currentGroup.map((q) =>
-              test.questions.findIndex((tq) => tq.id === q.id),
+              displayQuestions.findIndex((tq) => tq.id === q.id),
             )}
             onNavigate={handleNavigateQuestion}
           />
@@ -329,7 +379,11 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
             <ToeicNotePanel
               questionId={currentGroup[0].id}
               testId={testId}
-              onClose={() => setShowNotePanel(false)}
+              initialQuote={currentQuote}
+              onClose={() => {
+                setShowNotePanel(false);
+                setCurrentQuote(undefined);
+              }}
             />
           )}
         </div>

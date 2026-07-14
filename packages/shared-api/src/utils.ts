@@ -6,12 +6,29 @@ export function registryKey(method: HttpMethod, endpoint: string): string {
 
 export function formatUrl(
   url: string,
-  params?: Record<string, string | number>,
+  pathParams?: Record<string, string | number>,
+  queryParams?: Record<string, string | number | boolean | undefined | null>,
 ): string {
-  if (!params) return url;
   let formattedUrl = url;
-  for (const [key, value] of Object.entries(params)) {
-    formattedUrl = formattedUrl.replace(`:${key}`, String(value));
+
+  if (pathParams) {
+    for (const [key, value] of Object.entries(pathParams)) {
+      formattedUrl = formattedUrl.replace(`:${key}`, String(value));
+    }
   }
+
+  if (queryParams) {
+    const searchParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    }
+    const queryString = searchParams.toString();
+    if (queryString) {
+      formattedUrl += (formattedUrl.includes('?') ? '&' : '?') + queryString;
+    }
+  }
+
   return formattedUrl;
 }

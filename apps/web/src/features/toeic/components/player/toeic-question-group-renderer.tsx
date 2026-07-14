@@ -7,6 +7,9 @@ import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 import { ToeicQuestionDto } from '@/services/toeic';
+import { renderMarkdownToHtml } from '@lumen/utils';
+import { useTextSelection } from '@lumen/hooks';
+import { createPortal } from 'react-dom';
 
 export interface ToeicQuestionGroupRendererProps {
   questions: ToeicQuestionDto[];
@@ -19,6 +22,7 @@ export interface ToeicQuestionGroupRendererProps {
   onPrevGroup?: () => void;
   isFirstGroup: boolean;
   isLastGroup: boolean;
+  onTakeNote?: (quote: string) => void;
 }
 
 export const ToeicQuestionGroupRenderer = ({
@@ -32,12 +36,20 @@ export const ToeicQuestionGroupRenderer = ({
   onPrevGroup,
   isFirstGroup,
   isLastGroup,
+  onTakeNote,
 }: ToeicQuestionGroupRendererProps) => {
   const t = useTranslations('ToeicTestPlayer');
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1.0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { text: selectedText, rect: selectionRect } = useTextSelection();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Use the first question to determine context (audio, image, transcript)
   const contextQuestion = questions[0];
@@ -51,6 +63,7 @@ export const ToeicQuestionGroupRenderer = ({
       audioRef.current.currentTime = 0;
       audioRef.current.playbackRate = playbackRate;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contextQuestion?.id]);
 
   useEffect(() => {
@@ -121,7 +134,9 @@ export const ToeicQuestionGroupRenderer = ({
           </div>
 
           <div className="flex items-center gap-2 border-l pl-4 dark:border-slate-800 shrink-0">
-            <span className="text-[11px] font-semibold text-muted-foreground">Speed</span>
+            <span className="text-[11px] font-semibold text-muted-foreground">
+              Speed
+            </span>
             <select
               value={playbackRate}
               onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
@@ -144,7 +159,8 @@ export const ToeicQuestionGroupRenderer = ({
         const letter = String.fromCharCode(65 + index);
         const isSelected = userAnswers[question.id] === option;
         const isCorrect = isReviewMode && question.correctAnswer === option;
-        const isWrong = isReviewMode && isSelected && question.correctAnswer !== option;
+        const isWrong =
+          isReviewMode && isSelected && question.correctAnswer !== option;
 
         return (
           <Button
@@ -152,18 +168,20 @@ export const ToeicQuestionGroupRenderer = ({
             variant="outline"
             className={cn(
               'h-auto min-h-[3rem] px-4 py-3 justify-start text-left whitespace-normal font-normal',
-              isSelected && !isReviewMode && 'border-primary bg-primary/5 text-primary',
-              isCorrect && 'border-green-500 bg-green-500/10 text-green-700 dark:text-green-400',
-              isWrong && 'border-red-500 bg-red-500/10 text-red-700 dark:text-red-400',
+              isSelected &&
+                !isReviewMode &&
+                'border-primary bg-primary/5 text-primary',
+              isCorrect &&
+                'border-green-500 bg-green-500/10 text-green-700 dark:text-green-400',
+              isWrong &&
+                'border-red-500 bg-red-500/10 text-red-700 dark:text-red-400',
             )}
             disabled={isReviewMode}
             onClick={() => {
               if (!isReviewMode) onSelectOption(question.id, option);
             }}
           >
-            <span className="font-semibold mr-3 shrink-0">
-              {letter}.
-            </span>
+            <span className="font-semibold mr-3 shrink-0">{letter}.</span>
             <span>{option}</span>
           </Button>
         );
@@ -174,15 +192,48 @@ export const ToeicQuestionGroupRenderer = ({
   if (!contextQuestion) return null;
 
   const isListening = contextQuestion.part <= 4;
-  const hasReadingPassage = contextQuestion.part >= 6 && contextQuestion.transcript;
-  const hasContext = contextQuestion.imageUrl || hasReadingPassage || isListening;
+  const hasReadingPassage =
+    contextQuestion.part >= 6 && contextQuestion.transcript;
+  const hasContext =
+    contextQuestion.imageUrl || hasReadingPassage || isListening;
+
+  const renderFloatingMenu = () => {
+    if (!mounted || !selectedText || !selectionRect || !onTakeNote) return null;
+
+    // Check if we are reviewing. Floating notes are more useful in review, but can be allowed anytime.
+    return createPortal(
+      <div
+        className="fixed z-[100] animate-in fade-in zoom-in duration-200"
+        style={{
+          top: Math.max(10, selectionRect.top - 48),
+          left: selectionRect.left + selectionRect.width / 2 - 50,
+        }}
+      >
+        <Button
+          size="sm"
+          className="shadow-xl shadow-primary/20 rounded-full"
+          onClick={() => {
+            onTakeNote(selectedText);
+            window.getSelection()?.removeAllRanges();
+          }}
+        >
+          <Icons name="edit" className="w-3.5 h-3.5 mr-1.5" />
+          Note
+        </Button>
+      </div>,
+      document.body,
+    );
+  };
 
   return (
     <Card className="overflow-hidden border-none shadow-none bg-transparent flex flex-col h-full">
+      {renderFloatingMenu()}
       <div
         className={cn(
           'flex flex-col gap-6 flex-1',
-          hasContext && (hasReadingPassage || questions.length > 1) ? 'lg:flex-row' : '',
+          hasContext && (hasReadingPassage || questions.length > 1)
+            ? 'lg:flex-row'
+            : '',
         )}
       >
         {/* Left Side: Context (Image / Audio / Passage) */}
@@ -190,7 +241,9 @@ export const ToeicQuestionGroupRenderer = ({
           <div
             className={cn(
               'space-y-6',
-              hasContext && (hasReadingPassage || questions.length > 1) ? 'lg:w-1/2' : 'w-full',
+              hasContext && (hasReadingPassage || questions.length > 1)
+                ? 'lg:w-1/2'
+                : 'w-full',
             )}
           >
             <div className="flex items-center justify-between">
@@ -226,19 +279,26 @@ export const ToeicQuestionGroupRenderer = ({
         <div
           className={cn(
             'flex-1 flex flex-col',
-            hasContext && (hasReadingPassage || questions.length > 1) ? 'lg:w-1/2 h-[calc(100vh-16rem)] overflow-y-auto pr-2 pb-10' : 'max-w-3xl mx-auto w-full pb-10',
+            hasContext && (hasReadingPassage || questions.length > 1)
+              ? 'lg:w-1/2 h-[calc(100vh-16rem)] overflow-y-auto pr-2 pb-10'
+              : 'max-w-3xl mx-auto w-full pb-10',
           )}
         >
           <div className="space-y-8 flex-1">
             {questions.map((question) => (
-              <div key={question.id} className="space-y-4 bg-card p-6 rounded-2xl border shadow-sm relative">
+              <div
+                key={question.id}
+                className="space-y-4 bg-card p-6 rounded-2xl border shadow-sm relative"
+              >
                 <div className="flex items-start justify-between gap-4">
                   <h3 className="text-xl font-medium flex gap-2">
                     <span className="text-muted-foreground shrink-0">
                       {question.questionNumber}.
                     </span>
                     <span>
-                      {question.questionText ? question.questionText : t('listenAndChoose')}
+                      {question.questionText
+                        ? question.questionText
+                        : t('listenAndChoose')}
                     </span>
                   </h3>
                   <Button
@@ -249,61 +309,82 @@ export const ToeicQuestionGroupRenderer = ({
                       'shrink-0 h-8 w-8',
                       flaggedQuestions.has(question.id)
                         ? 'text-amber-500 hover:text-amber-600 hover:bg-amber-50'
-                        : 'text-muted-foreground hover:text-foreground'
+                        : 'text-muted-foreground hover:text-foreground',
                     )}
                     title={t('flagForReview')}
                   >
-                    <Icons name="flag" className={cn('h-4 w-4', flaggedQuestions.has(question.id) && 'fill-current')} />
+                    <Icons
+                      name="flag"
+                      className={cn(
+                        'h-4 w-4',
+                        flaggedQuestions.has(question.id) && 'fill-current',
+                      )}
+                    />
                   </Button>
                 </div>
 
                 {renderQuestionOptions(question)}
 
-                {isReviewMode && (question.explanation || question.transcript || (question.mediaUrls && question.mediaUrls.length > 0)) && (
-                  <div className="mt-4 p-4 rounded-xl bg-muted/50 text-sm space-y-3">
-                    {question.transcript && (
-                      <div>
-                        <span className="font-semibold text-primary">{t('transcript')}:</span>
-                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">{question.transcript}</p>
-                      </div>
-                    )}
-                    {question.explanation && (
-                      <div>
-                        <span className="font-semibold text-primary">{t('explanation')}:</span>
-                        <div
-                          className="mt-1 text-muted-foreground leading-relaxed prose dark:prose-invert max-w-none text-sm"
-                          dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(question.explanation) }}
-                        />
-                      </div>
-                    )}
-                    {question.mediaUrls && question.mediaUrls.length > 0 && (
-                      <div className="pt-1">
-                        <span className="font-semibold text-primary block mb-2">Explanatory Graphics:</span>
-                        <div className="flex flex-wrap gap-3">
-                          {question.mediaUrls.map((url, idx) => (
-                            <a
-                              key={idx}
-                              href={url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="relative inline-block rounded-lg overflow-hidden border bg-background hover:opacity-90 transition-opacity max-w-xs"
-                            >
-                              <img
-                                src={url}
-                                alt={`Explanation Media ${idx + 1}`}
-                                className="max-h-40 object-contain mx-auto"
-                              />
-                            </a>
-                          ))}
+                {isReviewMode &&
+                  (question.explanation ||
+                    question.transcript ||
+                    (question.mediaUrls && question.mediaUrls.length > 0)) && (
+                    <div className="mt-4 p-4 rounded-xl bg-muted/50 text-sm space-y-3">
+                      {question.transcript && (
+                        <div>
+                          <span className="font-semibold text-primary">
+                            {t('transcript')}:
+                          </span>
+                          <p className="mt-1 text-muted-foreground whitespace-pre-wrap">
+                            {question.transcript}
+                          </p>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+                      )}
+                      {question.explanation && (
+                        <div>
+                          <span className="font-semibold text-primary">
+                            {t('explanation')}:
+                          </span>
+                          <div
+                            className="mt-1 text-muted-foreground leading-relaxed prose dark:prose-invert max-w-none text-sm"
+                            dangerouslySetInnerHTML={{
+                              __html: renderMarkdownToHtml(
+                                question.explanation,
+                              ),
+                            }}
+                          />
+                        </div>
+                      )}
+                      {question.mediaUrls && question.mediaUrls.length > 0 && (
+                        <div className="pt-1">
+                          <span className="font-semibold text-primary block mb-2">
+                            Explanatory Graphics:
+                          </span>
+                          <div className="flex flex-wrap gap-3">
+                            {question.mediaUrls.map((url, idx) => (
+                              <a
+                                key={idx}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="relative inline-block rounded-lg overflow-hidden border bg-background hover:opacity-90 transition-opacity max-w-xs"
+                              >
+                                <img
+                                  src={url}
+                                  alt={`Explanation Media ${idx + 1}`}
+                                  className="max-h-40 object-contain mx-auto"
+                                />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
               </div>
             ))}
           </div>
-          
+
           <div className="flex items-center justify-between mt-8 pt-4 border-t">
             <Button
               variant="outline"
@@ -329,49 +410,3 @@ export const ToeicQuestionGroupRenderer = ({
     </Card>
   );
 };
-
-// Simple helper to parse basic markdown format into HTML safely
-const renderMarkdownToHtml = (markdown: string): string => {
-  if (!markdown) return '';
-  let html = markdown
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-
-  // Bold **text**
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // Italic *text*
-  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-  // Links [text](url)
-  html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">$1</a>');
-
-  // Lists - item
-  const lines = html.split('\n');
-  let inList = false;
-  const processedLines = lines.map((line) => {
-    const trimmed = line.trim();
-    if (trimmed.startsWith('- ')) {
-      const content = trimmed.substring(2);
-      if (!inList) {
-        inList = true;
-        return `<ul class="list-disc pl-5 space-y-1 my-2"><li>${content}</li>`;
-      }
-      return `<li>${content}</li>`;
-    } else {
-      if (inList) {
-        inList = false;
-        return `</ul>${line}`;
-      }
-      return line;
-    }
-  });
-  
-  if (inList) {
-    processedLines.push('</ul>');
-  }
-
-  return processedLines.join('<br />');
-};
-
