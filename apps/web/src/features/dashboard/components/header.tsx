@@ -17,7 +17,7 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
-import { NotificationsPopover } from './notifications-popover';
+import { NotificationDropdown } from '@/features/notification/components/notification-dropdown';
 
 export function Header() {
   const user = useAuthStore((state) => state.user);
@@ -51,7 +51,7 @@ export function Header() {
         </div>
       )}
 
-      <NotificationsPopover />
+      <NotificationDropdown />
 
       <DropdownMenu>
         <DropdownMenuTrigger className="h-8 w-8 rounded-full outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
