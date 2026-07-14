@@ -1,7 +1,6 @@
+import { JWT_ACCESS_TOKEN_KEY } from '@/shared/constants';
 import { create } from 'zustand';
-import { persist, devtools } from 'zustand/middleware';
-import { cookieHelper } from '@lumen/utils';
-import { JWT_ACCESS_TOKEN_KEY, JWT_REFRESH_TOKEN_KEY } from '@/shared/constants';
+import { devtools, persist } from 'zustand/middleware';
 
 export interface User {
   id: string;
@@ -14,63 +13,57 @@ export interface User {
 
 interface AuthState {
   user: User | null;
-  accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 
-  setAuth: (user: User, token: string, refreshToken?: string) => void;
+  setAuth: (user: User) => void;
   updateUser: (user: Partial<User>) => void;
   setLoading: (isLoading: boolean) => void;
   clearAuth: () => void;
 }
 
 // Ensure cookie reads only happen on the client
-const getInitialToken = () => {
-  return cookieHelper.get(JWT_ACCESS_TOKEN_KEY);
+// We still check if the cookie exists to set initial auth state, but we DO NOT set it manually anymore.
+const getInitialAuth = () => {
+  if (typeof document !== 'undefined') {
+    return document.cookie.includes(`${JWT_ACCESS_TOKEN_KEY}=`);
+  }
+  return false;
 };
 
-const initialToken = getInitialToken();
+const initialAuth = getInitialAuth();
 
 export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
-    (set, get) => ({
-      user: null,
-      accessToken: initialToken,
-      isAuthenticated: !!initialToken,
-      isLoading: true,
+      (set) => ({
+        user: null,
+        isAuthenticated: initialAuth,
+        isLoading: true,
 
-      setAuth: (user, token, refreshToken) => {
-        cookieHelper.set(JWT_ACCESS_TOKEN_KEY, token, {
-          expires: 7,
-          secure: true,
-        });
-        if (refreshToken) {
-          cookieHelper.set(JWT_REFRESH_TOKEN_KEY, refreshToken, {
-            expires: 30,
-            secure: true,
-          });
-        }
-        set({ user, accessToken: token, isAuthenticated: true });
+        setAuth: (user) => {
+          set({ user, isAuthenticated: true });
+        },
+
+        updateUser: (userUpdates) =>
+          set((state) => ({
+            user: state.user ? { ...state.user, ...userUpdates } : null,
+          })),
+
+        setLoading: (isLoading) => set({ isLoading }),
+
+        clearAuth: () => {
+          set({ user: null, isAuthenticated: false });
+        },
+      }),
+      {
+        name: 'auth-storage',
+        partialize: (state) => ({
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+        }),
       },
-
-      updateUser: (userUpdates) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...userUpdates } : null,
-        })),
-
-      setLoading: (isLoading) => set({ isLoading }),
-
-      clearAuth: () => {
-        cookieHelper.remove(JWT_ACCESS_TOKEN_KEY);
-        cookieHelper.remove(JWT_REFRESH_TOKEN_KEY);
-        set({ user: null, accessToken: null, isAuthenticated: false });
-      },
-    }),
-    {
-      name: 'auth-storage',
-      partialize: (state) => ({ user: state.user }),
-    }
+    ),
+    { name: 'AuthStore' },
   ),
-  { name: 'AuthStore' }
-));
+);

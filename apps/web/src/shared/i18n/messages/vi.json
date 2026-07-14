@@ -1,4 +1,15 @@
 {
+  "Error": {
+    "title": "Đã có lỗi xảy ra",
+    "subtitle": "Chúng tôi xin lỗi vì sự bất tiện này. Đã có một lỗi không mong muốn xảy ra.",
+    "tryAgain": "Thử lại",
+    "backHome": "Về trang chủ"
+  },
+  "NotFound": {
+    "title": "Không tìm thấy trang",
+    "subtitle": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+    "backHome": "Về trang chủ"
+  },
   "Index": {
     "title": "Chào mừng đến với Lumen",
     "heroTitle1": "Làm chủ Tiếng Anh,",
@@ -82,6 +93,7 @@
       "tabs": {
         "overview": "Tổng quan",
         "analytics": "Phân tích",
+        "gamification": "Trò chơi hóa",
         "reports": "Báo cáo",
         "notifications": "Thông báo"
       },
@@ -121,6 +133,20 @@
     "Header": {
       "search": "Tìm kiếm...",
       "language": "Ngôn ngữ"
+    }
+  },
+  "Gamification": {
+    "Leaderboard": {
+      "title": "Bảng xếp hạng chung",
+      "description": "Top 50 học viên xếp theo Tổng điểm XP.",
+      "anonymous": "Người dùng ẩn danh",
+      "dayStreak": "ngày chuỗi",
+      "xp": "XP",
+      "empty": "Chưa có ai trên bảng xếp hạng."
+    },
+    "Badges": {
+      "title": "Huy hiệu của bạn",
+      "description": "Mở khóa thành tựu khi bạn học và phát triển."
     }
   },
   "Auth": {
@@ -266,11 +292,23 @@
     "listenInstruction": "Nghe đoạn băng và chọn đáp án đúng nhất.",
     "option": "Lựa chọn",
     "listenAndChoose": "Nghe đoạn băng và chọn đáp án đúng.",
+    "readAndChoose": "Đọc đoạn văn và chọn đáp án đúng.",
     "previousGroup": "Trang trước",
     "nextGroup": "Trang sau",
     "questionsCount": "{count} câu hỏi",
     "questionNavigation": "Bảng câu hỏi",
-    "failedToLoadTest": "Không thể tải dữ liệu bài thi."
+    "failedToLoadTest": "Không thể tải dữ liệu bài thi.",
+    "finishTest": "Nộp bài",
+    "pauseTest": "Tạm dừng",
+    "resumeTest": "Tiếp tục",
+    "exit": "Thoát",
+    "confirmExit": "Bạn có chắc chắn muốn thoát? Kết quả chưa nộp sẽ không được lưu lại.",
+    "testPaused": "Đã tạm dừng bài thi",
+    "testPausedDesc": "Hãy nghỉ ngơi một chút. Thời gian làm bài đã được dừng lại.",
+    "reviewMode": "Xem lại đáp án",
+    "retryTest": "Làm lại bài thi",
+    "transcript": "Bản ghi âm",
+    "explanation": "Giải thích"
   },
   "ExamPractice": {
     "startFailed": "Lỗi khi bắt đầu bài thi. Vui lòng thử lại.",
@@ -279,6 +317,8 @@
     "finishFailed": "Lỗi khi nộp bài thi. Vui lòng thử lại."
   },
   "Reading": {
+    "translate": "Dịch",
+    "translateText": "Dịch đoạn văn bản",
     "translation": "Bản dịch",
     "translating": "Đang dịch...",
     "failedTranslation": "Lỗi khi tải bản dịch.",

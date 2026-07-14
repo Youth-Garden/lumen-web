@@ -21,7 +21,7 @@ export default async function Icon() {
         }}
       >
         <img
-          // @ts-ignore
+          // @ts-expect-error - NextJS img
           src={logoData.buffer as ArrayBuffer}
           alt="Icon"
           style={{ width: '100%', height: '100%', objectFit: 'contain' }}

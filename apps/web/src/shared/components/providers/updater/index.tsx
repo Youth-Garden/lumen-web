@@ -5,13 +5,13 @@ import { useAuthStore } from '@/store/auth.store';
 import { authService } from '@/services/auth';
 
 function useAuthUpdater() {
-  const { accessToken, clearAuth, setLoading } = useAuthStore();
+  const { isAuthenticated, clearAuth, setLoading } = useAuthStore();
 
   useEffect(() => {
     let isMounted = true;
 
     const loadProfile = async () => {
-      if (!accessToken) {
+      if (!isAuthenticated) {
         setLoading(false);
         return;
       }
@@ -37,7 +37,7 @@ function useAuthUpdater() {
     return () => {
       isMounted = false;
     };
-  }, [accessToken, clearAuth, setLoading]);
+  }, [isAuthenticated, clearAuth, setLoading]);
 }
 
 export function Updater() {

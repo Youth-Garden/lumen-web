@@ -23,7 +23,7 @@ export default async function AppleIcon() {
         }}
       >
         <img
-          // @ts-ignore
+          // @ts-expect-error - NextJS img
           src={logoData.buffer as ArrayBuffer}
           alt="Apple Icon"
           style={{ width: '80%', height: '80%', objectFit: 'contain' }}

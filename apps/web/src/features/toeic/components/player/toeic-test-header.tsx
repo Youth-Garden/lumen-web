@@ -9,14 +9,20 @@ interface ToeicTestHeaderProps {
   title: string;
   timeRemainingSeconds: number;
   isSubmitting: boolean;
+  isPaused: boolean;
   onFinish: () => void;
+  onPauseToggle: () => void;
+  onExit: () => void;
 }
 
 export const ToeicTestHeader = ({
   title,
   timeRemainingSeconds,
   isSubmitting,
+  isPaused,
   onFinish,
+  onPauseToggle,
+  onExit,
 }: ToeicTestHeaderProps) => {
   const t = useTranslations('ToeicTestPlayer');
 
@@ -52,6 +58,23 @@ export const ToeicTestHeader = ({
             <span>{formatTime(timeRemainingSeconds)}</span>
           </div>
 
+          <Button
+            onClick={onExit}
+            variant="ghost"
+            disabled={isSubmitting}
+            className="hidden sm:flex text-muted-foreground hover:text-foreground"
+          >
+            <Icons name="log-out" className="mr-2 h-4 w-4" />
+            {t('exit')}
+          </Button>
+          <Button
+            onClick={onPauseToggle}
+            variant="outline"
+            disabled={isSubmitting}
+          >
+            <Icons name={isPaused ? "play" : "pause"} className="mr-2 h-4 w-4" />
+            {isPaused ? t('resumeTest') : t('pauseTest')}
+          </Button>
           <Button
             onClick={onFinish}
             disabled={isSubmitting}

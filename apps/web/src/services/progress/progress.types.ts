@@ -14,6 +14,7 @@ export interface DashboardProgressResponse {
   totalPoints: number;
   dailyGoalMinutes: number;
   todayStudyMinutes: number;
+  unlockedBadges?: string[];
 }
 
 export interface UpdateProgressSettingsPayload {
@@ -27,4 +28,29 @@ export interface ActivityItem {
   description: string;
   xpEarned: number;
   timestamp: string;
+}
+
+export enum BadgeType {
+  FIRST_BLOOD = 'FIRST_BLOOD',
+  STREAK_3_DAYS = 'STREAK_3_DAYS',
+  STREAK_7_DAYS = 'STREAK_7_DAYS',
+  STREAK_30_DAYS = 'STREAK_30_DAYS',
+  XP_1000 = 'XP_1000',
+  XP_5000 = 'XP_5000',
+  GRAMMAR_MASTER = 'GRAMMAR_MASTER',
+  VOCAB_NOVICE = 'VOCAB_NOVICE',
+}
+
+export interface LeaderboardUser {
+  userId: string;
+  fullName: string | null;
+  avatarUrl: string | null;
+  totalPoints: number;
+  streak: number;
+  unlockedBadges: BadgeType[];
+}
+
+export interface LeaderboardResponse {
+  topUsers: LeaderboardUser[];
+  currentUserRank: number | null;
 }

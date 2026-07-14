@@ -73,7 +73,7 @@ export const TranslationPopover = ({
                 className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400 shrink-0"
               />
               <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                {t('translate')}: "{truncatedText}"
+                {t('translate')}: &quot;{truncatedText}&quot;
               </span>
             </>
           )}
@@ -91,7 +91,7 @@ export const TranslationPopover = ({
             <Icons name="languages" className="h-4 w-4" /> {t('translation')}
           </div>
           <div className="mt-1 line-clamp-2 text-sm font-medium text-slate-800 dark:text-slate-200">
-            "{text}"
+            &quot;{text}&quot;
           </div>
         </div>
 

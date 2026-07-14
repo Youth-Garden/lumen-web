@@ -1,14 +1,12 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
 import {
-  examPracticeService,
   examPracticeKeys,
-} from '@/services/exam-practice';
-import {
+  examPracticeService,
   StartExamAttemptRequest,
   SubmitExamAnswerRequest,
 } from '@/services/exam-practice';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 
 export const useStartExamAttempt = () => {
   const t = useTranslations('ExamPractice');
@@ -34,7 +32,7 @@ export const useSubmitExamAnswer = (attemptId: string) => {
     mutationFn: (data: SubmitExamAnswerRequest) =>
       examPracticeService.submitAnswer(attemptId, data),
     onSuccess: () => {
-      // Background save, no need to invalidate the whole attempt details to avoid UI flickers.
+      // Background save, no need to invalidate the whole attsempt details to avoid UI flickers.
     },
     onError: () => {
       toast.error(t('saveAnswerFailed'));

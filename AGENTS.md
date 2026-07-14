@@ -29,13 +29,14 @@
 - **Internationalization (i18n)**: NEVER hardcode UI text strings in JSX. All text must be extracted to `en.json` and `vi.json` files and accessed via `useTranslations()` from `next-intl`.
 - **i18n Fallbacks**: DO NOT use the `fallback` parameter in `useTranslations` or `t()` for static JSON strings (e.g., `t('key', { fallback: 'Text' })`). `fallback` is unnecessary for standard i18n keys and causes clutter. Always define the key in the JSON files directly.
 - **Portal & Floating UI**: When creating Modals, Dialogs, or Popovers that appear over the main layout, utilize `@lumen/uikit/portal` (`usePortal` or `usePortalWithoutBackdrop`). Do not mount global overlays deeply inside the DOM tree.
-- **Pages Directory and `app/` Routing (Strict)**: 
-  - Module-specific pages MUST be placed inside `features/[module]/pages/`. 
+- **Pages Directory and `app/` Routing (Strict)**:
+  - Module-specific pages MUST be placed inside `features/[module]/pages/`.
   - The files in the Next.js `app/` directory (`page.tsx`) must be absolutely minimal. They should NOT contain UI layouts (e.g., `<div className="...">`), component imports (like `Icons`), state management, or React hooks.
   - They must ONLY import the fully assembled page component from `features/[module]/pages/` and export it directly (e.g. `export default SettingsPage;`). Do not wrap it in unnecessary functions like `export default function SettingsRoute() { return <SettingsPage />; }`.
 
 ## File & Component Naming Convention
 
+- **Simplicity in Naming**: Keep component and function names as simple and concise as possible. Avoid redundant or overly complex prefixes like `Global` (e.g., use `NotFound` instead of `GlobalNotFound`, use `Error` instead of `GlobalError`).
 - **Casing**: File names must be strictly `kebab-case.tsx` or `kebab-case.ts`. Component names and exported functions/interfaces must be strictly `PascalCase`.
 - **Pages Naming**: Any file residing in a `features/[module]/pages/` directory must be suffixed with `-page.tsx` (e.g., `deck-list-page.tsx`). The exported React component inside must strictly be suffixed with `Page` (e.g., `export const DeckListPage = ...`). This ensures that the component name and filename are synchronized.
 

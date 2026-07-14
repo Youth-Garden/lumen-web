@@ -19,7 +19,6 @@ export interface BaseApiServiceConfig {
   baseURL: string;
   mappers?: MapperRegistry;
   timeout?: number;
-  getToken?: () => string | null | undefined;
   onError?: (errors: string[], message: string) => void;
   onNetworkError?: (message: string) => void;
 }
@@ -93,16 +92,13 @@ export abstract class BaseApiService {
     this.axiosInstance = create({
       baseURL: config.baseURL,
       timeout: config.timeout || 30000,
+      withCredentials: true, // Send HttpOnly cookies automatically
       paramsSerializer: (params) =>
         qs.stringify(params, { arrayFormat: 'brackets' }),
     });
     this.mappers = config.mappers || {};
 
     this.axiosInstance.interceptors.request.use((reqConfig) => {
-      const token = this.config.getToken?.();
-      if (token) {
-        reqConfig.headers.Authorization = `Bearer ${token}`;
-      }
       return reqConfig;
     });
   }

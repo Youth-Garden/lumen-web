@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -14,7 +15,7 @@ import {
 } from '@/features/exam-practice/hooks/use-exam-practice';
 import { ExamType } from '@/services/exam-practice/exam-practice.types';
 import { ToeicQuestionDto } from '@/services/toeic';
-import { useCountdown } from '@/shared/hooks';
+import { useCountdown } from '@lumen/hooks';
 
 import { useGetToeicTestById } from '../hooks/use-toeic';
 import { ToeicResultDashboard } from './analytics/toeic-result-dashboard';
@@ -31,6 +32,7 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const router = useRouter();
   const t = useTranslations('ToeicTestPlayer');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
 
   const form = useForm<{ answers: Record<string, string> }>({
     defaultValues: { answers: {} },
@@ -40,21 +42,37 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   const startAttemptMutation = useStartExamAttempt();
 
   const [attemptId, setAttemptId] = useState<string | null>(null);
-  const [isFinished, setIsFinished] = useState(false);
+  const [mode, setMode] = useState<'test' | 'result' | 'review'>('test');
   const submitAnswerMutation = useSubmitExamAnswer(attemptId);
   const finishAttemptMutation = useFinishExamAttempt(attemptId);
 
   const handleFinishTest = () => {
     finishAttemptMutation.mutate(undefined, {
-      onSuccess: () => setIsFinished(true),
+      onSuccess: () => setMode('result'),
     });
   };
 
-  const { secondsRemaining: timeRemaining, start: startTimer } = useCountdown({
+  const {
+    secondsRemaining: timeRemaining,
+    start: startTimer,
+    pause: pauseTimer,
+    isActive: isTimerActive,
+  } = useCountdown({
     initialSeconds: 120 * 60,
     autoStart: false,
     onComplete: handleFinishTest,
   });
+
+  const handlePauseToggle = () => {
+    if (isTimerActive) pauseTimer();
+    else startTimer();
+  };
+
+  const handleExit = () => {
+    if (window.confirm(t('confirmExit') || 'Are you sure you want to exit?')) {
+      router.push('/toeic');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -98,13 +116,14 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
   }
 
   // Test Completed Screen
-  if (isFinished) {
+  if (mode === 'result') {
     return (
       <div className="flex min-h-screen bg-slate-50/50 dark:bg-background">
         <ToeicResultDashboard
           questions={test.questions}
           userAnswers={form.getValues().answers || {}}
           timeSpentSeconds={120 * 60 - timeRemaining}
+          onReview={() => setMode('review')}
         />
       </div>
     );
@@ -160,7 +179,15 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
       questionId,
       userAnswer: option,
     });
-    // Removed auto advance to allow user to answer multiple questions in the group
+  };
+
+  const handleToggleFlag = (questionId: string) => {
+    setFlaggedQuestions((prev) => {
+      const next = new Set(prev);
+      if (next.has(questionId)) next.delete(questionId);
+      else next.add(questionId);
+      return next;
+    });
   };
 
   const handleNavigateQuestion = (index: number) => {
@@ -185,15 +212,44 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50/50 dark:bg-background">
-      <ToeicTestHeader
-        title={test.title}
-        timeRemainingSeconds={timeRemaining}
-        isSubmitting={finishAttemptMutation.isPending}
-        onFinish={handleFinishTest}
-      />
+      {mode === 'review' ? (
+        <div className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+            <h1 className="truncate text-lg font-semibold md:text-xl">
+              {test.title} - {t('reviewMode')}
+            </h1>
+            <Button onClick={() => setMode('result')} variant="outline">
+              <Icons name="arrow-left" className="mr-2 h-4 w-4" />
+              Back
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <ToeicTestHeader
+          title={test.title}
+          timeRemainingSeconds={timeRemaining}
+          isSubmitting={finishAttemptMutation.isPending}
+          isPaused={!isTimerActive && attemptId !== null}
+          onFinish={handleFinishTest}
+          onPauseToggle={handlePauseToggle}
+          onExit={handleExit}
+        />
+      )}
 
-      <div className="flex flex-1 mx-auto w-full max-w-[1600px] items-start">
-        {/* Main Content Area */}
+      {mode === 'test' && !isTimerActive && attemptId !== null ? (
+        <div className="flex flex-1 items-center justify-center">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold">{t('testPaused')}</h2>
+            <p className="text-muted-foreground">{t('testPausedDesc')}</p>
+            <Button size="lg" onClick={startTimer} className="mt-4">
+              <Icons name="play" className="mr-2 h-5 w-5" />
+              {t('resumeTest')}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-1 mx-auto w-full max-w-[1600px] items-start">
+          {/* Main Content Area */}
         <div className="flex-1 px-4 py-8 md:px-8 overflow-hidden h-[calc(100vh-64px)]">
           <AnimatePresence mode="wait">
             <motion.div
@@ -208,7 +264,10 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
                 <ToeicQuestionGroupRenderer
                   questions={currentGroup}
                   userAnswers={currentAnswers}
+                  flaggedQuestions={flaggedQuestions}
+                  isReviewMode={mode === 'review'}
                   onSelectOption={handleSelectOption}
+                  onToggleFlag={handleToggleFlag}
                   onNextGroup={() =>
                     setCurrentQuestionIndex(
                       Math.min(totalGroups - 1, currentQuestionIndex + 1),
@@ -231,12 +290,15 @@ export const ToeicTestPlayer = ({ testId }: ToeicTestPlayerProps) => {
         <ToeicTestSidebar
           questions={questionStatuses}
           answers={currentAnswers}
+          flaggedQuestions={flaggedQuestions}
+          isReviewMode={mode === 'review'}
           currentQuestionIndices={currentGroup.map((q) =>
             test.questions.findIndex((tq) => tq.id === q.id),
           )}
           onNavigate={handleNavigateQuestion}
-        />
-      </div>
+          />
+        </div>
+      )}
     </div>
   );
 };

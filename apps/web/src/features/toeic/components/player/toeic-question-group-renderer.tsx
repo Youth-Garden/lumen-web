@@ -6,21 +6,15 @@ import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
-export interface ToeicQuestionData {
-  id: string;
-  part: number;
-  questionNumber: number;
-  questionText?: string;
-  imageUrl?: string;
-  audioUrl?: string;
-  transcript?: string;
-  options?: string[];
-}
+import { ToeicQuestionDto } from '@/services/toeic';
 
 export interface ToeicQuestionGroupRendererProps {
-  questions: ToeicQuestionData[];
+  questions: ToeicQuestionDto[];
   userAnswers: Record<string, string>;
+  flaggedQuestions: Set<string>;
+  isReviewMode?: boolean;
   onSelectOption: (questionId: string, option: string) => void;
+  onToggleFlag: (questionId: string) => void;
   onNextGroup?: () => void;
   onPrevGroup?: () => void;
   isFirstGroup: boolean;
@@ -30,7 +24,10 @@ export interface ToeicQuestionGroupRendererProps {
 export const ToeicQuestionGroupRenderer = ({
   questions,
   userAnswers,
+  flaggedQuestions,
+  isReviewMode = false,
   onSelectOption,
+  onToggleFlag,
   onNextGroup,
   onPrevGroup,
   isFirstGroup,
@@ -118,37 +115,33 @@ export const ToeicQuestionGroupRenderer = ({
     );
   };
 
-  const renderQuestionOptions = (question: ToeicQuestionData) => (
+  const renderQuestionOptions = (question: ToeicQuestionDto) => (
     <div className="space-y-3">
       {(question.options || []).map((option, index) => {
         const letter = String.fromCharCode(65 + index);
         const isSelected = userAnswers[question.id] === option;
+        const isCorrect = isReviewMode && question.correctAnswer === option;
+        const isWrong = isReviewMode && isSelected && question.correctAnswer !== option;
 
         return (
           <Button
             key={index}
             variant="outline"
-            onClick={() => onSelectOption(question.id, option)}
             className={cn(
-              'flex w-full h-auto min-h-[44px] items-center justify-start gap-4 rounded-xl p-4 text-left font-normal transition-all hover:bg-slate-50 dark:hover:bg-slate-900 whitespace-normal',
-              {
-                'border-primary bg-primary/5 ring-1 ring-primary': isSelected,
-              },
+              'h-auto min-h-[3rem] px-4 py-3 justify-start text-left whitespace-normal font-normal',
+              isSelected && !isReviewMode && 'border-primary bg-primary/5 text-primary',
+              isCorrect && 'border-green-500 bg-green-500/10 text-green-700 dark:text-green-400',
+              isWrong && 'border-red-500 bg-red-500/10 text-red-700 dark:text-red-400',
             )}
+            disabled={isReviewMode}
+            onClick={() => {
+              if (!isReviewMode) onSelectOption(question.id, option);
+            }}
           >
-            <span
-              className={cn(
-                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition-colors',
-                isSelected
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-slate-300 text-slate-500 dark:border-slate-700',
-              )}
-            >
-              {letter}
+            <span className="font-semibold mr-3 shrink-0">
+              {letter}.
             </span>
-            <span className={cn('text-base', isSelected ? 'font-medium' : '')}>
-              {option !== letter ? option : `${t('option')} ${letter}`}
-            </span>
+            <span>{option}</span>
           </Button>
         );
       })}
@@ -215,17 +208,50 @@ export const ToeicQuestionGroupRenderer = ({
         >
           <div className="space-y-8 flex-1">
             {questions.map((question) => (
-              <div key={question.id} className="space-y-4 bg-card p-6 rounded-2xl border shadow-sm">
-                <h3 className="text-xl font-medium flex gap-2">
-                  <span className="text-muted-foreground shrink-0">
-                    {question.questionNumber}.
-                  </span>
-                  <span>
-                    {question.questionText ? question.questionText : t('listenAndChoose')}
-                  </span>
-                </h3>
+              <div key={question.id} className="space-y-4 bg-card p-6 rounded-2xl border shadow-sm relative">
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="text-xl font-medium flex gap-2">
+                    <span className="text-muted-foreground shrink-0">
+                      {question.questionNumber}.
+                    </span>
+                    <span>
+                      {question.questionText ? question.questionText : t('listenAndChoose')}
+                    </span>
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onToggleFlag(question.id)}
+                    className={cn(
+                      'shrink-0 h-8 w-8',
+                      flaggedQuestions.has(question.id)
+                        ? 'text-amber-500 hover:text-amber-600 hover:bg-amber-50'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                    title={t('flagForReview')}
+                  >
+                    <Icons name="flag" className={cn('h-4 w-4', flaggedQuestions.has(question.id) && 'fill-current')} />
+                  </Button>
+                </div>
 
                 {renderQuestionOptions(question)}
+
+                {isReviewMode && (question.explanation || question.transcript) && (
+                  <div className="mt-4 p-4 rounded-xl bg-muted/50 text-sm space-y-2">
+                    {question.transcript && (
+                      <div>
+                        <span className="font-semibold text-primary">{t('transcript')}:</span>
+                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">{question.transcript}</p>
+                      </div>
+                    )}
+                    {question.explanation && (
+                      <div>
+                        <span className="font-semibold text-primary">{t('explanation')}:</span>
+                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">{question.explanation}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

@@ -54,7 +54,7 @@ export default function LoginPage() {
         setIsLoading(true);
         const res = await authService.googleLogin(tokenResponse.access_token);
         const tokens = res.data;
-        setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
+        setAuth(tokens.user);
 
         toast.success(t('success'), {
           description: t('successDesc'),
@@ -84,7 +84,7 @@ export default function LoginPage() {
       ]);
 
       const tokens = res.data;
-      setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
+      setAuth(tokens.user);
 
       toast.success(t('success'), {
         description: t('successDesc'),

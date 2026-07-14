@@ -1,14 +1,9 @@
 import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
 import { useAuthStore } from '@/store/auth.store';
 import { toast } from 'sonner';
-import {
-  ApiEndpointEnum,
-  RouteEnum,
-  JWT_REFRESH_TOKEN_KEY,
-} from '@/shared/constants';
-
 import axios from 'axios';
 import { cookieHelper } from '@lumen/utils';
+import { ApiEndpointEnum, RouteEnum } from '@/shared/constants';
 
 export abstract class CoreService extends BaseApiService {
   protected static isRefreshing = false;
@@ -29,7 +24,6 @@ export abstract class CoreService extends BaseApiService {
     super({
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
       mappers,
-      getToken: () => useAuthStore.getState().accessToken,
       onError: (errors, message) => {
         // We will suppress toast on 401 if we handle it via refresh token
       },
@@ -50,15 +44,13 @@ export abstract class CoreService extends BaseApiService {
           !originalRequest._retry
         ) {
           const authStore = useAuthStore.getState();
-          const refreshToken = cookieHelper.get(JWT_REFRESH_TOKEN_KEY);
 
-          if (authStore.isAuthenticated && refreshToken) {
+          if (authStore.isAuthenticated) {
             if (CoreService.isRefreshing) {
               return new Promise(function (resolve, reject) {
                 CoreService.failedQueue.push({ resolve, reject });
               })
-                .then((token) => {
-                  originalRequest.headers.Authorization = 'Bearer ' + token;
+                .then(() => {
                   return this.axiosInstance(originalRequest);
                 })
                 .catch((err) => Promise.reject(err));
@@ -72,27 +64,22 @@ export abstract class CoreService extends BaseApiService {
               const { data } = await axios.post(
                 (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') +
                   ApiEndpointEnum.REFRESH_TOKEN,
-                { refreshToken },
+                {}, // Send empty body, HttpOnly cookie 'jwtr' handles the token
+                { withCredentials: true } // Ensure cookies are sent with this plain axios instance
               );
 
-              const newAccessToken = data?.data?.accessToken;
-              const newRefreshToken = data?.data?.refreshToken;
+              // Backend already set new cookies (HttpOnly) in response
+              const isSuccess = data?.statusCode === 201 || data?.data;
               const user = data?.data?.user;
 
-              if (newAccessToken) {
-                // Update auth store & cookies
-                authStore.setAuth(
-                  user || authStore.user,
-                  newAccessToken,
-                  newRefreshToken || refreshToken,
-                );
+              if (isSuccess) {
+                // Update auth store (without needing tokens)
+                authStore.setAuth(user || authStore.user);
 
-                CoreService.processQueue(null, newAccessToken);
-                originalRequest.headers.Authorization =
-                  'Bearer ' + newAccessToken;
+                CoreService.processQueue(null);
                 return this.axiosInstance(originalRequest);
               } else {
-                throw new Error('No access token returned');
+                throw new Error('Refresh failed');
               }
             } catch (refreshError) {
               CoreService.processQueue(refreshError, null);
@@ -102,7 +89,7 @@ export abstract class CoreService extends BaseApiService {
               authStore.clearAuth();
               import('@/services/auth')
                 .then(({ authService }) => {
-                  return authService.logout({ refreshToken });
+                  return authService.logout();
                 })
                 .catch(() => {})
                 .finally(() => {
@@ -119,19 +106,14 @@ export abstract class CoreService extends BaseApiService {
                 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
               );
               authStore.clearAuth();
-              const refreshToken = cookieHelper.get(JWT_REFRESH_TOKEN_KEY);
-              if (refreshToken) {
-                import('@/services/auth')
-                  .then(({ authService }) => {
-                    return authService.logout({ refreshToken });
-                  })
-                  .catch(() => {})
-                  .finally(() => {
-                    window.location.href = RouteEnum.LOGIN;
-                  });
-              } else {
-                window.location.href = RouteEnum.LOGIN;
-              }
+              import('@/services/auth')
+                .then(({ authService }) => {
+                  return authService.logout();
+                })
+                .catch(() => {})
+                .finally(() => {
+                  window.location.href = RouteEnum.LOGIN;
+                });
             } else {
               // Show toast for 401 errors when not authenticated (e.g. login failure)
               if (!originalRequest.disabledToast && error.response) {

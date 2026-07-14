@@ -1,10 +1,10 @@
 'use client';
 
-import { Link, usePathname, useRouter } from '@/shared/i18n/routing';
+import { Link, usePathname } from '@/shared/i18n/routing';
 import { useTranslations } from 'next-intl';
 
+import { Button, Logo, ScrollArea } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { Button, ScrollArea, Logo } from '@lumen/uikit/components';
 import { cn } from '@lumen/uikit/utils';
 
 import { RouteEnum } from '@/shared/constants';
@@ -39,7 +39,7 @@ export function Sidebar() {
   const { sidebarCollapsed, toggleSidebar } = useUiStore();
 
   return (
-    <div
+    <nav
       id="sidebar"
       className={cn(
         'relative flex h-full flex-col bg-background text-card-foreground transition-all duration-300 ease-in-out',
@@ -47,8 +47,8 @@ export function Sidebar() {
       )}
     >
       <div className="relative flex h-20 shrink-0 items-center overflow-hidden">
-        <Link 
-          href={RouteEnum.DASHBOARD} 
+        <Link
+          href={RouteEnum.DASHBOARD}
           className="absolute left-[30px] flex items-center group"
           onClick={(e) => {
             if (sidebarCollapsed) {
@@ -57,7 +57,12 @@ export function Sidebar() {
             }
           }}
         >
-          <div className={cn("transition-opacity duration-200 flex items-center", sidebarCollapsed && "group-hover:opacity-0")}>
+          <div
+            className={cn(
+              'transition-opacity duration-200 flex items-center',
+              sidebarCollapsed && 'group-hover:opacity-0',
+            )}
+          >
             <Logo showText={!sidebarCollapsed} iconSize={28} />
           </div>
           {sidebarCollapsed && (
@@ -80,7 +85,7 @@ export function Sidebar() {
       </div>
 
       <ScrollArea className="flex-1">
-        <nav className="flex flex-col gap-2 py-4">
+        <div className="flex flex-col gap-2 py-4">
           {navigationGroups.map((group, groupIdx) => (
             <div key={groupIdx} className="flex flex-col gap-1">
               <div
@@ -105,7 +110,10 @@ export function Sidebar() {
 
               <ul className="flex flex-col gap-1.5 w-full">
                 {group.items.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== RouteEnum.DASHBOARD && pathname.startsWith(item.href + '/'));
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== RouteEnum.DASHBOARD &&
+                      pathname.startsWith(item.href + '/'));
 
                   return (
                     <li key={item.key}>
@@ -142,8 +150,8 @@ export function Sidebar() {
               </ul>
             </div>
           ))}
-        </nav>
+        </div>
       </ScrollArea>
-    </div>
+    </nav>
   );
 }

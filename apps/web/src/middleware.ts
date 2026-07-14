@@ -1,6 +1,6 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { RouteEnum } from './shared/constants';
+import { JWT_ACCESS_TOKEN_KEY, RouteEnum } from './shared/constants';
 import { routing } from './shared/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
@@ -15,8 +15,6 @@ const publicOnlyRoutes = [
   RouteEnum.REGISTER,
   RouteEnum.FORGOT_PASSWORD,
 ];
-
-import { JWT_ACCESS_TOKEN_KEY } from './shared/constants';
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;

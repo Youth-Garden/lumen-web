@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
 import { BarChart, BarChartData } from '@/shared/components/charts/bar-chart';
+import { useMemo } from 'react';
 
 export interface XpProgressChartProps {
   data: { date: string; xp: number }[];

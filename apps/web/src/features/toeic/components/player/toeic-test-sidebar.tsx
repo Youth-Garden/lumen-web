@@ -24,13 +24,16 @@ interface ToeicQuestionStatus {
 interface ToeicTestSidebarProps {
   questions: ToeicQuestionStatus[];
   answers: Record<string, string>;
+  flaggedQuestions: Set<string>;
   currentQuestionIndices: number[];
+  isReviewMode?: boolean;
   onNavigate: (index: number) => void;
 }
 
 export const ToeicTestSidebar = ({
   questions,
   answers,
+  flaggedQuestions,
   currentQuestionIndices,
   onNavigate,
 }: ToeicTestSidebarProps) => {
@@ -66,27 +69,33 @@ export const ToeicTestSidebar = ({
                   const state = getQuestionState(q, index);
 
                   return (
-                    <Button
-                      key={q.id}
-                      variant="outline"
-                      onClick={() => {
-                        onNavigate(index);
-                        if (!isDesktop) setOpen(false);
-                      }}
-                      className={cn(
-                        'flex h-10 w-full p-0 items-center justify-center rounded-md border text-sm font-medium transition-colors hover:bg-muted',
-                        {
-                          'border-primary bg-primary text-primary-foreground hover:bg-primary/90':
-                            state === 'current',
-                          'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-300':
-                            state === 'answered',
-                          'bg-card text-card-foreground':
-                            state === 'unanswered',
-                        },
+                    <div key={q.id} className="relative">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          onNavigate(index);
+                          if (!isDesktop) setOpen(false);
+                        }}
+                        className={cn(
+                          'flex h-10 w-full p-0 items-center justify-center rounded-md border text-sm font-medium transition-colors hover:bg-muted',
+                          {
+                            'border-primary bg-primary text-primary-foreground hover:bg-primary/90':
+                              state === 'current',
+                            'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-300':
+                              state === 'answered',
+                            'bg-card text-card-foreground':
+                              state === 'unanswered',
+                          },
+                        )}
+                      >
+                        {q.questionNumber}
+                      </Button>
+                      {flaggedQuestions.has(q.id) && (
+                        <div className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 shadow-sm border-2 border-background">
+                          <Icons name="flag" className="h-2 w-2 text-white fill-current" />
+                        </div>
                       )}
-                    >
-                      {q.questionNumber}
-                    </Button>
+                    </div>
                   );
                 })}
               </div>

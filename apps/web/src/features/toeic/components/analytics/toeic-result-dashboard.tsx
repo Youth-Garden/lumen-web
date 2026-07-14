@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
 import { ToeicQuestionDto } from '@/services/toeic';
 import { RadarChart, RadarChartData } from '@/shared/components/charts/radar-chart';
 import { RouteEnum } from '@/shared/constants/route';
@@ -16,12 +17,14 @@ interface ToeicResultDashboardProps {
   questions: ToeicQuestionDto[];
   userAnswers: Record<string, string>;
   timeSpentSeconds: number;
+  onReview?: () => void;
 }
 
 export const ToeicResultDashboard = ({
   questions,
   userAnswers,
   timeSpentSeconds,
+  onReview,
 }: ToeicResultDashboardProps) => {
   const router = useRouter();
   const t = useTranslations('ToeicResultDashboard');
@@ -115,8 +118,14 @@ export const ToeicResultDashboard = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1 }}
-        className="mt-10 flex justify-center"
+        className="mt-10 flex justify-center gap-4"
       >
+        {onReview && (
+          <Button size="lg" className="gap-2" onClick={onReview}>
+            <Icons name="eye" className="h-5 w-5" />
+            {t('reviewMode')}
+          </Button>
+        )}
         <Button
           size="lg"
           onClick={() => router.push(RouteEnum.DASHBOARD)}

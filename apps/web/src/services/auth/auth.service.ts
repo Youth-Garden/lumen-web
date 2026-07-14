@@ -6,7 +6,6 @@ import {
   AuthTokens,
   ForgotPasswordPayload,
   LoginPayload,
-  LogoutPayload,
   RegisterPayload,
   ResetPasswordPayload,
   UpdateProfilePayload,
@@ -36,8 +35,8 @@ export class AuthService extends CoreService {
     return this._post<UserInfo>(ApiEndpointEnum.UPDATE_PROFILE, payload);
   }
 
-  logout(payload: LogoutPayload): Promise<BaseResponse<void>> {
-    return this._post<void>(ApiEndpointEnum.LOGOUT, payload);
+  logout(): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.LOGOUT, {});
   }
 
   forgotPassword(payload: ForgotPasswordPayload): Promise<BaseResponse<void>> {

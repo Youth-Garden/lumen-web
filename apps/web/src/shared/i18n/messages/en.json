@@ -1,4 +1,15 @@
 {
+  "Error": {
+    "title": "Something went wrong",
+    "subtitle": "We apologize for the inconvenience. An unexpected error has occurred.",
+    "tryAgain": "Try again",
+    "backHome": "Back to Home"
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "subtitle": "The page you are looking for doesn't exist or has been moved.",
+    "backHome": "Back to Home"
+  },
   "Index": {
     "title": "Welcome to Lumen",
     "heroTitle1": "Master English,",
@@ -82,6 +93,7 @@
       "tabs": {
         "overview": "Overview",
         "analytics": "Analytics",
+        "gamification": "Gamification",
         "reports": "Reports",
         "notifications": "Notifications"
       },
@@ -121,6 +133,20 @@
     "Header": {
       "search": "Search...",
       "language": "Language"
+    }
+  },
+  "Gamification": {
+    "Leaderboard": {
+      "title": "Global Leaderboard",
+      "description": "Top 50 learners ranked by Total XP.",
+      "anonymous": "Anonymous User",
+      "dayStreak": "day streak",
+      "xp": "XP",
+      "empty": "No users on the leaderboard yet."
+    },
+    "Badges": {
+      "title": "Your Badges",
+      "description": "Unlock achievements as you learn and grow."
     }
   },
   "Auth": {
@@ -254,23 +280,35 @@
   },
   "ToeicTestPlayer": {
     "startTest": "Start Test",
+    "finishTest": "Finish Test",
+    "failedToLoadTest": "Failed to load test. Please try again later.",
+    "listenAndChoose": "Listen to the audio and choose the correct answer.",
+    "readAndChoose": "Read the text and choose the correct answer.",
+    "flagForReview": "Flag for review",
+    "pauseTest": "Pause",
+    "resumeTest": "Resume",
+    "exit": "Exit",
+    "confirmExit": "Are you sure you want to exit? Your progress might not be saved.",
+    "testPaused": "Test Paused",
+    "testPausedDesc": "Take a break. The timer is paused.",
+    "reviewMode": "Review Answers",
+    "retryTest": "Retry Test",
+    "questionsCount": "{count} questions",
+    "questionNavigation": "Question Navigation",
+    "transcript": "Transcript",
+    "explanation": "Explanation",
     "submitTest": "Submit Test",
     "question": "Question",
     "of": "of",
     "part": "Part",
-    "flagForReview": "Flag for review",
     "previous": "Previous",
     "next": "Next",
     "audioTrack": "Audio Track",
     "audioPlayerHelp": "Use the play/pause button to control the audio.",
     "listenInstruction": "Listen to the audio and select the best response.",
     "option": "Option",
-    "listenAndChoose": "Listen to the audio and choose the correct answer.",
     "previousGroup": "Previous",
-    "nextGroup": "Next",
-    "questionsCount": "{count} questions",
-    "questionNavigation": "Question Navigation",
-    "failedToLoadTest": "Failed to load test data."
+    "nextGroup": "Next"
   },
   "ExamPractice": {
     "startFailed": "Failed to start the test. Please try again.",
@@ -279,6 +317,8 @@
     "finishFailed": "Failed to submit the test. Please try again."
   },
   "Reading": {
+    "translate": "Translate",
+    "translateText": "Translate Text",
     "translation": "Translation",
     "translating": "Translating...",
     "failedTranslation": "Failed to load translation.",

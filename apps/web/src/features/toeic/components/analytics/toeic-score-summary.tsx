@@ -2,7 +2,7 @@
 
 import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
-import { formatDuration } from '@/shared/utils';
+import { formatDuration } from '@lumen/utils';
 
 interface ToeicScoreSummaryProps {
   totalScore: number;

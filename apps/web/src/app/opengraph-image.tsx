@@ -26,7 +26,7 @@ export default async function Image() {
         }}
       >
         <img
-          // @ts-ignore
+          // @ts-expect-error - NextJS img
           src={logoData.buffer as ArrayBuffer}
           alt="Lumen Logo"
           style={{ width: '600px', height: '600px', objectFit: 'contain' }}

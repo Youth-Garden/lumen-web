@@ -13,6 +13,8 @@ export enum ApiEndpointEnum {
   PROGRESS_DASHBOARD = '/api/progress/dashboard',
   PROGRESS_ACTIVITIES = '/api/progress/activities',
   PROGRESS_SETTINGS = '/api/progress/settings',
+  PROGRESS_LEADERBOARD = '/api/progress/leaderboard',
+  PROGRESS_BADGES = '/api/progress/badges',
 
   // Vocabulary
   VOCABULARY_WORDS = '/api/vocabulary/words',

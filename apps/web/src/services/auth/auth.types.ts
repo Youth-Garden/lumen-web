@@ -23,9 +23,7 @@ export interface RegisterPayload {
   password: string;
 }
 
-export interface LogoutPayload {
-  refreshToken: string;
-}
+
 
 export interface UpdateProfilePayload {
   fullName?: string;

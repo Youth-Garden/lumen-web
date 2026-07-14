@@ -17,6 +17,8 @@ import { MetricCard } from '../components/metric-card';
 import { RecentActivity } from '../components/recent-activity';
 import { DailyGoalWidget } from '../components/daily-goal-widget';
 import { XpProgressChart } from '../components/charts/xp-progress-chart';
+import { Leaderboard } from '../components/leaderboard';
+import { BadgesList } from '../components/badges-list';
 import { useTranslations } from 'next-intl';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 import { useDueFlashcards } from '@/features/vocabulary/hooks/use-vocabulary';
@@ -52,6 +54,7 @@ export function OverviewPage() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="gamification">{t('tabs.gamification')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('tabs.analytics')}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
@@ -141,6 +144,16 @@ export function OverviewPage() {
                 <RecentActivity />
               </CardContent>
             </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="gamification" className="space-y-4 mt-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <div className="col-span-1 md:col-span-2 lg:col-span-3">
+              <Leaderboard />
+            </div>
+            <div className="col-span-1 md:col-span-2 lg:col-span-4">
+              <BadgesList />
+            </div>
           </div>
         </TabsContent>
       </Tabs>

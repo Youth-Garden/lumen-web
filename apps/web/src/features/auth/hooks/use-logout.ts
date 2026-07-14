@@ -2,8 +2,7 @@ import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { authService } from '@/services/auth';
-import { RouteEnum, JWT_REFRESH_TOKEN_KEY } from '@/shared/constants';
-import { cookieHelper } from '@lumen/utils';
+import { RouteEnum } from '@/shared/constants';
 
 export const useLogout = () => {
   const clearAuth = useAuthStore((state) => state.clearAuth);
@@ -11,8 +10,6 @@ export const useLogout = () => {
 
   const logout = useCallback(
     async (redirectUrl: string = RouteEnum.LOGIN) => {
-      const refreshToken = cookieHelper.get(JWT_REFRESH_TOKEN_KEY);
-
       // Optimistically clear local state immediately for snappy UI
       clearAuth();
 
@@ -21,13 +18,11 @@ export const useLogout = () => {
         router.push(redirectUrl);
       }
 
-      // Call API in background if refresh token exists
-      if (refreshToken) {
-        try {
-          await authService.logout({ refreshToken });
-        } catch (error) {
-          // Ignore logout errors
-        }
+      // Call API in background
+      try {
+        await authService.logout();
+      } catch (error) {
+        // Ignore logout errors
       }
     },
     [clearAuth, router]

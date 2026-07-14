@@ -1,126 +1,127 @@
 import { createMaterialIcon } from './material-icon';
 import { CommandIcon } from './svgs/command-icon';
-import { SunIcon } from './svgs/sun-icon';
-import { MoonIcon } from './svgs/moon-icon';
 import { GoogleIcon } from './svgs/google-icon';
+import { MoonIcon } from './svgs/moon-icon';
+import { SunIcon } from './svgs/sun-icon';
 
 export const registry = {
   // ── Navigation & Structure ──────────────────────────────────────────
-  home:               createMaterialIcon('home'),
+  home: createMaterialIcon('home'),
   'layout-dashboard': createMaterialIcon('dashboard'),
-  menu:               createMaterialIcon('menu'),
+  menu: createMaterialIcon('menu'),
   'panel-left-close': createMaterialIcon('left_panel_close'),
-  'panel-left-open':  createMaterialIcon('left_panel_open'),
-  overview:           createMaterialIcon('overview'),
+  'panel-left-open': createMaterialIcon('left_panel_open'),
+  overview: createMaterialIcon('overview'),
 
   // ── Actions ─────────────────────────────────────────────────────────
-  check:          createMaterialIcon('check'),
+  check: createMaterialIcon('check'),
   'check-circle': createMaterialIcon('check_circle'),
-  close:          createMaterialIcon('close'),
+  close: createMaterialIcon('close'),
   'close-circle': createMaterialIcon('cancel'),
-  plus:           createMaterialIcon('add'),
-  'trash-2':      createMaterialIcon('delete'),
-  edit:           createMaterialIcon('edit'),
-  save:           createMaterialIcon('save'),
-  upload:         createMaterialIcon('upload'),
-  filter:         createMaterialIcon('filter_list'),
-  search:         createMaterialIcon('search'),
-  ban:            createMaterialIcon('block'),
-  'rotate-ccw':   createMaterialIcon('undo'),
-  'x-circle':     createMaterialIcon('cancel'),
-  'pen-tool':     createMaterialIcon('draw'),
-  undo:           createMaterialIcon('undo'),
-  redo:           createMaterialIcon('redo'),
-  link:           createMaterialIcon('link'),
-  image:          createMaterialIcon('image'),
+  plus: createMaterialIcon('add'),
+  'trash-2': createMaterialIcon('delete'),
+  edit: createMaterialIcon('edit'),
+  save: createMaterialIcon('save'),
+  upload: createMaterialIcon('upload'),
+  filter: createMaterialIcon('filter_list'),
+  search: createMaterialIcon('search'),
+  ban: createMaterialIcon('block'),
+  'rotate-ccw': createMaterialIcon('undo'),
+  'x-circle': createMaterialIcon('cancel'),
+  'pen-tool': createMaterialIcon('draw'),
+  undo: createMaterialIcon('undo'),
+  redo: createMaterialIcon('redo'),
+  link: createMaterialIcon('link'),
+  image: createMaterialIcon('image'),
 
   // ── Chevrons & Arrows ────────────────────────────────────────────────
-  'chevron-down':  createMaterialIcon('keyboard_arrow_down'),
-  'chevron-up':    createMaterialIcon('keyboard_arrow_up'),
+  'chevron-down': createMaterialIcon('keyboard_arrow_down'),
+  'chevron-up': createMaterialIcon('keyboard_arrow_up'),
   'chevron-right': createMaterialIcon('keyboard_arrow_right'),
-  'chevron-left':  createMaterialIcon('keyboard_arrow_left'),
-  'arrow-left':    createMaterialIcon('arrow_back'),
-  'arrow-right':   createMaterialIcon('arrow_forward'),
+  'chevron-left': createMaterialIcon('keyboard_arrow_left'),
+  'arrow-left': createMaterialIcon('arrow_back'),
+  'arrow-right': createMaterialIcon('arrow_forward'),
 
   // ── Status & Feedback ────────────────────────────────────────────────
-  info:        createMaterialIcon('info'),
-  danger:      createMaterialIcon('warning'),
-  'loader-2':  createMaterialIcon('progress_activity'),
-  activity:    createMaterialIcon('monitor_heart'),
-  zap:         createMaterialIcon('bolt'),
-  flag:        createMaterialIcon('flag'),
+  info: createMaterialIcon('info'),
+  danger: createMaterialIcon('warning'),
+  'loader-2': createMaterialIcon('progress_activity'),
+  activity: createMaterialIcon('monitor_heart'),
+  zap: createMaterialIcon('bolt'),
+  flag: createMaterialIcon('flag'),
 
   // ── Media & Audio ────────────────────────────────────────────────────
-  play:         createMaterialIcon('play_arrow'),
-  pause:        createMaterialIcon('pause'),
-  'volume-2':   createMaterialIcon('volume_up'),
-  headphones:   createMaterialIcon('headphones'),
-  mic:          createMaterialIcon('mic'),
+  play: createMaterialIcon('play_arrow'),
+  pause: createMaterialIcon('pause'),
+  'volume-2': createMaterialIcon('volume_up'),
+  headphones: createMaterialIcon('headphones'),
+  mic: createMaterialIcon('mic'),
 
   // ── Notifications & Communication ───────────────────────────────────
   bell: createMaterialIcon('notifications'),
   mail: createMaterialIcon('mail'),
 
   // ── Content & Reading ────────────────────────────────────────────────
-  'book-open':    createMaterialIcon('menu_book'),
-  book:           createMaterialIcon('book'),
-  'book-marked':  createMaterialIcon('bookmark'),
-  newspaper:      createMaterialIcon('newspaper'),
-  'file-text':    createMaterialIcon('description'),
+  'book-open': createMaterialIcon('menu_book'),
+  book: createMaterialIcon('book'),
+  'book-marked': createMaterialIcon('bookmark'),
+  newspaper: createMaterialIcon('newspaper'),
+  'file-text': createMaterialIcon('description'),
   'file-question': createMaterialIcon('quiz'),
-  layers:         createMaterialIcon('layers'),
-  tag:            createMaterialIcon('label'),
-  languages:      createMaterialIcon('translate'),
+  layers: createMaterialIcon('layers'),
+  tag: createMaterialIcon('label'),
+  languages: createMaterialIcon('translate'),
 
   // ── Charts & Analytics ───────────────────────────────────────────────
-  'bar-chart':   createMaterialIcon('bar_chart'),
-  'pie-chart':   createMaterialIcon('pie_chart'),
+  'bar-chart': createMaterialIcon('bar_chart'),
+  'pie-chart': createMaterialIcon('pie_chart'),
 
   // ── Users & Identity ─────────────────────────────────────────────────
-  user:          createMaterialIcon('person'),
-  users:         createMaterialIcon('group'),
-  shield:        createMaterialIcon('security'),
+  user: createMaterialIcon('person'),
+  users: createMaterialIcon('group'),
+  shield: createMaterialIcon('security'),
   'shield-check': createMaterialIcon('verified_user'),
-  lock:          createMaterialIcon('lock'),
+  lock: createMaterialIcon('lock'),
 
   // ── Commerce ─────────────────────────────────────────────────────────
   'credit-card': createMaterialIcon('credit_card'),
 
   // ── Learning & Education ─────────────────────────────────────────────
-  study:      createMaterialIcon('school'),
-  quiz:       createMaterialIcon('quiz'),
+  study: createMaterialIcon('school'),
+  quiz: createMaterialIcon('quiz'),
   vocabulary: createMaterialIcon('spellcheck'),
-  deck:       createMaterialIcon('style'),
-  brain:      createMaterialIcon('neurology'),
-  trophy:     createMaterialIcon('emoji_events'),
-  flame:      createMaterialIcon('local_fire_department'),
-  clock:      createMaterialIcon('schedule'),
+  deck: createMaterialIcon('style'),
+  brain: createMaterialIcon('neurology'),
+  trophy: createMaterialIcon('emoji_events'),
+  award: createMaterialIcon('military_tech'),
+  flame: createMaterialIcon('local_fire_department'),
+  clock: createMaterialIcon('schedule'),
   cardiology: createMaterialIcon('cardiology'),
 
   // ── Rich Text Editor ─────────────────────────────────────────────────
-  bold:          createMaterialIcon('format_bold'),
-  italic:        createMaterialIcon('format_italic'),
+  bold: createMaterialIcon('format_bold'),
+  italic: createMaterialIcon('format_italic'),
   strikethrough: createMaterialIcon('format_strikethrough'),
-  'heading-2':   createMaterialIcon('format_h2'),
-  list:          createMaterialIcon('format_list_bulleted'),
+  'heading-2': createMaterialIcon('format_h2'),
+  list: createMaterialIcon('format_list_bulleted'),
   'list-ordered': createMaterialIcon('format_list_numbered'),
-  quote:         createMaterialIcon('format_quote'),
+  quote: createMaterialIcon('format_quote'),
 
   // ── Visibility ───────────────────────────────────────────────────────
-  eye:     createMaterialIcon('visibility'),
+  eye: createMaterialIcon('visibility'),
   'eye-off': createMaterialIcon('visibility_off'),
 
   // ── System ───────────────────────────────────────────────────────────
-  settings:    createMaterialIcon('settings'),
-  'log-out':   createMaterialIcon('logout'),
-  more:        createMaterialIcon('more_horiz'),
+  settings: createMaterialIcon('settings'),
+  'log-out': createMaterialIcon('logout'),
+  more: createMaterialIcon('more_horiz'),
 
   // ── Theme ────────────────────────────────────────────────────────────
-  sun:  SunIcon,
+  sun: SunIcon,
   moon: MoonIcon,
 
   // ── Brand / Special (keep original SVGs — no Material equivalent) ────
-  google:  GoogleIcon,
+  google: GoogleIcon,
   command: CommandIcon,
 } as const;
 

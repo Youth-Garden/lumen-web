@@ -18,7 +18,6 @@ const beVietnamPro = Be_Vietnam_Pro({
 export const metadata: Metadata = {
   title: 'Lumen Platform',
   description: 'Manage your business with Lumen ecosystem.',
-  manifest: '/site.webmanifest',
 };
 
 export default async function RootLayout({
