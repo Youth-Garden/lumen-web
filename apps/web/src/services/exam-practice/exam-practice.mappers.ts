@@ -21,6 +21,8 @@ export const examAttemptDetailMapper = (
   startedAt: String(raw?.startedAt ?? ''),
   completedAt: raw?.completedAt ? String(raw.completedAt) : null,
   mode: (raw?.mode as ExamAttemptMode) ?? ExamAttemptMode.FULL,
+  elapsedSeconds: Number(raw?.elapsedSeconds ?? 0),
+  customTimeLimit: raw?.customTimeLimit ? Number(raw.customTimeLimit) : null,
   questionIds: Array.isArray(raw?.questionIds)
     ? (raw!.questionIds as string[])
     : null,

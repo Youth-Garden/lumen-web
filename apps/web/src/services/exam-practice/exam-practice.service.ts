@@ -43,6 +43,29 @@ export class ExamPracticeService extends CoreService {
     );
   }
 
+  pauseAttempt(
+    attemptId: string,
+    elapsedSeconds: number,
+  ): Promise<BaseResponse<void>> {
+    return this._post<void>(
+      ApiEndpointEnum.EXAM_PRACTICE_ATTEMPT_PAUSE,
+      { elapsedSeconds },
+      {
+        pathParams: { id: attemptId },
+      },
+    );
+  }
+
+  resumeAttempt(attemptId: string): Promise<BaseResponse<void>> {
+    return this._post<void>(
+      ApiEndpointEnum.EXAM_PRACTICE_ATTEMPT_RESUME,
+      undefined,
+      {
+        pathParams: { id: attemptId },
+      },
+    );
+  }
+
   getAttempt(
     attemptId: string,
   ): Promise<BaseResponse<ExamAttemptDetailResponse>> {

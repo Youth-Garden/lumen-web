@@ -20,7 +20,7 @@ import { format } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useMyAttempts, useStartRetest } from '../hooks/use-exam-practice';
+import { useMyAttempts, useStartRetest, useResumeExamAttempt } from '../hooks/use-exam-practice';
 
 export const HistoryPage = () => {
   const t = useTranslations('ExamPractice');
@@ -30,6 +30,7 @@ export const HistoryPage = () => {
 
   const { data: response, isLoading } = useMyAttempts(page, limit);
   const { mutate: startRetest, isPending: isStartingRetest } = useStartRetest();
+  const resumeAttemptMutation = useResumeExamAttempt();
 
   const attempts = response?.items || [];
   const total = response?.paging.total || 0;
@@ -50,6 +51,19 @@ export const HistoryPage = () => {
         );
       },
     });
+  };
+
+  const handleResume = (attemptId: string, testId: string) => {
+    resumeAttemptMutation.mutate(
+      attemptId,
+      {
+        onSuccess: () => {
+          router.push(
+            formatUrl(RouteEnum.TOEIC_TEST, { id: testId }, { attemptId }),
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -128,11 +142,11 @@ export const HistoryPage = () => {
                     </span>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        if (attempt.status === ExamAttemptStatus.COMPLETED) {
+                    {attempt.status === ExamAttemptStatus.COMPLETED && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
                           router.push(
                             formatUrl(
                               RouteEnum.TOEIC_TEST,
@@ -143,7 +157,16 @@ export const HistoryPage = () => {
                               },
                             ),
                           );
-                        } else {
+                        }}
+                      >
+                        {t('view')}
+                      </Button>
+                    )}
+                    {attempt.status === ExamAttemptStatus.IN_PROGRESS && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
                           router.push(
                             formatUrl(
                               RouteEnum.TOEIC_TEST,
@@ -151,11 +174,21 @@ export const HistoryPage = () => {
                               { attemptId: attempt.id },
                             ),
                           );
-                        }
-                      }}
-                    >
-                      {t('view')}
-                    </Button>
+                        }}
+                      >
+                        {t('continue')}
+                      </Button>
+                    )}
+                    {attempt.status === ExamAttemptStatus.PAUSED && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={resumeAttemptMutation.isPending}
+                        onClick={() => handleResume(attempt.id, attempt.testId)}
+                      >
+                        {t('resume')}
+                      </Button>
+                    )}
                     {attempt.status === ExamAttemptStatus.COMPLETED &&
                       attempt.totalCorrect < attempt.totalAnswered && (
                         <Button

@@ -1,5 +1,6 @@
 export enum ExamAttemptStatus {
   IN_PROGRESS = 'IN_PROGRESS',
+  PAUSED = 'PAUSED',
   COMPLETED = 'COMPLETED',
 }
 
@@ -57,6 +58,8 @@ export interface ExamAttemptDetailResponse {
   startedAt: string;
   completedAt: string | null;
   mode: ExamAttemptMode;
+  elapsedSeconds: number;
+  customTimeLimit: number | null;
   questionIds: string[] | null;
   answers: ExamPracticeAnswer[];
 }

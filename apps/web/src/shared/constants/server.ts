@@ -57,6 +57,8 @@ export enum ApiEndpointEnum {
   EXAM_PRACTICE_ATTEMPT_ANSWERS = '/api/exam-practice/attempts/:id/answers',
   EXAM_PRACTICE_ATTEMPT_FINISH = '/api/exam-practice/attempts/:id/finish',
   EXAM_PRACTICE_RETEST = '/api/exam-practice/attempts/:id/retest',
+  EXAM_PRACTICE_ATTEMPT_PAUSE = '/api/exam-practice/attempts/:id/pause',
+  EXAM_PRACTICE_ATTEMPT_RESUME = '/api/exam-practice/attempts/:id/resume',
 
   // Notifications
   NOTIFICATIONS = '/api/notifications',

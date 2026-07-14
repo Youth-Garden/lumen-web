@@ -15,4 +15,8 @@ export const registry: MapperRegistry = {
     attemptHistoryMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.EXAM_PRACTICE_RETEST)]:
     idResponseMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.EXAM_PRACTICE_ATTEMPT_PAUSE)]:
+    undefined,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.EXAM_PRACTICE_ATTEMPT_RESUME)]:
+    undefined,
 };

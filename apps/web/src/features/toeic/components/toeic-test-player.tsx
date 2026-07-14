@@ -13,6 +13,7 @@ import {
   useStartExamAttempt,
   useSubmitExamAnswer,
   useGetExamAttemptDetail,
+  usePauseExamAttempt,
 } from '@/features/exam-practice/hooks/use-exam-practice';
 import {
   ExamType,
@@ -67,18 +68,42 @@ export const ToeicTestPlayer = ({
     isReviewMode ? TestPlayerMode.REVIEW : TestPlayerMode.TEST,
   );
   const submitAnswerMutation = useSubmitExamAnswer(attemptId);
-  const finishAttemptMutation = useFinishExamAttempt(attemptId);
+  const finishAttemptMutation = useFinishExamAttempt(attemptId || '');
+  const pauseAttemptMutation = usePauseExamAttempt(attemptId || '');
   const { data: attemptDetail } = useGetExamAttemptDetail(attemptId || '');
 
+  // Track if we've initialized the timer from an existing attempt
+  const [timerInitialized, setTimerInitialized] = useState(false);
+
   useEffect(() => {
-    if (isReviewMode && attemptDetail) {
-      const answersRecord: Record<string, string> = {};
-      attemptDetail.answers.forEach((a) => {
-        answersRecord[a.questionId] = a.userAnswer;
-      });
-      form.reset({ answers: answersRecord });
+    if (attemptDetail && !timerInitialized && attemptId) {
+      if (isReviewMode) {
+        const answersRecord: Record<string, string> = {};
+        attemptDetail.answers.forEach((a) => {
+          answersRecord[a.questionId] = a.userAnswer;
+        });
+        form.reset({ answers: answersRecord });
+      } else {
+        // Resuming an attempt or page refresh
+        const totalSecs = attemptDetail.customTimeLimit || 120 * 60;
+        const remaining = Math.max(0, totalSecs - (attemptDetail.elapsedSeconds || 0));
+        
+        // Only auto-start if not review mode and status is IN_PROGRESS
+        if (attemptDetail.status === 'IN_PROGRESS') {
+          resetTimer(remaining);
+          startTimer();
+          
+          // Also restore answers
+          const answersRecord: Record<string, string> = {};
+          attemptDetail.answers.forEach((a) => {
+            answersRecord[a.questionId] = a.userAnswer;
+          });
+          form.reset({ answers: answersRecord });
+        }
+      }
+      setTimerInitialized(true);
     }
-  }, [isReviewMode, attemptDetail, form]);
+  }, [isReviewMode, attemptDetail, form, attemptId, timerInitialized]);
 
   const handleFinishTest = () => {
     finishAttemptMutation.mutate(undefined, {
@@ -99,13 +124,28 @@ export const ToeicTestPlayer = ({
   });
 
   const handlePauseToggle = () => {
-    if (isTimerActive) pauseTimer();
-    else startTimer();
+    if (window.confirm(t('confirmPause') || 'Do you want to save and pause this test?')) {
+      const totalSecs = attemptDetail?.customTimeLimit || 120 * 60;
+      const elapsed = totalSecs - timeRemaining;
+      
+      pauseAttemptMutation.mutate(elapsed, {
+        onSuccess: () => {
+          router.push(RouteEnum.TOEIC);
+        }
+      });
+    }
   };
 
   const handleExit = () => {
-    if (window.confirm(t('confirmExit') || 'Are you sure you want to exit?')) {
-      router.push(RouteEnum.TOEIC);
+    if (window.confirm(t('confirmExit') || 'Are you sure you want to exit? Your progress will be paused.')) {
+      const totalSecs = attemptDetail?.customTimeLimit || 120 * 60;
+      const elapsed = totalSecs - timeRemaining;
+      
+      pauseAttemptMutation.mutate(elapsed, {
+        onSuccess: () => {
+          router.push(RouteEnum.TOEIC);
+        }
+      });
     }
   };
 

@@ -88,3 +88,38 @@ export const useStartRetest = () => {
     },
   });
 };
+
+export const usePauseExamAttempt = (attemptId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (elapsedSeconds: number) =>
+      examPracticeService.pauseAttempt(attemptId, elapsedSeconds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: examPracticeKeys.attemptDetail(attemptId),
+      });
+      queryClient.invalidateQueries({ queryKey: examPracticeKeys.attempts() });
+    },
+    onError: () => {
+      toast.error('Failed to pause attempt.');
+    },
+  });
+};
+
+export const useResumeExamAttempt = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (attemptId: string) => examPracticeService.resumeAttempt(attemptId),
+    onSuccess: (_, attemptId) => {
+      queryClient.invalidateQueries({
+        queryKey: examPracticeKeys.attemptDetail(attemptId),
+      });
+      queryClient.invalidateQueries({ queryKey: examPracticeKeys.attempts() });
+    },
+    onError: () => {
+      toast.error('Failed to resume attempt.');
+    },
+  });
+};
