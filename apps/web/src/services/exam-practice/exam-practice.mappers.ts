@@ -19,13 +19,15 @@ export const examAttemptDetailMapper = (
   readingScore: Number(raw?.readingScore ?? 0),
   totalScore: Number(raw?.totalScore ?? 0),
   startedAt: String(raw?.startedAt ?? ''),
-  completedAt: raw?.completedAt ? String(raw.completedAt) : null,
+  completedAt: raw?.completedAt ? String(raw.completedAt) : undefined,
   mode: (raw?.mode as ExamAttemptMode) ?? ExamAttemptMode.FULL,
   elapsedSeconds: Number(raw?.elapsedSeconds ?? 0),
-  customTimeLimit: raw?.customTimeLimit ? Number(raw.customTimeLimit) : null,
+  customTimeLimit: raw?.customTimeLimit
+    ? Number(raw.customTimeLimit)
+    : undefined,
   questionIds: Array.isArray(raw?.questionIds)
     ? (raw!.questionIds as string[])
-    : null,
+    : undefined,
   answers: Array.isArray(raw?.answers)
     ? (raw.answers as Record<string, unknown>[]).map((ans) => ({
         questionId: String(ans?.questionId ?? ''),

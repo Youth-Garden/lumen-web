@@ -111,7 +111,8 @@ export const useResumeExamAttempt = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (attemptId: string) => examPracticeService.resumeAttempt(attemptId),
+    mutationFn: (attemptId: string) =>
+      examPracticeService.resumeAttempt(attemptId),
     onSuccess: (_, attemptId) => {
       queryClient.invalidateQueries({
         queryKey: examPracticeKeys.attemptDetail(attemptId),

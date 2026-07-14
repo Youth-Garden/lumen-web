@@ -10,6 +10,8 @@ import { ToeicQuestionDto } from '@/services/toeic';
 import { renderMarkdownToHtml } from '@lumen/utils';
 import { useTextSelection } from '@lumen/hooks';
 import { createPortal } from 'react-dom';
+import { usePortal } from '@lumen/uikit/portal';
+import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
 
 export interface ToeicQuestionGroupRendererProps {
   questions: ToeicQuestionDto[];
@@ -46,6 +48,8 @@ export const ToeicQuestionGroupRenderer = ({
 
   const { text: selectedText, rect: selectionRect } = useTextSelection();
   const [mounted, setMounted] = useState(false);
+
+  const [presentAddFlashcard] = usePortal(AddFlashcardDialog);
 
   useEffect(() => {
     setMounted(true);
@@ -211,7 +215,7 @@ export const ToeicQuestionGroupRenderer = ({
       >
         <Button
           size="sm"
-          className="shadow-xl shadow-primary/20 rounded-full"
+          className="shadow-xl shadow-primary/20 rounded-full mr-2"
           onClick={() => {
             onTakeNote(selectedText);
             window.getSelection()?.removeAllRanges();
@@ -219,6 +223,18 @@ export const ToeicQuestionGroupRenderer = ({
         >
           <Icons name="edit" className="w-3.5 h-3.5 mr-1.5" />
           Note
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          className="shadow-xl rounded-full"
+          onClick={() => {
+            presentAddFlashcard({ wordId: '', term: selectedText });
+            window.getSelection()?.removeAllRanges();
+          }}
+        >
+          <Icons name="plus" className="w-3.5 h-3.5 mr-1.5" />
+          Save to Deck
         </Button>
       </div>,
       document.body,
@@ -328,6 +344,7 @@ export const ToeicQuestionGroupRenderer = ({
                 {isReviewMode &&
                   (question.explanation ||
                     question.transcript ||
+                    question.translation ||
                     (question.mediaUrls && question.mediaUrls.length > 0)) && (
                     <div className="mt-4 p-4 rounded-xl bg-muted/50 text-sm space-y-3">
                       {question.transcript && (
@@ -350,6 +367,21 @@ export const ToeicQuestionGroupRenderer = ({
                             dangerouslySetInnerHTML={{
                               __html: renderMarkdownToHtml(
                                 question.explanation,
+                              ),
+                            }}
+                          />
+                        </div>
+                      )}
+                      {question.translation && (
+                        <div className="mt-2 pt-2 border-t">
+                          <span className="font-semibold text-primary">
+                            {t('translation')}:
+                          </span>
+                          <div
+                            className="mt-1 text-muted-foreground leading-relaxed prose dark:prose-invert max-w-none text-sm"
+                            dangerouslySetInnerHTML={{
+                              __html: renderMarkdownToHtml(
+                                question.translation,
                               ),
                             }}
                           />

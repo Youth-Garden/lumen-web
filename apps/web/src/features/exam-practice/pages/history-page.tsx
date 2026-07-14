@@ -20,7 +20,11 @@ import { format } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useMyAttempts, useStartRetest, useResumeExamAttempt } from '../hooks/use-exam-practice';
+import {
+  useMyAttempts,
+  useStartRetest,
+  useResumeExamAttempt,
+} from '../hooks/use-exam-practice';
 
 export const HistoryPage = () => {
   const t = useTranslations('ExamPractice');
@@ -54,16 +58,13 @@ export const HistoryPage = () => {
   };
 
   const handleResume = (attemptId: string, testId: string) => {
-    resumeAttemptMutation.mutate(
-      attemptId,
-      {
-        onSuccess: () => {
-          router.push(
-            formatUrl(RouteEnum.TOEIC_TEST, { id: testId }, { attemptId }),
-          );
-        },
-      }
-    );
+    resumeAttemptMutation.mutate(attemptId, {
+      onSuccess: () => {
+        router.push(
+          formatUrl(RouteEnum.TOEIC_TEST, { id: testId }, { attemptId }),
+        );
+      },
+    });
   };
 
   return (

@@ -2,22 +2,23 @@
 
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { usePortal } from '@lumen/uikit/portal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
   useFinishExamAttempt,
-  useStartExamAttempt,
-  useSubmitExamAnswer,
   useGetExamAttemptDetail,
   usePauseExamAttempt,
+  useStartExamAttempt,
+  useSubmitExamAnswer,
 } from '@/features/exam-practice/hooks/use-exam-practice';
 import {
-  ExamType,
   ExamAttemptMode,
+  ExamType,
   TestPlayerMode,
 } from '@/services/exam-practice/exam-practice.types';
 import { ToeicQuestionDto } from '@/services/toeic';
@@ -26,11 +27,15 @@ import { useCountdown } from '@lumen/hooks';
 import { RouteEnum } from '@/shared/constants';
 import { useGetToeicTestById } from '../hooks/use-toeic';
 import { ToeicResultDashboard } from './analytics/toeic-result-dashboard';
+import { ToeicNotePanel } from './player/toeic-note-panel';
 import { ToeicQuestionGroupRenderer } from './player/toeic-question-group-renderer';
 import { ToeicTestHeader } from './player/toeic-test-header';
 import { ToeicTestSidebar } from './player/toeic-test-sidebar';
+import {
+  ConfirmDialogActionEnum,
+  ToeicTestConfirmDialog,
+} from './toeic-test-confirm-dialog';
 import { ToeicTestIntro } from './toeic-test-intro';
-import { ToeicNotePanel } from './player/toeic-note-panel';
 
 interface ToeicTestPlayerProps {
   testId: string;
@@ -72,39 +77,6 @@ export const ToeicTestPlayer = ({
   const pauseAttemptMutation = usePauseExamAttempt(attemptId || '');
   const { data: attemptDetail } = useGetExamAttemptDetail(attemptId || '');
 
-  // Track if we've initialized the timer from an existing attempt
-  const [timerInitialized, setTimerInitialized] = useState(false);
-
-  useEffect(() => {
-    if (attemptDetail && !timerInitialized && attemptId) {
-      if (isReviewMode) {
-        const answersRecord: Record<string, string> = {};
-        attemptDetail.answers.forEach((a) => {
-          answersRecord[a.questionId] = a.userAnswer;
-        });
-        form.reset({ answers: answersRecord });
-      } else {
-        // Resuming an attempt or page refresh
-        const totalSecs = attemptDetail.customTimeLimit || 120 * 60;
-        const remaining = Math.max(0, totalSecs - (attemptDetail.elapsedSeconds || 0));
-        
-        // Only auto-start if not review mode and status is IN_PROGRESS
-        if (attemptDetail.status === 'IN_PROGRESS') {
-          resetTimer(remaining);
-          startTimer();
-          
-          // Also restore answers
-          const answersRecord: Record<string, string> = {};
-          attemptDetail.answers.forEach((a) => {
-            answersRecord[a.questionId] = a.userAnswer;
-          });
-          form.reset({ answers: answersRecord });
-        }
-      }
-      setTimerInitialized(true);
-    }
-  }, [isReviewMode, attemptDetail, form, attemptId, timerInitialized]);
-
   const handleFinishTest = () => {
     finishAttemptMutation.mutate(undefined, {
       onSuccess: () => setMode(TestPlayerMode.RESULT),
@@ -123,30 +95,69 @@ export const ToeicTestPlayer = ({
     onComplete: handleFinishTest,
   });
 
-  const handlePauseToggle = () => {
-    if (window.confirm(t('confirmPause') || 'Do you want to save and pause this test?')) {
-      const totalSecs = attemptDetail?.customTimeLimit || 120 * 60;
-      const elapsed = totalSecs - timeRemaining;
-      
-      pauseAttemptMutation.mutate(elapsed, {
-        onSuccess: () => {
-          router.push(RouteEnum.TOEIC);
+  // Track if we've initialized the timer from an existing attempt
+  const [timerInitialized, setTimerInitialized] = useState(false);
+
+  useEffect(() => {
+    if (attemptDetail && !timerInitialized && attemptId) {
+      if (isReviewMode) {
+        const answersRecord: Record<string, string> = {};
+        attemptDetail.answers.forEach((a) => {
+          answersRecord[a.questionId] = a.userAnswer;
+        });
+        form.reset({ answers: answersRecord });
+      } else {
+        // Resuming an attempt or page refresh
+        const totalSecs = attemptDetail.customTimeLimit ?? 120 * 60;
+        const remaining = Math.max(0, totalSecs - attemptDetail.elapsedSeconds);
+
+        // Only auto-start if not review mode and status is IN_PROGRESS
+        if (attemptDetail.status === 'IN_PROGRESS') {
+          resetTimer(remaining);
+          startTimer();
+
+          // Also restore answers
+          const answersRecord: Record<string, string> = {};
+          attemptDetail.answers.forEach((answer) => {
+            answersRecord[answer.questionId] = answer.userAnswer;
+          });
+          form.reset({ answers: answersRecord });
         }
-      });
+      }
+      setTimerInitialized(true);
     }
+  }, [
+    isReviewMode,
+    attemptDetail,
+    form,
+    attemptId,
+    timerInitialized,
+    resetTimer,
+    startTimer,
+  ]);
+
+  const [presentConfirmDialog] = usePortal(ToeicTestConfirmDialog);
+
+  const confirmAction = async () => {
+    const totalSecs = attemptDetail?.customTimeLimit ?? 120 * 60;
+    const elapsed = totalSecs - timeRemaining;
+
+    await pauseAttemptMutation.mutateAsync(elapsed);
+    router.push(RouteEnum.TOEIC);
+  };
+
+  const handlePauseToggle = () => {
+    presentConfirmDialog({
+      action: ConfirmDialogActionEnum.PAUSE,
+      onConfirm: confirmAction,
+    });
   };
 
   const handleExit = () => {
-    if (window.confirm(t('confirmExit') || 'Are you sure you want to exit? Your progress will be paused.')) {
-      const totalSecs = attemptDetail?.customTimeLimit || 120 * 60;
-      const elapsed = totalSecs - timeRemaining;
-      
-      pauseAttemptMutation.mutate(elapsed, {
-        onSuccess: () => {
-          router.push(RouteEnum.TOEIC);
-        }
-      });
-    }
+    presentConfirmDialog({
+      action: ConfirmDialogActionEnum.EXIT,
+      onConfirm: confirmAction,
+    });
   };
 
   if (isLoading) {
@@ -207,11 +218,11 @@ export const ToeicTestPlayer = ({
   }
 
   const displayQuestions =
-    test?.questions &&
-    attemptDetail?.mode === ExamAttemptMode.RETEST &&
-    attemptDetail.questionIds
-      ? test.questions.filter((q) => attemptDetail.questionIds!.includes(q.id))
-      : test?.questions || [];
+    attemptDetail?.mode === ExamAttemptMode.RETEST && attemptDetail.questionIds
+      ? test.questions.filter((question) =>
+          attemptDetail.questionIds!.includes(question.id),
+        )
+      : (test?.questions ?? []);
 
   // Test Completed Screen
   if (mode === TestPlayerMode.RESULT) {
@@ -237,27 +248,31 @@ export const ToeicTestPlayer = ({
       transcript?: string;
     } | null = null;
 
-    displayQuestions.forEach((q) => {
-      const hasContext = !!(q.audioUrl || q.imageUrl || q.transcript);
+    displayQuestions.forEach((question) => {
+      const hasContext = !!(
+        question.audioUrl ||
+        question.imageUrl ||
+        question.transcript
+      );
       const isSameContext =
         hasContext &&
         lastContext &&
-        q.audioUrl === lastContext.audioUrl &&
-        q.imageUrl === lastContext.imageUrl &&
-        q.transcript === lastContext.transcript;
+        question.audioUrl === lastContext.audioUrl &&
+        question.imageUrl === lastContext.imageUrl &&
+        question.transcript === lastContext.transcript;
 
       if (isSameContext) {
-        currentGroup.push(q);
+        currentGroup.push(question);
       } else {
         if (currentGroup.length > 0) {
           groups.push(currentGroup);
         }
-        currentGroup = [q];
+        currentGroup = [question];
         lastContext = hasContext
           ? {
-              audioUrl: q.audioUrl,
-              imageUrl: q.imageUrl,
-              transcript: q.transcript,
+              audioUrl: question.audioUrl,
+              imageUrl: question.imageUrl,
+              transcript: question.transcript,
             }
           : null;
       }
@@ -267,7 +282,7 @@ export const ToeicTestPlayer = ({
     }
   }
 
-  const currentGroup = groups[currentQuestionIndex] || [];
+  const currentGroup = groups[currentQuestionIndex] ?? [];
   const totalGroups = groups.length;
   const currentAnswers = form.watch('answers');
 
@@ -408,8 +423,10 @@ export const ToeicTestPlayer = ({
             answers={currentAnswers}
             flaggedQuestions={flaggedQuestions}
             isReviewMode={mode === TestPlayerMode.REVIEW}
-            currentQuestionIndices={currentGroup.map((q) =>
-              displayQuestions.findIndex((tq) => tq.id === q.id),
+            currentQuestionIndices={currentGroup.map((questionInGroup) =>
+              displayQuestions.findIndex(
+                (targetQuestion) => targetQuestion.id === questionInGroup.id,
+              ),
             )}
             onNavigate={handleNavigateQuestion}
           />

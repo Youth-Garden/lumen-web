@@ -27,6 +27,7 @@
 ## UI & Architecture Convention
 
 - **Internationalization (i18n)**: NEVER hardcode UI text strings in JSX. All text must be extracted to `en.json` and `vi.json` files and accessed via `useTranslations()` from `next-intl`.
+- **Translation Keys**: All keys in JSON translation files (`en.json`, `vi.json`) MUST strictly use `camelCase`. Do NOT use `PascalCase`, `snake_case`, or `SCREAMING_SNAKE_CASE` (e.g., use `listeningDetail` instead of `LISTENING_DETAIL`). When rendering Enum values via i18n, map the enum value to a `camelCase` key.
 - **i18n Fallbacks**: DO NOT use the `fallback` parameter in `useTranslations` or `t()` for static JSON strings (e.g., `t('key', { fallback: 'Text' })`). `fallback` is unnecessary for standard i18n keys and causes clutter. Always define the key in the JSON files directly.
 - **Portal & Floating UI**: When creating Modals, Dialogs, or Popovers that appear over the main layout, utilize `@lumen/uikit/portal` (`usePortal` or `usePortalWithoutBackdrop`). Do not mount global overlays deeply inside the DOM tree.
 - **Pages Directory and `app/` Routing (Strict)**:

@@ -26,7 +26,9 @@ export const NotificationDropdown = () => {
   const { mutate: markAsRead } = useMarkAsRead();
   const { mutate: markAllAsRead, isPending: isMarkingAll } = useMarkAllAsRead();
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const unreadCount = notifications.filter(
+    (notification) => !notification.isRead,
+  ).length;
 
   const handleMarkAsRead = (id: string, isRead: boolean) => {
     if (!isRead) {
@@ -37,9 +39,12 @@ export const NotificationDropdown = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="relative outline-none focus-visible:ring-2 focus-visible:ring-primary inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-10 w-10">
-        <Icons name="bell" className="h-5 w-5 text-muted-foreground" />
+        <Icons
+          name="bell"
+          className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-foreground"
+        />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">
+          <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground ring-2 ring-background">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -62,8 +67,16 @@ export const NotificationDropdown = () => {
         <ScrollArea className="h-80">
           {notifications.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center p-8 text-center text-muted-foreground">
-              <Icons name="bell" className="mb-2 h-8 w-8 opacity-20" />
-              <p className="text-sm">{t('noNotifications')}</p>
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/50 mb-3">
+                <Icons
+                  name="bell"
+                  className="h-6 w-6 text-muted-foreground/50 opacity-50"
+                />
+              </div>
+              <p className="text-sm font-medium">{t('noNotifications')}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                You&apos;re all caught up!
+              </p>
             </div>
           ) : (
             <div className="flex flex-col">
@@ -78,9 +91,9 @@ export const NotificationDropdown = () => {
                     // Add routing logic here if notifications start having actionUrls
                   }}
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start justify-between gap-3">
                     <span
-                      className={`text-sm font-medium ${
+                      className={`text-sm font-medium leading-tight ${
                         !notification.isRead
                           ? 'text-foreground'
                           : 'text-muted-foreground'
@@ -89,13 +102,13 @@ export const NotificationDropdown = () => {
                       {notification.title}
                     </span>
                     {!notification.isRead && (
-                      <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
+                      <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.6)]" />
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                     {notification.description}
                   </p>
-                  <span className="text-[10px] text-muted-foreground/80 mt-1">
+                  <span className="text-[10px] font-medium text-muted-foreground/60 mt-1 uppercase tracking-wider">
                     {formatDistanceToNow(new Date(notification.createdAt), {
                       addSuffix: true,
                     })}

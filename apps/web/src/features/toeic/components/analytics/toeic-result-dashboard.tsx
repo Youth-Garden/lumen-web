@@ -48,6 +48,19 @@ export const ToeicResultDashboard = ({
     },
   );
 
+  const topicData = Object.keys(scoreResult.topicScores).map((topic) => {
+    const camelCaseTopic = topic
+      .toLowerCase()
+      .replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+
+    return {
+      topic: t(`topics.${camelCaseTopic}` as any),
+      percentage: scoreResult.topicScores[topic].percentage,
+      correct: scoreResult.topicScores[topic].correct,
+      total: scoreResult.topicScores[topic].total,
+    };
+  });
+
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8">
       <motion.div
@@ -124,6 +137,41 @@ export const ToeicResultDashboard = ({
           </div>
         </motion.div>
       </div>
+
+      {topicData.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="mt-8 bg-card border rounded-2xl shadow-sm p-6"
+        >
+          <h3 className="font-semibold text-lg mb-4">
+            {t('performanceByTopic')}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topicData.map((stat, idx) => (
+              <div key={idx} className="space-y-2">
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-foreground capitalize">
+                    {stat.topic.toLowerCase()}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {stat.correct} / {stat.total}
+                  </span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${stat.percentage}%` }}
+                    transition={{ duration: 1, delay: 0.8 + idx * 0.1 }}
+                    className="h-full bg-indigo-500"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

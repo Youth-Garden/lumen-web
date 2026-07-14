@@ -276,7 +276,15 @@
     "accuracy": "Độ chính xác",
     "detailedBreakdown": "Chi tiết từng phần",
     "part": "Phần",
-    "returnToDashboard": "Trở về bảng điều khiển"
+    "returnToDashboard": "Trở về bảng điều khiển",
+    "performanceByTopic": "Hiệu suất theo chuyên đề",
+    "topics": {
+      "grammar": "Ngữ pháp",
+      "vocabulary": "Từ vựng",
+      "comprehension": "Đọc hiểu",
+      "listeningDetail": "Nghe lấy chi tiết",
+      "listeningInference": "Nghe suy luận"
+    }
   },
   "ToeicTestPlayer": {
     "startTest": "Bắt đầu làm bài",
@@ -308,7 +316,8 @@
     "reviewMode": "Xem lại đáp án",
     "retryTest": "Làm lại bài thi",
     "transcript": "Bản ghi âm",
-    "explanation": "Giải thích"
+    "explanation": "Giải thích",
+    "translation": "Dịch nghĩa"
   },
   "ExamPractice": {
     "startFailed": "Lỗi khi bắt đầu bài thi. Vui lòng thử lại.",

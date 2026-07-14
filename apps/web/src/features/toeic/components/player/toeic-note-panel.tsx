@@ -23,7 +23,7 @@ export const ToeicNotePanel = ({
   const saveNoteMutation = useSaveToeicNote();
 
   // Find if there is an existing note for this question
-  const currentNote = notes.find((n) => n.questionId === questionId);
+  const currentNote = notes.find((note) => note.questionId === questionId);
 
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('REMINDER');
@@ -216,19 +216,19 @@ export const ToeicNotePanel = ({
             </h4>
             <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
               {notes
-                .filter((n) => n.questionId !== questionId)
-                .map((n) => (
+                .filter((note) => note.questionId !== questionId)
+                .map((note) => (
                   <div
-                    key={n.id}
+                    key={note.id}
                     className="p-2.5 rounded-lg border bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-800 text-xs space-y-1"
                   >
                     <div className="flex justify-between items-center text-muted-foreground">
                       <span className="font-semibold text-[10px] text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 px-1.5 py-0.5 rounded dark:text-indigo-400">
-                        {n.category}
+                        {note.category}
                       </span>
                     </div>
                     <p className="line-clamp-2 text-foreground/80 leading-normal">
-                      {n.content}
+                      {note.content}
                     </p>
                   </div>
                 ))}

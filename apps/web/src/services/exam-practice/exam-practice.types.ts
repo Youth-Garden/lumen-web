@@ -56,11 +56,11 @@ export interface ExamAttemptDetailResponse {
   readingScore: number;
   totalScore: number;
   startedAt: string;
-  completedAt: string | null;
+  completedAt?: string;
   mode: ExamAttemptMode;
   elapsedSeconds: number;
-  customTimeLimit: number | null;
-  questionIds: string[] | null;
+  customTimeLimit?: number;
+  questionIds?: string[];
   answers: ExamPracticeAnswer[];
 }
 

@@ -10,6 +10,13 @@ export interface ToeicQuestionDto {
   options?: string[];
   correctAnswer: string;
   explanation?: string;
+  translation?: string;
+  topic?:
+    | 'GRAMMAR'
+    | 'VOCABULARY'
+    | 'COMPREHENSION'
+    | 'LISTENING_DETAIL'
+    | 'LISTENING_INFERENCE';
   mediaUrls?: string[];
 }
 

@@ -10,6 +10,10 @@ export interface ToeicScoreResult {
     number,
     { correct: number; total: number; percentage: number }
   >;
+  topicScores: Record<
+    string,
+    { correct: number; total: number; percentage: number }
+  >;
 }
 
 const LISTENING_SCORE_MAPPING = [
@@ -33,9 +37,10 @@ const READING_SCORE_MAPPING = [
 ];
 
 /**
- * Tính điểm TOEIC nội bộ (Frontend mock nếu Backend chưa tính).
- * (Thực tế TOEIC có bảng quy đổi điểm riêng biệt cho Reading và Listening,
- * ở đây ta tạm tính dựa trên tỷ lệ phần trăm đúng * 495 cho mỗi kỹ năng để có số liệu đẹp)
+ * Tính điểm TOEIC chính xác (Frontend mock).
+ * TOEIC có bảng quy đổi điểm riêng biệt cho Reading và Listening (max 495 mỗi phần).
+ * Đối với các đề thi rút gọn (Mini test, < 200 câu), hệ thống sẽ tự động scale
+ * tỷ lệ phần trăm đúng sang thang 100 câu trước khi map vào bảng điểm.
  */
 export const calculateToeicScore = (
   questions: ToeicQuestionDto[],
@@ -43,6 +48,11 @@ export const calculateToeicScore = (
 ): ToeicScoreResult => {
   const partScores: Record<
     number,
+    { correct: number; total: number; percentage: number }
+  > = {};
+
+  const topicScores: Record<
+    string,
     { correct: number; total: number; percentage: number }
   > = {};
 
@@ -56,10 +66,10 @@ export const calculateToeicScore = (
   let totalListening = 0;
   let totalReading = 0;
 
-  questions.forEach((q) => {
-    const part = q.part || 1;
+  questions.forEach((question) => {
+    const part = question.part || 1;
     const isListening = part <= 4;
-    const isCorrect = userAnswers[q.id] === q.correctAnswer;
+    const isCorrect = userAnswers[question.id] === question.correctAnswer;
 
     // Safety check in case part is somehow out of 1-7 bounds
     if (partScores[part]) {
@@ -76,6 +86,17 @@ export const calculateToeicScore = (
       totalReading += 1;
       if (isCorrect) readingCorrect += 1;
     }
+
+    // Topic calculation
+    if (question.topic) {
+      if (!topicScores[question.topic]) {
+        topicScores[question.topic] = { correct: 0, total: 0, percentage: 0 };
+      }
+      topicScores[question.topic].total += 1;
+      if (isCorrect) {
+        topicScores[question.topic].correct += 1;
+      }
+    }
   });
 
   // Calculate percentages
@@ -87,11 +108,27 @@ export const calculateToeicScore = (
     }
   }
 
+  // Calculate percentages for topics
+  Object.values(topicScores).forEach((stats) => {
+    if (stats.total > 0) {
+      stats.percentage = Math.round((stats.correct / stats.total) * 100);
+    }
+  });
+
+  // Chuẩn hóa số câu đúng về thang 100 nếu đề thi không đủ 200 câu
+  const normalizedListeningCorrect =
+    totalListening > 0
+      ? Math.round((listeningCorrect / totalListening) * 100)
+      : 0;
+
+  const normalizedReadingCorrect =
+    totalReading > 0 ? Math.round((readingCorrect / totalReading) * 100) : 0;
+
   // Sử dụng bảng quy đổi chuẩn TOEIC
   const listeningScore =
-    LISTENING_SCORE_MAPPING[Math.min(100, listeningCorrect)] || 0;
+    LISTENING_SCORE_MAPPING[Math.min(100, normalizedListeningCorrect)] || 0;
   const readingScore =
-    READING_SCORE_MAPPING[Math.min(100, readingCorrect)] || 0;
+    READING_SCORE_MAPPING[Math.min(100, normalizedReadingCorrect)] || 0;
 
   return {
     totalScore: listeningScore + readingScore,
@@ -100,5 +137,6 @@ export const calculateToeicScore = (
     correctAnswersCount: listeningCorrect + readingCorrect,
     totalQuestions: questions.length,
     partScores,
+    topicScores,
   };
 };

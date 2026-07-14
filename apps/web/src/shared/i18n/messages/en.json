@@ -276,7 +276,15 @@
     "accuracy": "Accuracy",
     "detailedBreakdown": "Detailed Breakdown",
     "part": "Part",
-    "returnToDashboard": "Return to Dashboard"
+    "returnToDashboard": "Return to Dashboard",
+    "performanceByTopic": "Performance by Topic",
+    "topics": {
+      "grammar": "Grammar",
+      "vocabulary": "Vocabulary",
+      "comprehension": "Comprehension",
+      "listeningDetail": "Listening for Details",
+      "listeningInference": "Listening for Inference"
+    }
   },
   "ToeicTestPlayer": {
     "startTest": "Start Test",
@@ -297,6 +305,7 @@
     "questionNavigation": "Question Navigation",
     "transcript": "Transcript",
     "explanation": "Explanation",
+    "translation": "Translation",
     "submitTest": "Submit Test",
     "question": "Question",
     "of": "of",
