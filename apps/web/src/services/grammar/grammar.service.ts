@@ -23,12 +23,18 @@ export class GrammarService extends CoreService {
   }
 
   getTopicById(id: string): Promise<BaseResponse<GrammarTopicDto>> {
-    return this._get<GrammarTopicDto>(ApiEndpointEnum.GRAMMAR_TOPIC_DETAIL, undefined, {
-      pathParams: { id },
-    });
+    return this._get<GrammarTopicDto>(
+      ApiEndpointEnum.GRAMMAR_TOPIC_DETAIL,
+      undefined,
+      {
+        pathParams: { id },
+      },
+    );
   }
 
-  getLessonExercises(lessonId: string): Promise<BaseResponse<GrammarExerciseDto[]>> {
+  getLessonExercises(
+    lessonId: string,
+  ): Promise<BaseResponse<GrammarExerciseDto[]>> {
     return this._get<GrammarExerciseDto[]>(
       ApiEndpointEnum.GRAMMAR_LESSON_EXERCISES,
       undefined,

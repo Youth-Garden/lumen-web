@@ -59,7 +59,14 @@ export interface DueFlashcard {
   repetitions: number;
 }
 
+export enum FlashcardRating {
+  AGAIN = 1,
+  HARD = 2,
+  GOOD = 3,
+  EASY = 4,
+}
+
 export interface ReviewFlashcardPayload {
   flashcardId: string;
-  grade: number; // 0 to 5
+  quality: FlashcardRating;
 }

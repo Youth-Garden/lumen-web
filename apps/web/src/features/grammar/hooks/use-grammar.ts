@@ -28,7 +28,8 @@ export const useGrammarTopicDetail = (id: string) => {
 export const useLessonExercises = (lessonId: string) => {
   return useQuery({
     queryKey: grammarKeys.lessonExercises(lessonId),
-    queryFn: () => grammarService.getLessonExercises(lessonId).then((res) => res.data),
+    queryFn: () =>
+      grammarService.getLessonExercises(lessonId).then((res) => res.data),
     enabled: !!lessonId,
   });
 };

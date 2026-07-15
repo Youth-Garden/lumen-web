@@ -2,6 +2,7 @@
 
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
 import { DueFlashcard } from '@/services/vocabulary';
+import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
 import { AudioButton } from '@/shared/components/audio-button';
 import { useKeydownEventListener } from '@/shared/hooks/use-keydown-event-listener';
 import { playAudio } from '@/shared/utils/audio';
@@ -11,6 +12,7 @@ import { usePortal } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { KeyboardShortcutsDialog } from './keyboard-shortcuts-dialog';
 
 export enum FlashcardShortcutKey {
@@ -25,7 +27,7 @@ export enum FlashcardShortcutKey {
 
 interface FlashcardReviewProps {
   flashcard: DueFlashcard;
-  onGrade: (grade: number) => void;
+  onGrade: (grade: FlashcardRating) => void;
   isSubmitting?: boolean;
 }
 
@@ -58,7 +60,7 @@ export function FlashcardReview({
   }, [isFlipped, word?.audioUrl]);
 
   const handleGrade = useCallback(
-    (grade: number) => {
+    (grade: FlashcardRating) => {
       onGrade(grade);
       // Reset flip state after a slight delay to allow transition, or let parent unmount it
       setTimeout(() => setIsFlipped(false), 200);
@@ -89,19 +91,19 @@ export function FlashcardReview({
         switch (event.key) {
           case FlashcardShortcutKey.GradeAgain:
             event.preventDefault();
-            handleGrade(0);
+            handleGrade(FlashcardRating.AGAIN);
             break;
           case FlashcardShortcutKey.GradeHard:
             event.preventDefault();
-            handleGrade(3);
+            handleGrade(FlashcardRating.HARD);
             break;
           case FlashcardShortcutKey.GradeGood:
             event.preventDefault();
-            handleGrade(4);
+            handleGrade(FlashcardRating.GOOD);
             break;
           case FlashcardShortcutKey.GradeEasy:
             event.preventDefault();
-            handleGrade(5);
+            handleGrade(FlashcardRating.EASY);
             break;
         }
       }
@@ -137,14 +139,22 @@ export function FlashcardReview({
         className="w-full cursor-pointer perspective-[2000px]"
         onClick={handleFlip}
       >
-        <div
-          className={cn(
-            'relative w-full grid transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-3d',
-            isFlipped ? 'transform-[rotateY(180deg)]' : '',
-          )}
+        <motion.div
+          className="relative w-full min-h-[500px]"
+          animate={{ rotateY: isFlipped ? 180 : 0 }}
+          transition={{
+            duration: 0.6,
+            type: 'spring',
+            stiffness: 260,
+            damping: 20,
+          }}
+          style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Front Face */}
-          <Card className="[grid-area:1/1/2/2] w-full min-h-[500px] border-2 border-border hover:border-primary/50 hover:shadow-lg backface-hidden">
+          <Card
+            className="absolute inset-0 w-full min-h-[500px] border-2 border-border hover:border-primary/50 hover:shadow-lg"
+            style={{ backfaceVisibility: 'hidden' }}
+          >
             <CardContent className="flex flex-col items-center justify-center min-h-[500px] h-full p-12 text-center relative">
               <h2 className="text-[clamp(3rem,8vw,6rem)] font-black tracking-tighter leading-none mb-6 text-foreground">
                 {flashcard.term}
@@ -159,7 +169,13 @@ export function FlashcardReview({
           </Card>
 
           {/* Back Face */}
-          <Card className="[grid-area:1/1/2/2] w-full min-h-[500px] border-2 border-primary shadow-xl backface-hidden transform-[rotateY(180deg)]">
+          <Card
+            className="absolute inset-0 w-full min-h-[500px] border-2 border-primary shadow-xl"
+            style={{
+              backfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)',
+            }}
+          >
             <CardContent className="flex flex-col items-center min-h-[500px] h-full p-12 text-center relative">
               <div className="flex flex-col items-center w-full">
                 {isLoading ? (
@@ -219,66 +235,69 @@ export function FlashcardReview({
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </div>
 
-      <div
-        className={cn(
-          'flex flex-col sm:flex-row justify-center gap-4 w-full transition-all duration-500 ease-out',
-          isFlipped
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 translate-y-8 pointer-events-none',
+      <AnimatePresence>
+        {isFlipped && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col sm:flex-row justify-center gap-4 w-full"
+          >
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 h-16 text-lg font-bold border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-none flex flex-col gap-1"
+              onClick={() => handleGrade(FlashcardRating.AGAIN)}
+              disabled={isSubmitting}
+            >
+              <span>{t('gradeAgain')}</span>
+              <span className="text-xs font-normal opacity-70">
+                {t('pressKey', { key: '1' })}
+              </span>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 h-16 text-lg font-bold border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-none flex flex-col gap-1"
+              onClick={() => handleGrade(FlashcardRating.HARD)}
+              disabled={isSubmitting}
+            >
+              <span>{t('gradeHard')}</span>
+              <span className="text-xs font-normal opacity-70">
+                {t('pressKey', { key: '2' })}
+              </span>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 h-16 text-lg font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none flex flex-col gap-1"
+              onClick={() => handleGrade(FlashcardRating.GOOD)}
+              disabled={isSubmitting}
+            >
+              <span>{t('gradeGood')}</span>
+              <span className="text-xs font-normal opacity-70">
+                {t('pressKey', { key: '3' })}
+              </span>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 h-16 text-lg font-bold border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground rounded-none flex flex-col gap-1"
+              onClick={() => handleGrade(FlashcardRating.EASY)}
+              disabled={isSubmitting}
+            >
+              <span>{t('gradeEasy')}</span>
+              <span className="text-xs font-normal opacity-70">
+                {t('pressKey', { key: '4' })}
+              </span>
+            </Button>
+          </motion.div>
         )}
-      >
-        <Button
-          variant="outline"
-          size="lg"
-          className="flex-1 h-16 text-lg font-bold border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-none flex flex-col gap-1"
-          onClick={() => handleGrade(0)}
-          disabled={isSubmitting}
-        >
-          <span>{t('gradeAgain')}</span>
-          <span className="text-xs font-normal opacity-70">
-            {t('pressKey', { key: '1' })}
-          </span>
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="flex-1 h-16 text-lg font-bold border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-none flex flex-col gap-1"
-          onClick={() => handleGrade(3)}
-          disabled={isSubmitting}
-        >
-          <span>{t('gradeHard')}</span>
-          <span className="text-xs font-normal opacity-70">
-            {t('pressKey', { key: '2' })}
-          </span>
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="flex-1 h-16 text-lg font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none flex flex-col gap-1"
-          onClick={() => handleGrade(4)}
-          disabled={isSubmitting}
-        >
-          <span>{t('gradeGood')}</span>
-          <span className="text-xs font-normal opacity-70">
-            {t('pressKey', { key: '3' })}
-          </span>
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="flex-1 h-16 text-lg font-bold border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground rounded-none flex flex-col gap-1"
-          onClick={() => handleGrade(5)}
-          disabled={isSubmitting}
-        >
-          <span>{t('gradeEasy')}</span>
-          <span className="text-xs font-normal opacity-70">
-            {t('pressKey', { key: '4' })}
-          </span>
-        </Button>
-      </div>
+      </AnimatePresence>
     </div>
   );
 }

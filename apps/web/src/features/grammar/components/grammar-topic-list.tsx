@@ -27,7 +27,8 @@ interface TopicCardProps {
 
 const TopicCard = ({ topic, index }: TopicCardProps) => {
   const t = useTranslations('Grammar');
-  const cefrColor = CEFR_COLORS[topic.cefrLevel] ?? 'bg-secondary text-secondary-foreground';
+  const cefrColor =
+    CEFR_COLORS[topic.cefrLevel] ?? 'bg-secondary text-secondary-foreground';
   const lessonCount = topic.lessons?.length ?? 0;
 
   return (
@@ -39,7 +40,9 @@ const TopicCard = ({ topic, index }: TopicCardProps) => {
       <Link href={formatUrl(RouteEnum.GRAMMAR_TOPIC, { id: topic.id })}>
         <div className="group bg-card border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200 cursor-pointer h-full">
           <div className="flex items-start justify-between mb-3">
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${cefrColor}`}>
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${cefrColor}`}
+            >
               {topic.cefrLevel}
             </span>
             {lessonCount > 0 && (
@@ -51,10 +54,15 @@ const TopicCard = ({ topic, index }: TopicCardProps) => {
           <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
             {topic.title}
           </h3>
-          <p className="text-sm text-muted-foreground line-clamp-3">{topic.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-3">
+            {topic.description}
+          </p>
           <div className="mt-4 flex items-center gap-1 text-primary text-sm font-medium">
             <span>{t('startLesson')}</span>
-            <Icons name="chevron-right" className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <Icons
+              name="chevron-right"
+              className="h-4 w-4 group-hover:translate-x-1 transition-transform"
+            />
           </div>
         </div>
       </Link>
@@ -78,7 +86,10 @@ export const GrammarTopicList = () => {
     <div>
       {/* Search */}
       <div className="relative mb-6">
-        <Icons name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Icons
+          name="search"
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+        />
         <input
           type="text"
           placeholder={t('searchPlaceholder')}
@@ -90,7 +101,10 @@ export const GrammarTopicList = () => {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Icons name="loader-2" className="h-8 w-8 animate-spin text-primary" />
+          <Icons
+            name="loader-2"
+            className="h-8 w-8 animate-spin text-primary"
+          />
         </div>
       ) : topics.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">

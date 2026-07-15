@@ -17,7 +17,7 @@ export const GrammarTopicDetail = ({ topic }: GrammarTopicDetailProps) => {
   const t = useTranslations('Grammar');
   const lessons = topic.lessons ?? [];
   const [activeLessonId, setActiveLessonId] = useState<string | null>(
-    lessons.length > 0 ? lessons[0].id : null
+    lessons.length > 0 ? lessons[0].id : null,
   );
 
   const activeLesson = lessons.find((l) => l.id === activeLessonId);
@@ -34,7 +34,7 @@ export const GrammarTopicDetail = ({ topic }: GrammarTopicDetailProps) => {
             </h3>
             <p className="text-sm text-muted-foreground mt-1">{topic.title}</p>
           </div>
-          
+
           <div className="p-2 space-y-1">
             {lessons.length === 0 ? (
               <div className="p-4 text-sm text-muted-foreground text-center">
@@ -49,15 +49,19 @@ export const GrammarTopicDetail = ({ topic }: GrammarTopicDetailProps) => {
                     onClick={() => setActiveLessonId(lesson.id)}
                     className={cn(
                       'w-full flex items-center gap-3 text-left p-3 rounded-xl transition-all duration-200 text-sm font-medium',
-                      isActive 
-                        ? 'bg-primary/10 text-primary' 
-                        : 'hover:bg-muted text-foreground'
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'hover:bg-muted text-foreground',
                     )}
                   >
-                    <div className={cn(
-                      'flex items-center justify-center h-6 w-6 rounded-full text-xs shrink-0',
-                      isActive ? 'bg-primary text-primary-foreground' : 'bg-muted-foreground/20 text-muted-foreground'
-                    )}>
+                    <div
+                      className={cn(
+                        'flex items-center justify-center h-6 w-6 rounded-full text-xs shrink-0',
+                        isActive
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted-foreground/20 text-muted-foreground',
+                      )}
+                    >
                       {index + 1}
                     </div>
                     <span className="line-clamp-2">{lesson.title}</span>
@@ -82,7 +86,10 @@ export const GrammarTopicDetail = ({ topic }: GrammarTopicDetailProps) => {
           </motion.div>
         ) : (
           <div className="bg-card border rounded-2xl p-12 text-center shadow-sm">
-            <Icons name="layout-dashboard" className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+            <Icons
+              name="layout-dashboard"
+              className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50"
+            />
             <p className="text-muted-foreground">{t('noExercises')}</p>
           </div>
         )}

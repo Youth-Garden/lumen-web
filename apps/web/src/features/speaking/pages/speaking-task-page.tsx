@@ -16,12 +16,12 @@ export const SpeakingTaskPage = () => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const t = useTranslations('Speaking');
-  
+
   // In a real app we'd have a getTaskById endpoint, but since we only have getTasks,
   // we'll fetch the list and find the task. This is a workaround for the current API.
   const { data, isLoading } = useSpeakingTasks({ limit: 100 });
-  
-  const task = data?.items?.find(taskItem => taskItem.id === params.id);
+
+  const task = data?.items?.find((taskItem) => taskItem.id === params.id);
 
   if (isLoading) {
     return (
@@ -34,9 +34,15 @@ export const SpeakingTaskPage = () => {
   if (!task) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
-        <Icons name="file-question" className="h-12 w-12 text-muted-foreground" />
+        <Icons
+          name="file-question"
+          className="h-12 w-12 text-muted-foreground"
+        />
         <p className="text-muted-foreground">{t('noTasks')}</p>
-        <Button variant="outline" onClick={() => router.push(RouteEnum.SPEAKING)}>
+        <Button
+          variant="outline"
+          onClick={() => router.push(RouteEnum.SPEAKING)}
+        >
           {t('backToTasks')}
         </Button>
       </div>
@@ -50,35 +56,41 @@ export const SpeakingTaskPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <Link 
+        <Link
           href={RouteEnum.SPEAKING}
           className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-6 bg-muted/50 px-3 py-1.5 rounded-full"
         >
           <Icons name="arrow-left" className="mr-2 h-4 w-4" />
           {t('backToTasks')}
         </Link>
-        
+
         <div className="bg-card border rounded-2xl p-6 md:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary">
               <Icons name="mic" className="h-5 w-5" />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{task.title}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              {task.title}
+            </h1>
           </div>
-          
+
           <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 mb-6">
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">{t('prompt')}</h3>
+            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">
+              {t('prompt')}
+            </h3>
             <p className="text-lg leading-relaxed text-foreground">
               {task.prompt}
             </p>
           </div>
-          
+
           {task.keywords.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t('keywords')}:</h3>
+              <h3 className="text-sm font-semibold text-muted-foreground mb-3">
+                {t('keywords')}:
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {task.keywords.map((keyword, idx) => (
-                  <span 
+                  <span
                     key={idx}
                     className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-muted text-muted-foreground border shadow-sm"
                   >
@@ -91,8 +103,14 @@ export const SpeakingTaskPage = () => {
 
           {task.referenceAudioUrl && (
             <div className="mt-6 pt-6 border-t">
-              <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t('referenceAudio')}:</h3>
-              <audio src={task.referenceAudioUrl} controls className="w-full h-10" />
+              <h3 className="text-sm font-semibold text-muted-foreground mb-3">
+                {t('referenceAudio')}:
+              </h3>
+              <audio
+                src={task.referenceAudioUrl}
+                controls
+                className="w-full h-10"
+              />
             </div>
           )}
         </div>

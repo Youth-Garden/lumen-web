@@ -21,4 +21,6 @@ export const registry: MapperRegistry = {
     idResponseMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS)]:
     idResponseMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS_REVIEW)]:
+    idResponseMapper, // Assuming review just returns success, or whatever response format. We can map later if it returns stats.
 };

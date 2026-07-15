@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export function useKeydownEventListener(
   handler: (event: KeyboardEvent) => void,
-  dependencies: any[] = []
+  dependencies: any[] = [],
 ) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

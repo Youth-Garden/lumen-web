@@ -25,19 +25,22 @@ export const GrammarLessonDetail = ({ lesson }: GrammarLessonDetailProps) => {
       {/* Lesson Content */}
       <div className="bg-card border rounded-2xl p-6 md:p-8 shadow-sm">
         <h2 className="text-2xl font-bold mb-6">{lesson.title}</h2>
-        <div 
+        <div
           className="prose prose-blue dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-primary"
-          dangerouslySetInnerHTML={{ __html: lesson.content }} 
+          dangerouslySetInnerHTML={{ __html: lesson.content }}
         />
-        
+
         <div className="mt-8 pt-6 border-t flex justify-center">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="rounded-xl px-8"
             onClick={() => setShowExercises(!showExercises)}
           >
             {showExercises ? t('lessons') : t('practiceExercises')}
-            <Icons name={showExercises ? 'chevron-up' : 'chevron-down'} className="ml-2 h-4 w-4" />
+            <Icons
+              name={showExercises ? 'chevron-up' : 'chevron-down'}
+              className="ml-2 h-4 w-4"
+            />
           </Button>
         </div>
       </div>
@@ -56,10 +59,13 @@ export const GrammarLessonDetail = ({ lesson }: GrammarLessonDetailProps) => {
                 <Icons name="pen-tool" className="text-primary h-5 w-5" />
                 {t('practiceExercises')}
               </h3>
-              
+
               {isLoading ? (
                 <div className="flex justify-center py-8">
-                  <Icons name="loader-2" className="h-8 w-8 animate-spin text-primary" />
+                  <Icons
+                    name="loader-2"
+                    className="h-8 w-8 animate-spin text-primary"
+                  />
                 </div>
               ) : !exercises || exercises.length === 0 ? (
                 <div className="bg-muted/50 rounded-2xl p-8 text-center text-muted-foreground border border-dashed">

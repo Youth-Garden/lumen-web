@@ -11,7 +11,13 @@ import { formatUrl } from '@lumen/shared-api';
 import type { SpeakingTaskDto } from '@/services/speaking';
 import { useSpeakingTasks } from '../hooks/use-speaking';
 
-const TaskCard = ({ task, index }: { task: SpeakingTaskDto; index: number }) => {
+const TaskCard = ({
+  task,
+  index,
+}: {
+  task: SpeakingTaskDto;
+  index: number;
+}) => {
   const t = useTranslations('Speaking');
 
   return (
@@ -33,18 +39,21 @@ const TaskCard = ({ task, index }: { task: SpeakingTaskDto; index: number }) => 
               </span>
             )}
           </div>
-          
+
           <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
             {task.title}
           </h3>
-          
+
           <p className="text-sm text-muted-foreground line-clamp-3 mb-6 flex-1">
             {task.prompt}
           </p>
-          
+
           <div className="flex items-center text-primary text-sm font-medium mt-auto">
             <span>{t('record')}</span>
-            <Icons name="arrow-right" className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <Icons
+              name="arrow-right"
+              className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform"
+            />
           </div>
         </div>
       </Link>
@@ -67,7 +76,10 @@ export const SpeakingTaskList = () => {
   return (
     <div>
       <div className="relative mb-8 max-w-md">
-        <Icons name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Icons
+          name="search"
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+        />
         <input
           type="text"
           placeholder="Search speaking tasks..."
@@ -79,11 +91,17 @@ export const SpeakingTaskList = () => {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Icons name="loader-2" className="h-8 w-8 animate-spin text-primary" />
+          <Icons
+            name="loader-2"
+            className="h-8 w-8 animate-spin text-primary"
+          />
         </div>
       ) : tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center border rounded-2xl bg-muted/20 border-dashed">
-          <Icons name="mic-off" className="h-12 w-12 text-muted-foreground opacity-50" />
+          <Icons
+            name="mic-off"
+            className="h-12 w-12 text-muted-foreground opacity-50"
+          />
           <p className="text-muted-foreground font-medium">{t('noTasks')}</p>
         </div>
       ) : (

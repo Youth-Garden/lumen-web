@@ -10,6 +10,7 @@ import { useReviewFlashcard } from '@/features/vocabulary/hooks';
 import { FlashcardReview } from '../components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
 import { OpenEffect } from '@lumen/uikit/components';
+import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
 
 export function StudyPage() {
   const t = useTranslations('Vocabulary.Study');
@@ -29,13 +30,13 @@ export function StudyPage() {
   const isFinished =
     currentIndex >= dueFlashcards.length && dueFlashcards.length > 0;
 
-  const handleGrade = async (grade: number) => {
+  const handleGrade = async (grade: FlashcardRating) => {
     if (!currentFlashcard) return;
 
     try {
       await reviewFlashcard({
         flashcardId: currentFlashcard.flashcardId,
-        grade,
+        quality: grade,
       });
       // Move to next card
       setCurrentIndex((prev) => prev + 1);

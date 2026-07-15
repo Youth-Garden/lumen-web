@@ -29,9 +29,15 @@ export const GrammarTopicPage = () => {
   if (!topic) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
-        <Icons name="file-question" className="h-12 w-12 text-muted-foreground" />
+        <Icons
+          name="file-question"
+          className="h-12 w-12 text-muted-foreground"
+        />
         <p className="text-muted-foreground">{t('noTopics')}</p>
-        <Button variant="outline" onClick={() => router.push(RouteEnum.GRAMMAR)}>
+        <Button
+          variant="outline"
+          onClick={() => router.push(RouteEnum.GRAMMAR)}
+        >
           {t('backToTopics')}
         </Button>
       </div>
@@ -45,7 +51,7 @@ export const GrammarTopicPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <Link 
+        <Link
           href={RouteEnum.GRAMMAR}
           className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
         >

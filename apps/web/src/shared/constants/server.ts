@@ -15,6 +15,7 @@ export enum ApiEndpointEnum {
   PROGRESS_SETTINGS = '/api/progress/settings',
   PROGRESS_LEADERBOARD = '/api/progress/leaderboard',
   PROGRESS_BADGES = '/api/progress/badges',
+  PROGRESS_HEATMAP = '/api/progress/heatmap',
 
   // Vocabulary
   VOCABULARY_WORDS = '/api/vocabulary/words',

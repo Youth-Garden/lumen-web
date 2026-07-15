@@ -20,14 +20,16 @@ import { XpProgressChart } from '../components/charts/xp-progress-chart';
 import { Leaderboard } from '../components/leaderboard';
 import { BadgesList } from '../components/badges-list';
 import { useTranslations } from 'next-intl';
-import { useProgressDashboard } from '../hooks/use-progress-dashboard';
+import { useProgressDashboard, useHeatmap } from '../hooks';
 import { useDueFlashcards } from '@/features/vocabulary/hooks/use-vocabulary';
+import { HeatmapCalendar } from '../components/heatmap-calendar';
 import Link from 'next/link';
 import { RouteEnum } from '@/shared/constants';
 
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
   const { data: progressData } = useProgressDashboard();
+  const { data: heatmapData, isLoading: heatmapLoading } = useHeatmap();
   const { data: dueFlashcards } = useDueFlashcards();
   const dueCount = dueFlashcards?.data?.length || 0;
 
@@ -83,6 +85,13 @@ export function OverviewPage() {
               icon="book-open"
             />
             <MetricCard
+              title="Streak Freezes"
+              value={`${progressData?.streakFreezes || 0}`}
+              trend="shields available"
+              trendValue={0}
+              icon="shield"
+            />
+            <MetricCard
               title="Study Time"
               value={`${progressData?.todayStudyMinutes || 0}m`}
               trend="today"
@@ -129,8 +138,9 @@ export function OverviewPage() {
                 <XpProgressChart data={chartData} />
               </CardContent>
             </Card>
-            <div className="col-span-3">
+            <div className="col-span-3 flex flex-col gap-4">
               <DailyGoalWidget />
+              <HeatmapCalendar data={heatmapData} isLoading={heatmapLoading} />
             </div>
           </div>
 

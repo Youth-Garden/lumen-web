@@ -1,4 +1,9 @@
-import { ActivityItem, ActivityType } from './progress.types';
+import {
+  ActivityItem,
+  ActivityType,
+  HeatmapItem,
+  DashboardProgressResponse,
+} from './progress.types';
 
 export const recentActivitiesMapper = (raw: any): ActivityItem[] => {
   if (!Array.isArray(raw)) return [];
@@ -13,4 +18,24 @@ export const recentActivitiesMapper = (raw: any): ActivityItem[] => {
     xpEarned: item.xpEarned || 0,
     timestamp: item.timestamp || '',
   }));
+};
+
+export const heatmapListMapper = (raw: any): HeatmapItem[] => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((item: any) => ({
+    date: item.date || '',
+    count: item.count || 0,
+  }));
+};
+
+export const dashboardMapper = (raw: any): DashboardProgressResponse => {
+  return {
+    streak: raw?.streak || 0,
+    lastActivityDate: raw?.lastActivityDate,
+    totalPoints: raw?.totalPoints || 0,
+    dailyGoalMinutes: raw?.dailyGoalMinutes || 0,
+    todayStudyMinutes: raw?.todayStudyMinutes || 0,
+    streakFreezes: raw?.streakFreezes || 0,
+    unlockedBadges: raw?.unlockedBadges || [],
+  };
 };

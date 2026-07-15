@@ -10,8 +10,14 @@ import { Icons } from '@lumen/uikit/icons';
 import { formatDuration } from '@lumen/utils';
 import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
-import { useGetExamAttemptDetail, useStartRetest } from '../hooks/use-exam-practice';
-import { ExamAttemptStatus, TestPlayerMode } from '@/services/exam-practice/exam-practice.types';
+import {
+  useGetExamAttemptDetail,
+  useStartRetest,
+} from '../hooks/use-exam-practice';
+import {
+  ExamAttemptStatus,
+  TestPlayerMode,
+} from '@/services/exam-practice/exam-practice.types';
 import { useRouter } from 'next/navigation';
 
 export const ExamResultPage = () => {
@@ -30,7 +36,11 @@ export const ExamResultPage = () => {
     startRetest(attemptId, {
       onSuccess: (newAttempt) => {
         router.push(
-          formatUrl(RouteEnum.TOEIC_TEST, { id: testId }, { attemptId: newAttempt.id }),
+          formatUrl(
+            RouteEnum.TOEIC_TEST,
+            { id: testId },
+            { attemptId: newAttempt.id },
+          ),
         );
       },
     });
@@ -47,7 +57,10 @@ export const ExamResultPage = () => {
   if (!attempt || attempt.status !== ExamAttemptStatus.COMPLETED) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-        <Icons name="file-question" className="h-12 w-12 text-muted-foreground" />
+        <Icons
+          name="file-question"
+          className="h-12 w-12 text-muted-foreground"
+        />
         <p className="text-muted-foreground">{t('notFound')}</p>
         <Button variant="outline" onClick={() => router.push(RouteEnum.TOEIC)}>
           {t('backToTests')}
@@ -57,8 +70,11 @@ export const ExamResultPage = () => {
   }
 
   const totalAnswered = attempt.answers.length;
-  const totalCorrect = attempt.answers.filter((answer) => answer.isCorrect).length;
-  const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const totalCorrect = attempt.answers.filter(
+    (answer) => answer.isCorrect,
+  ).length;
+  const accuracy =
+    totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
   const elapsedSeconds = attempt.elapsedSeconds ?? 0;
 
   return (
@@ -86,7 +102,9 @@ export const ExamResultPage = () => {
           <div className="absolute top-0 right-0 p-4 opacity-20">
             <Icons name="trophy" className="w-20 h-20" />
           </div>
-          <h3 className="text-sm font-medium opacity-80 mb-1">{t('totalScore')}</h3>
+          <h3 className="text-sm font-medium opacity-80 mb-1">
+            {t('totalScore')}
+          </h3>
           <div className="text-5xl font-bold">
             {attempt.totalScore}
             <span className="text-xl font-normal opacity-70"> / 990</span>
@@ -106,7 +124,10 @@ export const ExamResultPage = () => {
             </div>
             <div className="text-2xl font-bold">
               {attempt.listeningScore}
-              <span className="text-xs font-normal text-muted-foreground"> / 495</span>
+              <span className="text-xs font-normal text-muted-foreground">
+                {' '}
+                / 495
+              </span>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -116,7 +137,10 @@ export const ExamResultPage = () => {
             </div>
             <div className="text-2xl font-bold">
               {attempt.readingScore}
-              <span className="text-xs font-normal text-muted-foreground"> / 495</span>
+              <span className="text-xs font-normal text-muted-foreground">
+                {' '}
+                / 495
+              </span>
             </div>
           </div>
         </motion.div>
@@ -131,8 +155,12 @@ export const ExamResultPage = () => {
             <Icons name="clock" className="w-6 h-6 text-orange-500" />
           </div>
           <div className="text-center">
-            <p className="text-xs text-muted-foreground font-medium mb-1">{t('timeSpent')}</p>
-            <div className="text-2xl font-bold">{formatDuration(elapsedSeconds)}</div>
+            <p className="text-xs text-muted-foreground font-medium mb-1">
+              {t('timeSpent')}
+            </p>
+            <div className="text-2xl font-bold">
+              {formatDuration(elapsedSeconds)}
+            </div>
           </div>
         </motion.div>
       </div>
@@ -204,7 +232,11 @@ export const ExamResultPage = () => {
           </Button>
         )}
 
-        <Button size="lg" className="gap-2" onClick={() => router.push(RouteEnum.TOEIC)}>
+        <Button
+          size="lg"
+          className="gap-2"
+          onClick={() => router.push(RouteEnum.TOEIC)}
+        >
           <Icons name="layers" className="h-5 w-5" />
           {t('backToTests')}
         </Button>

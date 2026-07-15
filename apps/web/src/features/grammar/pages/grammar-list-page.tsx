@@ -16,9 +16,7 @@ export const GrammarListPage = () => {
         className="mb-8"
       >
         <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
-        <p className="text-muted-foreground mt-2 text-lg">
-          {t('subtitle')}
-        </p>
+        <p className="text-muted-foreground mt-2 text-lg">{t('subtitle')}</p>
       </motion.div>
 
       <GrammarTopicList />

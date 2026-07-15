@@ -14,7 +14,13 @@ export interface DashboardProgressResponse {
   totalPoints: number;
   dailyGoalMinutes: number;
   todayStudyMinutes: number;
+  streakFreezes: number;
   unlockedBadges?: string[];
+}
+
+export interface HeatmapItem {
+  date: string;
+  count: number;
 }
 
 export interface UpdateProgressSettingsPayload {

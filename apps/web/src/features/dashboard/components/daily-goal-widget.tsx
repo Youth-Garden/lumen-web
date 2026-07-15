@@ -99,9 +99,7 @@ export function DailyGoalWidget() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{t('setDailyGoal')}</DialogTitle>
-              <DialogDescription>
-                {t('setDailyGoalDesc')}
-              </DialogDescription>
+              <DialogDescription>{t('setDailyGoalDesc')}</DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-2 gap-4 py-4">
               {[15, 30, 45, 60].map((minutes) => (
@@ -161,7 +159,9 @@ export function DailyGoalWidget() {
           <p className="text-sm text-muted-foreground">
             {isGoalReached
               ? t('goalReachedDesc')
-              : t('minutesLeft', { minutes: safeDailyGoal - todayStudyMinutes })}
+              : t('minutesLeft', {
+                  minutes: safeDailyGoal - todayStudyMinutes,
+                })}
           </p>
         </div>
       </CardContent>

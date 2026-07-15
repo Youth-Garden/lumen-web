@@ -6,6 +6,7 @@ import {
   UpdateProgressSettingsPayload,
   ActivityItem,
   LeaderboardResponse,
+  HeatmapItem,
 } from './progress.types';
 
 export interface BadgeResponse {
@@ -19,6 +20,13 @@ export class ProgressService extends CoreService {
   async getDashboardData(): Promise<DashboardProgressResponse> {
     const res = await this._get<DashboardProgressResponse>(
       ApiEndpointEnum.PROGRESS_DASHBOARD,
+    );
+    return res.data;
+  }
+
+  async getHeatmapData(): Promise<HeatmapItem[]> {
+    const res = await this._get<HeatmapItem[]>(
+      ApiEndpointEnum.PROGRESS_HEATMAP,
     );
     return res.data;
   }
