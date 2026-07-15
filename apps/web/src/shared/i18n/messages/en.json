@@ -240,7 +240,20 @@
       "allCaughtUp": "You're all caught up!",
       "allCaughtUpDescription": "You have reviewed all due flashcards for today. Great job!",
       "backToWords": "Back to Vocabulary Bank",
-      "backToDecks": "Back to My Decks"
+      "shortcutsTitle": "Keyboard Shortcuts",
+      "shortcutFlip": "Flip card",
+      "shortcutAudio": "Replay Audio",
+      "shortcutAgain": "Grade: Again",
+      "shortcutHard": "Grade: Hard",
+      "shortcutGood": "Grade: Good",
+      "shortcutEasy": "Grade: Easy",
+      "backToDecks": "Back to My Decks",
+      "gradeAgain": "Again",
+      "gradeHard": "Hard",
+      "gradeGood": "Good",
+      "gradeEasy": "Easy",
+      "failedLoadWord": "Failed to load word details.",
+      "pressKey": "Press {key}"
     },
     "List": {
       "title": "Vocabulary Bank",

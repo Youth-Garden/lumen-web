@@ -240,7 +240,20 @@
       "allCaughtUp": "Bạn đã hoàn thành!",
       "allCaughtUpDescription": "Bạn đã ôn tập xong tất cả thẻ đến hạn hôm nay. Tuyệt vời!",
       "backToWords": "Quay lại Từ vựng",
-      "backToDecks": "Quay lại Bộ thẻ"
+      "backToDecks": "Quay lại Bộ thẻ",
+      "shortcutsTitle": "Phím tắt",
+      "shortcutFlip": "Lật thẻ",
+      "shortcutAudio": "Phát lại Audio",
+      "shortcutAgain": "Đánh giá: Again",
+      "shortcutHard": "Đánh giá: Hard",
+      "shortcutGood": "Đánh giá: Good",
+      "shortcutEasy": "Đánh giá: Easy",
+      "gradeAgain": "Học lại",
+      "gradeHard": "Khó",
+      "gradeGood": "Tốt",
+      "gradeEasy": "Dễ",
+      "failedLoadWord": "Không thể tải chi tiết từ vựng.",
+      "pressKey": "Phím {key}"
     },
     "List": {
       "title": "Kho từ vựng",

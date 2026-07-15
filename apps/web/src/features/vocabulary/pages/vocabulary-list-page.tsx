@@ -1,20 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { useVocabularyWords } from '@/features/vocabulary/hooks';
+import { useTranslations } from 'next-intl';
+
+import { useDebounce } from '@lumen/hooks';
 import {
-  Input,
   Button,
   Card,
   CardContent,
+  Input,
   ScrollArea,
   Skeleton,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useTranslations } from 'next-intl';
-import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
 import { usePortal } from '@lumen/uikit/portal';
-import { useDebounce } from '@lumen/hooks';
+
+import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
+import { useVocabularyWords } from '@/features/vocabulary/hooks';
+import { AudioButton } from '@/shared/components/audio-button';
+import { CefrLevelEnum } from '@/shared/types';
 
 export function VocabularyListPage() {
   const t = useTranslations('Vocabulary.List');
@@ -29,21 +33,16 @@ export function VocabularyListPage() {
     cefrLevel,
   });
 
-  const playAudio = (url: string) => {
-    const audio = new Audio(url);
-    audio.play();
-  };
-
   const getCefrColor = (level: string) => {
     switch (level.toUpperCase()) {
-      case 'A1':
-      case 'A2':
+      case CefrLevelEnum.A1:
+      case CefrLevelEnum.A2:
         return 'bg-green-500/10 text-green-500';
-      case 'B1':
-      case 'B2':
+      case CefrLevelEnum.B1:
+      case CefrLevelEnum.B2:
         return 'bg-blue-500/10 text-blue-500';
-      case 'C1':
-      case 'C2':
+      case CefrLevelEnum.C1:
+      case CefrLevelEnum.C2:
         return 'bg-purple-500/10 text-purple-500';
       default:
         return 'bg-secondary text-secondary-foreground';
@@ -108,14 +107,11 @@ export function VocabularyListPage() {
                         </div>
                       )}
                       {word.audioUrl && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full"
-                          onClick={() => playAudio(word.audioUrl!)}
-                        >
-                          <Icons name="volume-2" className="h-4 w-4" />
-                        </Button>
+                        <AudioButton
+                          url={word.audioUrl}
+                          className="h-8 w-8 text-muted-foreground hover:text-primary"
+                          iconClassName="h-4 w-4"
+                        />
                       )}
                     </div>
                     {word.phonetic && (
