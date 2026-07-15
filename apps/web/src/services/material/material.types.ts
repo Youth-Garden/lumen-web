@@ -1,16 +1,9 @@
+import { CefrLevelEnum } from '@/shared/types';
+
 export enum MaterialTypeEnum {
   AUDIO = 'AUDIO',
   VIDEO = 'VIDEO',
   TEXT = 'TEXT',
-}
-
-export enum MaterialLevelEnum {
-  A1 = 'A1',
-  A2 = 'A2',
-  B1 = 'B1',
-  B2 = 'B2',
-  C1 = 'C1',
-  C2 = 'C2',
 }
 
 export interface TranscriptDto {
@@ -30,7 +23,7 @@ export interface MaterialDto {
   description: string | undefined;
   mediaUrl: string | undefined;
   thumbnailUrl: string | undefined;
-  level: MaterialLevelEnum | undefined;
+  level: CefrLevelEnum | undefined;
   tags: string[] | undefined;
   duration: number | undefined;
 }

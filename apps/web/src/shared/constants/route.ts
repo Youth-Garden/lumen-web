@@ -13,6 +13,7 @@ export enum RouteEnum {
   QUIZ_SESSION = '/quiz/:id',
   TOEIC = '/toeic',
   TOEIC_TEST = '/toeic/:id',
+  EXAM_RESULT = '/toeic/:id/result',
   READING = '/reading',
   ARTICLE_READER = '/reading/:id',
   DICTATION = '/dictation',
@@ -20,4 +21,8 @@ export enum RouteEnum {
   FLASHCARD_REVIEW = '/vocabulary/review',
   PROFILE = '/profile',
   SETTINGS = '/settings',
+  GRAMMAR = '/grammar',
+  GRAMMAR_TOPIC = '/grammar/:id',
+  SPEAKING = '/speaking',
+  SPEAKING_TASK = '/speaking/:id',
 }

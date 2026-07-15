@@ -5,7 +5,7 @@ import {
   TestPlayerMode,
 } from '@/services/exam-practice/exam-practice.types';
 import { RouteEnum } from '@/shared/constants';
-import { formatUrl } from '@/shared/utils';
+import { formatUrl } from '@lumen/shared-api';
 import {
   Button,
   Card,
@@ -106,7 +106,7 @@ export const HistoryPage = () => {
               attempts.map((attempt) => (
                 <TableRow key={attempt.id}>
                   <TableCell className="font-medium">
-                    {attempt.testId} ({attempt.testType})
+                    {attempt.testTitle ?? attempt.testId} ({attempt.testType})
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {format(new Date(attempt.startedAt), 'MMM dd, yyyy HH:mm')}

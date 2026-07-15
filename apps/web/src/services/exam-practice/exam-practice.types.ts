@@ -67,6 +67,7 @@ export interface ExamAttemptDetailResponse {
 export interface AttemptSummary {
   id: string;
   testId: string;
+  testTitle?: string;
   testType: ExamType;
   status: ExamAttemptStatus;
   mode: ExamAttemptMode;

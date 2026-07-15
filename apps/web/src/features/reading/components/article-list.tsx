@@ -15,7 +15,7 @@ import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { RouteEnum } from '@/shared/constants';
-import { formatUrl } from '@/shared/utils';
+import { formatUrl } from '@lumen/shared-api';
 
 export const ArticleList = () => {
   const { data, isLoading, isError } = useGetArticles();

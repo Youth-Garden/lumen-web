@@ -53,13 +53,16 @@ export const registry = {
   // ── Media & Audio ────────────────────────────────────────────────────
   play: createMaterialIcon('play_arrow'),
   pause: createMaterialIcon('pause'),
+  square: createMaterialIcon('stop'),
   'volume-2': createMaterialIcon('volume_up'),
   headphones: createMaterialIcon('headphones'),
   mic: createMaterialIcon('mic'),
+  'mic-off': createMaterialIcon('mic_off'),
 
   // ── Notifications & Communication ───────────────────────────────────
   bell: createMaterialIcon('notifications'),
   mail: createMaterialIcon('mail'),
+  send: createMaterialIcon('send'),
 
   // ── Content & Reading ────────────────────────────────────────────────
   'book-open': createMaterialIcon('menu_book'),

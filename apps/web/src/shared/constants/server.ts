@@ -65,6 +65,16 @@ export enum ApiEndpointEnum {
   NOTIFICATION_MARK_READ = '/api/notifications/:id/read',
   NOTIFICATION_MARK_ALL_READ = '/api/notifications/read-all',
   NOTIFICATION_DEBUG = '/api/notifications/debug',
+
+  // Grammar
+  GRAMMAR_TOPICS = '/api/grammar/topics',
+  GRAMMAR_TOPIC_DETAIL = '/api/grammar/topics/:id',
+  GRAMMAR_LESSON_EXERCISES = '/api/grammar/lessons/:id/exercises',
+  GRAMMAR_EXERCISE_SUBMIT = '/api/grammar/exercises/:id/submit',
+
+  // Speaking
+  SPEAKING_TASKS = '/api/listening-speaking/speaking-tasks',
+  SPEAKING_TASK_SUBMIT = '/api/listening-speaking/speaking-tasks/:id/submit',
 }
 
 export const JWT_ACCESS_TOKEN_KEY = 'jwta';

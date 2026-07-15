@@ -25,6 +25,7 @@ import { ToeicQuestionDto } from '@/services/toeic';
 import { useCountdown } from '@lumen/hooks';
 
 import { RouteEnum } from '@/shared/constants';
+import { formatUrl } from '@lumen/shared-api';
 import { useGetToeicTestById } from '../hooks/use-toeic';
 import { ToeicResultDashboard } from './analytics/toeic-result-dashboard';
 import { ToeicNotePanel } from './player/toeic-note-panel';
@@ -79,7 +80,15 @@ export const ToeicTestPlayer = ({
 
   const handleFinishTest = () => {
     finishAttemptMutation.mutate(undefined, {
-      onSuccess: () => setMode(TestPlayerMode.RESULT),
+      onSuccess: () => {
+        router.push(
+          formatUrl(
+            RouteEnum.EXAM_RESULT,
+            { id: testId },
+            { attemptId: attemptId ?? '' },
+          ),
+        );
+      },
     });
   };
 

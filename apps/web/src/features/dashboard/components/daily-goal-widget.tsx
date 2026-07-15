@@ -1,21 +1,53 @@
 'use client';
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
-import { RadialProgress } from '@lumen/uikit/components';
-import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 import {
+  Button,
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  RadialProgress,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { useTranslations } from 'next-intl';
+import React from 'react';
+import {
+  useProgressDashboard,
+  useUpdateProgressSettings,
+} from '../hooks/use-progress-dashboard';
 
 export function DailyGoalWidget() {
   const t = useTranslations('Dashboard.Overview');
   const { data: progressData, isLoading } = useProgressDashboard();
+  const updateSettings = useUpdateProgressSettings();
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [selectedGoal, setSelectedGoal] = React.useState(15);
+
+  React.useEffect(() => {
+    if (progressData?.dailyGoalMinutes) {
+      setSelectedGoal(progressData.dailyGoalMinutes);
+    }
+  }, [progressData?.dailyGoalMinutes]);
+
+  const handleSaveGoal = () => {
+    updateSettings.mutate(
+      { dailyGoalMinutes: selectedGoal },
+      {
+        onSuccess: () => {
+          setIsDialogOpen(false);
+        },
+      },
+    );
+  };
 
   if (isLoading || !progressData) {
     return (
@@ -44,12 +76,58 @@ export function DailyGoalWidget() {
         className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-20 transition-colors duration-1000 ${isGoalReached ? 'bg-green-500' : 'bg-primary'}`}
       />
 
-      <CardHeader className="relative z-10 pb-2">
-        <CardTitle className="flex items-center gap-2">
-          <Icons name="activity" className="h-5 w-5 text-primary" />
-          Daily Goal
-        </CardTitle>
-        <CardDescription>Your learning progress for today</CardDescription>
+      <CardHeader className="relative z-10 pb-2 flex flex-row items-start justify-between">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <Icons name="activity" className="h-5 w-5 text-primary" />
+            {t('dailyGoal')}
+          </CardTitle>
+          <CardDescription>{t('learningProgress')}</CardDescription>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-full"
+              />
+            }
+          >
+            <Icons name="settings" className="h-4 w-4" />
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t('setDailyGoal')}</DialogTitle>
+              <DialogDescription>
+                {t('setDailyGoalDesc')}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-4 py-4">
+              {[15, 30, 45, 60].map((minutes) => (
+                <Button
+                  key={minutes}
+                  variant={selectedGoal === minutes ? 'default' : 'outline'}
+                  onClick={() => setSelectedGoal(minutes)}
+                  className="h-16 text-lg"
+                >
+                  {minutes} {t('mins')}
+                </Button>
+              ))}
+            </div>
+            <DialogFooter>
+              <DialogClose render={<Button variant="outline" />}>
+                {t('cancel')}
+              </DialogClose>
+              <Button
+                onClick={handleSaveGoal}
+                disabled={updateSettings.isPending}
+              >
+                {updateSettings.isPending ? t('saving') : t('saveChanges')}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col items-center justify-center relative z-10 pt-4">
         <RadialProgress
@@ -78,12 +156,12 @@ export function DailyGoalWidget() {
 
         <div className="text-center mt-2 space-y-1">
           <h4 className="font-semibold text-lg">
-            {isGoalReached ? 'Goal Reached! 🏆' : 'Keep it up! 🔥'}
+            {isGoalReached ? t('goalReached') : t('keepItUp')}
           </h4>
           <p className="text-sm text-muted-foreground">
             {isGoalReached
-              ? "You've hit your daily study goal. Great job!"
-              : `${safeDailyGoal - todayStudyMinutes} minutes left to reach your goal.`}
+              ? t('goalReachedDesc')
+              : t('minutesLeft', { minutes: safeDailyGoal - todayStudyMinutes })}
           </p>
         </div>
       </CardContent>

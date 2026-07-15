@@ -1,7 +1,7 @@
 'use client';
 
 import { RouteEnum } from '@/shared/constants';
-import { formatUrl } from '@/shared/utils';
+import { formatUrl } from '@lumen/shared-api';
 import {
   Button,
   Card,

@@ -13,7 +13,7 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
 import { RouteEnum } from '@/shared/constants';
-import { formatUrl } from '@/shared/utils';
+import { formatUrl } from '@lumen/shared-api';
 
 export const DictationList = () => {
   const router = useRouter();

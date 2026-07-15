@@ -19,7 +19,7 @@ import { usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { RouteEnum } from '@/shared/constants';
-import { formatUrl } from '@/shared/utils';
+import { formatUrl } from '@lumen/shared-api';
 
 export function DeckListPage() {
   const t = useTranslations('Vocabulary.Decks');
