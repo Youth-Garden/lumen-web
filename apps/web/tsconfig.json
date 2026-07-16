@@ -2,6 +2,7 @@
   "extends": "@lumen/typescript-config/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"]
     }
