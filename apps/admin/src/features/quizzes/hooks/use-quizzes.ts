@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { quizzesService } from '../services/quizzes.service';
-import { CreatePresetQuizDto, UpdatePresetQuizDto } from '../types';
+import type { CreatePresetQuizDto, UpdatePresetQuizDto } from '../types';
 import { toast } from 'sonner';
 
 export const useQuizzes = (page = 1, limit = 20) => {

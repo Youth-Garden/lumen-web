@@ -53,6 +53,7 @@ export default function MaterialForm() {
       title,
       category,
       level: level as any,
+      content,
       tags: tags
         .split(',')
         .map((tag) => tag.trim())

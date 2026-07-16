@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, DataTable } from '@lumen/uikit/components';
+import { Button } from '@lumen/uikit/components';
+import { DataTable } from '@/shared/components/data-table';
 import { Icons } from '@lumen/uikit/icons';
 import { useQuizzes, useDeleteQuiz } from '../hooks/use-quizzes';
-import { ColumnDef } from '@tanstack/react-table';
-import { PresetQuiz } from '../types';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { PresetQuiz } from '../types';
 import { format } from 'date-fns';
 
 export default function QuizzesList() {
@@ -79,7 +80,7 @@ export default function QuizzesList() {
                 }
               }}
             >
-              <Icons name="trash" className="h-4 w-4" />
+              <Icons name="trash-2" className="h-4 w-4" />
             </Button>
           </div>
         );
@@ -110,8 +111,8 @@ export default function QuizzesList() {
             className="h-8 w-8 animate-spin text-primary"
           />
         </div>
-      ) : data?.items && data.items.length > 0 ? (
-        <DataTable columns={columns} data={data.items} searchKey="title" />
+      ) : data?.data?.items && data.data.items.length > 0 ? (
+        <DataTable columns={columns} data={data.data.items} searchKey="title" />
       ) : (
         <div className="bg-white dark:bg-slate-900 border rounded-lg p-16 text-center text-muted-foreground flex flex-col items-center justify-center">
           <Icons

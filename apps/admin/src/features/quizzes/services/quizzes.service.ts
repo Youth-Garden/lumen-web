@@ -1,36 +1,34 @@
-import { api } from '@/shared/services/api';
-import {
+import { CoreService } from '@/services/core';
+import type { BaseResponse } from '@lumen/shared-api';
+import type {
   PresetQuiz,
   PresetQuizListResponse,
   CreatePresetQuizDto,
   UpdatePresetQuizDto,
 } from '../types';
 
-export const quizzesService = {
-  getQuizzes: async (page = 1, limit = 20) => {
-    const res = await api.get<PresetQuizListResponse>('/admin/quizzes', {
+export class QuizzesService extends CoreService {
+  getQuizzes(page = 1, limit = 20): Promise<BaseResponse<PresetQuizListResponse>> {
+    return this._get<PresetQuizListResponse>('/admin/quizzes', {
       params: { page, limit },
     });
-    return res.data;
-  },
+  }
 
-  getQuizById: async (id: string) => {
-    const res = await api.get<PresetQuiz>(`/admin/quizzes/${id}`);
-    return res.data;
-  },
+  getQuizById(id: string): Promise<BaseResponse<PresetQuiz>> {
+    return this._get<PresetQuiz>(`/admin/quizzes/${id}`);
+  }
 
-  createQuiz: async (data: CreatePresetQuizDto) => {
-    const res = await api.post<{ id: string }>('/admin/quizzes', data);
-    return res.data;
-  },
+  createQuiz(data: CreatePresetQuizDto): Promise<BaseResponse<{ id: string }>> {
+    return this._post<{ id: string }>('/admin/quizzes', data);
+  }
 
-  updateQuiz: async (id: string, data: UpdatePresetQuizDto) => {
-    const res = await api.put(`/admin/quizzes/${id}`, data);
-    return res.data;
-  },
+  updateQuiz(id: string, data: UpdatePresetQuizDto): Promise<BaseResponse<void>> {
+    return this._put<void>(`/admin/quizzes/${id}`, data);
+  }
 
-  deleteQuiz: async (id: string) => {
-    const res = await api.delete(`/admin/quizzes/${id}`);
-    return res.data;
-  },
-};
+  deleteQuiz(id: string): Promise<BaseResponse<void>> {
+    return this._delete<void>(`/admin/quizzes/${id}`);
+  }
+}
+
+export const quizzesService = QuizzesService.getInstance();

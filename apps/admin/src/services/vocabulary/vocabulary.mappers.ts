@@ -1,4 +1,4 @@
-import { passThroughMapper } from '../core';
+
 import type {
   VocabularyWord,
   VocabularyWordListResponse,

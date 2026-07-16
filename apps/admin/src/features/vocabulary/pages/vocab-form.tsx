@@ -59,8 +59,8 @@ export default function VocabForm() {
   useEffect(() => {
     if (isEditing && wordData) {
       setTerm(wordData.term);
-      setPhonetic(wordData.phonetic);
-      setCefrLevel(wordData.cefrLevel);
+      setPhonetic(wordData.phonetic || '');
+      setCefrLevel(wordData.cefrLevel || 'A1');
       if (wordData.definitions && wordData.definitions.length > 0) {
         setDefinitions(
           wordData.definitions.map((def) => ({

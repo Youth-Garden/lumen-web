@@ -11,7 +11,6 @@ import {
   CardTitle,
   Input,
   Label,
-  Textarea,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useQuiz, useCreateQuiz, useUpdateQuiz } from '../hooks/use-quizzes';
@@ -19,7 +18,7 @@ import { useQuiz, useCreateQuiz, useUpdateQuiz } from '../hooks/use-quizzes';
 const quizSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
-  isPublished: z.boolean().default(false),
+  isPublished: z.boolean(),
 });
 
 type QuizFormValues = z.infer<typeof quizSchema>;
@@ -43,11 +42,11 @@ export default function QuizzesForm() {
   });
 
   useEffect(() => {
-    if (quiz) {
+    if (quiz?.data) {
       form.reset({
-        title: quiz.title,
-        description: quiz.description,
-        isPublished: quiz.isPublished,
+        title: quiz.data.title,
+        description: quiz.data.description,
+        isPublished: quiz.data.isPublished,
       });
     }
   }, [quiz, form]);
@@ -116,8 +115,9 @@ export default function QuizzesForm() {
 
           <div className="space-y-2">
             <Label>Description</Label>
-            <Textarea
+            <textarea
               {...form.register('description')}
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Enter quiz description"
               rows={4}
             />

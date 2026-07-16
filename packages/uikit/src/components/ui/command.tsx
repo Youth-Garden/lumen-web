@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 
 import { cn } from '@lumen/uikit/utils';
-import { Dialog, DialogContent, DialogOverlay, DialogPortal } from './dialog';
+import { Dialog, DialogOverlay, DialogPortal } from './dialog';
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { Icons } from '@lumen/uikit/icons';
 

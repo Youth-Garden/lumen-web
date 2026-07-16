@@ -8,7 +8,6 @@ export abstract class CoreService extends BaseApiService {
     super({
       baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
       mappers,
-      getToken: () => useAuthStore.getState().accessToken,
       onError: (errors, message) => {
         toast.error(message, {
           description: errors.length > 0 ? errors.join('\n') : undefined,
