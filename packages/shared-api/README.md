@@ -1,6 +1,6 @@
 # @lumen/shared-api
 
-A shared package that contains all API bindings, Axios interceptors, endpoints, and Data Transfer Objects (DTOs) for communicating with the Lumen Backend.
+A shared package that contains all API bindings, Axios interceptors, endpoints, and Data Transfer Objects (DTOs) for communicating with the Lumen Server.
 
 ## Features
 - **Axios Configuration**: Configured base instances with request/response interceptors for handling authentication tokens and errors.
