@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "iconsax-react": "^0.0.8",
-    "prettier": "^3.9.5"
+    "prettier": "^3.9.5",
+    "turbo": "^2.5.4"
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.5"
