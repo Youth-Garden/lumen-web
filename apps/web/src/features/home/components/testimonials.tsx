@@ -98,7 +98,7 @@ export function Testimonials() {
 
                 {/* Quote */}
                 <blockquote className="text-base leading-relaxed text-muted-foreground md:text-lg">
-                  "{t(testimonial.quoteKey)}"
+                  &ldquo;{t(testimonial.quoteKey)}&rdquo;
                 </blockquote>
 
                 {/* Divider */}
