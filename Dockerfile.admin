@@ -27,7 +27,7 @@ RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
 COPY --from=installer /app/ .
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
-RUN pnpm turbo run build --filter=admin...
+RUN npx turbo run build --filter=admin...
 
 # Stage 4: Production Nginx Server
 FROM nginx:alpine AS runner

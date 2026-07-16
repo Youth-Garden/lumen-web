@@ -27,7 +27,7 @@ RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
 COPY --from=installer /app/ .
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
-RUN pnpm turbo run build --filter=web...
+RUN npx turbo run build --filter=web...
 
 # Stage 4: Production Runner
 FROM node:20-alpine AS runner
