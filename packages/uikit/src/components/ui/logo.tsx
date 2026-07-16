@@ -1,5 +1,5 @@
-import { cn } from '../../utils';
 import { forwardRef } from 'react';
+import { cn } from '../../utils';
 
 export interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   showText?: boolean;

@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-import { useTheme } from 'next-themes';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +7,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
+import { useTheme } from 'next-themes';
+import * as React from 'react';
 import { buttonVariants } from './button';
 
 // Single source of truth: theme -> 3 swatch colors (matches the menu items)
