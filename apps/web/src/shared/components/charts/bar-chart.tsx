@@ -34,14 +34,14 @@ export const BarChart = ({
   data,
   dataKey = 'value',
   nameKey = 'name',
-  fillColor = 'hsl(var(--primary))',
+  fillColor = 'var(--primary)',
   height = '100%',
   showGrid = true,
   tooltipFormatter,
 }: BarChartProps) => {
   return (
-    <div className="w-full" style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full outline-none focus:outline-none [&_:focus]:outline-none [&_:focus-visible]:outline-none" style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" className="outline-none focus:outline-none">
         <RechartsBarChart
           data={data}
           margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
@@ -50,34 +50,34 @@ export const BarChart = ({
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
             />
           )}
           <XAxis
             dataKey={nameKey}
-            stroke="hsl(var(--muted-foreground))"
+            stroke="var(--muted-foreground)"
             fontSize={12}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke="hsl(var(--muted-foreground))"
+            stroke="var(--muted-foreground)"
             fontSize={12}
             tickLine={false}
             axisLine={false}
             tickFormatter={(value) => `${value}`}
           />
           <Tooltip
-            cursor={{ fill: 'hsl(var(--muted))' }}
+            cursor={{ fill: 'var(--muted)' }}
             contentStyle={{
-              backgroundColor: 'hsl(var(--background))',
-              borderColor: 'hsl(var(--border))',
+              backgroundColor: 'var(--background)',
+              borderColor: 'var(--border)',
               borderRadius: '8px',
               boxShadow:
                 '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
             }}
-            labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
-            itemStyle={{ color: 'hsl(var(--primary))' }}
+            labelStyle={{ color: 'var(--foreground)', fontWeight: 'bold' }}
+            itemStyle={{ color: 'var(--primary)' }}
             formatter={
               tooltipFormatter || ((value: number) => [value, 'Value'])
             }

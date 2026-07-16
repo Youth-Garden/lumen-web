@@ -22,14 +22,14 @@ export function XpProgressChart({ data }: XpProgressChartProps) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+      <div className="flex h-[250px] items-center justify-center text-muted-foreground">
         No learning data available for the last 7 days.
       </div>
     );
   }
 
   return (
-    <div className="h-[350px] w-full pt-4">
+    <div className="flex-1 h-full min-h-[250px] w-full pt-4">
       <BarChart
         data={formattedData}
         tooltipFormatter={(value: number) => [value, 'XP']}

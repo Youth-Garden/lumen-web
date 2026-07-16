@@ -38,26 +38,30 @@ export const wordMapper = (raw: any): VocabularyWord => {
   };
 };
 
+export const deckMapper = (deck: any): Deck => ({
+  id: deck?.id || '',
+  name: deck?.name || '',
+  description: deck?.description,
+  flashcardCount: deck?.flashcardCount ?? 0,
+});
+
 export const deckListMapper = (raw: any): Deck[] => {
   if (!Array.isArray(raw)) return [];
-  return raw.map((deck: any) => ({
-    id: deck?.id || '',
-    name: deck?.name || '',
-    description: deck?.description,
-    flashcardCount: deck?.flashcardCount ?? 0,
-  }));
+  return raw.map(deckMapper);
 };
+
+export const dueFlashcardMapper = (item: any): DueFlashcard => ({
+  flashcardId: item?.flashcardId || '',
+  wordId: item?.wordId || '',
+  term: item?.term || '',
+  deckId: item?.deckId || '',
+  deckName: item?.deckName || '',
+  nextReviewDate: item?.nextReviewDate || '',
+  easeFactor: item?.easeFactor ?? 0,
+  repetitions: item?.repetitions ?? 0,
+});
 
 export const dueFlashcardsMapper = (raw: any): DueFlashcard[] => {
   if (!Array.isArray(raw)) return [];
-  return raw.map((item: any) => ({
-    flashcardId: item?.flashcardId || '',
-    wordId: item?.wordId || '',
-    term: item?.term || '',
-    deckId: item?.deckId || '',
-    deckName: item?.deckName || '',
-    nextReviewDate: item?.nextReviewDate || '',
-    easeFactor: item?.easeFactor ?? 0,
-    repetitions: item?.repetitions ?? 0,
-  }));
+  return raw.map(dueFlashcardMapper);
 };

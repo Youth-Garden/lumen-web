@@ -1,4 +1,9 @@
 {
+  "Common": {
+    "notifications": "Notifications",
+    "noNotifications": "No notifications",
+    "markAllAsRead": "Mark all as read"
+  },
   "Error": {
     "title": "Something went wrong",
     "subtitle": "We apologize for the inconvenience. An unexpected error has occurred.",
@@ -76,6 +81,51 @@
     "ctaTitle": "Start your English journey today",
     "ctaSubtitle": "Join thousands of learners building real, lasting fluency with Lumen.",
     "ctaButton": "Get started free",
+
+    "statLearners": "Active Learners",
+    "statWords": "Words Mastered",
+    "statRating": "Average Rating",
+    "statSuccess": "Success Rate",
+
+    "testimonialsTitle": "What Our Learners Say",
+    "testimonialsSubtitle": "Join thousands who have transformed their English skills with Lumen.",
+    "testimonial1Quote": "Lumen has completely changed how I study English. The daily practice is addictive and effective!",
+    "testimonial2Quote": "The TOEIC preparation was seamless. I went from 450 to 780 in just 3 months.",
+    "testimonial3Quote": "I love the personalized learning path. Every exercise feels tailored to my level.",
+    "joinSuccessStories": "Ready to start your success story?",
+    "joinSuccessSubtitle": "Join our community of confident English learners today.",
+    "seeFeatures": "See all features",
+    "startFree": "Start for free",
+
+    "howItWorksEyebrow": "How it works",
+    "howItWorksTitle": "Your path to fluency in four steps",
+    "howItWorksSubtitle": "A simple, guided routine that fits into any schedule.",
+    "howItWorksStepLabel": "Step {n}",
+    "step1Title": "Create your free account",
+    "step1Desc": "Sign up in seconds and set your daily learning goal.",
+    "step2Title": "Pick a learning track",
+    "step2Desc": "Choose TOEIC, vocabulary, dictation, or any track that fits your goal.",
+    "step3Title": "Practice every day",
+    "step3Desc": "Complete short, engaging exercises tailored to your level.",
+    "step4Title": "Track your progress",
+    "step4Desc": "Watch your scores and streaks grow with detailed analytics.",
+
+    "statLearners": "Active Learners",
+    "statWords": "Words Mastered",
+    "statRating": "Average Rating",
+    "statSuccess": "Success Rate",
+
+    "testimonialsTitle": "What Our Learners Say",
+    "testimonialsSubtitle": "Join thousands who have transformed their English skills with Lumen.",
+    "testimonial1Quote": "Lumen has completely changed how I study English. The daily practice is addictive and effective!",
+    "testimonial2Quote": "The TOEIC preparation was seamless. I went from 450 to 780 in just 3 months.",
+    "testimonial3Quote": "I love the personalized learning path. Every exercise feels tailored to my level.",
+    "joinSuccessStories": "Ready to start your success story?",
+    "joinSuccessSubtitle": "Join our community of confident English learners today.",
+    "seeFeatures": "See all features",
+    "startFree": "Start for free",
+
+    "startNow": "Start now",
     "footerTagline": "The all-in-one platform to learn English, prepare for TOEIC, and build lasting fluency.",
     "footerProductTitle": "Product",
     "footerResourceTitle": "Resources",
@@ -87,6 +137,9 @@
     "footerCareers": "Careers"
   },
   "Dashboard": {
+    "activityHeatmap": "Activity Heatmap",
+    "less": "Less",
+    "more": "More",
     "Overview": {
       "title": "Overview",
       "downloadReport": "Download Report",

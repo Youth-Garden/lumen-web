@@ -1,32 +1,24 @@
-# React + TypeScript + Vite
+# Lumen Admin App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The internal administration dashboard for the Lumen platform.
 
-Currently, two official plugins are available:
+## Features
+- **User Management**: View and manage users, roles, and subscriptions.
+- **Content Management**: Create, edit, and organize grammar topics, reading materials, vocabulary decks, and quizzes.
+- **Analytics Overview**: High-level system statistics.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Getting Started
 
-## React Compiler
+To run the admin app in isolation:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+cd apps/admin
+pnpm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The admin app is typically configured to run on a separate port from the main web app (e.g., `http://localhost:3001`).
+
+## Technology Stack
+- Next.js (App Router)
+- Tailwind CSS
+- React Query

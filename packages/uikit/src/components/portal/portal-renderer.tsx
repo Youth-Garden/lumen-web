@@ -1,10 +1,10 @@
 'use client';
 
-import { Backdrop } from '../ui/backdrop';
-import { usePortalStore } from '../../store/portal.store';
-import React, { useEffect, useState } from 'react';
-import { PortalInstance } from '../../types/portal.types';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { usePortalStore } from '../../store/portal.store';
+import { PortalInstance } from '../../types/portal.types';
+import { Backdrop } from '../ui/backdrop';
 
 export const PortalRenderer = () => {
   const { portals, onDismiss } = usePortalStore();

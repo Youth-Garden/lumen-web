@@ -1,4 +1,9 @@
 {
+  "Common": {
+    "notifications": "Thông báo",
+    "noNotifications": "Không có thông báo",
+    "markAllAsRead": "Đánh dấu tất cả đã đọc"
+  },
   "Error": {
     "title": "Đã có lỗi xảy ra",
     "subtitle": "Chúng tôi xin lỗi vì sự bất tiện này. Đã có một lỗi không mong muốn xảy ra.",
@@ -76,6 +81,20 @@
     "ctaTitle": "Bắt đầu hành trình tiếng Anh hôm nay",
     "ctaSubtitle": "Tham gia cùng hàng nghìn học viên đang xây dựng sự thành thạo tiếng Anh bền vững cùng Lumen.",
     "ctaButton": "Bắt đầu miễn phí",
+    "statLearners": "Học viên hoạt động",
+    "statWords": "Từ vựng đã học",
+    "statRating": "Đánh giá trung bình",
+    "statSuccess": "Tỷ lệ thành công",
+    "testimonialsTitle": "Học viên của chúng tôi nói gì",
+    "testimonialsSubtitle": "Tham gia cùng hàng nghìn người đã thay đổi kỹ năng tiếng Anh của họ với Lumen.",
+    "testimonial1Quote": "Lumen đã thay đổi hoàn toàn cách tôi học tiếng Anh. Các bài tập hàng ngày rất thú vị và hiệu quả!",
+    "testimonial2Quote": "Chương trình luyện thi TOEIC rất tuyệt vời. Tôi đã nâng điểm từ 450 lên 780 chỉ trong 3 tháng.",
+    "testimonial3Quote": "Tôi yêu lộ trình học cá nhân hóa. Mỗi bài tập đều phù hợp với trình độ của tôi.",
+    "joinSuccessStories": "Sẵn sàng bắt đầu câu chuyện thành công của bạn?",
+    "joinSuccessSubtitle": "Tham gia cộng đồng học viên tiếng Anh tự tin của chúng tôi ngay hôm nay.",
+    "seeFeatures": "Xem tất cả tính năng",
+    "startFree": "Bắt đầu miễn phí",
+    "startNow": "Bắt đầu ngay",
     "footerTagline": "Nền tảng toàn diện để học tiếng Anh, ôn thi TOEIC và xây dựng sự thành thạo bền vững.",
     "footerProductTitle": "Sản phẩm",
     "footerResourceTitle": "Tài nguyên",
@@ -87,6 +106,9 @@
     "footerCareers": "Tuyển dụng"
   },
   "Dashboard": {
+    "activityHeatmap": "Bản đồ hoạt động",
+    "less": "Ít hơn",
+    "more": "Nhiều hơn",
     "Overview": {
       "title": "Tổng quan",
       "downloadReport": "Tải báo cáo",

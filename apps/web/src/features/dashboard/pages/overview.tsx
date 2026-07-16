@@ -101,7 +101,7 @@ export function OverviewPage() {
           </div>
 
           {dueCount > 0 && (
-            <Card className="border-orange-500/20 bg-orange-500/10 shadow-lg backdrop-blur-md hover:-translate-y-1 hover:shadow-orange-500/10 transition-all duration-300">
+            <Card className="bg-orange-50 dark:bg-orange-950/30 hover:-translate-y-1 transition-all duration-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -127,14 +127,14 @@ export function OverviewPage() {
           )}
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4 bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
+            <Card className="col-span-4">
               <CardHeader>
                 <CardTitle>XP Progress</CardTitle>
                 <CardDescription>
                   Your learning activity over the last 7 days.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pl-2">
+              <CardContent className="pl-2 flex-1 flex flex-col">
                 <XpProgressChart data={chartData} />
               </CardContent>
             </Card>
@@ -145,7 +145,7 @@ export function OverviewPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-1">
-            <Card className="bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
+            <Card>
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>

@@ -1,10 +1,10 @@
-import { Icons } from '@lumen/uikit/icons';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 
 interface MetricCardProps {
@@ -25,7 +25,7 @@ export function MetricCard({
   const isPositive = trendValue >= 0;
 
   return (
-    <Card className="bg-background/40 backdrop-blur-md border-white/10 shadow-lg hover:-translate-y-1 hover:shadow-xl hover:bg-white/5 transition-all duration-300">
+    <Card className="hover:-translate-y-1 transition-all duration-300">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icons name={icon as any} className="h-4 w-4 text-muted-foreground" />

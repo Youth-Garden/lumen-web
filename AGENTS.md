@@ -46,3 +46,7 @@
 - **Enums for Strict Values**: Do NOT use inline string or numeric literal unions (e.g. `type: 'VIDEO' | 'AUDIO' | 'TEXT'` or `quality: 1 | 2 | 3 | 4`) for strict data model fields, function arguments, or DTO properties. You MUST define and use TypeScript Enums (e.g. `export enum MaterialTypeEnum { ... }` or `export enum FlashcardRating { ... }`) to ensure type safety and reusability across the application.
 - **No Magic Numbers**: Avoid hardcoding magic numbers or strings directly into components. Always define them as Enums or constants.
 - **Nullable vs Optional Fields**: For DTO properties that might not be returned by the backend, DO NOT use strict `T | null` (e.g. `avatarUrl: string | null;`) which forces null checks and default values everywhere. Instead, use optional parameters `?` (e.g. `avatarUrl?: string;`). Only use strict null types if the backend explicitly guarantees returning a `null` key and the presence of the key is strictly required by the frontend layout. Avoid injecting `|| null` fallbacks in mappers unless explicitly necessary.
+
+## Code Commenting Convention
+
+- **No Unnecessary Comments**: Do not add comments for normal, self-explanatory information or clearly written code. Only add comments if a function is multi-step, contains complex logic, or is highly complicated.

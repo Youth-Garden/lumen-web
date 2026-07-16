@@ -11,7 +11,8 @@ import { RouteEnum } from '@/shared/constants';
 import { cn } from '@lumen/uikit/utils';
 import { Hero } from '../components/hero';
 import { FeatureGrid } from '../components/feature-grid';
-import { HowItWorks } from '../components/how-it-works';
+import { Stats } from '../components/stats';
+import { Testimonials } from '../components/testimonials';
 import { Faq } from '../components/faq';
 import { FinalCta } from '../components/final-cta';
 import { SiteFooter } from '../components/site-footer';
@@ -108,7 +109,8 @@ export default function HomePage() {
       <main className="flex-1">
         <Hero />
         <FeatureGrid />
-        <HowItWorks />
+        <Stats />
+        <Testimonials />
         <Faq />
         <FinalCta />
       </main>

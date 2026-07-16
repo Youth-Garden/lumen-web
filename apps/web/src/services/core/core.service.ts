@@ -1,9 +1,8 @@
-import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
-import { useAuthStore } from '@/store/auth.store';
-import { toast } from 'sonner';
-import axios from 'axios';
-import { cookieHelper } from '@lumen/utils';
 import { ApiEndpointEnum, RouteEnum } from '@/shared/constants';
+import { useAuthStore } from '@/store/auth.store';
+import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export abstract class CoreService extends BaseApiService {
   protected static isRefreshing = false;
@@ -101,7 +100,12 @@ export abstract class CoreService extends BaseApiService {
             }
           } else {
             // Not authenticated or no refresh token
-            if (authStore.isAuthenticated) {
+            // We should clear auth and redirect to login, unless this is a login/refresh/logout request itself
+            if (
+              !originalRequest.url?.includes('auth/login') &&
+              !originalRequest.url?.includes('auth/refresh') &&
+              !originalRequest.url?.includes('auth/logout')
+            ) {
               toast.error(
                 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
               );
@@ -112,7 +116,9 @@ export abstract class CoreService extends BaseApiService {
                 })
                 .catch(() => {})
                 .finally(() => {
-                  window.location.href = RouteEnum.LOGIN;
+                  if (window.location.pathname !== RouteEnum.LOGIN) {
+                    window.location.href = RouteEnum.LOGIN;
+                  }
                 });
             } else {
               // Show toast for 401 errors when not authenticated (e.g. login failure)
