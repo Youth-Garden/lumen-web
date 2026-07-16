@@ -26,21 +26,23 @@ export function Faq() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.1 }}
-          className="space-y-3"
+          className="divide-y divide-border border-y border-border"
         >
           {FAQS.map((faq) => (
             <details
               key={faq.qKey}
-              className="group rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors open:border-primary/40"
+              className="group py-6"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-bold text-foreground transition-colors hover:text-primary">
                 {t(faq.qKey)}
-                <Icons
-                  name="chevron-down"
-                  className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
-                />
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary/80 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                  <Icons
+                    name="chevron-down"
+                    className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180 group-hover:text-primary"
+                  />
+                </div>
               </summary>
-              <p className="mt-3 text-muted-foreground">{t(faq.aKey)}</p>
+              <p className="mt-4 text-base leading-relaxed text-muted-foreground pr-8">{t(faq.aKey)}</p>
             </details>
           ))}
         </motion.div>

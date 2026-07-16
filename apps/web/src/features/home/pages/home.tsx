@@ -12,7 +12,6 @@ import { cn } from '@lumen/uikit/utils';
 import { Hero } from '../components/hero';
 import { FeatureGrid } from '../components/feature-grid';
 import { Stats } from '../components/stats';
-import { Testimonials } from '../components/testimonials';
 import { Faq } from '../components/faq';
 import { FinalCta } from '../components/final-cta';
 import { SiteFooter } from '../components/site-footer';
@@ -110,7 +109,6 @@ export default function HomePage() {
         <Hero />
         <FeatureGrid />
         <Stats />
-        <Testimonials />
         <Faq />
         <FinalCta />
       </main>
