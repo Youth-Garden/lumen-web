@@ -51,7 +51,7 @@ export function Testimonials() {
   const t = useTranslations('Index');
 
   return (
-    <section className="py-28 bg-background">
+    <section className="py-28 bg-muted">
       <div className="container mx-auto max-w-6xl px-4">
         <motion.div
           variants={staggerContainer}

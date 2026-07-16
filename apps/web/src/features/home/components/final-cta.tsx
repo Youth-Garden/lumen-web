@@ -23,10 +23,8 @@ export function FinalCta() {
       >
         <motion.div
           variants={fadeUpVariants}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-indigo-500 to-primary px-6 py-16 text-center text-primary-foreground sm:px-16"
+          className="relative overflow-hidden rounded-3xl bg-primary px-6 py-16 text-center text-primary-foreground sm:px-16"
         >
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
 
           <div className="relative z-10 mx-auto grid max-w-4xl items-center gap-8 lg:grid-cols-[1fr_auto] lg:text-left">
             <div>

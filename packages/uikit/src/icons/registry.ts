@@ -45,6 +45,7 @@ export const registry = {
   // ── Status & Feedback ────────────────────────────────────────────────
   info: createMaterialIcon('info'),
   danger: createMaterialIcon('warning'),
+  star: createMaterialIcon('star'),
   'loader-2': createMaterialIcon('progress_activity'),
   activity: createMaterialIcon('monitor_heart'),
   zap: createMaterialIcon('bolt'),

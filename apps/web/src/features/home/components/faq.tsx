@@ -17,7 +17,7 @@ export function Faq() {
   const t = useTranslations('Index');
 
   return (
-    <section className="py-28">
+    <section className="py-28 bg-background">
       <div className="container mx-auto max-w-3xl px-4">
         <SectionHeading title={t('faqTitle')} subtitle={t('faqSubtitle')} />
 
