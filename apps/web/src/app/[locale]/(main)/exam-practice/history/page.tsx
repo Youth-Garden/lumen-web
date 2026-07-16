@@ -9,3 +9,5 @@ export async function generateMetadata() {
 }
 
 export default HistoryPage;
+
+

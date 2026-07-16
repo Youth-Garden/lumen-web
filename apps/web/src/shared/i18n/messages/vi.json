@@ -372,7 +372,20 @@
     "startFailed": "Lỗi khi bắt đầu bài thi. Vui lòng thử lại.",
     "saveAnswerFailed": "Lỗi khi lưu đáp án.",
     "finishSuccess": "Nộp bài thi thành công!",
-    "finishFailed": "Lỗi khi nộp bài thi. Vui lòng thử lại."
+    "finishFailed": "Lỗi khi nộp bài thi. Vui lòng thử lại.",
+    "myAttempts": "Lịch sử làm bài",
+    "test": "Bài thi",
+    "date": "Ngày",
+    "mode": "Chế độ",
+    "score": "Điểm số",
+    "status": "Trạng thái",
+    "actions": "Hành động",
+    "loading": "Đang tải...",
+    "noAttempts": "Không có lịch sử làm bài.",
+    "view": "Xem",
+    "continue": "Tiếp tục",
+    "resume": "Làm tiếp",
+    "retestIncorrect": "Làm lại câu sai"
   },
   "Reading": {
     "translate": "Dịch",

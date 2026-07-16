@@ -403,7 +403,20 @@
     "startFailed": "Failed to start the test. Please try again.",
     "saveAnswerFailed": "Failed to save answer.",
     "finishSuccess": "Test submitted successfully!",
-    "finishFailed": "Failed to submit the test. Please try again."
+    "finishFailed": "Failed to submit the test. Please try again.",
+    "myAttempts": "My Attempts",
+    "test": "Test",
+    "date": "Date",
+    "mode": "Mode",
+    "score": "Score",
+    "status": "Status",
+    "actions": "Actions",
+    "loading": "Loading...",
+    "noAttempts": "No attempts found.",
+    "view": "View",
+    "continue": "Continue",
+    "resume": "Resume",
+    "retestIncorrect": "Retest Incorrect"
   },
   "Reading": {
     "translate": "Translate",
