@@ -6,10 +6,10 @@ import { Icons } from '@lumen/uikit/icons';
 import { fadeUpVariants, staggerContainer } from './animations';
 
 const STATS = [
-  { value: '1,250+', labelKey: 'statLearners', icon: 'users' },
-  { value: '45,800+', labelKey: 'statWords', icon: 'book' },
-  { value: '4.9/5', labelKey: 'statRating', icon: 'star' },
-  { value: '94%', labelKey: 'statSuccess', icon: 'trophy' },
+  { value: '50+', labelKey: 'statLearners', icon: 'users' },
+  { value: '5,000+', labelKey: 'statWords', icon: 'book' },
+  { value: '5.0/5', labelKey: 'statRating', icon: 'star' },
+  { value: '98%', labelKey: 'statSuccess', icon: 'trophy' },
 ] as const;
 
 export function Stats() {

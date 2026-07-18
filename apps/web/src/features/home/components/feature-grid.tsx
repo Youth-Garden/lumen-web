@@ -46,7 +46,7 @@ export function FeatureGrid() {
   const t = useTranslations('Index');
 
   return (
-    <section id="features" className="scroll-mt-20 py-28 bg-muted">
+    <section id="features" className="scroll-mt-20 py-28 bg-primary/5">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeading
           eyebrow={t('featuresEyebrow')}
