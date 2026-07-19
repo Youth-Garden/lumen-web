@@ -1,12 +1,13 @@
-import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
+import { CoreService } from '../core';
 import { registry } from './progress.registry';
 import {
-  DashboardProgressResponse,
-  UpdateProgressSettingsPayload,
   ActivityItem,
-  LeaderboardResponse,
+  DashboardProgressResponse,
   HeatmapItem,
+  LeaderboardPeriodEnum,
+  LeaderboardResponse,
+  UpdateProgressSettingsPayload,
 } from './progress.types';
 
 export interface BadgeResponse {
@@ -42,15 +43,22 @@ export class ProgressService extends CoreService {
     return res.data;
   }
 
-  async getLeaderboard(): Promise<LeaderboardResponse> {
+  async getLeaderboard(
+    period?: LeaderboardPeriodEnum,
+  ): Promise<LeaderboardResponse> {
     const res = await this._get<LeaderboardResponse>(
       ApiEndpointEnum.PROGRESS_LEADERBOARD,
+      { params: { period } },
     );
     return res.data;
   }
 
   async updateSettings(payload: UpdateProgressSettingsPayload): Promise<void> {
     await this._put<void>(ApiEndpointEnum.PROGRESS_SETTINGS, payload);
+  }
+
+  async buyStreakFreeze(): Promise<void> {
+    await this._post<void>(ApiEndpointEnum.PROGRESS_STREAK_FREEZE);
   }
 
   async getBadges(): Promise<BadgeResponse[]> {

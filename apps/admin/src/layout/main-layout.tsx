@@ -1,3 +1,4 @@
+import { RouteEnum } from '@/shared/constants/route';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
@@ -39,7 +40,7 @@ export default function MainLayout() {
       onSettled: () => {
         logout();
         toast.success('Logged out successfully');
-        navigate('/login');
+        navigate(RouteEnum.LOGIN);
       },
     });
   };

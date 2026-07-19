@@ -17,6 +17,7 @@ import { usePortal } from '@lumen/uikit/portal';
 
 import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
+import { HighlightText } from '@/shared/components/highlight-text';
 import { AudioButton } from '@/shared/components/audio-button';
 import { CefrLevelEnum } from '@/shared/types';
 
@@ -58,8 +59,8 @@ export function VocabularyListPage() {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex flex-col gap-4">
+        <div className="relative w-full max-w-md">
           <Icons
             name="search"
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
@@ -71,10 +72,29 @@ export function VocabularyListPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Button variant="outline" className="gap-2">
-          <Icons name="filter" className="h-4 w-4" />
-          {t('filterByLevel')}
-        </Button>
+        
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground mr-2 font-medium">CEFR Level:</span>
+          <Button 
+            variant={cefrLevel === '' ? 'default' : 'outline'} 
+            size="sm" 
+            className="h-8 rounded-full"
+            onClick={() => setCefrLevel('')}
+          >
+            All
+          </Button>
+          {Object.values(CefrLevelEnum).map((level) => (
+            <Button
+              key={level}
+              variant={cefrLevel === level ? 'default' : 'outline'}
+              size="sm"
+              className="h-8 rounded-full"
+              onClick={() => setCefrLevel(level)}
+            >
+              {level}
+            </Button>
+          ))}
+        </div>
       </div>
 
       <ScrollArea className="flex-1 rounded-md border border-border">
@@ -83,12 +103,12 @@ export function VocabularyListPage() {
             Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-24 w-full rounded-xl" />
             ))
-          ) : data?.data.items.length === 0 ? (
+          ) : data?.items.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               {t('noResults')}
             </div>
           ) : (
-            data?.data.items.map((word, index) => (
+            data?.items.map((word, index) => (
               <Card
                 key={word.id || `word-${index}`}
                 className="group overflow-hidden transition-all hover:border-primary/50"
@@ -97,7 +117,7 @@ export function VocabularyListPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold text-foreground">
-                        {word.term}
+                        <HighlightText text={word.term} query={debouncedSearch} />
                       </h3>
                       {word.cefrLevel && (
                         <div
@@ -131,7 +151,7 @@ export function VocabularyListPage() {
                               {def.partOfSpeech}.
                             </span>
                             <span className="text-foreground">
-                              {def.definitionEn}
+                              <HighlightText text={def.definitionEn} query={debouncedSearch} />
                             </span>
                             <span className="text-muted-foreground ml-2">
                               ({def.translationVi})

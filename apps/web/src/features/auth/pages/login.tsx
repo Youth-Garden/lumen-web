@@ -5,14 +5,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import { toast } from 'sonner';
 import { Icons } from '@lumen/uikit/icons';
 
 import {
   Button,
   Input,
-  PasswordInput,
   Form,
   FormControl,
   FormField,
@@ -22,14 +20,16 @@ import {
   Logo,
 } from '@lumen/uikit/components';
 import {
-  LoginFormData,
-  getLoginSchema,
+  VerifyEmailOtpFormData,
+  getVerifyEmailOtpSchema,
 } from '@/features/auth/validations/auth';
 import { authService } from '@/services/auth';
 import { useAuthStore } from '@/store/auth.store';
 import { RouteEnum } from '@/shared/constants';
 
 import { useGoogleLogin } from '@react-oauth/google';
+
+type Step = 'email' | 'otp';
 
 export default function LoginPage() {
   const t = useTranslations('Auth.Login');
@@ -38,14 +38,13 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const setAuth = useAuthStore((state) => state.setAuth);
 
+  const [step, setStep] = useState<Step>('email');
   const [isLoading, setIsLoading] = useState(false);
+  const [resendIn, setResendIn] = useState(0);
 
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(getLoginSchema(tVal)),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const form = useForm<VerifyEmailOtpFormData>({
+    resolver: zodResolver(getVerifyEmailOtpSchema(tVal)),
+    defaultValues: { email: '', otp: '' },
   });
 
   const handleGoogleLogin = useGoogleLogin({
@@ -75,11 +74,27 @@ export default function LoginPage() {
     },
   });
 
-  async function onSubmit(data: LoginFormData) {
+  async function handleSendOtp() {
+    const valid = await form.trigger('email');
+    if (!valid) return;
+    try {
+      setIsLoading(true);
+      await authService.sendEmailOtp({ email: form.getValues('email') });
+      setStep('otp');
+      toast.success(t('otpSent'));
+      startResendTimer();
+    } catch {
+      // Errors handled globally
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function onVerify(data: VerifyEmailOtpFormData) {
     try {
       setIsLoading(true);
       const [res] = await Promise.all([
-        authService.login(data),
+        authService.verifyEmailOtp({ email: data.email, otp: data.otp }),
         new Promise((resolve) => setTimeout(resolve, 500)),
       ]);
 
@@ -93,9 +108,34 @@ export default function LoginPage() {
       const callbackUrl = searchParams.get('callbackUrl');
       router.push(callbackUrl || RouteEnum.DASHBOARD);
       router.refresh();
-    } catch (error) {
+    } catch {
+      // Errors handled globally
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  function startResendTimer() {
+    setResendIn(30);
+    const id = setInterval(() => {
+      setResendIn((current) => {
+        if (current <= 1) {
+          clearInterval(id);
+          return 0;
+        }
+        return current - 1;
+      });
+    }, 1000);
+  }
+
+  async function handleResend() {
+    if (resendIn > 0) return;
+    try {
+      await authService.sendEmailOtp({ email: form.getValues('email') });
+      toast.success(t('otpSent'));
+      startResendTimer();
+    } catch {
+      // Errors handled globally
     }
   }
 
@@ -110,62 +150,124 @@ export default function LoginPage() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('email')}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="name@example.com"
-                    type="email"
-                    autoComplete="email"
-                    disabled={isLoading}
-                    {...field}
+        <form onSubmit={form.handleSubmit(onVerify)} className="space-y-4">
+          {step === 'email' ? (
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('email')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="name@example.com"
+                      type="email"
+                      autoComplete="email"
+                      disabled={isLoading}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleSendOtp();
+                        }
+                      }}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+                {t('otpSentTo')}{' '}
+                <span className="font-medium text-foreground">
+                  {form.getValues('email')}
+                </span>
+              </div>
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('otp')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="123456"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        maxLength={6}
+                        disabled={isLoading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="button"
+                variant="link"
+                className="h-auto p-0 text-sm"
+                disabled={resendIn > 0}
+                onClick={handleResend}
+              >
+                {resendIn > 0
+                  ? t('resendIn', { seconds: resendIn })
+                  : t('resend')}
+              </Button>
+            </div>
+          )}
+
+          {step === 'email' ? (
+            <Button
+              type="button"
+              className="w-full mt-6"
+              disabled={isLoading}
+              onClick={handleSendOtp}
+            >
+              {isLoading ? (
+                <>
+                  <Icons
+                    name="loader-2"
+                    className="mr-2 h-4 w-4 animate-spin"
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>{t('password')}</FormLabel>
-                  <Link
-                    href={RouteEnum.FORGOT_PASSWORD}
-                    className="text-sm font-medium text-primary hover:underline"
-                  >
-                    {t('forgotPassword')}
-                  </Link>
-                </div>
-                <FormControl>
-                  <PasswordInput
-                    placeholder="••••••••"
-                    autoComplete="current-password"
-                    disabled={isLoading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="w-full mt-6" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Icons name="loader-2" className="mr-2 h-4 w-4 animate-spin" />
-                {t('processing')}
-              </>
-            ) : (
-              t('submit')
-            )}
-          </Button>
+                  {t('processing')}
+                </>
+              ) : (
+                t('sendCode')
+              )}
+            </Button>
+          ) : (
+            <div className="space-y-3">
+              <Button
+                type="submit"
+                className="w-full mt-2"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Icons
+                      name="loader-2"
+                      className="mr-2 h-4 w-4 animate-spin"
+                    />
+                    {t('processing')}
+                  </>
+                ) : (
+                  t('verify')
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full"
+                disabled={isLoading}
+                onClick={() => setStep('email')}
+              >
+                {t('backToEmail')}
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
 
@@ -190,16 +292,6 @@ export default function LoginPage() {
         <Icons name="google" className="mr-2 h-4 w-4" />
         Google
       </Button>
-
-      <div className="text-center text-sm text-muted-foreground mt-2">
-        {t('noAccount')}{' '}
-        <Link
-          href={RouteEnum.REGISTER}
-          className="font-medium text-primary hover:underline hover:text-primary/90 transition-colors"
-        >
-          {t('registerNow')}
-        </Link>
-      </div>
     </div>
   );
 }

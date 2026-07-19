@@ -5,6 +5,8 @@ export const ApiEndpointEnum = {
   LOGOUT: '/api/iam/logout',
   REFRESH_TOKEN: '/api/iam/refresh',
   GET_ME: '/api/iam/me',
+  // Admin
+  ADMIN_DASHBOARD: '/api/admin/dashboard',
 
   // Users (Admin management)
   USERS: '/api/iam/users',

@@ -8,12 +8,10 @@ import {
 } from './vocabulary.mappers';
 
 export const registry: MapperRegistry = {
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORDS)]:
-    wordMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORDS)]: wordMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORD_DETAIL)]:
     wordMapper,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_DECKS)]:
-    deckMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_DECKS)]: deckMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE)]:
     dueFlashcardMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_DECKS)]:

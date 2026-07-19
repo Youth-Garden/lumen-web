@@ -8,6 +8,11 @@ export enum ActivityType {
   SPEAKING_COMPLETED = 'speaking_completed',
 }
 
+export enum LeaderboardPeriodEnum {
+  WEEKLY = 'weekly',
+  ALL_TIME = 'all-time',
+}
+
 export interface DashboardProgressResponse {
   streak: number;
   lastActivityDate?: string;

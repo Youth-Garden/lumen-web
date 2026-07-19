@@ -1,24 +1,39 @@
 # Lumen Admin App
 
-The internal administration dashboard for the Lumen platform.
+`apps/admin` is the internal administration dashboard for the Lumen platform. It is a Vite + React 19 single-page application (SPA) for content creators and system administrators.
 
-## Features
-- **User Management**: View and manage users, roles, and subscriptions.
-- **Content Management**: Create, edit, and organize grammar topics, reading materials, vocabulary decks, and quizzes.
-- **Analytics Overview**: High-level system statistics.
+## Overview
+- A fast, lightweight SPA (no SSR) used by staff to manage platform content and users.
+- Talks to the same NestJS backend REST API as the web app (`@lumen/shared-api` + `@lumen/uikit`).
+- Theming via `next-themes` (light/dark) for parity with the public app.
+
+## Feature Areas
+- User Management: view and manage users, roles, and accounts.
+- Content Management: create and edit grammar topics, reading articles, vocabulary decks, TOEIC questions, and dictation materials (rich-text editing via Tiptap).
+- Analytics Overview: high-level system statistics and charts.
+
+## Tech Stack
+- Vite + React 19 (SPA)
+- React Router v7 for client-side routing
+- Tailwind CSS v4, `@lumen/uikit` (base-ui based design system)
+- TanStack Query for server state
+- TanStack Table for data grids
+- Tiptap for rich-text editing
+- Recharts for dashboards
+- Zustand for client state, Zod + React Hook Form for forms
+- `sonner` for toasts, `date-fns` for dates
+- oxlint for linting
 
 ## Getting Started
-
-To run the admin app in isolation:
-
+From the frontend workspace root:
 ```bash
-cd apps/admin
-pnpm run dev
+pnpm install
+pnpm --filter admin dev        # or: cd apps/admin && pnpm dev
 ```
+It expects the backend running at the configured `BACKEND_URL` and typically serves on a separate port from the web app (Vite default).
 
-The admin app is typically configured to run on a separate port from the main web app (e.g., `http://localhost:3001`).
-
-## Technology Stack
-- Next.js (App Router)
-- Tailwind CSS
-- React Query
+## Scripts (in `apps/admin`)
+- `pnpm dev` - Vite dev server.
+- `pnpm build` - type-check (`tsc -b`) and production build.
+- `pnpm preview` - preview the production build.
+- `pnpm lint` - oxlint.

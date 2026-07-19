@@ -1,4 +1,3 @@
-
 import type {
   VocabularyWord,
   VocabularyWordListResponse,

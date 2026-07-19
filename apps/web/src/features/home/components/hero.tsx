@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { RouteEnum } from '@/shared/constants';
@@ -14,11 +14,18 @@ const HERO_IMAGE =
 
 export function Hero() {
   const t = useTranslations('Index');
+  const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-20 lg:pt-32 lg:pb-28">
-      {/* Refined modern background */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+    <section
+      className="relative overflow-hidden pt-24 pb-20 lg:pt-32 lg:pb-28"
+      aria-labelledby="hero-title"
+    >
+      {/* Refined modern background - decorative only */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"
+      >
         <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[500px] w-[500px] rounded-full bg-primary/20 opacity-30 blur-[120px]" />
       </div>
 
@@ -60,7 +67,7 @@ export function Hero() {
           variants={fadeUpVariants}
           className="flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row"
         >
-          <Link href={RouteEnum.REGISTER} className="w-full sm:w-auto">
+          <Link href={RouteEnum.LOGIN} className="w-full sm:w-auto">
             <Button
               size="lg"
               className="group w-full gap-2 rounded-full px-8 text-lg min-h-[56px] shadow-lg transition-all hover:shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"

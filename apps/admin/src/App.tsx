@@ -4,25 +4,25 @@ import { Toaster } from '@lumen/uikit/components';
 
 import MainLayout from './layout/main-layout';
 import ProtectedRoute from './shared/components/protected-route';
-import LoginPage from './features/auth/pages/login';
-import DashboardPage from './features/dashboard/pages/overview';
-import TestList from './features/toeic/pages/test-list';
-import TestForm from './features/toeic/pages/test-form';
-import MissingExplanationsPage from './features/toeic/pages/missing-explanations';
-import VocabList from './features/vocabulary/pages/vocab-list';
-import VocabForm from './features/vocabulary/pages/vocab-form';
-import UserList from './features/users/pages/user-list';
-import UserForm from './features/users/pages/user-form';
-import MaterialList from './features/materials/pages/material-list';
-import MaterialForm from './features/materials/pages/material-form';
-import ReadingList from './features/reading/pages/reading-list';
-import ReadingForm from './features/reading/pages/reading-form';
-import GrammarList from './features/grammar/pages/grammar-list';
-import GrammarForm from './features/grammar/pages/grammar-form';
-import ListeningSpeakingList from './features/listening-speaking/pages/listening-speaking-list';
-import ListeningSpeakingForm from './features/listening-speaking/pages/listening-speaking-form';
-import QuizzesList from './features/quizzes/pages/quizzes-list';
-import QuizzesForm from './features/quizzes/pages/quizzes-form';
+import LoginPage from './features/auth/pages/login-page';
+import DashboardPage from './features/dashboard/pages/overview-page';
+import TestListPage from './features/toeic/pages/test-list-page';
+import TestFormPage from './features/toeic/pages/test-form-page';
+import MissingExplanationsPage from './features/toeic/pages/missing-explanations-page';
+import VocabListPage from './features/vocabulary/pages/vocab-list-page';
+import VocabFormPage from './features/vocabulary/pages/vocab-form-page';
+import UserListPage from './features/users/pages/user-list-page';
+import UserFormPage from './features/users/pages/user-form-page';
+import MaterialListPage from './features/materials/pages/material-list-page';
+import MaterialFormPage from './features/materials/pages/material-form-page';
+import ReadingListPage from './features/reading/pages/reading-list-page';
+import ReadingFormPage from './features/reading/pages/reading-form-page';
+import GrammarListPage from './features/grammar/pages/grammar-list-page';
+import GrammarFormPage from './features/grammar/pages/grammar-form-page';
+import ListeningSpeakingListPage from './features/listening-speaking/pages/listening-speaking-list-page';
+import ListeningSpeakingFormPage from './features/listening-speaking/pages/listening-speaking-form-page';
+import QuizzesListPage from './features/quizzes/pages/quizzes-list-page';
+import QuizzesFormPage from './features/quizzes/pages/quizzes-form-page';
 
 const queryClient = new QueryClient();
 
@@ -38,21 +38,21 @@ function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="users">
-                <Route index element={<UserList />} />
-                <Route path="new" element={<UserForm />} />
-                <Route path=":id/edit" element={<UserForm />} />
+                <Route index element={<UserListPage />} />
+                <Route path="new" element={<UserFormPage />} />
+                <Route path=":id/edit" element={<UserFormPage />} />
               </Route>
 
               <Route path="materials">
-                <Route index element={<MaterialList />} />
-                <Route path="new" element={<MaterialForm />} />
-                <Route path=":id/edit" element={<MaterialForm />} />
+                <Route index element={<MaterialListPage />} />
+                <Route path="new" element={<MaterialFormPage />} />
+                <Route path=":id/edit" element={<MaterialFormPage />} />
               </Route>
 
               <Route path="toeic">
-                <Route index element={<TestList />} />
-                <Route path="new" element={<TestForm />} />
-                <Route path=":id/edit" element={<TestForm />} />
+                <Route index element={<TestListPage />} />
+                <Route path="new" element={<TestFormPage />} />
+                <Route path=":id/edit" element={<TestFormPage />} />
                 <Route
                   path="missing-explanations"
                   element={<MissingExplanationsPage />}
@@ -60,33 +60,36 @@ function App() {
               </Route>
 
               <Route path="vocabulary">
-                <Route index element={<VocabList />} />
-                <Route path="new" element={<VocabForm />} />
-                <Route path=":id/edit" element={<VocabForm />} />
+                <Route index element={<VocabListPage />} />
+                <Route path="new" element={<VocabFormPage />} />
+                <Route path=":id/edit" element={<VocabFormPage />} />
               </Route>
 
               <Route path="reading">
-                <Route index element={<ReadingList />} />
-                <Route path="new" element={<ReadingForm />} />
-                <Route path=":id/edit" element={<ReadingForm />} />
+                <Route index element={<ReadingListPage />} />
+                <Route path="new" element={<ReadingFormPage />} />
+                <Route path=":id/edit" element={<ReadingFormPage />} />
               </Route>
 
               <Route path="grammar">
-                <Route index element={<GrammarList />} />
-                <Route path="new" element={<GrammarForm />} />
-                <Route path=":id/edit" element={<GrammarForm />} />
+                <Route index element={<GrammarListPage />} />
+                <Route path="new" element={<GrammarFormPage />} />
+                <Route path=":id/edit" element={<GrammarFormPage />} />
               </Route>
 
               <Route path="listening-speaking">
-                <Route index element={<ListeningSpeakingList />} />
-                <Route path="new" element={<ListeningSpeakingForm />} />
-                <Route path=":id/edit" element={<ListeningSpeakingForm />} />
+                <Route index element={<ListeningSpeakingListPage />} />
+                <Route path="new" element={<ListeningSpeakingFormPage />} />
+                <Route
+                  path=":id/edit"
+                  element={<ListeningSpeakingFormPage />}
+                />
               </Route>
 
               <Route path="quizzes">
-                <Route index element={<QuizzesList />} />
-                <Route path="new" element={<QuizzesForm />} />
-                <Route path=":id/edit" element={<QuizzesForm />} />
+                <Route index element={<QuizzesListPage />} />
+                <Route path="new" element={<QuizzesFormPage />} />
+                <Route path=":id/edit" element={<QuizzesFormPage />} />
               </Route>
 
               <Route

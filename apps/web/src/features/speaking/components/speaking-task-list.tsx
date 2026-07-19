@@ -10,13 +10,16 @@ import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 import type { SpeakingTaskDto } from '@/services/speaking';
 import { useSpeakingTasks } from '../hooks/use-speaking';
+import { HighlightText } from '@/shared/components/highlight-text';
 
 const TaskCard = ({
   task,
   index,
+  searchQuery = '',
 }: {
   task: SpeakingTaskDto;
   index: number;
+  searchQuery?: string;
 }) => {
   const t = useTranslations('Speaking');
 
@@ -41,11 +44,11 @@ const TaskCard = ({
           </div>
 
           <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
-            {task.title}
+            <HighlightText text={task.title} query={searchQuery} />
           </h3>
 
           <p className="text-sm text-muted-foreground line-clamp-3 mb-6 flex-1">
-            {task.prompt}
+            <HighlightText text={task.prompt} query={searchQuery} />
           </p>
 
           <div className="flex items-center text-primary text-sm font-medium mt-auto">
@@ -107,7 +110,7 @@ export const SpeakingTaskList = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tasks.map((task, index) => (
-            <TaskCard key={task.id} task={task} index={index} />
+            <TaskCard key={task.id} task={task} index={index} searchQuery={search} />
           ))}
         </div>
       )}

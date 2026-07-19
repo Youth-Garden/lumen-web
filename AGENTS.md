@@ -18,7 +18,7 @@
 
 ## Service & API Layer Convention
 
-- **Mapper Registry**: ALL API endpoints MUST be explicitly registered in a `MapperRegistry` (`[feature].registry.ts`). No exceptions. Even if the endpoint only returns a simple `{ id: string }`, you must register it with `idResponseMapper`. Do not rely on the core API client implicitly returning unmapped JSON.
+- **Mapper Registry**: ALL API endpoints MUST be explicitly registered in a `MapperRegistry` (`[feature].registry.ts`). No exceptions. Even if the endpoint only returns a simple `{ id: string }`, you must register it with `idResponseMapper`. For endpoints returning `void` or 204 No Content, explicitly register them using `voidResponseMapper` (or `noContentMapper`) from `@/services/core`. NEVER assign `undefined` to an endpoint key in a `MapperRegistry`. Do not rely on the core API client implicitly returning unmapped JSON.
 
 ## State & Routing Convention
 

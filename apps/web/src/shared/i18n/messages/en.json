@@ -221,59 +221,19 @@
       "success": "Login successful",
       "successDesc": "Welcome back to Lumen Platform.",
       "title": "Log in",
-      "subtitle": "Enter your email and password to access the system",
+      "subtitle": "Enter your email to receive a verification code",
       "email": "Email",
-      "password": "Password",
-      "forgotPassword": "Forgot password?",
+      "otp": "Verification code",
+      "otpSent": "Verification code sent",
+      "otpSentTo": "We sent a 6-digit code to",
+      "otpPlaceholder": "6-digit code",
+      "sendCode": "Continue with email",
+      "verify": "Verify & log in",
       "processing": "Processing...",
-      "submit": "Log in",
-      "noAccount": "Don't have an account?",
-      "registerNow": "Register now",
+      "resend": "Resend code",
+      "resendIn": "Resend code in {seconds}s",
+      "backToEmail": "Use a different email",
       "orContinueWith": "Or continue with"
-    },
-    "Register": {
-      "success": "Registration successful",
-      "successDesc": "Your account has been created. Please log in.",
-      "title": "Create an account",
-      "subtitle": "Fill in the information below to join Lumen Platform",
-      "email": "Email",
-      "password": "Password",
-      "confirmPassword": "Confirm password",
-      "processing": "Processing...",
-      "submit": "Register",
-      "hasAccount": "Already have an account?",
-      "loginNow": "Log in",
-      "orContinueWith": "Or continue with"
-    },
-    "ForgotPassword": {
-      "title": "Forgot Password",
-      "description": "Enter your email to receive a password reset link",
-      "email": "Email",
-      "submit": "Send reset link",
-      "rememberPassword": "Remember your password?",
-      "loginLink": "Log in",
-      "success": "Reset link sent",
-      "successDesc": "Please check your email for the reset link",
-      "checkEmail": "Check your email",
-      "checkEmailDesc": "We have sent a password reset link to your email address.",
-      "backToLogin": "Back to login",
-      "error": "Error",
-      "errorDesc": "Failed to send reset link. Please try again."
-    },
-    "ResetPassword": {
-      "title": "Reset Password",
-      "description": "Enter your new password below",
-      "missingToken": "Invalid or missing reset token",
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm Password",
-      "submit": "Reset Password",
-      "cancel": "Cancel",
-      "success": "Password reset successfully",
-      "successDesc": "You can now log in with your new password",
-      "resetSuccess": "Password Changed",
-      "redirecting": "Redirecting to login...",
-      "error": "Error",
-      "errorDesc": "Failed to reset password. The link might be expired."
     },
     "Layout": {
       "title": "Lumen Platform",
@@ -281,8 +241,8 @@
     },
     "Validation": {
       "invalidEmail": "Invalid email",
-      "passwordMin": "Password must be at least 6 characters",
-      "passwordMismatch": "Passwords do not match"
+      "otpLength": "OTP must be 6 digits",
+      "otpDigits": "OTP must contain only numbers"
     }
   },
   "Vocabulary": {
@@ -574,5 +534,36 @@
     "referenceAudio": "Reference Audio",
     "noMicPermission": "Microphone permission is required to record audio.",
     "uploadAudio": "Upload Audio File"
+  },
+  "Gamification": {
+    "streak": "Daily Streak",
+    "daysStreak": "{count} Days Streak",
+    "streakActive": "Active",
+    "streakLost": "Streak Lost",
+    "freezeShields": "Freeze Shields",
+    "buyFreeze": "Buy Freeze (500 XP)",
+    "buyFreezeSuccess": "Streak Freeze purchased successfully!",
+    "insufficientPoints": "Not enough XP points.",
+    "leaderboard": "Leaderboard",
+    "weekly": "Weekly",
+    "allTime": "All-Time",
+    "rank": "Rank #{rank}",
+    "yourRank": "Your Rank",
+    "badges": "Achievements & Badges",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "points": "{xp} XP"
+  },
+  "AdaptiveLearning": {
+    "title": "Weakness Remediation",
+    "subtitle": "Targeted practice based on your TOEIC performance",
+    "overallAccuracy": "Overall TOEIC Accuracy",
+    "partMastery": "Part Mastery Breakdown",
+    "startSmartDrill": "Start 5-Min Smart Practice",
+    "recommendedParts": "Focus Parts",
+    "statusMastered": "Mastered",
+    "statusModerate": "Moderate",
+    "statusPractice": "Critical Focus",
+    "drillCompleted": "Drill completed!"
   }
 }

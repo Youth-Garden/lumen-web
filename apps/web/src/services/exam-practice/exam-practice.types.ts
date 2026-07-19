@@ -21,6 +21,12 @@ export enum ExamAttemptMode {
   RETEST = 'RETEST',
 }
 
+export enum WeaknessLevelEnum {
+  MASTERED = 'MASTERED',
+  MODERATE = 'MODERATE',
+  NEEDS_PRACTICE = 'NEEDS_PRACTICE',
+}
+
 export interface StartExamAttemptRequest {
   testId: string;
   testType: ExamType;
@@ -89,4 +95,35 @@ export interface PagingMeta {
 export interface AttemptHistoryResponse {
   items: AttemptSummary[];
   paging: PagingMeta;
+}
+
+export interface PartMastery {
+  partNumber: number;
+  name: string;
+  totalAttempted: number;
+  correctCount: number;
+  accuracyPercentage: number;
+  weaknessLevel: WeaknessLevelEnum;
+}
+
+export interface WeaknessAnalysisResponse {
+  partMasteries: PartMastery[];
+  recommendedPartNumbers: number[];
+  overallAccuracy: number;
+}
+
+export interface AdaptiveDrillQuestion {
+  questionId: string;
+  partNumber: number;
+  prompt: string;
+  options: string[];
+  explanation?: string;
+}
+
+export interface AdaptiveDrillResponse {
+  drillId: string;
+  title: string;
+  targetPartNumbers: number[];
+  estimatedMinutes: number;
+  questions: AdaptiveDrillQuestion[];
 }

@@ -40,8 +40,15 @@ export const BarChart = ({
   tooltipFormatter,
 }: BarChartProps) => {
   return (
-    <div className="w-full outline-none focus:outline-none [&_:focus]:outline-none [&_:focus-visible]:outline-none" style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" className="outline-none focus:outline-none">
+    <div
+      className="w-full outline-none focus:outline-none [&_:focus]:outline-none [&_:focus-visible]:outline-none"
+      style={{ height }}
+    >
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        className="outline-none focus:outline-none"
+      >
         <RechartsBarChart
           data={data}
           margin={{ top: 0, right: 0, left: -20, bottom: 0 }}

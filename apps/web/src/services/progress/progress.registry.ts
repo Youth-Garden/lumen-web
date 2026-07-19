@@ -1,9 +1,11 @@
+import { idResponseMapper, voidResponseMapper } from '@/services/core';
 import { ApiEndpointEnum } from '@/shared/constants';
 import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
 import {
-  recentActivitiesMapper,
-  heatmapListMapper,
   dashboardMapper,
+  heatmapListMapper,
+  leaderboardMapper,
+  recentActivitiesMapper,
 } from './progress.mappers';
 
 export const registry: MapperRegistry = {
@@ -13,4 +15,12 @@ export const registry: MapperRegistry = {
     heatmapListMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_ACTIVITIES)]:
     recentActivitiesMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_LEADERBOARD)]:
+    leaderboardMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_BADGES)]:
+    voidResponseMapper,
+  [registryKey(HttpMethod.PUT, ApiEndpointEnum.PROGRESS_SETTINGS)]:
+    voidResponseMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.PROGRESS_STREAK_FREEZE)]:
+    idResponseMapper,
 };

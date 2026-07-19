@@ -190,59 +190,19 @@
       "success": "Đăng nhập thành công",
       "successDesc": "Chào mừng bạn quay lại với Lumen Platform.",
       "title": "Đăng nhập",
-      "subtitle": "Nhập email và mật khẩu của bạn để truy cập hệ thống",
+      "subtitle": "Nhập email để nhận mã xác thực",
       "email": "Email",
-      "password": "Mật khẩu",
-      "forgotPassword": "Quên mật khẩu?",
+      "otp": "Mã xác thực",
+      "otpSent": "Đã gửi mã xác thực",
+      "otpSentTo": "Chúng tôi đã gửi mã 6 chữ số đến",
+      "otpPlaceholder": "Mã 6 chữ số",
+      "sendCode": "Tiếp tục với email",
+      "verify": "Xác thực & đăng nhập",
       "processing": "Đang xử lý...",
-      "submit": "Đăng nhập",
-      "noAccount": "Chưa có tài khoản?",
-      "registerNow": "Đăng ký ngay",
+      "resend": "Gửi lại mã",
+      "resendIn": "Gửi lại mã sau {seconds}s",
+      "backToEmail": "Dùng email khác",
       "orContinueWith": "Hoặc tiếp tục với"
-    },
-    "Register": {
-      "success": "Đăng ký thành công",
-      "successDesc": "Tài khoản của bạn đã được tạo. Vui lòng đăng nhập.",
-      "title": "Tạo tài khoản",
-      "subtitle": "Điền thông tin bên dưới để tham gia Lumen Platform",
-      "email": "Email",
-      "password": "Mật khẩu",
-      "confirmPassword": "Xác nhận mật khẩu",
-      "processing": "Đang xử lý...",
-      "submit": "Đăng ký",
-      "hasAccount": "Đã có tài khoản?",
-      "loginNow": "Đăng nhập",
-      "orContinueWith": "Hoặc tiếp tục với"
-    },
-    "ForgotPassword": {
-      "title": "Quên mật khẩu",
-      "description": "Nhập email của bạn để nhận liên kết đặt lại mật khẩu",
-      "email": "Email",
-      "submit": "Gửi liên kết",
-      "rememberPassword": "Bạn đã nhớ mật khẩu?",
-      "loginLink": "Đăng nhập",
-      "success": "Đã gửi liên kết",
-      "successDesc": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu",
-      "checkEmail": "Kiểm tra email",
-      "checkEmailDesc": "Chúng tôi đã gửi một liên kết đặt lại mật khẩu đến email của bạn.",
-      "backToLogin": "Quay lại đăng nhập",
-      "error": "Lỗi",
-      "errorDesc": "Không thể gửi liên kết. Vui lòng thử lại."
-    },
-    "ResetPassword": {
-      "title": "Đặt lại mật khẩu",
-      "description": "Nhập mật khẩu mới của bạn bên dưới",
-      "missingToken": "Token không hợp lệ hoặc đã hết hạn",
-      "newPassword": "Mật khẩu mới",
-      "confirmPassword": "Xác nhận mật khẩu",
-      "submit": "Xác nhận",
-      "cancel": "Hủy",
-      "success": "Đặt lại mật khẩu thành công",
-      "successDesc": "Bạn có thể đăng nhập bằng mật khẩu mới",
-      "resetSuccess": "Đã thay đổi mật khẩu",
-      "redirecting": "Đang chuyển hướng...",
-      "error": "Lỗi",
-      "errorDesc": "Không thể đặt lại mật khẩu. Liên kết có thể đã hết hạn."
     },
     "Layout": {
       "title": "Lumen Platform",
@@ -250,8 +210,8 @@
     },
     "Validation": {
       "invalidEmail": "Email không hợp lệ",
-      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
-      "passwordMismatch": "Mật khẩu không khớp"
+      "otpLength": "Mã OTP phải có 6 chữ số",
+      "otpDigits": "Mã OTP chỉ được chứa số"
     }
   },
   "Vocabulary": {
@@ -543,5 +503,36 @@
     "referenceAudio": "Audio tham khảo",
     "noMicPermission": "Cần cấp quyền microphone để ghi âm.",
     "uploadAudio": "Tải lên file âm thanh"
+  },
+  "Gamification": {
+    "streak": "Chuỗi ngày học",
+    "daysStreak": "Chuỗi {count} ngày",
+    "streakActive": "Đang hoạt động",
+    "streakLost": "Đã mất chuỗi",
+    "freezeShields": "Khiên đóng băng",
+    "buyFreeze": "Mua khiên (500 XP)",
+    "buyFreezeSuccess": "Mua khiên đóng băng thành công!",
+    "insufficientPoints": "Không đủ điểm XP.",
+    "leaderboard": "Bảng xếp hạng",
+    "weekly": "Hàng tuần",
+    "allTime": "Tất cả thời gian",
+    "rank": "Hạng #{rank}",
+    "yourRank": "Thứ hạng của bạn",
+    "badges": "Huy hiệu & Thành tựu",
+    "unlocked": "Đã mở khóa",
+    "locked": "Chưa mở khóa",
+    "points": "{xp} XP"
+  },
+  "AdaptiveLearning": {
+    "title": "Cải thiện điểm yếu",
+    "subtitle": "Bài tập mục tiêu dựa trên kết quả thi TOEIC của bạn",
+    "overallAccuracy": "Tỷ lệ chính xác TOEIC tổng thể",
+    "partMastery": "Chi tiết làm chủ theo Part",
+    "startSmartDrill": "Bắt đầu luyện tập 5 phút",
+    "recommendedParts": "Phần cần tập trung",
+    "statusMastered": "Thành thạo",
+    "statusModerate": "Ká",
+    "statusPractice": "Cần tập trung",
+    "drillCompleted": "Hoàn thành bài luyện tập!"
   }
 }

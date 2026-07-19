@@ -15,6 +15,8 @@ import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { AdaptiveDrillWidget } from './adaptive-drill-widget';
+import { WeaknessRadar } from './weakness-radar';
 import { useGetToeicTests } from '../hooks';
 
 export const ToeicTestList = () => {
@@ -40,7 +42,7 @@ export const ToeicTestList = () => {
 
   return (
     <div className="space-y-8">
-      {/* Premium Header */}
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -67,70 +69,81 @@ export const ToeicTestList = () => {
         </div>
       </motion.div>
 
+      {/* Adaptive Weakness & Micro-Drill Section */}
+      <div className="space-y-6">
+        <AdaptiveDrillWidget />
+        <WeaknessRadar />
+      </div>
+
       {/* Tests Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {data.items?.map((test, index) => (
-          <motion.div
-            key={test.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -5 }}
-            className="group"
-          >
-            <Card className="h-full overflow-hidden border-none bg-white/60 shadow-lg backdrop-blur-xl transition-all duration-300 hover:shadow-xl dark:bg-slate-900/60">
-              <CardHeader className="relative bg-gradient-to-b from-indigo-50 to-transparent pb-4 dark:from-indigo-950/50">
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-semibold text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300">
-                    {t('fullTest')}
-                  </span>
-                  <div className="flex space-x-1">
-                    <Icons
-                      name="headphones"
-                      className="h-4 w-4 text-slate-400"
-                    />
-                    <Icons
-                      name="book-open"
-                      className="h-4 w-4 text-slate-400"
-                    />
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-foreground tracking-tight">
+          Standard Mock Tests
+        </h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {data.items?.map((test, index) => (
+            <motion.div
+              key={test.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="group"
+            >
+              <Card className="h-full overflow-hidden border-none bg-white/60 shadow-lg backdrop-blur-xl transition-all duration-300 hover:shadow-xl dark:bg-slate-900/60">
+                <CardHeader className="relative bg-gradient-to-b from-indigo-50 to-transparent pb-4 dark:from-indigo-950/50">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-semibold text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300">
+                      {t('fullTest')}
+                    </span>
+                    <div className="flex space-x-1">
+                      <Icons
+                        name="headphones"
+                        className="h-4 w-4 text-slate-400"
+                      />
+                      <Icons
+                        name="book-open"
+                        className="h-4 w-4 text-slate-400"
+                      />
+                    </div>
                   </div>
-                </div>
-                <CardTitle className="line-clamp-1 text-xl">
-                  {test.title}
-                </CardTitle>
-                <CardDescription className="line-clamp-2">
-                  {test.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-4 pb-4 pt-4 text-sm text-slate-500 dark:text-slate-400">
-                <div className="flex items-center gap-2">
-                  <Icons name="clock" className="h-4 w-4 text-primary" />
-                  <span>120 mins</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Icons name="bar-chart" className="h-4 w-4 text-primary" />
-                  <span>200 Questions</span>
-                </div>
-              </CardContent>
-              <CardFooter className="pt-2">
-                <Button
-                  className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 font-semibold text-white transition-all hover:from-indigo-600 hover:to-purple-700"
-                  onClick={() =>
-                    router.push(
-                      formatUrl(RouteEnum.TOEIC_TEST, { id: test.id }),
-                    )
-                  }
-                >
-                  {t('startTest')}
-                  <Icons
-                    name="arrow-right"
-                    className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
-                  />
-                </Button>
-              </CardFooter>
-            </Card>
-          </motion.div>
-        ))}
+                  <CardTitle className="line-clamp-1 text-xl">
+                    {test.title}
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {test.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-4 pb-4 pt-4 text-sm text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <Icons name="clock" className="h-4 w-4 text-primary" />
+                    <span>120 mins</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icons name="bar-chart" className="h-4 w-4 text-primary" />
+                    <span>200 Questions</span>
+                  </div>
+                </CardContent>
+                <CardFooter className="pt-2">
+                  <Button
+                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 font-semibold text-white transition-all hover:from-indigo-600 hover:to-purple-700"
+                    onClick={() =>
+                      router.push(
+                        formatUrl(RouteEnum.TOEIC_TEST, { id: test.id }),
+                      )
+                    }
+                  >
+                    {t('startTest')}
+                    <Icons
+                      name="arrow-right"
+                      className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                    />
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );

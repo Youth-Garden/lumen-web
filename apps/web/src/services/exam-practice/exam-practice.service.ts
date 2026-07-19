@@ -3,11 +3,13 @@ import { BaseResponse } from '@lumen/shared-api';
 import { CoreService } from '../core';
 import { registry } from './exam-practice.registry';
 import {
+  AdaptiveDrillResponse,
   AttemptHistoryResponse,
   ExamAttemptDetailResponse,
   StartExamAttemptRequest,
   StartExamAttemptResponse,
   SubmitExamAnswerRequest,
+  WeaknessAnalysisResponse,
 } from './exam-practice.types';
 
 export class ExamPracticeService extends CoreService {
@@ -97,6 +99,18 @@ export class ExamPracticeService extends CoreService {
       {
         pathParams: { id: sourceAttemptId },
       },
+    );
+  }
+
+  getWeaknessAnalysis(): Promise<BaseResponse<WeaknessAnalysisResponse>> {
+    return this._get<WeaknessAnalysisResponse>(
+      ApiEndpointEnum.EXAM_PRACTICE_WEAKNESS_ANALYSIS,
+    );
+  }
+
+  getAdaptiveDrill(): Promise<BaseResponse<AdaptiveDrillResponse>> {
+    return this._get<AdaptiveDrillResponse>(
+      ApiEndpointEnum.EXAM_PRACTICE_ADAPTIVE_DRILL,
     );
   }
 }

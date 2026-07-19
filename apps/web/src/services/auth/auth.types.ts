@@ -13,27 +13,17 @@ export interface AuthTokens {
   user: UserInfo;
 }
 
-export interface LoginPayload {
+export interface SendEmailOtpPayload {
   email: string;
-  password: string;
 }
 
-export interface RegisterPayload {
+export interface VerifyEmailOtpPayload {
   email: string;
-  password: string;
+  otp: string;
 }
 
 export interface UpdateProfilePayload {
   fullName?: string;
   avatarUrl?: string;
   phone?: string;
-}
-
-export interface ForgotPasswordPayload {
-  email: string;
-}
-
-export interface ResetPasswordPayload {
-  token: string;
-  newPassword: string;
 }

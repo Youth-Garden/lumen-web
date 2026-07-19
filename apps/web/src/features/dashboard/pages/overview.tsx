@@ -1,7 +1,9 @@
 'use client';
 
-import { Icons } from '@lumen/uikit/icons';
+import { useDueFlashcards } from '@/features/vocabulary/hooks/use-vocabulary';
+import { RouteEnum } from '@/shared/constants';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -11,20 +13,19 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Button,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { BadgeGrid } from '../components/badge-grid';
+import { XpProgressChart } from '../components/charts/xp-progress-chart';
+import { DailyGoalWidget } from '../components/daily-goal-widget';
+import { HeatmapCalendar } from '../components/heatmap-calendar';
+import { LeaderboardWidget } from '../components/leaderboard-widget';
 import { MetricCard } from '../components/metric-card';
 import { RecentActivity } from '../components/recent-activity';
-import { DailyGoalWidget } from '../components/daily-goal-widget';
-import { XpProgressChart } from '../components/charts/xp-progress-chart';
-import { Leaderboard } from '../components/leaderboard';
-import { BadgesList } from '../components/badges-list';
-import { useTranslations } from 'next-intl';
-import { useProgressDashboard, useHeatmap } from '../hooks';
-import { useDueFlashcards } from '@/features/vocabulary/hooks/use-vocabulary';
-import { HeatmapCalendar } from '../components/heatmap-calendar';
-import Link from 'next/link';
-import { RouteEnum } from '@/shared/constants';
+import { StreakCard } from '../components/streak-card';
+import { useHeatmap, useProgressDashboard } from '../hooks';
 
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
@@ -33,33 +34,40 @@ export function OverviewPage() {
   const { data: dueFlashcards } = useDueFlashcards();
   const dueCount = dueFlashcards?.data?.length || 0;
 
-  // Generate fake weekly data for the chart if backend doesn't provide it yet
-  const chartData = Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
+  const chartData = Array.from({ length: 7 }).map((_, indexItem) => {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - (6 - indexItem));
     return {
-      date: d.toISOString(),
+      date: currentDate.toISOString(),
       xp: Math.floor(Math.random() * 200) + 50,
     };
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">
-          Your Learning Dashboard
-        </h2>
-        <div className="flex items-center space-x-2">
-          <Button>Download Report</Button>
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">
+            Your Learning Dashboard
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Track daily streaks, leaderboards, and personalized progress.
+          </p>
         </div>
       </div>
+
+      <StreakCard
+        streak={progressData?.streak || 0}
+        streakFreezes={progressData?.streakFreezes || 0}
+        totalPoints={progressData?.totalPoints || 0}
+      />
+
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
           <TabsTrigger value="gamification">
             {t('tabs.gamification')}
           </TabsTrigger>
-          <TabsTrigger value="analytics">{t('tabs.analytics')}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -76,13 +84,6 @@ export function OverviewPage() {
               trend="keep it up!"
               trendValue={100}
               icon="flame"
-            />
-            <MetricCard
-              title="Words Learned"
-              value="0"
-              trend="from last month"
-              trendValue={0}
-              icon="book-open"
             />
             <MetricCard
               title="Streak Freezes"
@@ -158,13 +159,14 @@ export function OverviewPage() {
             </Card>
           </div>
         </TabsContent>
+
         <TabsContent value="gamification" className="space-y-4 mt-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <div className="col-span-1 md:col-span-2 lg:col-span-3">
-              <Leaderboard />
+          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
+            <div className="col-span-1 lg:col-span-3">
+              <LeaderboardWidget />
             </div>
-            <div className="col-span-1 md:col-span-2 lg:col-span-4">
-              <BadgesList />
+            <div className="col-span-1 lg:col-span-4">
+              <BadgeGrid unlockedBadges={progressData?.unlockedBadges} />
             </div>
           </div>
         </TabsContent>

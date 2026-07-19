@@ -10,11 +10,7 @@ const protectedRoutes = [
   RouteEnum.PROFILE,
   RouteEnum.SETTINGS,
 ];
-const publicOnlyRoutes = [
-  RouteEnum.LOGIN,
-  RouteEnum.REGISTER,
-  RouteEnum.FORGOT_PASSWORD,
-];
+const publicOnlyRoutes = [RouteEnum.LOGIN];
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;

@@ -1,4 +1,3 @@
-
 import type { User, UserListResponse } from './users.types';
 
 export const userMapper = (raw: any): User => ({

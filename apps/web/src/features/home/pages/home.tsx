@@ -47,7 +47,7 @@ export default function HomePage() {
                 {t('login')}
               </Button>
             </Link>
-            <Link href={RouteEnum.REGISTER}>
+            <Link href={RouteEnum.LOGIN}>
               <Button className="min-h-[44px] rounded-full px-6 shadow-sm transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                 {t('startNow')}
               </Button>
@@ -92,7 +92,7 @@ export default function HomePage() {
                   </Button>
                 </Link>
                 <Link
-                  href={RouteEnum.REGISTER}
+                  href={RouteEnum.LOGIN}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Button className="w-full justify-center">

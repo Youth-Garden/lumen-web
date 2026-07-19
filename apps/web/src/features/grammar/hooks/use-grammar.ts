@@ -5,15 +5,19 @@ import { toast } from 'sonner';
 import { grammarKeys, grammarService } from '@/services/grammar';
 import type { SubmitExerciseRequest } from '@/services/grammar';
 
-export const useGrammarTopics = (params?: {
-  page?: number;
-  limit?: number;
-  search?: string;
-  cefrLevel?: string;
-}) => {
+export const useGrammarTopics = (
+  params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    cefrLevel?: string;
+  },
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: [...grammarKeys.topics(), params],
     queryFn: () => grammarService.getTopics(params).then((res) => res.data),
+    ...options,
   });
 };
 

@@ -1,44 +1,49 @@
 # Lumen Frontend Monorepo
 
-The Lumen frontend is a modern web application structured as a monorepo using [Turborepo](https://turbo.build/repo). It contains multiple [Next.js](https://nextjs.org/) applications and shared internal packages, providing a cohesive and scalable B2B learning platform.
+The Lumen frontend is a monorepo managed by Turborepo and pnpm workspaces. It contains multiple applications and shared internal packages for the Lumen learning platform.
 
-## Architecture
-
-The monorepo uses `pnpm` workspaces and contains the following structure:
+## Workspace Layout
 
 ### Applications (`apps/`)
-- `web`: The primary B2B student-facing platform (Next.js, App Router).
-- `admin`: The internal administrative dashboard.
+- `web` - The primary student-facing platform (Next.js 16, App Router). See `apps/web/README.md`.
+- `admin` - The internal administrative dashboard (Vite + React 19 SPA). See `apps/admin/README.md`.
 
 ### Packages (`packages/`)
-- `uikit`: Custom Design System and shared UI components (Tailwind, Radix, base-ui).
-- `shared-api`: Centralized API bindings, Axios clients, and data transfer objects (DTOs).
-- `hooks`: Shared React hooks utilized across all apps.
-- `utils`: Generic helper functions, string formatting, and common logic.
-- `eslint-config`: Centralized ESLint configurations for consistency.
-- `typescript-config`: Shared `tsconfig.json` configurations.
+- `uikit` - Custom design system and shared UI components (Tailwind CSS v4, base-ui).
+- `shared-api` - Centralized API bindings, Axios clients, and data transfer objects (DTOs) shared by both apps.
+- `hooks` - Shared React hooks used across all apps.
+- `utils` - Generic helpers (string formatting, common logic).
+- `eslint-config` - Centralized ESLint configuration for consistency.
+- `typescript-config` - Shared `tsconfig.json` base configurations.
+
+## Tooling
+- Turborepo - build caching, task pipelines, and parallel execution.
+- pnpm workspaces - dependency and package linking (`workspace:*`).
+- Prettier - formatting (`pnpm format` / `pnpm format:check`).
 
 ## Getting Started
+Install once from the frontend root:
+```bash
+pnpm install
+pnpm run dev      # runs apps/web (and other configured apps) in development
+pnpm run build    # builds the web app (filter with pnpm --filter <app>)
+pnpm run lint     # lints the web app
+```
 
-1. Install dependencies from the root of the frontend:
-   ```bash
-   pnpm install
-   ```
+Run a single app directly:
+```bash
+pnpm --filter web dev
+pnpm --filter admin dev
+```
 
-2. Start the development server for all apps and packages:
-   ```bash
-   pnpm run dev
-   ```
+## Key Technologies (shared)
+- React 19
+- Tailwind CSS v4
+- Framer Motion (web)
+- TanStack Query
+- Zod + React Hook Form
+- `next-intl` (web i18n)
 
-3. Build all apps and packages:
-   ```bash
-   pnpm run build
-   ```
-
-## Key Technologies
-- **Next.js** (App Router)
-- **React 19**
-- **Tailwind CSS**
-- **Framer Motion**
-- **Turborepo**
-- **React Query** (TanStack Query)
+## Notes
+- Both apps depend on the backend at `BACKEND_URL`. The web app additionally requires `FRONTEND_URL` for cookie/CSRF and Google OAuth callbacks.
+- The `web` app is the only one with SSR and i18n; `admin` is a pure client-side SPA.

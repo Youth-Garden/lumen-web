@@ -24,7 +24,6 @@ export function FinalCta() {
           variants={fadeUpVariants}
           className="relative overflow-hidden rounded-3xl bg-primary px-6 py-16 text-center text-primary-foreground sm:px-16"
         >
-
           <div className="relative z-10 mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
               {t('ctaTitle')}
@@ -32,7 +31,7 @@ export function FinalCta() {
             <p className="mt-4 text-lg text-primary-foreground/90 mx-auto max-w-xl">
               {t('ctaSubtitle')}
             </p>
-            <Link href={RouteEnum.REGISTER} className="mt-8 inline-block">
+            <Link href={RouteEnum.LOGIN} className="mt-8 inline-block">
               <Button
                 size="lg"
                 variant="secondary"

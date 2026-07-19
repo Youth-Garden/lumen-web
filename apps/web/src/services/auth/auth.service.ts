@@ -4,25 +4,25 @@ import { CoreService } from '../core';
 import { registry } from './auth.registry';
 import {
   AuthTokens,
-  ForgotPasswordPayload,
-  LoginPayload,
-  RegisterPayload,
-  ResetPasswordPayload,
+  SendEmailOtpPayload,
   UpdateProfilePayload,
   UserInfo,
+  VerifyEmailOtpPayload,
 } from './auth.types';
 
 export class AuthService extends CoreService {
-  login(payload: LoginPayload): Promise<BaseResponse<AuthTokens>> {
+  sendEmailOtp(payload: SendEmailOtpPayload): Promise<BaseResponse<void>> {
+    return this._post<void>(ApiEndpointEnum.EMAIL_OTP_SEND, payload);
+  }
+
+  verifyEmailOtp(
+    payload: VerifyEmailOtpPayload,
+  ): Promise<BaseResponse<AuthTokens>> {
     return this._post<AuthTokens>(ApiEndpointEnum.LOGIN, payload);
   }
 
   googleLogin(idToken: string): Promise<BaseResponse<AuthTokens>> {
     return this._post<AuthTokens>(ApiEndpointEnum.GOOGLE_LOGIN, { idToken });
-  }
-
-  register(payload: RegisterPayload): Promise<BaseResponse<void>> {
-    return this._post<void>(ApiEndpointEnum.REGISTER, payload);
   }
 
   getMe(): Promise<BaseResponse<UserInfo>> {
@@ -37,14 +37,6 @@ export class AuthService extends CoreService {
 
   logout(): Promise<BaseResponse<void>> {
     return this._post<void>(ApiEndpointEnum.LOGOUT, {});
-  }
-
-  forgotPassword(payload: ForgotPasswordPayload): Promise<BaseResponse<void>> {
-    return this._post<void>(ApiEndpointEnum.FORGOT_PASSWORD, payload);
-  }
-
-  resetPassword(payload: ResetPasswordPayload): Promise<BaseResponse<void>> {
-    return this._post<void>(ApiEndpointEnum.RESET_PASSWORD, payload);
   }
 }
 

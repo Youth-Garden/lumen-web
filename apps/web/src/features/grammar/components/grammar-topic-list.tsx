@@ -10,6 +10,9 @@ import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 import type { GrammarTopicDto } from '@/services/grammar';
 import { useGrammarTopics } from '../hooks/use-grammar';
+import { Button } from '@lumen/uikit/components';
+import { CefrLevelEnum } from '@/shared/types';
+import { HighlightText } from '@/shared/components/highlight-text';
 
 const CEFR_COLORS: Record<string, string> = {
   A1: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -23,9 +26,10 @@ const CEFR_COLORS: Record<string, string> = {
 interface TopicCardProps {
   topic: GrammarTopicDto;
   index: number;
+  searchQuery?: string;
 }
 
-const TopicCard = ({ topic, index }: TopicCardProps) => {
+const TopicCard = ({ topic, index, searchQuery = '' }: TopicCardProps) => {
   const t = useTranslations('Grammar');
   const cefrColor =
     CEFR_COLORS[topic.cefrLevel] ?? 'bg-secondary text-secondary-foreground';
@@ -52,10 +56,10 @@ const TopicCard = ({ topic, index }: TopicCardProps) => {
             )}
           </div>
           <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
-            {topic.title}
+            <HighlightText text={topic.title} query={searchQuery} />
           </h3>
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {topic.description}
+            <HighlightText text={topic.description} query={searchQuery} />
           </p>
           <div className="mt-4 flex items-center gap-1 text-primary text-sm font-medium">
             <span>{t('startLesson')}</span>
@@ -73,30 +77,57 @@ const TopicCard = ({ topic, index }: TopicCardProps) => {
 export const GrammarTopicList = () => {
   const t = useTranslations('Grammar');
   const [search, setSearch] = useState('');
+  const [cefrLevel, setCefrLevel] = useState<string>('');
 
   const { data, isLoading } = useGrammarTopics({
     page: 1,
     limit: 50,
     search: search || undefined,
+    cefrLevel: cefrLevel || undefined,
   });
 
   const topics = data?.items ?? [];
 
   return (
     <div>
-      {/* Search */}
-      <div className="relative mb-6">
-        <Icons
-          name="search"
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-        />
-        <input
-          type="text"
-          placeholder={t('searchPlaceholder')}
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 text-sm bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
-        />
+      {/* Search and Filters */}
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="relative">
+          <Icons
+            name="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
+          <input
+            type="text"
+            placeholder={t('searchPlaceholder')}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            className="w-full max-w-md pl-10 pr-4 py-2.5 text-sm bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground mr-2 font-medium">CEFR Level:</span>
+          <Button 
+            variant={cefrLevel === '' ? 'default' : 'outline'} 
+            size="sm" 
+            className="h-8 rounded-full"
+            onClick={() => setCefrLevel('')}
+          >
+            All
+          </Button>
+          {Object.values(CefrLevelEnum).map((level) => (
+            <Button
+              key={level}
+              variant={cefrLevel === level ? 'default' : 'outline'}
+              size="sm"
+              className="h-8 rounded-full"
+              onClick={() => setCefrLevel(level)}
+            >
+              {level}
+            </Button>
+          ))}
+        </div>
       </div>
 
       {isLoading ? (
@@ -114,7 +145,7 @@ export const GrammarTopicList = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {topics.map((topic, index) => (
-            <TopicCard key={topic.id} topic={topic} index={index} />
+            <TopicCard key={topic.id} topic={topic} index={index} searchQuery={search} />
           ))}
         </div>
       )}

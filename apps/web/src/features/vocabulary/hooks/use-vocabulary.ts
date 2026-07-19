@@ -47,13 +47,17 @@ export const useReviewFlashcard = () => {
   });
 };
 
-export const useVocabularyWords = (params?: {
-  search?: string;
-  cefrLevel?: string;
-}) => {
+export const useVocabularyWords = (
+  params?: {
+    search?: string;
+    cefrLevel?: string;
+  },
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: vocabularyKeys.wordList(params),
-    queryFn: () => vocabularyService.listWords(params),
+    queryFn: () => vocabularyService.listWords(params).then((res) => res.data),
+    ...options,
   });
 };
 

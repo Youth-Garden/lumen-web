@@ -8,7 +8,7 @@ export const useLogin = () => {
   });
 };
 
-export const useGoogleLoginMutation = () => {
+export const useGoogleLogin = () => {
   return useMutation({
     mutationFn: (idToken: string) => authService.googleLogin(idToken),
   });

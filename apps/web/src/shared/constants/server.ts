@@ -1,13 +1,11 @@
 export enum ApiEndpointEnum {
   LOGIN = '/api/iam/login',
-  REGISTER = '/api/iam/register',
+  EMAIL_OTP_SEND = '/api/iam/email-otp/send',
   REFRESH_TOKEN = '/api/iam/refresh',
   GET_ME = '/api/iam/me',
   UPDATE_PROFILE = '/api/iam/profile',
   LOGOUT = '/api/iam/logout',
   GOOGLE_LOGIN = '/api/iam/google-login',
-  FORGOT_PASSWORD = '/api/iam/forgot-password',
-  RESET_PASSWORD = '/api/iam/reset-password',
 
   // Progress
   PROGRESS_DASHBOARD = '/api/progress/dashboard',
@@ -16,6 +14,7 @@ export enum ApiEndpointEnum {
   PROGRESS_LEADERBOARD = '/api/progress/leaderboard',
   PROGRESS_BADGES = '/api/progress/badges',
   PROGRESS_HEATMAP = '/api/progress/heatmap',
+  PROGRESS_STREAK_FREEZE = '/api/progress/streak-freeze',
 
   // Vocabulary
   VOCABULARY_WORDS = '/api/vocabulary/words',
@@ -60,6 +59,8 @@ export enum ApiEndpointEnum {
   EXAM_PRACTICE_RETEST = '/api/exam-practice/attempts/:id/retest',
   EXAM_PRACTICE_ATTEMPT_PAUSE = '/api/exam-practice/attempts/:id/pause',
   EXAM_PRACTICE_ATTEMPT_RESUME = '/api/exam-practice/attempts/:id/resume',
+  EXAM_PRACTICE_WEAKNESS_ANALYSIS = '/api/exam-practice/attempts/weakness-analysis',
+  EXAM_PRACTICE_ADAPTIVE_DRILL = '/api/exam-practice/attempts/adaptive-drill',
 
   // Notifications
   NOTIFICATIONS = '/api/notifications',

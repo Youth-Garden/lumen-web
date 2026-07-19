@@ -3,7 +3,6 @@ import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useUpdateExplanation } from '../hooks/use-toeic';
 
-
 interface ToeicExplanationEditorProps {
   questionId: string;
   initialExplanation?: string;

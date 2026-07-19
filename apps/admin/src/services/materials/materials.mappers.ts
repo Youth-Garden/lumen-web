@@ -7,7 +7,7 @@ export const materialMapper = (raw: any): MaterialDto => {
     audioUrl: raw?.audioUrl ?? null,
     coverImageUrl: raw?.coverImageUrl ?? null,
     tags: Array.isArray(raw?.tags) ? raw.tags : [],
-    views: typeof raw?.views === 'number' ? raw.views : 0,
+    views: typeof raw?.viewCount === 'number' ? raw.viewCount : 0,
   };
 };
 
