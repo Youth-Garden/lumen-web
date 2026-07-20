@@ -2,7 +2,6 @@ import {
   QuizDetailResponseDto,
   QuestionDetailDto,
   QuizListItemDto,
-  QuizListResponseDto,
   GenerateQuizResponseDto,
   FinishQuizResponseDto,
 } from './quiz.types';
@@ -34,13 +33,6 @@ export const quizListItemMapper = (raw: any): QuizListItemDto => ({
   score: raw?.score ?? 0,
   createdAt: raw?.createdAt || '',
   completedAt: raw?.completedAt ?? undefined,
-});
-
-export const quizListMapper = (raw: any): QuizListResponseDto => ({
-  items: Array.isArray(raw?.items) ? raw.items.map(quizListItemMapper) : [],
-  total: raw?.total || 0,
-  page: raw?.page || 1,
-  limit: raw?.limit || 10,
 });
 
 export const finishQuizResponseMapper = (raw: any): FinishQuizResponseDto => ({

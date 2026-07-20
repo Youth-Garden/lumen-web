@@ -1,10 +1,9 @@
 import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { BaseResponse } from '@lumen/shared-api';
+import { BaseResponse, Paging } from '@lumen/shared-api';
 import { registry } from './reading.registry';
 import {
   ArticleDto,
-  ArticleListResponse,
   CreateArticleDto,
   TranslateResponse,
 } from './reading.types';
@@ -13,8 +12,8 @@ export class ReadingService extends CoreService {
   getArticles(
     page: number = 1,
     limit: number = 20,
-  ): Promise<BaseResponse<ArticleListResponse>> {
-    return this._get<ArticleListResponse>(ApiEndpointEnum.READING_ARTICLES, {
+  ): Promise<BaseResponse<Paging<ArticleDto>>> {
+    return this._get<Paging<ArticleDto>>(ApiEndpointEnum.READING_ARTICLES, {
       params: { page, limit },
     });
   }
@@ -36,8 +35,8 @@ export class ReadingService extends CoreService {
   getPublicArticles(
     page: number = 1,
     limit: number = 6,
-  ): Promise<BaseResponse<ArticleListResponse>> {
-    return this._get<ArticleListResponse>(
+  ): Promise<BaseResponse<Paging<ArticleDto>>> {
+    return this._get<Paging<ArticleDto>>(
       ApiEndpointEnum.READING_ARTICLES_PUBLIC,
       {
         params: { page, limit },

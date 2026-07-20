@@ -4,9 +4,10 @@ The centralized Design System and UI Component library for Lumen.
 
 ## Overview
 
-This package provides a strict, reusable set of React components that adhere strictly to the Lumen Design System (Minimal Single Column, Bold typography, High Contrast). 
+This package provides a strict, reusable set of React components that adhere strictly to the Lumen Design System (Minimal Single Column, Bold typography, High Contrast).
 
 It utilizes:
+
 - **Tailwind CSS** for styling and utility classes.
 - **Base-UI & Radix Primitives** for unstyled, accessible component foundations.
 - **Lucide Icons** for SVG iconography.

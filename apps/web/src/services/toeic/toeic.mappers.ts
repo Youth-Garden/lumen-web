@@ -1,8 +1,4 @@
-import {
-  ToeicQuestionDto,
-  ToeicTestDto,
-  ToeicTestListResponse,
-} from './toeic.types';
+import { ToeicQuestionDto, ToeicTestDto } from './toeic.types';
 
 export const toeicQuestionMapper = (raw: any): ToeicQuestionDto => ({
   id: raw?.id || '',
@@ -37,11 +33,4 @@ export const toeicTestListItemMapper = (
   description: raw?.description || null,
   isPublished: !!raw?.isPublished,
   createdAt: raw?.createdAt || '',
-});
-
-export const toeicTestListMapper = (raw: any): ToeicTestListResponse => ({
-  items: Array.isArray(raw?.items)
-    ? raw.items.map(toeicTestListItemMapper)
-    : [],
-  total: raw?.total || 0,
 });

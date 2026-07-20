@@ -5,12 +5,16 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useAdaptiveDrill, useSubmitDrill } from '../hooks/use-adaptive-learning';
+import {
+  useAdaptiveDrill,
+  useSubmitDrill,
+} from '../hooks/use-adaptive-learning';
 
 export const AdaptiveDrillWidget = () => {
   const t = useTranslations('AdaptiveLearning');
   const { refetch, isFetching, data: drill } = useAdaptiveDrill();
-  const { mutateAsync: submitDrill, isPending: isSubmitting } = useSubmitDrill();
+  const { mutateAsync: submitDrill, isPending: isSubmitting } =
+    useSubmitDrill();
 
   const [activeQuestionIdx, setActiveQuestionIdx] = useState<number | null>(
     null,
@@ -152,7 +156,10 @@ export const AdaptiveDrillWidget = () => {
                 }}
               >
                 {isSubmitting ? (
-                  <Icons name="loader-2" className="h-4 w-4 animate-spin mr-2" />
+                  <Icons
+                    name="loader-2"
+                    className="h-4 w-4 animate-spin mr-2"
+                  />
                 ) : null}
                 Submit Drill
               </Button>

@@ -1,6 +1,6 @@
 import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { BaseResponse } from '@lumen/shared-api';
+import { BaseResponse, Paging } from '@lumen/shared-api';
 import { registry } from './vocabulary.registry';
 import {
   CreateDeckPayload,
@@ -9,7 +9,6 @@ import {
   DueFlashcard,
   ReviewFlashcardPayload,
   VocabularyWord,
-  WordListResponse,
 } from './vocabulary.types';
 
 export class VocabularyService extends CoreService {
@@ -19,8 +18,8 @@ export class VocabularyService extends CoreService {
     deckId?: string;
     search?: string;
     cefrLevel?: string;
-  }): Promise<BaseResponse<WordListResponse>> {
-    return this._get<WordListResponse>(ApiEndpointEnum.VOCABULARY_WORDS, {
+  }): Promise<BaseResponse<Paging<VocabularyWord>>> {
+    return this._get<Paging<VocabularyWord>>(ApiEndpointEnum.VOCABULARY_WORDS, {
       params,
     });
   }

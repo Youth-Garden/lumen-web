@@ -5,13 +5,6 @@ export interface ArticleDto {
   createdAt: string;
 }
 
-export interface ArticleListResponse {
-  items: ArticleDto[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
 export interface CreateArticleDto {
   title: string;
   content: string;

@@ -3,6 +3,7 @@
 A shared package that contains all API bindings, Axios interceptors, endpoints, and Data Transfer Objects (DTOs) for communicating with the Lumen Server.
 
 ## Features
+
 - **Axios Configuration**: Configured base instances with request/response interceptors for handling authentication tokens and errors.
 - **API Endpoints**: Strongly-typed enums and paths mapping to backend routes.
 - **Response Models**: TypeScript interfaces defining backend responses to ensure type safety across frontend applications.

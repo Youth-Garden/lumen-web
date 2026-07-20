@@ -107,10 +107,12 @@ export const GrammarTopicList = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground mr-2 font-medium">CEFR Level:</span>
-          <Button 
-            variant={cefrLevel === '' ? 'default' : 'outline'} 
-            size="sm" 
+          <span className="text-sm text-muted-foreground mr-2 font-medium">
+            CEFR Level:
+          </span>
+          <Button
+            variant={cefrLevel === '' ? 'default' : 'outline'}
+            size="sm"
             className="h-8 rounded-full"
             onClick={() => setCefrLevel('')}
           >
@@ -145,7 +147,12 @@ export const GrammarTopicList = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {topics.map((topic, index) => (
-            <TopicCard key={topic.id} topic={topic} index={index} searchQuery={search} />
+            <TopicCard
+              key={topic.id}
+              topic={topic}
+              index={index}
+              searchQuery={search}
+            />
           ))}
         </div>
       )}

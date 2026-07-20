@@ -59,7 +59,9 @@ export const ArticleList = () => {
           </div>
           <div className="flex gap-4">
             <div className="flex flex-col items-center justify-center rounded-2xl bg-white/20 p-4 backdrop-blur-md">
-              <span className="text-2xl font-bold">{data.total || 0}</span>
+              <span className="text-2xl font-bold">
+                {data.meta?.totalItems || 0}
+              </span>
               <span className="text-xs font-medium uppercase tracking-wider text-emerald-100">
                 Articles
               </span>

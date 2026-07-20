@@ -1,21 +1,4 @@
-import {
-  VocabularyWord,
-  WordListResponse,
-  Deck,
-  DueFlashcard,
-} from './vocabulary.types';
-
-export const wordListMapper = (raw: any): WordListResponse => {
-  return {
-    items: (raw?.items || []).map(wordMapper),
-    meta: {
-      currentPage: raw?.meta?.currentPage || 1,
-      perPage: raw?.meta?.perPage || 20,
-      totalItems: raw?.meta?.totalItems || 0,
-      totalPages: raw?.meta?.totalPages || 0,
-    },
-  };
-};
+import { VocabularyWord, Deck, DueFlashcard } from './vocabulary.types';
 
 export const wordMapper = (raw: any): VocabularyWord => {
   return {

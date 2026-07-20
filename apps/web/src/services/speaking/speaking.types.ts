@@ -6,13 +6,6 @@ export interface SpeakingTaskDto {
   keywords: string[];
 }
 
-export interface SpeakingTaskListResponse {
-  items: SpeakingTaskDto[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
 export interface SubmitSpeechRequest {
   audioUrl: string;
 }

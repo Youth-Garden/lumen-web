@@ -1,9 +1,9 @@
 import { ApiEndpointEnum } from '@/shared/constants';
-import { BaseResponse } from '@lumen/shared-api';
+import { BaseResponse, Paging } from '@lumen/shared-api';
 import { CoreService } from '../core';
 import { registry } from './speaking.registry';
 import type {
-  SpeakingTaskListResponse,
+  SpeakingTaskDto,
   SpeechResultDto,
   SubmitSpeechRequest,
 } from './speaking.types';
@@ -13,8 +13,8 @@ export class SpeakingService extends CoreService {
     page?: number;
     limit?: number;
     search?: string;
-  }): Promise<BaseResponse<SpeakingTaskListResponse>> {
-    return this._get<SpeakingTaskListResponse>(ApiEndpointEnum.SPEAKING_TASKS, {
+  }): Promise<BaseResponse<Paging<SpeakingTaskDto>>> {
+    return this._get<Paging<SpeakingTaskDto>>(ApiEndpointEnum.SPEAKING_TASKS, {
       params,
     });
   }

@@ -37,11 +37,6 @@ export interface ToeicTestListItemDto {
   createdAt: string;
 }
 
-export interface ToeicTestListResponse {
-  items: ToeicTestListItemDto[];
-  total: number;
-}
-
 export interface SaveToeicNoteRequest {
   questionId: string;
   testId: string;

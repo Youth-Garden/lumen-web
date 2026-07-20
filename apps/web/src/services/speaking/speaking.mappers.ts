@@ -1,8 +1,4 @@
-import type {
-  SpeakingTaskDto,
-  SpeakingTaskListResponse,
-  SpeechResultDto,
-} from './speaking.types';
+import type { SpeakingTaskDto, SpeechResultDto } from './speaking.types';
 
 export const speakingTaskMapper = (
   raw: Record<string, unknown>,
@@ -14,15 +10,6 @@ export const speakingTaskMapper = (
     ? String(raw.referenceAudioUrl)
     : null,
   keywords: Array.isArray(raw?.keywords) ? raw.keywords.map(String) : [],
-});
-
-export const speakingTaskListMapper = (
-  raw: Record<string, unknown>,
-): SpeakingTaskListResponse => ({
-  items: Array.isArray(raw?.items) ? raw.items.map(speakingTaskMapper) : [],
-  total: Number(raw?.total ?? 0),
-  page: Number(raw?.page ?? 1),
-  limit: Number(raw?.limit ?? 10),
 });
 
 export const speechResultMapper = (

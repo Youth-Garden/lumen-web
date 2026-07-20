@@ -25,7 +25,7 @@ export function CommandPalette() {
   const router = useRouter();
   const { commandPaletteOpen, setCommandPaletteOpen } = useUiStore();
   const { logout } = useLogout();
-  
+
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
@@ -33,7 +33,7 @@ export function CommandPalette() {
     { search: debouncedSearch },
     { enabled: debouncedSearch.length > 2 },
   );
-  
+
   const grammarTopics = useGrammarTopics(
     { search: debouncedSearch },
     { enabled: debouncedSearch.length > 2 },
@@ -46,7 +46,9 @@ export function CommandPalette() {
 
   const isSearching =
     debouncedSearch.length > 2 &&
-    (vocabWords.isFetching || grammarTopics.isFetching || speakingTasks.isFetching);
+    (vocabWords.isFetching ||
+      grammarTopics.isFetching ||
+      speakingTasks.isFetching);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -72,8 +74,8 @@ export function CommandPalette() {
       open={commandPaletteOpen}
       onOpenChange={setCommandPaletteOpen}
     >
-      <CommandInput 
-        placeholder="Type a command or search..." 
+      <CommandInput
+        placeholder="Type a command or search..."
         value={search}
         onValueChange={setSearch}
       />
@@ -81,13 +83,17 @@ export function CommandPalette() {
         <CommandEmpty>No results found.</CommandEmpty>
 
         {isSearching && (
-          <div className="p-4 text-center text-sm text-muted-foreground">Searching...</div>
+          <div className="p-4 text-center text-sm text-muted-foreground">
+            Searching...
+          </div>
         )}
 
         {!debouncedSearch && (
           <CommandGroup heading="Suggestions">
             <CommandItem
-              onSelect={() => runCommand(() => router.push(RouteEnum.DASHBOARD))}
+              onSelect={() =>
+                runCommand(() => router.push(RouteEnum.DASHBOARD))
+              }
             >
               <Icons name="home" className="mr-2 h-4 w-4" />
               <span>Overview Dashboard</span>
@@ -116,7 +122,11 @@ export function CommandPalette() {
                 {vocabWords.data.items.slice(0, 5).map((word) => (
                   <CommandItem
                     key={word.id}
-                    onSelect={() => runCommand(() => router.push(`${RouteEnum.VOCABULARY}/${word.id}`))}
+                    onSelect={() =>
+                      runCommand(() =>
+                        router.push(`${RouteEnum.VOCABULARY}/${word.id}`),
+                      )
+                    }
                   >
                     <Icons name="book-open" className="mr-2 h-4 w-4" />
                     <span>
@@ -132,37 +142,53 @@ export function CommandPalette() {
               </CommandGroup>
             )}
 
-            {grammarTopics?.data?.items && grammarTopics.data.items.length > 0 && (
-              <CommandGroup heading="Grammar Topics">
-                {grammarTopics.data.items.slice(0, 5).map((topic) => (
-                  <CommandItem
-                    key={topic.id}
-                    onSelect={() => runCommand(() => router.push(`${RouteEnum.GRAMMAR}/${topic.id}`))}
-                  >
-                    <Icons name="file-text" className="mr-2 h-4 w-4" />
-                    <span>
-                      <HighlightText text={topic.title} query={debouncedSearch} />
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            {grammarTopics?.data?.items &&
+              grammarTopics.data.items.length > 0 && (
+                <CommandGroup heading="Grammar Topics">
+                  {grammarTopics.data.items.slice(0, 5).map((topic) => (
+                    <CommandItem
+                      key={topic.id}
+                      onSelect={() =>
+                        runCommand(() =>
+                          router.push(`${RouteEnum.GRAMMAR}/${topic.id}`),
+                        )
+                      }
+                    >
+                      <Icons name="file-text" className="mr-2 h-4 w-4" />
+                      <span>
+                        <HighlightText
+                          text={topic.title}
+                          query={debouncedSearch}
+                        />
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
 
-            {speakingTasks?.data?.items && speakingTasks.data.items.length > 0 && (
-              <CommandGroup heading="Speaking Tasks">
-                {speakingTasks.data.items.slice(0, 5).map((task) => (
-                  <CommandItem
-                    key={task.id}
-                    onSelect={() => runCommand(() => router.push(`${RouteEnum.SPEAKING}/${task.id}`))}
-                  >
-                    <Icons name="mic" className="mr-2 h-4 w-4" />
-                    <span>
-                      <HighlightText text={task.title} query={debouncedSearch} />
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            {speakingTasks?.data?.items &&
+              speakingTasks.data.items.length > 0 && (
+                <CommandGroup heading="Speaking Tasks">
+                  {speakingTasks.data.items.slice(0, 5).map((task) => (
+                    <CommandItem
+                      key={task.id}
+                      onSelect={() =>
+                        runCommand(() =>
+                          router.push(`${RouteEnum.SPEAKING}/${task.id}`),
+                        )
+                      }
+                    >
+                      <Icons name="mic" className="mr-2 h-4 w-4" />
+                      <span>
+                        <HighlightText
+                          text={task.title}
+                          query={debouncedSearch}
+                        />
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
           </>
         )}
 

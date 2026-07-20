@@ -1,6 +1,6 @@
 import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { BaseResponse } from '@lumen/shared-api';
+import { BaseResponse, Paging } from '@lumen/shared-api';
 import { registry } from './quiz.registry';
 import {
   GenerateQuizDto,
@@ -8,7 +8,7 @@ import {
   GenerateQuizResponseDto,
   FinishQuizResponseDto,
   QuizDetailResponseDto,
-  QuizListResponseDto,
+  QuizListItemDto,
 } from './quiz.types';
 
 export class QuizService extends CoreService {
@@ -54,8 +54,10 @@ export class QuizService extends CoreService {
   listQuizzes(params?: {
     page?: number;
     limit?: number;
-  }): Promise<BaseResponse<QuizListResponseDto>> {
-    return this._get<QuizListResponseDto>(ApiEndpointEnum.QUIZZES, { params });
+  }): Promise<BaseResponse<Paging<QuizListItemDto>>> {
+    return this._get<Paging<QuizListItemDto>>(ApiEndpointEnum.QUIZZES, {
+      params,
+    });
   }
 }
 

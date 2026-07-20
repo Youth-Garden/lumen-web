@@ -1,11 +1,10 @@
 import { ApiEndpointEnum } from '@/shared/constants';
-import { BaseResponse } from '@lumen/shared-api';
+import { BaseResponse, Paging } from '@lumen/shared-api';
 import { CoreService } from '../core';
 import { registry } from './grammar.registry';
 import type {
   GrammarExerciseDto,
   GrammarTopicDto,
-  GrammarTopicListResponse,
   SubmitExerciseRequest,
   SubmitExerciseResultDto,
 } from './grammar.types';
@@ -16,8 +15,8 @@ export class GrammarService extends CoreService {
     limit?: number;
     search?: string;
     cefrLevel?: string;
-  }): Promise<BaseResponse<GrammarTopicListResponse>> {
-    return this._get<GrammarTopicListResponse>(ApiEndpointEnum.GRAMMAR_TOPICS, {
+  }): Promise<BaseResponse<Paging<GrammarTopicDto>>> {
+    return this._get<Paging<GrammarTopicDto>>(ApiEndpointEnum.GRAMMAR_TOPICS, {
       params,
     });
   }

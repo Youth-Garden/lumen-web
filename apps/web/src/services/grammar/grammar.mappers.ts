@@ -2,9 +2,10 @@ import type {
   GrammarExerciseDto,
   GrammarLessonDto,
   GrammarTopicDto,
-  GrammarTopicListResponse,
   SubmitExerciseResultDto,
 } from './grammar.types';
+
+import { CefrLevelEnum } from '@/shared/types';
 
 const mapLesson = (raw: Record<string, unknown>): GrammarLessonDto => ({
   id: String(raw?.id ?? ''),
@@ -12,8 +13,6 @@ const mapLesson = (raw: Record<string, unknown>): GrammarLessonDto => ({
   content: String(raw?.content ?? ''),
   orderIndex: Number(raw?.orderIndex ?? 0),
 });
-
-import { CefrLevelEnum } from '@/shared/types';
 
 export const grammarTopicMapper = (
   raw: Record<string, unknown>,
@@ -23,15 +22,6 @@ export const grammarTopicMapper = (
   description: String(raw?.description ?? ''),
   cefrLevel: String(raw?.cefrLevel ?? '') as CefrLevelEnum,
   lessons: Array.isArray(raw?.lessons) ? raw.lessons.map(mapLesson) : undefined,
-});
-
-export const grammarTopicListMapper = (
-  raw: Record<string, unknown>,
-): GrammarTopicListResponse => ({
-  items: Array.isArray(raw?.items) ? raw.items.map(grammarTopicMapper) : [],
-  total: Number(raw?.total ?? 0),
-  page: Number(raw?.page ?? 1),
-  limit: Number(raw?.limit ?? 20),
 });
 
 export const grammarExerciseMapper = (

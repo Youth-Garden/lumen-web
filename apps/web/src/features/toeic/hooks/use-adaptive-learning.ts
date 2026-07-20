@@ -35,7 +35,9 @@ export function useSubmitDrill() {
       return new Promise((resolve) => setTimeout(resolve, 600));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: adaptiveLearningKeys.weakness() });
+      queryClient.invalidateQueries({
+        queryKey: adaptiveLearningKeys.weakness(),
+      });
     },
   });
 }

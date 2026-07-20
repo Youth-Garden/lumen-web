@@ -2,14 +2,13 @@ import { ApiEndpointEnum } from '@/shared/constants';
 import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
 import {
   grammarExerciseMapper,
-  grammarTopicListMapper,
   grammarTopicMapper,
   submitExerciseResultMapper,
 } from './grammar.mappers';
 
 export const registry: MapperRegistry = {
   [registryKey(HttpMethod.GET, ApiEndpointEnum.GRAMMAR_TOPICS)]:
-    grammarTopicListMapper,
+    grammarTopicMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.GRAMMAR_TOPIC_DETAIL)]:
     grammarTopicMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.GRAMMAR_LESSON_EXERCISES)]: (

@@ -1,16 +1,16 @@
 import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { BaseResponse } from '@lumen/shared-api';
+import { BaseResponse, Paging } from '@lumen/shared-api';
 import { registry } from './toeic.registry';
 import {
   ToeicTestDto,
-  ToeicTestListResponse,
+  ToeicTestListItemDto,
   SaveToeicNoteRequest,
 } from './toeic.types';
 
 export class ToeicService extends CoreService {
-  getTests(): Promise<BaseResponse<ToeicTestListResponse>> {
-    return this._get<ToeicTestListResponse>(ApiEndpointEnum.TOEIC_TESTS);
+  getTests(): Promise<BaseResponse<Paging<ToeicTestListItemDto>>> {
+    return this._get<Paging<ToeicTestListItemDto>>(ApiEndpointEnum.TOEIC_TESTS);
   }
 
   getTestById(id: string): Promise<BaseResponse<ToeicTestDto>> {

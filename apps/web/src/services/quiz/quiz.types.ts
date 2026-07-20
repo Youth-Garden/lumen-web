@@ -49,10 +49,3 @@ export interface QuizListItemDto {
   createdAt: string;
   completedAt?: string;
 }
-
-export interface QuizListResponseDto {
-  items: QuizListItemDto[];
-  total: number;
-  page: number;
-  limit: number;
-}

@@ -26,6 +26,7 @@ export interface Paging<T> {
     currentPage: number;
     perPage: number;
     totalItems: number;
+    totalPages?: number;
   };
 }
 

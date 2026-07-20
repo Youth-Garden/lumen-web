@@ -21,16 +21,6 @@ export interface VocabularyWord {
   definitions: VocabularyDefinition[];
 }
 
-export interface WordListResponse {
-  items: VocabularyWord[];
-  meta: {
-    currentPage: number;
-    perPage: number;
-    totalItems: number;
-    totalPages: number;
-  };
-}
-
 export interface Deck {
   id: string;
   name: string;

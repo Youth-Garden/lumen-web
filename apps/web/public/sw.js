@@ -50,16 +50,20 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cached) => {
       // Stale-while-revalidate for shell assets
       if (cached) {
-        fetch(event.request).then((response) => {
-          if (response.ok) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, response.clone()));
-          }
-        }).catch(() => {
-          // Offline, serve fallback for navigations
-          if (event.request.mode === 'navigate') {
-            return caches.match('/offline.html');
-          }
-        });
+        fetch(event.request)
+          .then((response) => {
+            if (response.ok) {
+              caches
+                .open(CACHE_NAME)
+                .then((cache) => cache.put(event.request, response.clone()));
+            }
+          })
+          .catch(() => {
+            // Offline, serve fallback for navigations
+            if (event.request.mode === 'navigate') {
+              return caches.match('/offline.html');
+            }
+          });
         return cached;
       }
 

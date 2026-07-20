@@ -15,13 +15,6 @@ export interface GrammarTopicDto {
   lessons?: GrammarLessonDto[];
 }
 
-export interface GrammarTopicListResponse {
-  items: GrammarTopicDto[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
 export interface GrammarExerciseDto {
   id: string;
   lessonId: string;

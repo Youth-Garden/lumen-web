@@ -72,12 +72,14 @@ export function VocabularyListPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        
+
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground mr-2 font-medium">CEFR Level:</span>
-          <Button 
-            variant={cefrLevel === '' ? 'default' : 'outline'} 
-            size="sm" 
+          <span className="text-sm text-muted-foreground mr-2 font-medium">
+            CEFR Level:
+          </span>
+          <Button
+            variant={cefrLevel === '' ? 'default' : 'outline'}
+            size="sm"
             className="h-8 rounded-full"
             onClick={() => setCefrLevel('')}
           >
@@ -117,7 +119,10 @@ export function VocabularyListPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold text-foreground">
-                        <HighlightText text={word.term} query={debouncedSearch} />
+                        <HighlightText
+                          text={word.term}
+                          query={debouncedSearch}
+                        />
                       </h3>
                       {word.cefrLevel && (
                         <div
@@ -151,7 +156,10 @@ export function VocabularyListPage() {
                               {def.partOfSpeech}.
                             </span>
                             <span className="text-foreground">
-                              <HighlightText text={def.definitionEn} query={debouncedSearch} />
+                              <HighlightText
+                                text={def.definitionEn}
+                                query={debouncedSearch}
+                              />
                             </span>
                             <span className="text-muted-foreground ml-2">
                               ({def.translationVi})
