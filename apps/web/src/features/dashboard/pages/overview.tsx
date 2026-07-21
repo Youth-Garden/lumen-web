@@ -102,7 +102,7 @@ export function OverviewPage() {
           </div>
 
           {dueCount > 0 && (
-            <Card className="bg-orange-50 dark:bg-orange-950/30 hover:-translate-y-1 transition-all duration-300">
+            <Card className="hover:-translate-y-1 transition-all duration-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">

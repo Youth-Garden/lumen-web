@@ -19,7 +19,7 @@ export const Leaderboard = () => {
 
   if (isLoading) {
     return (
-      <Card className="w-full h-[400px] flex items-center justify-center bg-background/40 backdrop-blur-md">
+      <Card className="w-full h-[400px] flex items-center justify-center backdrop-blur-md">
         <Icons
           name="loader-2"
           className="h-8 w-8 animate-spin text-muted-foreground"
@@ -31,7 +31,7 @@ export const Leaderboard = () => {
   const topUsers = leaderboard?.topUsers || [];
 
   return (
-    <Card className="bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
+    <Card className="backdrop-blur-md border-white/10 shadow-lg">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Icons name="trophy" className="h-6 w-6 text-yellow-500" />

@@ -49,7 +49,7 @@ export const BadgeGrid = ({ unlockedBadges = [] }: BadgeGridProps) => {
   const badgeList = allBadges.length > 0 ? allBadges : defaultBadges;
 
   return (
-    <Card className="p-6 bg-card/40">
+    <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500">

@@ -9,7 +9,7 @@ export const SettingsCard = React.forwardRef<
   return (
     <Card
       ref={ref}
-      className={cn('bg-muted/40', className)}
+      className={className}
       {...props}
     />
   );

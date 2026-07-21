@@ -19,7 +19,7 @@ export const LeaderboardWidget = () => {
   const currentUserRank = data?.currentUserRank;
 
   return (
-    <Card className="flex flex-col h-full p-6 bg-card/40">
+    <Card className="flex flex-col h-full p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">

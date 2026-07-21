@@ -19,7 +19,7 @@ export const BadgesList = () => {
 
   if (loadingBadges) {
     return (
-      <Card className="w-full h-[400px] flex items-center justify-center bg-background/40 backdrop-blur-md">
+      <Card className="w-full h-[400px] flex items-center justify-center backdrop-blur-md">
         <Icons
           name="loader-2"
           className="h-8 w-8 animate-spin text-muted-foreground"
@@ -33,7 +33,7 @@ export const BadgesList = () => {
   const unlockedBadges = progress?.unlockedBadges || [];
 
   return (
-    <Card className="bg-background/40 backdrop-blur-md border-white/10 shadow-lg">
+    <Card className="backdrop-blur-md border-white/10 shadow-lg">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Icons name="award" className="h-6 w-6 text-primary" />
