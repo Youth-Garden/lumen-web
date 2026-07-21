@@ -79,9 +79,17 @@ export const useVocabularyDecks = () => {
   });
 };
 
-export const useDueFlashcards = () => {
+export const useVocabularyDeck = (id: string, options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: vocabularyKeys.dueFlashcards(),
-    queryFn: () => vocabularyService.listDueFlashcards(),
+    queryKey: vocabularyKeys.deckDetail(id),
+    queryFn: () => vocabularyService.getDeck(id).then(res => res.data),
+    enabled: options?.enabled,
+  });
+};
+
+export const useDueFlashcards = (params?: { deckId?: string; limit?: number }) => {
+  return useQuery({
+    queryKey: vocabularyKeys.dueFlashcards(params),
+    queryFn: () => vocabularyService.listDueFlashcards(params),
   });
 };

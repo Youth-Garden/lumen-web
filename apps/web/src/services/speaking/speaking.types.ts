@@ -4,6 +4,7 @@ export interface SpeakingTaskDto {
   prompt: string;
   referenceAudioUrl: string | null;
   keywords: string[];
+  category?: string | null;
 }
 
 export interface SubmitSpeechRequest {

@@ -1,6 +1,14 @@
 'use client';
 
-import { Button, Input, Label } from '@lumen/uikit/components';
+import {
+  Button,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@lumen/uikit/components';
+import { SettingsCard } from './settings-card';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -53,11 +61,9 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   });
 
   return (
-    <div className="rounded-xl border bg-card p-6">
-      <div className="flex items-start justify-between">
-        <h3 className="text-base font-semibold text-foreground">
-          {t('profile.personalInfo')}
-        </h3>
+    <SettingsCard>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle>{t('profile.personalInfo')}</CardTitle>
         {!isEditing && (
           <Button
             variant="outline"
@@ -69,41 +75,42 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
             {t('buttons.edit')}
           </Button>
         )}
-      </div>
-
-      {!isEditing ? (
-        <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-5">
-          <InfoRow label={t('profile.fullName')} value={user?.fullName} />
-          <InfoRow label={t('account.email')} value={user?.email} />
-          <InfoRow label={t('profile.phone')} value={user?.phone} />
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="personal-fullName">{t('profile.fullName')}</Label>
-              <Input id="personal-fullName" {...form.register('fullName')} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="personal-phone">{t('profile.phone')}</Label>
-              <Input id="personal-phone" {...form.register('phone')} />
-            </div>
+      </CardHeader>
+      <CardContent>
+        {!isEditing ? (
+          <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-5">
+            <InfoRow label={t('profile.fullName')} value={user?.fullName} />
+            <InfoRow label={t('account.email')} value={user?.email} />
+            <InfoRow label={t('profile.phone')} value={user?.phone} />
           </div>
-          <div className="flex gap-2">
-            <Button type="submit" size="sm" disabled={isPending}>
-              {isPending ? t('buttons.saving') : t('buttons.saveChanges')}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => setIsEditing(false)}
-            >
-              {t('buttons.cancel')}
-            </Button>
-          </div>
-        </form>
-      )}
-    </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="personal-fullName">{t('profile.fullName')}</Label>
+                <Input id="personal-fullName" {...form.register('fullName')} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="personal-phone">{t('profile.phone')}</Label>
+                <Input id="personal-phone" {...form.register('phone')} />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" size="sm" disabled={isPending}>
+                {isPending ? t('buttons.saving') : t('buttons.saveChanges')}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => setIsEditing(false)}
+              >
+                {t('buttons.cancel')}
+              </Button>
+            </div>
+          </form>
+        )}
+      </CardContent>
+    </SettingsCard>
   );
 }

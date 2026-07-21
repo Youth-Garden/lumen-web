@@ -16,4 +16,12 @@ export async function generateMetadata({
   };
 }
 
-export default StudyPage;
+import { Suspense } from 'react';
+
+export default function StudyRoute() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading study session...</div>}>
+      <StudyPage />
+    </Suspense>
+  );
+}

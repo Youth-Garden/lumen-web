@@ -6,5 +6,6 @@ export const vocabularyKeys = {
   wordDetail: (id: string) =>
     [...vocabularyKeys.all, 'word-detail', id] as const,
   decks: () => [...vocabularyKeys.all, 'decks'] as const,
-  dueFlashcards: () => [...vocabularyKeys.all, 'due-flashcards'] as const,
+  deckDetail: (id: string) => [...vocabularyKeys.decks(), id] as const,
+  dueFlashcards: (params?: Record<string, unknown>) => [...vocabularyKeys.all, 'due-flashcards', params] as const,
 };

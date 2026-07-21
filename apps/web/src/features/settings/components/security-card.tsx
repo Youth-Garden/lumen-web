@@ -1,6 +1,13 @@
 'use client';
 
-import { Input, Label } from '@lumen/uikit/components';
+import {
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@lumen/uikit/components';
+import { SettingsCard } from './settings-card';
 import { useTranslations } from 'next-intl';
 
 import { UserInfo } from '@/services/auth/auth.types';
@@ -13,15 +20,12 @@ export function SecurityCard({ user }: SecurityCardProps) {
   const t = useTranslations('Settings');
 
   return (
-    <div className="rounded-xl border bg-card p-6 space-y-6">
-      {/* Email Section */}
-      <div>
-        <div className="flex items-start justify-between mb-4">
-          <h3 className="text-base font-semibold text-foreground">
-            {t('account.title')}
-          </h3>
-        </div>
-        <div className="space-y-1.5">
+    <SettingsCard>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle>{t('account.title')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-1.5 pt-2">
           <Label htmlFor="security-email">{t('account.email')}</Label>
           <Input
             id="security-email"
@@ -34,7 +38,7 @@ export function SecurityCard({ user }: SecurityCardProps) {
             {t('account.emailHint')}
           </p>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </SettingsCard>
   );
 }

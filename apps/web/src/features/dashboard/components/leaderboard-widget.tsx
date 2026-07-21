@@ -1,7 +1,7 @@
 'use client';
 
 import { LeaderboardPeriodEnum } from '@/services/progress/progress.types';
-import { Button } from '@lumen/uikit/components';
+import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -19,7 +19,7 @@ export const LeaderboardWidget = () => {
   const currentUserRank = data?.currentUserRank;
 
   return (
-    <div className="rounded-2xl border bg-card p-6 shadow-sm flex flex-col h-full">
+    <Card className="flex flex-col h-full p-6 bg-card/40">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
@@ -37,7 +37,7 @@ export const LeaderboardWidget = () => {
           </div>
         </div>
 
-        <div className="flex rounded-xl bg-muted p-1 gap-1 border">
+        <div className="flex rounded-xl bg-muted p-1 gap-1">
           <Button
             size="sm"
             variant={
@@ -86,14 +86,14 @@ export const LeaderboardWidget = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: indexItem * 0.03 }}
-                className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
                   isTop1
-                    ? 'bg-amber-500/5 border-amber-500/20'
+                    ? 'bg-amber-500/10'
                     : isTop2
-                      ? 'bg-slate-400/5 border-slate-400/20'
+                      ? 'bg-slate-400/10'
                       : isTop3
-                        ? 'bg-amber-700/5 border-amber-700/20'
-                        : 'bg-card/50 border-border/60 hover:bg-muted/40'
+                        ? 'bg-amber-700/10'
+                        : 'bg-muted/40 hover:bg-muted/60'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -129,6 +129,6 @@ export const LeaderboardWidget = () => {
           })}
         </div>
       )}
-    </div>
+    </Card>
   );
 };

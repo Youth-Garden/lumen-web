@@ -18,15 +18,15 @@
   "Index": {
     "title": "Chào mừng đến với Lumen",
     "heroTitle1": "Làm chủ Tiếng Anh,",
-    "heroTitle2": "Chinh phục TOEIC",
-    "heroSubtitle": "Nền tảng học tập toàn diện tích hợp thi thử TOEIC chuẩn IIG, luyện nghe chép chính tả và xây dựng vốn từ vựng thông minh.",
+    "heroTitle2": "Mở khóa Tiềm năng",
+    "heroSubtitle": "Nền tảng học tập toàn diện tích hợp kiểm tra năng lực, luyện nghe chép chính tả và xây dựng vốn từ vựng thông minh.",
     "heroRatingLabel": "Dựa trên 1.970 đánh giá",
     "startFree": "Bắt đầu miễn phí",
     "exploreFeatures": "Khám phá tính năng",
     "featuresEyebrow": "Mọi thứ bạn cần",
     "featuresTitle": "Tính năng nổi bật",
     "featuresSubtitle": "Mọi công cụ bạn cần để nâng cao trình độ Tiếng Anh đều được tích hợp sẵn sàng.",
-    "featureToeicTitle": "Thi thử TOEIC chuẩn IIG",
+    "featureToeicTitle": "Kiểm tra năng lực toàn diện",
     "featureToeicDesc": "Trải nghiệm giao diện thi thật với hệ thống đề thi đa dạng, có chấm điểm và giải thích chi tiết.",
     "featureDictationTitle": "Nghe chép chính tả",
     "featureDictationDesc": "Rèn luyện kỹ năng nghe với các bài tập chép chính tả hàng ngày từ nhiều chủ đề khác nhau.",
@@ -56,7 +56,7 @@
     "step1Title": "Tạo tài khoản miễn phí",
     "step1Desc": "Đăng ký trong vài giây và đặt mục tiêu học hàng ngày.",
     "step2Title": "Chọn lộ trình học",
-    "step2Desc": "Chọn TOEIC, từ vựng, nghe chép chính tả hoặc bất kỳ lộ trình nào phù hợp với mục tiêu.",
+    "step2Desc": "Chọn kiểm tra năng lực, từ vựng, nghe chép chính tả hoặc bất kỳ lộ trình nào phù hợp với mục tiêu.",
     "step3Title": "Luyện tập mỗi ngày",
     "step3Desc": "Hoàn thành các bài tập ngắn, hấp dẫn được cá nhân hóa theo trình độ.",
     "step4Title": "Theo dõi tiến độ",
@@ -88,14 +88,14 @@
     "testimonialsTitle": "Học viên của chúng tôi nói gì",
     "testimonialsSubtitle": "Tham gia cùng hàng nghìn người đã thay đổi kỹ năng tiếng Anh của họ với Lumen.",
     "testimonial1Quote": "Lumen đã thay đổi hoàn toàn cách tôi học tiếng Anh. Các bài tập hàng ngày rất thú vị và hiệu quả!",
-    "testimonial2Quote": "Chương trình luyện thi TOEIC rất tuyệt vời. Tôi đã nâng điểm từ 450 lên 780 chỉ trong 3 tháng.",
+    "testimonial2Quote": "Chương trình luyện tập rất tuyệt vời. Kỹ năng tiếng Anh của tôi đã tiến bộ vượt bậc chỉ trong 3 tháng.",
     "testimonial3Quote": "Tôi yêu lộ trình học cá nhân hóa. Mỗi bài tập đều phù hợp với trình độ của tôi.",
     "joinSuccessStories": "Sẵn sàng bắt đầu câu chuyện thành công của bạn?",
     "joinSuccessSubtitle": "Tham gia cộng đồng học viên tiếng Anh tự tin của chúng tôi ngay hôm nay.",
     "seeFeatures": "Xem tất cả tính năng",
     "startFree": "Bắt đầu miễn phí",
     "startNow": "Bắt đầu ngay",
-    "footerTagline": "Nền tảng toàn diện để học tiếng Anh, ôn thi TOEIC và xây dựng sự thành thạo bền vững.",
+    "footerTagline": "Nền tảng toàn diện để học tiếng Anh và xây dựng sự thành thạo bền vững.",
     "footerProductTitle": "Sản phẩm",
     "footerResourceTitle": "Tài nguyên",
     "footerCompanyTitle": "Công ty",
@@ -378,7 +378,10 @@
     "backToList": "Quay lại danh sách",
     "dailyDictation": {
       "title": "Chép chính tả hàng ngày",
-      "description": "Rèn luyện kỹ năng nghe của bạn bằng cách gõ lại chính xác những gì bạn nghe được."
+      "description": "Rèn luyện kỹ năng nghe của bạn bằng cách gõ lại chính xác những gì bạn nghe được.",
+      "noLessons": "Chưa có bài chép chính tả nào.",
+      "startPracticing": "Bắt đầu luyện tập",
+      "searchPlaceholder": "Tìm kiếm bài chép chính tả..."
     }
   },
   "Settings": {
@@ -468,6 +471,7 @@
     "lessons": "Bài học",
     "exercises": "Bài tập",
     "cefrLevel": "Trình độ",
+    "filterByLevel": "Lọc theo trình độ",
     "startLesson": "Bắt đầu học",
     "practiceExercises": "Luyện tập",
     "submit": "Nộp bài",
@@ -481,12 +485,21 @@
     "backToTopics": "Về danh sách chủ đề",
     "noTopics": "Chưa có chủ đề ngữ pháp nào.",
     "noExercises": "Chưa có bài tập cho bài học này.",
-    "loading": "Đang tải..."
+    "loading": "Đang tải...",
+    "categories": {
+      "tenses": "Thì",
+      "conditionals": "Câu điều kiện",
+      "clauses": "Mệnh đề",
+      "passiveVoice": "Câu bị động",
+      "modals": "Động từ tình thái",
+      "reportedSpeech": "Câu gián tiếp"
+    }
   },
   "Speaking": {
     "title": "Luyện nói",
     "subtitle": "Cải thiện phát âm và sự lưu loát qua các bài tập nói.",
     "allTasks": "Tất cả bài tập",
+    "filterByLevel": "Lọc theo trình độ",
     "prompt": "Yêu cầu",
     "keywords": "Từ khóa cần dùng",
     "record": "Bắt đầu ghi âm",
@@ -502,7 +515,13 @@
     "loading": "Đang tải...",
     "referenceAudio": "Audio tham khảo",
     "noMicPermission": "Cần cấp quyền microphone để ghi âm.",
-    "uploadAudio": "Tải lên file âm thanh"
+    "uploadAudio": "Tải lên file âm thanh",
+    "categories": {
+      "dailyConversation": "Hội thoại hàng ngày",
+      "describeAPicture": "Miêu tả tranh",
+      "opinionDiscussion": "Ý kiến & Thảo luận",
+      "pronunciation": "Phát âm"
+    }
   },
   "Gamification": {
     "streak": "Chuỗi ngày học",

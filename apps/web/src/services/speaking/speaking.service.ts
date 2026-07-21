@@ -13,6 +13,7 @@ export class SpeakingService extends CoreService {
     page?: number;
     limit?: number;
     search?: string;
+    category?: string;
   }): Promise<BaseResponse<Paging<SpeakingTaskDto>>> {
     return this._get<Paging<SpeakingTaskDto>>(ApiEndpointEnum.SPEAKING_TASKS, {
       params,

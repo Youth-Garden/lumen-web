@@ -11,6 +11,7 @@ export const useGrammarTopics = (
     limit?: number;
     search?: string;
     cefrLevel?: string;
+    category?: string;
   },
   options?: { enabled?: boolean },
 ) => {

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@lumen/uikit/components';
+import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useBuyStreakFreeze } from '../hooks/use-gamification';
 
@@ -28,7 +28,7 @@ export const StreakCard = ({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border bg-card p-6 shadow-sm">
+    <Card className="relative p-6">
       {/* Background glow effect */}
       <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-amber-500/10 blur-3xl" />
 
@@ -47,7 +47,7 @@ export const StreakCard = ({
               <h3 className="text-2xl font-bold tracking-tight text-foreground">
                 {t('daysStreak', { count: streak })}
               </h3>
-              <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                 {t('streakActive')}
               </span>
             </div>
@@ -57,7 +57,7 @@ export const StreakCard = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-4 border-t sm:border-t-0 sm:border-l pt-4 sm:pt-0 sm:pl-6 border-border">
+        <div className="flex items-center gap-4 pt-4 sm:pt-0 sm:pl-6 bg-muted/30 sm:bg-transparent rounded-xl sm:rounded-none p-3 sm:p-0 mt-2 sm:mt-0">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400">
               <Icons name="shield" className="h-5 w-5" />
@@ -91,6 +91,6 @@ export const StreakCard = ({
           </Button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

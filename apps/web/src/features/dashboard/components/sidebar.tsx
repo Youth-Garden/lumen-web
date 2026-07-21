@@ -23,7 +23,6 @@ const navigationGroups = [
       { key: 'speaking', href: RouteEnum.SPEAKING, icon: 'mic' },
       { key: 'quiz', href: RouteEnum.QUIZ, icon: 'quiz' },
       { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: 'vocabulary' },
-      { key: 'decks', href: RouteEnum.DECKS, icon: 'deck' },
       { key: 'toeic', href: RouteEnum.TOEIC, icon: 'headphones' },
       { key: 'reading', href: RouteEnum.READING, icon: 'newspaper' },
       { key: 'dictation', href: RouteEnum.DICTATION, icon: 'headphones' },

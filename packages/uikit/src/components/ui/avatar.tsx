@@ -29,13 +29,14 @@ function Avatar({
 function AvatarImage({
   className,
   seed,
-  avatarStyle = 'avataaars',
+  avatarStyle = 'thumbs',
+  src: propSrc,
   ...props
 }: AvatarPrimitive.Image.Props & {
   seed?: string;
   avatarStyle?: (typeof AvatarStyles)[number];
 }) {
-  const src = seed ? getAvatarUrl(avatarStyle, seed) : props.src;
+  const src = propSrc ? propSrc : (seed ? getAvatarUrl(avatarStyle, seed) : undefined);
 
   return (
     <AvatarPrimitive.Image

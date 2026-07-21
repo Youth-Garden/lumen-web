@@ -27,6 +27,7 @@ import { LanguageSwitcher } from '../components/language-switcher';
 import { PersonalInfoCard } from '../components/personal-info-card';
 import { ProfileCard } from '../components/profile-card';
 import { SecurityCard } from '../components/security-card';
+import { SettingsCard } from '../components/settings-card';
 
 export enum SettingsSectionEnum {
   PROFILE = 'profile',
@@ -93,10 +94,10 @@ export const SettingsPage = () => {
         <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
 
-      <div className="flex flex-col gap-8 md:flex-row">
+      <div className="flex flex-col md:flex-row min-h-[calc(100vh-140px)]">
         {/* Section Nav */}
-        <nav className="md:w-52 md:shrink-0">
-          <ul className="flex gap-1 overflow-x-auto md:sticky md:top-6 md:flex-col md:overflow-visible">
+        <nav className="p-5 md:p-6 md:w-64 md:shrink-0">
+          <ul className="flex gap-1 overflow-x-auto md:sticky md:top-0 md:flex-col md:overflow-visible">
             {SECTIONS.map((item) => {
               const isActive = section === item.key;
               return (
@@ -106,13 +107,12 @@ export const SettingsPage = () => {
                     variant="ghost"
                     onClick={() => setSection(item.key)}
                     className={cn(
-                      'flex h-auto w-full justify-start items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors outline-none focus-visible:ring-4 focus-visible:ring-primary/20 font-normal hover:bg-transparent',
+                      'flex h-auto w-full justify-start items-center rounded-xl px-4 py-3 text-[15px] transition-colors outline-none focus-visible:ring-4 focus-visible:ring-primary/20 font-medium active:scale-100 hover:bg-transparent',
                       isActive
-                        ? 'bg-primary/10 font-medium text-primary hover:bg-primary/10 hover:text-primary'
-                        : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
+                        ? 'bg-blue-50 text-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:bg-blue-500/10 dark:text-blue-500'
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
                     )}
                   >
-                    <Icons name={item.icon} className="h-4 w-4 shrink-0" />
                     {t(`sections.${item.key}`)}
                   </Button>
                 </li>
@@ -122,50 +122,52 @@ export const SettingsPage = () => {
         </nav>
 
         {/* Content Panel */}
-        <div className="min-w-0 flex-1 space-y-4">
+        <div className="min-w-0 flex-1 space-y-6 p-5 md:p-8">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-foreground">
+              {t(`sections.${section}`)}
+            </h2>
+          </div>
+
           {section === SettingsSectionEnum.PROFILE && (
-            <>
+            <div className="space-y-6">
               <ProfileCard user={user} />
               <PersonalInfoCard user={user} />
-            </>
-          )}
-
-          {section === SettingsSectionEnum.GOALS && (
-            <div className="rounded-xl border bg-card p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-base font-semibold text-foreground">
-                    {t('goals.title')}
-                  </h3>
-                  <p className="mt-0.5 text-sm text-muted-foreground">
-                    {t('goals.description')}
-                  </p>
-                </div>
-              </div>
-              <form onSubmit={onProgressSubmit} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="dailyGoalMinutes">
-                    {t('goals.dailyGoalMinutes')}
-                  </Label>
-                  <Input
-                    id="dailyGoalMinutes"
-                    type="number"
-                    min="1"
-                    className="max-w-xs"
-                    {...progressForm.register('dailyGoalMinutes')}
-                  />
-                </div>
-                <Button type="submit" size="sm" disabled={isUpdatingProgress}>
-                  {isUpdatingProgress
-                    ? t('buttons.saving')
-                    : t('buttons.saveGoals')}
-                </Button>
-              </form>
             </div>
           )}
 
+          {section === SettingsSectionEnum.GOALS && (
+            <SettingsCard>
+              <CardHeader>
+                <CardTitle>{t('goals.title')}</CardTitle>
+                <CardDescription>{t('goals.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={onProgressSubmit} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="dailyGoalMinutes">
+                      {t('goals.dailyGoalMinutes')}
+                    </Label>
+                    <Input
+                      id="dailyGoalMinutes"
+                      type="number"
+                      min="1"
+                      className="max-w-xs"
+                      {...progressForm.register('dailyGoalMinutes')}
+                    />
+                  </div>
+                  <Button type="submit" size="sm" disabled={isUpdatingProgress}>
+                    {isUpdatingProgress
+                      ? t('buttons.saving')
+                      : t('buttons.saveGoals')}
+                  </Button>
+                </form>
+              </CardContent>
+            </SettingsCard>
+          )}
+
           {section === SettingsSectionEnum.APPEARANCE && (
-            <Card>
+            <SettingsCard>
               <CardHeader>
                 <CardTitle>{t('appearance.title')}</CardTitle>
                 <CardDescription>{t('appearance.description')}</CardDescription>
@@ -194,7 +196,7 @@ export const SettingsPage = () => {
                   <LanguageSwitcher />
                 </div>
               </CardContent>
-            </Card>
+            </SettingsCard>
           )}
 
           {section === SettingsSectionEnum.SECURITY && (

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Icons } from '@lumen/uikit/icons';
+import { Card } from '@lumen/uikit/components';
 import { useBadges } from '../hooks/use-gamification';
 
 interface BadgeGridProps {
@@ -48,7 +49,7 @@ export const BadgeGrid = ({ unlockedBadges = [] }: BadgeGridProps) => {
   const badgeList = allBadges.length > 0 ? allBadges : defaultBadges;
 
   return (
-    <div className="rounded-2xl border bg-card p-6 shadow-sm">
+    <Card className="p-6 bg-card/40">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500">
@@ -73,10 +74,10 @@ export const BadgeGrid = ({ unlockedBadges = [] }: BadgeGridProps) => {
             return (
               <div
                 key={badge.code}
-                className={`flex flex-col items-center text-center p-3.5 rounded-xl border transition-all ${
+                className={`flex flex-col items-center text-center p-3.5 rounded-xl transition-all ${
                   isUnlocked
-                    ? 'bg-purple-500/5 border-purple-500/20 shadow-sm'
-                    : 'bg-muted/30 border-border/40 opacity-50 grayscale'
+                    ? 'bg-purple-500/10 shadow-sm'
+                    : 'bg-muted/30 opacity-50 grayscale'
                 }`}
               >
                 <div
@@ -99,6 +100,6 @@ export const BadgeGrid = ({ unlockedBadges = [] }: BadgeGridProps) => {
           })}
         </div>
       )}
-    </div>
+    </Card>
   );
 };

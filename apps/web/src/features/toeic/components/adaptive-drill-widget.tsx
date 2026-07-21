@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@lumen/uikit/components';
+import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import {
   useAdaptiveDrill,
@@ -39,7 +39,7 @@ export const AdaptiveDrillWidget = () => {
       : null;
 
   return (
-    <div className="rounded-2xl border bg-gradient-to-br from-primary/5 via-card to-card p-6 shadow-sm">
+    <Card className="bg-gradient-to-br from-primary/5 via-card to-card p-6 shadow-sm">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/20">
@@ -174,6 +174,6 @@ export const AdaptiveDrillWidget = () => {
           {t('drillCompleted')}
         </div>
       )}
-    </div>
+    </Card>
   );
 };

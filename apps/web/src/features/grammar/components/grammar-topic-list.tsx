@@ -10,9 +10,9 @@ import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 import type { GrammarTopicDto } from '@/services/grammar';
 import { useGrammarTopics } from '../hooks/use-grammar';
-import { Button } from '@lumen/uikit/components';
 import { CefrLevelEnum } from '@/shared/types';
 import { HighlightText } from '@/shared/components/highlight-text';
+import { CategoryNav, type CategoryDef } from '@/shared/components/category-nav';
 
 const CEFR_COLORS: Record<string, string> = {
   A1: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -22,6 +22,15 @@ const CEFR_COLORS: Record<string, string> = {
   C1: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
   C2: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
 };
+
+const GRAMMAR_CATEGORIES: CategoryDef[] = [
+  { value: 'Tenses', labelKey: 'Tenses' },
+  { value: 'Conditionals', labelKey: 'Conditionals' },
+  { value: 'Clauses', labelKey: 'Clauses' },
+  { value: 'Passive Voice', labelKey: 'Passive Voice' },
+  { value: 'Modals', labelKey: 'Modals' },
+  { value: 'Reported Speech', labelKey: 'Reported Speech' },
+];
 
 interface TopicCardProps {
   topic: GrammarTopicDto;
@@ -44,13 +53,20 @@ const TopicCard = ({ topic, index, searchQuery = '' }: TopicCardProps) => {
       <Link href={formatUrl(RouteEnum.GRAMMAR_TOPIC, { id: topic.id })}>
         <div className="group bg-card border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200 cursor-pointer h-full">
           <div className="flex items-start justify-between mb-3">
-            <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${cefrColor}`}
-            >
-              {topic.cefrLevel}
-            </span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${cefrColor}`}
+              >
+                {topic.cefrLevel}
+              </span>
+              {topic.category && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                  {topic.category}
+                </span>
+              )}
+            </div>
             {lessonCount > 0 && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground shrink-0">
                 {lessonCount} {t('lessons')}
               </span>
             )}
@@ -77,60 +93,30 @@ const TopicCard = ({ topic, index, searchQuery = '' }: TopicCardProps) => {
 export const GrammarTopicList = () => {
   const t = useTranslations('Grammar');
   const [search, setSearch] = useState('');
-  const [cefrLevel, setCefrLevel] = useState<string>('');
+  const [category, setCategory] = useState<string | undefined>(undefined);
+  const [cefrLevel, setCefrLevel] = useState<string | undefined>(undefined);
 
   const { data, isLoading } = useGrammarTopics({
     page: 1,
     limit: 50,
     search: search || undefined,
-    cefrLevel: cefrLevel || undefined,
+    cefrLevel,
+    category,
   });
 
   const topics = data?.items ?? [];
 
   return (
     <div>
-      {/* Search and Filters */}
-      <div className="flex flex-col gap-4 mb-8">
-        <div className="relative">
-          <Icons
-            name="search"
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-          />
-          <input
-            type="text"
-            placeholder={t('searchPlaceholder')}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            className="w-full max-w-md pl-10 pr-4 py-2.5 text-sm bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
-          />
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground mr-2 font-medium">
-            CEFR Level:
-          </span>
-          <Button
-            variant={cefrLevel === '' ? 'default' : 'outline'}
-            size="sm"
-            className="h-8 rounded-full"
-            onClick={() => setCefrLevel('')}
-          >
-            All
-          </Button>
-          {Object.values(CefrLevelEnum).map((level) => (
-            <Button
-              key={level}
-              variant={cefrLevel === level ? 'default' : 'outline'}
-              size="sm"
-              className="h-8 rounded-full"
-              onClick={() => setCefrLevel(level)}
-            >
-              {level}
-            </Button>
-          ))}
-        </div>
-      </div>
+      <CategoryNav
+        categories={GRAMMAR_CATEGORIES}
+        searchPlaceholder={t('searchPlaceholder')}
+        filterByLevelLabel={t('filterByLevel')}
+        onSearchChange={setSearch}
+        onCategoryChange={setCategory}
+        onCefrLevelChange={setCefrLevel}
+        showLevelFilter
+      />
 
       {isLoading ? (
         <div className="flex justify-center py-16">
@@ -140,9 +126,9 @@ export const GrammarTopicList = () => {
           />
         </div>
       ) : topics.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-          <Icons name="file-text" className="h-12 w-12 text-muted-foreground" />
-          <p className="text-muted-foreground">{t('noTopics')}</p>
+        <div className="flex flex-col items-center justify-center py-16 gap-3 text-center border-2 border-dashed border-border rounded-2xl bg-muted/10">
+          <Icons name="file-text" className="h-12 w-12 text-muted-foreground opacity-50" />
+          <p className="text-muted-foreground font-medium">{t('noTopics')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

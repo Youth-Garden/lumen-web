@@ -5,12 +5,7 @@ import { routing } from './shared/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-const protectedRoutes = [
-  RouteEnum.DASHBOARD,
-  RouteEnum.PROFILE,
-  RouteEnum.SETTINGS,
-];
-const publicOnlyRoutes = [RouteEnum.LOGIN];
+const publicRoutes = [RouteEnum.HOME, RouteEnum.LOGIN];
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;
@@ -25,26 +20,21 @@ export default function middleware(req: NextRequest) {
     }
   }
 
-  const isProtected = protectedRoutes.some((route) =>
-    normalizedPath.startsWith(route),
-  );
-  const isPublicOnly = publicOnlyRoutes.some((route) =>
-    normalizedPath.startsWith(route),
+  // Exact match for root / (Home), since startsWith('/') matches everything
+  const isPublic = publicRoutes.some((route) => 
+    route === '/' ? normalizedPath === '/' : normalizedPath.startsWith(route)
   );
 
-  if (isProtected && !token) {
+  // If user is already logged in and tries to access Login or Home -> redirect to dashboard
+  if (token && (normalizedPath.startsWith(RouteEnum.LOGIN) || normalizedPath === '/')) {
+    return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
+  }
+
+  // If it's NOT a public route and user has no token -> redirect to login
+  if (!isPublic && !token) {
     const loginUrl = new URL(RouteEnum.LOGIN, req.url);
     loginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
-  }
-
-  if (isPublicOnly && token) {
-    return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
-  }
-
-  // Redirect authenticated users from home to dashboard
-  if (normalizedPath === '/' && token) {
-    return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
   }
 
   // Pass to next-intl middleware for locale handling

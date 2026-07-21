@@ -12,16 +12,22 @@ import { RouteEnum } from '@/shared/constants';
 import { OpenEffect } from '@lumen/uikit/components';
 import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
 
+import { useSearchParams } from 'next/navigation';
+
 export function StudyPage() {
   const t = useTranslations('Vocabulary.Study');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const deckId = searchParams.get('deckId') || undefined;
+  const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined;
+  
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const {
     data: dueFlashcardsResponse,
     isLoading,
     isError,
-  } = useDueFlashcards();
+  } = useDueFlashcards({ deckId, limit });
   const { mutateAsync: reviewFlashcard, isPending: isReviewing } =
     useReviewFlashcard();
 

@@ -38,6 +38,12 @@ export class VocabularyService extends CoreService {
     return this._get<Deck[]>(ApiEndpointEnum.VOCABULARY_DECKS);
   }
 
+  getDeck(id: string): Promise<BaseResponse<any>> {
+    return this._get<any>(ApiEndpointEnum.VOCABULARY_DECK_DETAIL, undefined, {
+      pathParams: { id },
+    });
+  }
+
   createDeck(
     payload: CreateDeckPayload,
   ): Promise<BaseResponse<{ id: string }>> {
@@ -56,8 +62,13 @@ export class VocabularyService extends CoreService {
     );
   }
 
-  listDueFlashcards(): Promise<BaseResponse<DueFlashcard[]>> {
-    return this._get<DueFlashcard[]>(ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE);
+  listDueFlashcards(params?: {
+    deckId?: string;
+    limit?: number;
+  }): Promise<BaseResponse<DueFlashcard[]>> {
+    return this._get<DueFlashcard[]>(ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE, {
+      params,
+    });
   }
 
   reviewFlashcard(

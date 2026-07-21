@@ -20,6 +20,7 @@ export enum ApiEndpointEnum {
   VOCABULARY_WORDS = '/api/vocabulary/words',
   VOCABULARY_WORD_DETAIL = '/api/vocabulary/words/:id',
   VOCABULARY_DECKS = '/api/vocabulary/words/decks',
+  VOCABULARY_DECK_DETAIL = '/api/vocabulary/words/decks/:id',
   VOCABULARY_FLASHCARDS = '/api/vocabulary/words/flashcards',
   VOCABULARY_FLASHCARDS_DUE = '/api/vocabulary/words/flashcards/due',
   VOCABULARY_FLASHCARDS_REVIEW = '/api/vocabulary/words/flashcards/review',

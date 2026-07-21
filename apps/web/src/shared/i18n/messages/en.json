@@ -18,15 +18,15 @@
   "Index": {
     "title": "Welcome to Lumen",
     "heroTitle1": "Master English,",
-    "heroTitle2": "Conquer TOEIC",
-    "heroSubtitle": "The comprehensive learning platform integrating advanced methodology and personalized tracking.",
+    "heroTitle2": "Unlock Fluency",
+    "heroSubtitle": "The comprehensive learning platform integrating mock tests, advanced dictation, and personalized vocabulary tracking.",
     "heroRatingLabel": "Based on 1,970 reviews",
     "startFree": "Start for free",
     "exploreFeatures": "Explore features",
     "featuresEyebrow": "Everything you need",
     "featuresTitle": "Outstanding Features",
     "featuresSubtitle": "Every tool you need to elevate your English proficiency is built-in and ready.",
-    "featureToeicTitle": "Standard TOEIC Mock Tests",
+    "featureToeicTitle": "Standardized Mock Tests",
     "featureToeicDesc": "Experience real test interface with diverse exams, automatic grading, and detailed explanations.",
     "featureDictationTitle": "Daily Dictation",
     "featureDictationDesc": "Improve your listening skills with daily dictation exercises from various topics.",
@@ -56,7 +56,7 @@
     "step1Title": "Create your free account",
     "step1Desc": "Sign up in seconds and set your daily learning goal.",
     "step2Title": "Pick a learning track",
-    "step2Desc": "Choose TOEIC, vocabulary, dictation, or any track that fits your goal.",
+    "step2Desc": "Choose mock tests, vocabulary, dictation, or any track that fits your goal.",
     "step3Title": "Practice every day",
     "step3Desc": "Complete short, engaging exercises tailored to your level.",
     "step4Title": "Track your progress",
@@ -90,7 +90,7 @@
     "testimonialsTitle": "What Our Learners Say",
     "testimonialsSubtitle": "Join thousands who have transformed their English skills with Lumen.",
     "testimonial1Quote": "Lumen has completely changed how I study English. The daily practice is addictive and effective!",
-    "testimonial2Quote": "The TOEIC preparation was seamless. I went from 450 to 780 in just 3 months.",
+    "testimonial2Quote": "The preparation was seamless. My English proficiency improved significantly in just 3 months.",
     "testimonial3Quote": "I love the personalized learning path. Every exercise feels tailored to my level.",
     "joinSuccessStories": "Ready to start your success story?",
     "joinSuccessSubtitle": "Join our community of confident English learners today.",
@@ -104,7 +104,7 @@
     "step1Title": "Create your free account",
     "step1Desc": "Sign up in seconds and set your daily learning goal.",
     "step2Title": "Pick a learning track",
-    "step2Desc": "Choose TOEIC, vocabulary, dictation, or any track that fits your goal.",
+    "step2Desc": "Choose mock tests, vocabulary, dictation, or any track that fits your goal.",
     "step3Title": "Practice every day",
     "step3Desc": "Complete short, engaging exercises tailored to your level.",
     "step4Title": "Track your progress",
@@ -118,7 +118,7 @@
     "testimonialsTitle": "What Our Learners Say",
     "testimonialsSubtitle": "Join thousands who have transformed their English skills with Lumen.",
     "testimonial1Quote": "Lumen has completely changed how I study English. The daily practice is addictive and effective!",
-    "testimonial2Quote": "The TOEIC preparation was seamless. I went from 450 to 780 in just 3 months.",
+    "testimonial2Quote": "The preparation was seamless. My English proficiency improved significantly in just 3 months.",
     "testimonial3Quote": "I love the personalized learning path. Every exercise feels tailored to my level.",
     "joinSuccessStories": "Ready to start your success story?",
     "joinSuccessSubtitle": "Join our community of confident English learners today.",
@@ -126,7 +126,7 @@
     "startFree": "Start for free",
 
     "startNow": "Start now",
-    "footerTagline": "The all-in-one platform to learn English, prepare for TOEIC, and build lasting fluency.",
+    "footerTagline": "The all-in-one platform to learn English and build lasting fluency.",
     "footerProductTitle": "Product",
     "footerResourceTitle": "Resources",
     "footerCompanyTitle": "Company",
@@ -409,7 +409,10 @@
     "backToList": "Back to List",
     "dailyDictation": {
       "title": "Daily Dictation",
-      "description": "Sharpen your listening skills by typing exactly what you hear."
+      "description": "Sharpen your listening skills by typing exactly what you hear.",
+      "noLessons": "No dictation lessons available yet.",
+      "startPracticing": "Start Practicing",
+      "searchPlaceholder": "Search dictation lessons..."
     }
   },
   "Settings": {
@@ -499,6 +502,7 @@
     "lessons": "Lessons",
     "exercises": "Exercises",
     "cefrLevel": "Level",
+    "filterByLevel": "Filter by Level",
     "startLesson": "Start Lesson",
     "practiceExercises": "Practice Exercises",
     "submit": "Submit",
@@ -512,12 +516,21 @@
     "backToTopics": "Back to Topics",
     "noTopics": "No grammar topics available yet.",
     "noExercises": "No exercises for this lesson yet.",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "categories": {
+      "tenses": "Tenses",
+      "conditionals": "Conditionals",
+      "clauses": "Clauses",
+      "passiveVoice": "Passive Voice",
+      "modals": "Modals",
+      "reportedSpeech": "Reported Speech"
+    }
   },
   "Speaking": {
     "title": "Speaking Practice",
     "subtitle": "Improve your pronunciation and fluency by completing speaking tasks.",
     "allTasks": "All Tasks",
+    "filterByLevel": "Filter by Level",
     "prompt": "Your Prompt",
     "keywords": "Keywords to use",
     "record": "Start Recording",
@@ -533,7 +546,13 @@
     "loading": "Loading...",
     "referenceAudio": "Reference Audio",
     "noMicPermission": "Microphone permission is required to record audio.",
-    "uploadAudio": "Upload Audio File"
+    "uploadAudio": "Upload Audio File",
+    "categories": {
+      "dailyConversation": "Daily Conversation",
+      "describeAPicture": "Describe a Picture",
+      "opinionDiscussion": "Opinion & Discussion",
+      "pronunciation": "Pronunciation"
+    }
   },
   "Gamification": {
     "streak": "Daily Streak",

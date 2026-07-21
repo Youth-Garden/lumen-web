@@ -102,9 +102,10 @@ export abstract class CoreService extends BaseApiService {
             // Not authenticated or no refresh token
             // We should clear auth and redirect to login, unless this is a login/refresh/logout request itself
             if (
-              !originalRequest.url?.includes('auth/login') &&
-              !originalRequest.url?.includes('auth/refresh') &&
-              !originalRequest.url?.includes('auth/logout')
+              !originalRequest.url?.includes(ApiEndpointEnum.LOGIN) &&
+              !originalRequest.url?.includes(ApiEndpointEnum.GOOGLE_LOGIN) &&
+              !originalRequest.url?.includes(ApiEndpointEnum.REFRESH_TOKEN) &&
+              !originalRequest.url?.includes(ApiEndpointEnum.LOGOUT)
             ) {
               toast.error(
                 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',

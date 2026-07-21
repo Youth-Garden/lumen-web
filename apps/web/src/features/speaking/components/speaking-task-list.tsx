@@ -11,6 +11,14 @@ import { formatUrl } from '@lumen/shared-api';
 import type { SpeakingTaskDto } from '@/services/speaking';
 import { useSpeakingTasks } from '../hooks/use-speaking';
 import { HighlightText } from '@/shared/components/highlight-text';
+import { CategoryNav, type CategoryDef } from '@/shared/components/category-nav';
+
+const SPEAKING_CATEGORIES: CategoryDef[] = [
+  { value: 'Daily Conversation', labelKey: 'Daily Conversation' },
+  { value: 'Describe a Picture', labelKey: 'Describe a Picture' },
+  { value: 'Opinion & Discussion', labelKey: 'Opinion & Discussion' },
+  { value: 'Pronunciation', labelKey: 'Pronunciation' },
+];
 
 const TaskCard = ({
   task,
@@ -36,11 +44,18 @@ const TaskCard = ({
             <div className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary group-hover:scale-110 transition-transform">
               <Icons name="mic" className="h-5 w-5" />
             </div>
-            {task.keywords.length > 0 && (
-              <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
-                {task.keywords.length} {t('keywords')}
-              </span>
-            )}
+            <div className="flex flex-col items-end gap-1">
+              {task.category && (
+                <span className="text-xs font-medium text-primary bg-primary/10 border border-primary/20 px-2.5 py-0.5 rounded-full">
+                  {task.category}
+                </span>
+              )}
+              {task.keywords.length > 0 && (
+                <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-0.5 rounded-full">
+                  {task.keywords.length} {t('keywords')}
+                </span>
+              )}
+            </div>
           </div>
 
           <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
@@ -67,30 +82,27 @@ const TaskCard = ({
 export const SpeakingTaskList = () => {
   const t = useTranslations('Speaking');
   const [search, setSearch] = useState('');
+  const [category, setCategory] = useState<string | undefined>(undefined);
 
   const { data, isLoading } = useSpeakingTasks({
     page: 1,
     limit: 20,
     search: search || undefined,
+    category,
   });
 
   const tasks = data?.items ?? [];
 
   return (
     <div>
-      <div className="relative mb-8 max-w-md">
-        <Icons
-          name="search"
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-        />
-        <input
-          type="text"
-          placeholder="Search speaking tasks..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 text-sm bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 transition shadow-sm"
-        />
-      </div>
+      <CategoryNav
+        categories={SPEAKING_CATEGORIES}
+        searchPlaceholder="Search speaking tasks..."
+        filterByLevelLabel={t('filterByLevel')}
+        onSearchChange={setSearch}
+        onCategoryChange={setCategory}
+        showLevelFilter={false}
+      />
 
       {isLoading ? (
         <div className="flex justify-center py-16">
@@ -100,7 +112,7 @@ export const SpeakingTaskList = () => {
           />
         </div>
       ) : tasks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-3 text-center border rounded-2xl bg-muted/20 border-dashed">
+        <div className="flex flex-col items-center justify-center py-16 gap-3 text-center border-2 border-dashed border-border rounded-2xl bg-muted/10">
           <Icons
             name="mic-off"
             className="h-12 w-12 text-muted-foreground opacity-50"

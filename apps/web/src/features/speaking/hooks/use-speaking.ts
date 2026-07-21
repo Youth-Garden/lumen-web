@@ -10,6 +10,7 @@ export const useSpeakingTasks = (
     page?: number;
     limit?: number;
     search?: string;
+    category?: string;
   },
   options?: { enabled?: boolean },
 ) => {

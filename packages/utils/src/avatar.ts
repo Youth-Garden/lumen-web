@@ -11,22 +11,10 @@
  * https://www.dicebear.com/styles
  */
 export const AvatarStyles = [
-  // human-like avatars
-  'avataaars',
-  'big-ears',
-  'big-ears-neutral',
-  // pixel-art avatars
-  'pixel-art',
-  'pixel-art-neutral',
-  // bot / robot avatars
-  'bottts',
-  // simple geometric avatars
-  'identicon',
-  'initials',
-  // hand-drawn style
-  'micah',
-  // cartoon-style avatar
   'thumbs',
+  'stripes',
+  'triangles',
+  'disco',
 ] as const;
 
 /**

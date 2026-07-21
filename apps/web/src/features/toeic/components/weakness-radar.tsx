@@ -5,6 +5,7 @@ import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useWeaknessAnalysis } from '../hooks/use-adaptive-learning';
+import { Card } from '@lumen/uikit/components';
 
 export const WeaknessRadar = () => {
   const t = useTranslations('AdaptiveLearning');
@@ -12,9 +13,9 @@ export const WeaknessRadar = () => {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border bg-card p-6 shadow-sm flex items-center justify-center min-h-[220px]">
+      <Card className="flex items-center justify-center min-h-[220px] p-6">
         <Icons name="loader-2" className="h-6 w-6 animate-spin text-primary" />
-      </div>
+      </Card>
     );
   }
 
@@ -22,7 +23,7 @@ export const WeaknessRadar = () => {
   const overallAccuracy = data?.overallAccuracy ?? 0;
 
   return (
-    <div className="rounded-2xl border bg-card p-6 shadow-sm">
+    <Card className="p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -36,7 +37,7 @@ export const WeaknessRadar = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-muted/50 px-3.5 py-1.5 rounded-xl border">
+        <div className="flex items-center gap-3 bg-muted/50 px-3.5 py-1.5 rounded-xl">
           <span className="text-xs font-medium text-muted-foreground">
             {t('overallAccuracy')}:
           </span>
@@ -56,7 +57,7 @@ export const WeaknessRadar = () => {
           return (
             <div
               key={masteryItem.partNumber}
-              className="p-3.5 rounded-xl border bg-muted/20 flex flex-col justify-between"
+              className="p-3.5 rounded-xl bg-muted/20 flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -114,6 +115,6 @@ export const WeaknessRadar = () => {
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };

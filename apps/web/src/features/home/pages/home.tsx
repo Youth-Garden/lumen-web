@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
 import { Button, ThemeSwitcher, Logo } from '@lumen/uikit/components';
+import { LanguageSwitcher } from '@/shared/components/language-switcher';
 import { RouteEnum } from '@/shared/constants';
 import { cn } from '@lumen/uikit/utils';
 import { Hero } from '../components/hero';
@@ -19,11 +20,27 @@ import { SiteFooter } from '../components/site-footer';
 export default function HomePage() {
   const t = useTranslations('Index');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans text-foreground selection:bg-primary/20">
       {/* Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      <header 
+        className={cn(
+          "fixed top-0 z-50 w-full transition-all duration-300",
+          isScrolled 
+            ? "border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 shadow-sm"
+            : "bg-transparent border-transparent py-2"
+        )}
+      >
         <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4">
           <Link
             href={RouteEnum.HOME}
@@ -38,6 +55,7 @@ export default function HomePage() {
 
           {/* Desktop navigation */}
           <nav className="hidden items-center space-x-3 sm:flex">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Link href={RouteEnum.LOGIN}>
               <Button
@@ -56,6 +74,7 @@ export default function HomePage() {
 
           {/* Mobile controls */}
           <div className="flex items-center space-x-2 sm:hidden">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Button
               variant="ghost"

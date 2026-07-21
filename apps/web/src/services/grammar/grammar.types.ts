@@ -12,6 +12,7 @@ export interface GrammarTopicDto {
   title: string;
   description: string;
   cefrLevel: CefrLevelEnum;
+  category?: string | null;
   lessons?: GrammarLessonDto[];
 }
 

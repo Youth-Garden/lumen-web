@@ -15,6 +15,7 @@ export class GrammarService extends CoreService {
     limit?: number;
     search?: string;
     cefrLevel?: string;
+    category?: string;
   }): Promise<BaseResponse<Paging<GrammarTopicDto>>> {
     return this._get<Paging<GrammarTopicDto>>(ApiEndpointEnum.GRAMMAR_TOPICS, {
       params,

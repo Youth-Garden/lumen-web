@@ -1,6 +1,7 @@
 'use client';
 
 import { useLogout } from '@/features/auth/hooks';
+import { NotificationDropdown } from '@/features/notification/components/notification-dropdown';
 import { RouteEnum } from '@/shared/constants';
 import { useRouter } from '@/shared/i18n/routing';
 import { useAuthStore } from '@/store/auth.store';
@@ -17,7 +18,6 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
-import { NotificationDropdown } from '@/features/notification/components/notification-dropdown';
 
 export function Header() {
   const user = useAuthStore((state) => state.user);
@@ -42,7 +42,7 @@ export function Header() {
   return (
     <header
       id="header"
-      className="absolute top-4 right-5 z-50 flex items-center gap-2"
+      className="absolute top-4 right-5 z-50 flex items-center gap-2.5 bg-background border border-border/40 shadow-sm rounded-full p-1.5 pr-1.5"
     >
       {progressData && (
         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-medium text-sm">

@@ -50,11 +50,7 @@ export function ThemeSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className={buttonVariants({
-          variant: 'ghost',
-          size: 'icon',
-          className: 'relative h-9 w-9',
-        })}
+        className="inline-flex h-9 items-center justify-center rounded-full border border-border/60 bg-background/80 px-3 transition-all hover:border-primary/40 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 shadow-sm"
         aria-label="Change theme"
       >
         <Swatch theme={theme ?? 'ocean-light'} />
