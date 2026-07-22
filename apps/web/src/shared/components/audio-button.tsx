@@ -1,10 +1,9 @@
-import { ComponentProps, useCallback } from 'react';
+'use client';
 
+import { ComponentProps, useCallback, useState } from 'react';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-
-import { playAudio } from '@/shared/utils/audio';
 
 export interface AudioButtonProps extends Omit<
   ComponentProps<typeof Button>,
@@ -22,11 +21,28 @@ export function AudioButton({
   onClick,
   ...props
 }: AudioButtonProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const handlePlay = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      playAudio(url);
       onClick?.(e);
+
+      if (!url) return;
+
+      try {
+        const audio = new Audio(url);
+        setIsPlaying(true);
+        audio.play().catch((err) => {
+          console.error(err);
+          setIsPlaying(false);
+        });
+        audio.onended = () => setIsPlaying(false);
+        audio.onerror = () => setIsPlaying(false);
+      } catch (error) {
+        console.error(error);
+        setIsPlaying(false);
+      }
     },
     [url, onClick],
   );
@@ -35,11 +51,26 @@ export function AudioButton({
     <Button
       variant="ghost"
       size="icon"
-      className={cn('rounded-full', className)}
+      className={cn(
+        'relative rounded-full transition-all duration-200 active:scale-90 hover:bg-primary/10 hover:text-primary',
+        isPlaying && 'text-primary bg-primary/15 ring-2 ring-primary/30',
+        className,
+      )}
       onClick={handlePlay}
       {...props}
     >
-      <Icons name="volume-2" className={cn('h-5 w-5', iconClassName)} />
+      {isPlaying && (
+        <span className="absolute inset-0 rounded-full animate-ping bg-primary/20 pointer-events-none" />
+      )}
+      <Icons
+        name={isPlaying ? 'volume-2' : 'volume-2'}
+        className={cn(
+          'h-5 w-5 transition-transform',
+          isPlaying && 'scale-110',
+          iconClassName,
+        )}
+      />
     </Button>
   );
 }
+

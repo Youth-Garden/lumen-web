@@ -1,248 +1,242 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  useDictationMaterial,
-  useSubmitDictation,
-} from '@/features/dictation/hooks/use-dictation';
-import { Button, Input, Card, CardContent } from '@lumen/uikit/components';
+import { useState, useRef, useEffect } from 'react';
 import { Icons } from '@lumen/uikit/icons';
-import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
+import { Button, Input } from '@lumen/uikit/components';
 
-export const DictationPlayer = ({ materialId }: { materialId: string }) => {
-  const t = useTranslations('Dictation');
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+interface DictationSentence {
+  id: string;
+  text: string;
+  startTime?: number;
+  endTime?: number;
+}
+
+interface DictationPlayerProps {
+  title: string;
+  audioUrl?: string;
+  sentences: DictationSentence[];
+  onComplete?: (score: number) => void;
+}
+
+export function DictationPlayer({
+  title,
+  audioUrl,
+  sentences,
+  onComplete,
+}: DictationPlayerProps) {
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [playbackRate, setPlaybackRate] = useState<number>(1.0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activeTranscriptId, setActiveTranscriptId] = useState<string | null>(
-    null,
-  );
-  const [inputs, setInputs] = useState<Record<string, string>>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [autoPause, setAutoPause] = useState(true);
+  const [showResult, setShowResult] = useState(false);
 
-  const { data: materialResponse, isLoading } =
-    useDictationMaterial(materialId);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const submitMutation = useSubmitDictation();
-
-  const handleSubmit = () => {
-    const answers = Object.entries(inputs).map(([transcriptId, userInput]) => ({
-      transcriptId,
-      userInput,
-    }));
-
-    if (answers.length === 0) {
-      toast.error(t('emptySubmission'));
-      return;
-    }
-
-    submitMutation.mutate(
-      {
-        materialId,
-        answers,
-      },
-      {
-        onSuccess: (result) => {
-          setIsSubmitted(true);
-          toast.success(t('scoreResult', { score: result.data?.score }));
-        },
-        onError: () => {
-          toast.error(t('failedSubmit'));
-        },
-      },
-    );
-  };
-
-  const material = materialResponse?.data;
+  const currentSentence = sentences[currentSentenceIndex];
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleTimeUpdate = () => {
-      if (!activeTranscriptId || !material) return;
-      const activeSegment = material.transcripts.find(
-        (transcript) => transcript.id === activeTranscriptId,
-      );
-      if (activeSegment && audio.currentTime >= activeSegment.endTime) {
-        audio.pause();
-        setIsPlaying(false);
-      }
-    };
-
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
-  }, [activeTranscriptId, material]);
-
-  if (isLoading)
-    return <div className="p-8 text-center">{t('loadingAudio')}</div>;
-  if (!material)
-    return (
-      <div className="p-8 text-center text-red-500">
-        {t('materialNotFound')}
-      </div>
-    );
-
-  const handlePlaySegment = (transcriptId: string, startTime: number) => {
     if (audioRef.current) {
-      audioRef.current.currentTime = startTime;
-      audioRef.current.play();
-      setIsPlaying(true);
-      setActiveTranscriptId(transcriptId);
+      audioRef.current.playbackRate = playbackRate;
     }
-  };
+  }, [playbackRate]);
 
-  const handlePause = () => {
-    if (audioRef.current) {
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch(console.error);
+      setIsPlaying(true);
     }
   };
 
-  const handleInputChange = (id: string, value: string) => {
-    setInputs((prev) => ({ ...prev, [id]: value }));
+  const handleReplaySentence = () => {
+    if (!audioRef.current || !currentSentence) return;
+    if (currentSentence.startTime !== undefined) {
+      audioRef.current.currentTime = currentSentence.startTime;
+    }
+    audioRef.current.play().catch(console.error);
+    setIsPlaying(true);
   };
 
-  const results = submitMutation.data?.data?.results || [];
+  // Compare userInput with target sentence word-by-word
+  const targetWords = currentSentence ? currentSentence.text.trim().split(/\s+/) : [];
+  const typedWords = userInput.trim().split(/\s+/);
+
+  const getWordAccuracy = () => {
+    if (targetWords.length === 0) return 0;
+    let correct = 0;
+    targetWords.forEach((word, idx) => {
+      if (typedWords[idx] && typedWords[idx].toLowerCase() === word.toLowerCase()) {
+        correct += 1;
+      }
+    });
+    return Math.round((correct / targetWords.length) * 100);
+  };
+
+  const handleNextSentence = () => {
+    if (currentSentenceIndex < sentences.length - 1) {
+      setCurrentSentenceIndex((prev) => prev + 1);
+      setUserInput('');
+      setShowResult(false);
+    } else {
+      setShowResult(true);
+      if (onComplete) onComplete(getWordAccuracy());
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Audio Player Card */}
-      <Card className="sticky top-4 z-10 shadow-lg border-primary/20">
-        <CardContent className="p-6">
-          <audio
-            ref={audioRef}
-            src={
-              material.mediaUrl ||
-              'https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg'
-            }
-            onEnded={() => setIsPlaying(false)}
-            onPause={() => setIsPlaying(false)}
-            onPlay={() => setIsPlaying(true)}
-            controls
-            className="w-full mb-4"
+    <div className="flex flex-col w-full max-w-3xl mx-auto rounded-3xl border border-border/80 bg-card p-6 shadow-xl space-y-6">
+      {/* Audio Element */}
+      {audioUrl && <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} />}
+
+      {/* Top Controls Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">{title}</h2>
+          <p className="text-xs text-muted-foreground">
+            Sentence {currentSentenceIndex + 1} of {sentences.length}
+          </p>
+        </div>
+
+        {/* Speed & Auto-pause Settings */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-full text-xs border border-border/40">
+            {[0.5, 0.75, 1.0, 1.25].map((speed) => (
+              <button
+                key={speed}
+                type="button"
+                onClick={() => setPlaybackRate(speed)}
+                className={`px-2.5 py-1 rounded-full transition-colors font-medium ${
+                  playbackRate === speed
+                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {speed}x
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setAutoPause((prev) => !prev)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+              autoPause
+                ? 'border-primary/40 bg-primary/10 text-primary'
+                : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Icons name="clock" className="h-3.5 w-3.5" />
+            Auto-Pause: {autoPause ? 'ON' : 'OFF'}
+          </button>
+        </div>
+      </div>
+
+      {/* Audio Player Controller Bar */}
+      <div className="flex items-center justify-center gap-4 py-4 rounded-2xl bg-muted/30 border border-border/40">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleReplaySentence}
+          className="rounded-full shadow-xs"
+        >
+          <Icons name="undo" className="h-4 w-4" />
+        </Button>
+
+        <Button
+          variant="default"
+          size="icon-lg"
+          onClick={togglePlay}
+          className="rounded-full shadow-md bg-primary hover:bg-primary/90 text-primary-foreground"
+        >
+          <Icons name={isPlaying ? 'close' : 'play'} className="h-6 w-6" />
+        </Button>
+
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleNextSentence}
+          className="rounded-full shadow-xs"
+        >
+          <Icons name="redo" className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Typing & Comparison Area */}
+      {!showResult ? (
+        <div className="space-y-4">
+          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Type what you hear:
+          </label>
+          <textarea
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            placeholder="Listen closely and type here..."
+            rows={4}
+            className="w-full rounded-2xl border border-border/80 bg-background/80 p-4 text-base focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20 outline-none transition-all resize-none shadow-xs"
           />
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-lg">{material.title}</h3>
+
+          {/* Word-by-Word Live Diff Comparison */}
+          {userInput.length > 0 && (
+            <div className="p-4 rounded-2xl bg-muted/40 border border-border/40 space-y-2">
+              <span className="text-xs font-semibold text-muted-foreground">Accuracy Feedback:</span>
+              <div className="flex flex-wrap gap-1.5 text-sm font-medium">
+                {targetWords.map((word, idx) => {
+                  const typed = typedWords[idx];
+                  const isCorrect = typed && typed.toLowerCase() === word.toLowerCase();
+                  return (
+                    <span
+                      key={idx}
+                      className={`px-2 py-0.5 rounded-md ${
+                        isCorrect
+                          ? 'bg-emerald-500/20 text-emerald-600 font-semibold'
+                          : typed
+                          ? 'bg-red-500/20 text-red-600 line-through'
+                          : 'bg-muted text-muted-foreground/50'
+                      }`}
+                    >
+                      {typed || '___'}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3 pt-2">
             <Button
-              onClick={handleSubmit}
-              disabled={submitMutation.isPending || isSubmitted}
-              className="min-w-[120px]"
+              className="rounded-full px-6"
+              onClick={handleNextSentence}
             >
-              {submitMutation.isPending
-                ? t('checking')
-                : isSubmitted
-                  ? t('score', { score: submitMutation.data?.data?.score })
-                  : t('checkAnswers')}
+              Check & Next Sentence
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Transcripts List */}
-      <div className="space-y-6 pb-20">
-        {material.transcripts
-          .sort((a, b) => a.sequenceNumber - b.sequenceNumber)
-          .map((transcript, index) => {
-            const result = results.find(
-              (res) => res.transcriptId === transcript.id,
-            );
-            const isActive = activeTranscriptId === transcript.id && isPlaying;
-
-            return (
-              <div
-                key={transcript.id}
-                className={`p-4 rounded-xl border transition-all ${isActive ? 'border-primary shadow-md bg-primary/5' : 'border-border bg-card'}`}
-              >
-                <div className="flex gap-4">
-                  <div className="flex flex-col gap-2 shrink-0">
-                    <Button
-                      variant={isActive ? 'default' : 'secondary'}
-                      size="icon"
-                      className="rounded-full w-10 h-10"
-                      onClick={() =>
-                        isActive
-                          ? handlePause()
-                          : handlePlaySegment(
-                              transcript.id,
-                              transcript.startTime,
-                            )
-                      }
-                    >
-                      {isActive ? (
-                        <Icons name="pause" className="w-5 h-5" />
-                      ) : (
-                        <Icons name="play" className="w-5 h-5" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full w-10 h-10 text-muted-foreground hover:text-primary"
-                      onClick={() =>
-                        handlePlaySegment(transcript.id, transcript.startTime)
-                      }
-                    >
-                      <Icons name="rotate-ccw" className="w-4 h-4" />
-                    </Button>
-                  </div>
-
-                  <div className="flex-1 space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-muted-foreground">
-                        {t('sentence', { index: index + 1 })}
-                      </span>
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">
-                        {transcript.startTime}s - {transcript.endTime}s
-                      </span>
-                    </div>
-
-                    <Input
-                      value={inputs[transcript.id] || ''}
-                      onChange={(e) =>
-                        handleInputChange(transcript.id, e.target.value)
-                      }
-                      placeholder={t('typeWhatYouHear')}
-                      disabled={isSubmitted}
-                      className={`text-lg py-6 ${result ? (result.isCorrect ? 'border-green-500 focus-visible:ring-green-500' : 'border-red-500 focus-visible:ring-red-500') : ''}`}
-                    />
-
-                    {isSubmitted && result && (
-                      <div
-                        className={`p-3 rounded-lg text-sm ${result.isCorrect ? 'bg-green-500/10 text-green-700 dark:text-green-400' : 'bg-red-500/10 text-red-700 dark:text-red-400'}`}
-                      >
-                        <div className="flex items-start gap-2">
-                          {result.isCorrect ? (
-                            <Icons
-                              name="check-circle"
-                              className="w-5 h-5 shrink-0 mt-0.5"
-                            />
-                          ) : (
-                            <Icons
-                              name="x-circle"
-                              className="w-5 h-5 shrink-0 mt-0.5"
-                            />
-                          )}
-                          <div>
-                            {!result.isCorrect && (
-                              <p className="font-semibold mb-1">
-                                {t('correctAnswer')}
-                              </p>
-                            )}
-                            <p>{result.correctAnswer}</p>
-                            <p className="text-muted-foreground mt-2 italic">
-                              {t('translation')} {transcript.translation}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-      </div>
+        </div>
+      ) : (
+        /* Results View */
+        <div className="flex flex-col items-center justify-center text-center p-8 space-y-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Icons name="trophy" className="h-8 w-8" />
+          </div>
+          <h3 className="text-2xl font-black text-foreground">Dictation Complete!</h3>
+          <p className="text-sm text-muted-foreground">
+            Accuracy Score: <span className="font-bold text-primary text-lg">{getWordAccuracy()}%</span>
+          </p>
+          <Button
+            className="rounded-full px-8 mt-4"
+            onClick={() => {
+              setCurrentSentenceIndex(0);
+              setUserInput('');
+              setShowResult(false);
+            }}
+          >
+            Practice Again
+          </Button>
+        </div>
+      )}
     </div>
   );
-};
+}

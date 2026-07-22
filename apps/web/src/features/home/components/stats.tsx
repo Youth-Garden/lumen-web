@@ -3,13 +3,14 @@
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
+import { Highlighter } from '@/shared/components/highlighter';
 import { fadeUpVariants, staggerContainer } from './animations';
 
 const STATS = [
-  { value: '50+', labelKey: 'statLearners', icon: 'users' },
-  { value: '5,000+', labelKey: 'statWords', icon: 'book' },
-  { value: '5.0/5', labelKey: 'statRating', icon: 'star' },
-  { value: '98%', labelKey: 'statSuccess', icon: 'trophy' },
+  { value: '50+', labelKey: 'statLearners', icon: 'users', action: 'highlight' as const },
+  { value: '5,000+', labelKey: 'statWords', icon: 'book', action: 'underline' as const },
+  { value: '5.0/5', labelKey: 'statRating', icon: 'star', action: 'circle' as const },
+  { value: '98%', labelKey: 'statSuccess', icon: 'trophy', action: 'box' as const },
 ] as const;
 
 export function Stats() {
@@ -31,7 +32,7 @@ export function Stats() {
               variants={fadeUpVariants}
               className="relative group"
             >
-              <div className="relative rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-primary/20">
+              <div className="relative rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-primary/30">
                 {/* Icon decoration */}
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icons name={stat.icon} className="h-6 w-6" />
@@ -41,9 +42,16 @@ export function Stats() {
                   <p className="text-3xl font-black tracking-tight text-primary transition-colors duration-300 group-hover:text-indigo-600 sm:text-4xl md:text-5xl">
                     {stat.value}
                   </p>
-                  <p className="mt-2 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80 md:text-base">
-                    {t(stat.labelKey)}
-                  </p>
+                  <div className="mt-3 text-sm font-semibold text-muted-foreground md:text-base">
+                    <Highlighter
+                      action={stat.action}
+                      color="rgba(59, 130, 246, 0.25)"
+                      isView={true}
+                      animationDuration={800}
+                    >
+                      {t(stat.labelKey)}
+                    </Highlighter>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -53,3 +61,4 @@ export function Stats() {
     </section>
   );
 }
+

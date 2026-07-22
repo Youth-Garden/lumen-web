@@ -20,6 +20,7 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { StudySettingsDialog } from '../components/study-settings-dialog';
+import { FlashcardStudyModal } from '../components/flashcard-study-modal';
 
 interface DeckDetailPageProps {
   deckId: string;
@@ -33,6 +34,7 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
   const { data: dueFlashcards } = useDueFlashcards({ deckId });
 
   const [isStudySettingsOpen, setIsStudySettingsOpen] = useState(false);
+  const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -61,6 +63,18 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
 
   const dueCount = dueFlashcards?.data.length || 0;
   const flashcards = deckDetail.flashcards || [];
+
+  const studyCards = (dueFlashcards?.data || []).map((fc) => ({
+    id: fc.flashcardId,
+    word: {
+      id: fc.wordId,
+      term: fc.term,
+      phonetic: '',
+      audioUrl: '',
+      cefrLevel: '',
+      definitions: [],
+    },
+  }));
 
   const getCefrColor = (level?: string | null) => {
     if (!level) return 'bg-secondary text-secondary-foreground';
@@ -100,12 +114,12 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
           )}
         </div>
         <Button
-          onClick={() => setIsStudySettingsOpen(true)}
-          className="gap-2 shrink-0"
-          disabled={dueCount === 0}
+          onClick={() => setIsStudyModalOpen(true)}
+          className="gap-2 shrink-0 rounded-full px-6 shadow-md"
+          disabled={studyCards.length === 0}
         >
           <Icons name="play" className="h-4 w-4" />
-          {t('learn') || 'Learn'} ({dueCount} due)
+          {t('learn') || 'Learn Flashcards'} ({studyCards.length})
         </Button>
       </div>
 
@@ -162,6 +176,13 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
           )}
         </CardContent>
       </Card>
+
+      <FlashcardStudyModal
+        cards={studyCards}
+        isOpen={isStudyModalOpen}
+        onClose={() => setIsStudyModalOpen(false)}
+        deckName={deckDetail.name}
+      />
 
       <StudySettingsDialog
         isOpen={isStudySettingsOpen}

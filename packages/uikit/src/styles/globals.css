@@ -319,3 +319,29 @@
     font-size: 18px;
   }
 }
+
+/* Custom UI Utilities */
+@utility glass-card {
+  background-color: color-mix(in srgb, var(--card) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+@utility glass-header {
+  background-color: color-mix(in srgb, var(--background) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@utility gradient-text {
+  background-image: linear-gradient(to right, var(--primary), #38bdf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glow-primary {
+  box-shadow: 0 0 25px -5px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+

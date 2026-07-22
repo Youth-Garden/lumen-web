@@ -24,11 +24,11 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  'group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-1 text-muted-foreground group-data-horizontal/tabs:h-10 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none',
+  'group/tabs-list inline-flex w-fit items-center justify-center rounded-xl p-1 text-muted-foreground group-data-horizontal/tabs:h-10 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none',
   {
     variants: {
       variant: {
-        default: 'bg-foreground/5',
+        default: 'bg-muted/60 border border-border/40 backdrop-blur-sm',
         line: 'gap-1 bg-transparent',
       },
     },
@@ -56,7 +56,7 @@ function TabsList({
           'absolute z-0 transition-all duration-300 ease-out',
           'w-[var(--active-tab-width)] left-[var(--active-tab-left)]',
           variant === 'default'
-            ? 'inset-y-1 rounded-md bg-background'
+            ? 'inset-y-1 rounded-lg bg-background shadow-xs border border-border/40'
             : 'bottom-0 h-[2px] bg-primary',
         )}
       />
@@ -70,8 +70,8 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "relative z-10 inline-flex h-[calc(100%-2px)] flex-1 items-center justify-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-colors duration-300 group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        'data-active:text-foreground dark:data-active:text-foreground',
+        "relative z-10 inline-flex h-[calc(100%-2px)] flex-1 items-center justify-center gap-2 rounded-lg px-4 py-1.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all duration-200 group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        'data-active:text-foreground data-active:font-semibold dark:data-active:text-foreground',
         className,
       )}
       {...props}

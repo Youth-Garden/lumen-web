@@ -27,6 +27,9 @@ import { RecentActivity } from '../components/recent-activity';
 import { StreakCard } from '../components/streak-card';
 import { useHeatmap, useProgressDashboard } from '../hooks';
 
+import { StreakFlameWidget } from '../components/streak-flame-widget';
+import { Highlighter } from '@/shared/components/highlighter';
+
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
   const { data: progressData } = useProgressDashboard();
@@ -45,15 +48,20 @@ export function OverviewPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between space-y-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">
-            Your Learning Dashboard
+          <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
+            Your Learning <Highlighter action="highlight" color="rgba(59, 130, 246, 0.2)">Dashboard</Highlighter>
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-1 font-medium">
             Track daily streaks, leaderboards, and personalized progress.
           </p>
         </div>
+
+        <StreakFlameWidget
+          streakDays={progressData?.streak || 0}
+          isActiveToday={true}
+        />
       </div>
 
       <StreakCard
