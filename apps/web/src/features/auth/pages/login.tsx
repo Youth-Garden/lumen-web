@@ -55,9 +55,6 @@ export default function LoginPage() {
         const tokens = res.data;
         setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
 
-        toast.success(t('success'), {
-          description: t('successDesc'),
-        });
         const callbackUrl = searchParams.get('callbackUrl');
         router.push(callbackUrl || RouteEnum.DASHBOARD);
         router.refresh();
@@ -100,10 +97,6 @@ export default function LoginPage() {
 
       const tokens = res.data;
       setAuth(tokens.user, tokens.accessToken, tokens.refreshToken);
-
-      toast.success(t('success'), {
-        description: t('successDesc'),
-      });
 
       const callbackUrl = searchParams.get('callbackUrl');
       router.push(callbackUrl || RouteEnum.DASHBOARD);

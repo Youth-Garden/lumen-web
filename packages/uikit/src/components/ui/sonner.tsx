@@ -11,42 +11,31 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps['theme']}
       className="toaster group"
-      gap={8}
+      position="top-right"
+      gap={6}
       icons={{
-        success: <Icons name="check" className="size-4" />,
-        info: <Icons name="info" className="size-4" />,
-        warning: <Icons name="danger" className="size-4" />,
-        error: <Icons name="close" className="size-4" />,
-        loading: <Icons name="more" className="size-4 animate-spin" />,
+        success: <Icons name="check" className="h-4 w-4 text-emerald-500 shrink-0" />,
+        info: <Icons name="info" className="h-4 w-4 text-primary shrink-0" />,
+        warning: <Icons name="alert-triangle" className="h-4 w-4 text-amber-500 shrink-0" />,
+        error: <Icons name="close" className="h-4 w-4 text-destructive shrink-0" />,
+        loading: <Icons name="loader-2" className="h-4 w-4 text-muted-foreground animate-spin shrink-0" />,
       }}
       toastOptions={{
+        style: {
+          background: 'var(--card)',
+          color: 'var(--card-foreground)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          padding: '10px 14px',
+          fontSize: '13px',
+          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
+        },
         classNames: {
-          toast: [
-            'group toast',
-            '!bg-card !text-card-foreground',
-            'border !border-border/60',
-            'shadow-[0_8px_32px_-4px_rgba(0,0,0,0.18),0_2px_8px_-2px_rgba(0,0,0,0.10)]',
-            'dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.45),0_2px_8px_-2px_rgba(0,0,0,0.25)]',
-            '!rounded-xl',
-            '!p-4',
-            'backdrop-blur-none',
-          ].join(' '),
-          title: '!font-semibold !text-sm tracking-tight',
-          description:
-            '!text-muted-foreground !text-xs !mt-0.5 leading-relaxed',
-          actionButton:
-            '!bg-primary !text-primary-foreground rounded-lg !px-3 !py-1.5 !text-xs !font-semibold hover:!opacity-90 transition-opacity',
-          cancelButton:
-            '!bg-secondary !text-secondary-foreground rounded-lg !px-3 !py-1.5 !text-xs !font-medium hover:!bg-secondary/80 transition-colors',
-          icon: [
-            'group-data-[type=error]:!text-destructive',
-            'group-data-[type=success]:!text-emerald-500',
-            'group-data-[type=warning]:!text-amber-500',
-            'group-data-[type=info]:!text-blue-500',
-            'mt-0.5 shrink-0',
-          ].join(' '),
-          closeButton:
-            '!bg-muted !border-border/50 !text-muted-foreground hover:!bg-accent hover:!text-accent-foreground !rounded-lg transition-colors',
+          toast: 'group toast !min-h-0 !w-auto !max-w-md font-sans border-border/80 shadow-md',
+          title: 'font-medium text-xs text-foreground tracking-tight',
+          description: 'text-muted-foreground text-[11px] leading-snug',
+          actionButton: '!bg-primary !text-primary-foreground rounded-md !px-2.5 !py-1 !text-xs',
+          cancelButton: '!bg-muted !text-muted-foreground rounded-md !px-2.5 !py-1 !text-xs',
         },
       }}
       {...props}

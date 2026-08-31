@@ -1,9 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -12,32 +10,39 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center p-4 text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex max-w-md flex-col items-center space-y-6"
-      >
-        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/10">
-          <Icons name="search" className="h-12 w-12 text-primary" />
+    <div className="flex min-h-[75vh] flex-col items-center justify-center p-4 text-center">
+      <div className="relative flex max-w-md flex-col items-center space-y-6">
+        {/* Ambient Glow */}
+        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none -z-10" />
+
+        {/* Icon Badge */}
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
+          <Icons name="search" className="h-10 w-10" />
         </div>
+
+        {/* Text */}
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">404</h1>
-          <h2 className="text-2xl font-semibold tracking-tight">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+            404 Error
+          </span>
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
             {t('title')}
-          </h2>
-          <p className="text-muted-foreground">{t('subtitle')}</p>
+          </h1>
+          <p className="text-muted-foreground text-sm max-w-xs mx-auto leading-relaxed">
+            {t('subtitle')}
+          </p>
         </div>
+
+        {/* Button */}
         <Button
           onClick={() => router.push('/')}
           size="lg"
-          className="mt-8 gap-2"
+          className="mt-4 gap-2 rounded-xl px-6 shadow-md"
         >
           <Icons name="home" className="h-4 w-4" />
           {t('backHome')}
         </Button>
-      </motion.div>
+      </div>
     </div>
   );
 }

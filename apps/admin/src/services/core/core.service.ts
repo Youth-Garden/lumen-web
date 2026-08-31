@@ -1,6 +1,6 @@
-import { BaseApiService } from '@lumen/shared-api';
-import type { MapperRegistry } from '@lumen/shared-api';
 import { useAuthStore } from '@/store/auth.store';
+import type { MapperRegistry } from '@lumen/shared-api';
+import { BaseApiService } from '@lumen/shared-api';
 import { toast } from 'sonner';
 
 export abstract class CoreService extends BaseApiService {

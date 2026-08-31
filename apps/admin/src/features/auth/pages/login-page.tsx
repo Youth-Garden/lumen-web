@@ -40,7 +40,6 @@ export default function LoginPage() {
       onSuccess: (response) => {
         if (response.data?.accessToken) {
           setToken(response.data.accessToken);
-          toast.success('Welcome back to Lumen Admin!');
           navigate(RouteEnum.DASHBOARD);
         }
       },
@@ -84,7 +83,6 @@ export default function LoginPage() {
       const res = await authService.login({ email, password: otp });
       if (res.data?.accessToken) {
         setToken(res.data.accessToken);
-        toast.success('Welcome to Lumen Admin!');
         navigate(RouteEnum.DASHBOARD);
       }
     } catch {

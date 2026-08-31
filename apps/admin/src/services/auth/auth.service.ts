@@ -1,7 +1,7 @@
-import { CoreService } from '../core';
 import { ApiEndpointEnum } from '@/shared/constants';
-import { registry } from './auth.registry';
 import type { BaseResponse } from '@lumen/shared-api';
+import { CoreService } from '../core';
+import { registry } from './auth.registry';
 import type { AuthResponse, LoginPayload } from './auth.types';
 
 export class AuthService extends CoreService {
