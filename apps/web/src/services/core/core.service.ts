@@ -31,6 +31,15 @@ export abstract class CoreService extends BaseApiService {
       },
     });
 
+    // Attach Bearer token to request headers
+    this.axiosInstance.interceptors.request.use((reqConfig) => {
+      const token = useAuthStore.getState().accessToken;
+      if (token) {
+        reqConfig.headers.Authorization = `Bearer ${token}`;
+      }
+      return reqConfig;
+    });
+
     // Handle 401 Unauthorized globally
     this.axiosInstance.interceptors.response.use(
       (response) => response,
@@ -60,20 +69,30 @@ export abstract class CoreService extends BaseApiService {
 
             try {
               // Plain axios call to avoid interceptor loops
+              const currentRefreshToken = authStore.refreshToken;
               const { data } = await axios.post(
                 (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') +
                   ApiEndpointEnum.REFRESH_TOKEN,
-                {}, // Send empty body, HttpOnly cookie 'jwtr' handles the token
-                { withCredentials: true }, // Ensure cookies are sent with this plain axios instance
+                { refreshToken: currentRefreshToken },
+                {
+                  headers: currentRefreshToken
+                    ? { 'x-refresh-token': currentRefreshToken }
+                    : {},
+                },
               );
 
-              // Backend already set new cookies (HttpOnly) in response
               const isSuccess = data?.statusCode === 201 || data?.data;
               const user = data?.data?.user;
+              const newAccessToken = data?.data?.accessToken;
+              const newRefreshToken = data?.data?.refreshToken;
 
               if (isSuccess) {
-                // Update auth store (without needing tokens)
-                authStore.setAuth(user || authStore.user);
+                // Update auth store
+                authStore.setAuth(
+                  user || authStore.user,
+                  newAccessToken || authStore.accessToken,
+                  newRefreshToken || authStore.refreshToken,
+                );
 
                 CoreService.processQueue(null);
                 return this.axiosInstance(originalRequest);

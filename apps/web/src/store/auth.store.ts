@@ -13,36 +13,37 @@ export interface User {
 
 interface AuthState {
   user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 
-  setAuth: (user: User) => void;
+  setAuth: (user: User, accessToken?: string, refreshToken?: string) => void;
   updateUser: (user: Partial<User>) => void;
   setLoading: (isLoading: boolean) => void;
   clearAuth: () => void;
 }
-
-// Ensure cookie reads only happen on the client
-// We still check if the cookie exists to set initial auth state, but we DO NOT set it manually anymore.
-const getInitialAuth = () => {
-  if (typeof document !== 'undefined') {
-    return document.cookie.includes(`${JWT_ACCESS_TOKEN_KEY}=`);
-  }
-  return false;
-};
-
-const initialAuth = getInitialAuth();
 
 export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
       (set) => ({
         user: null,
-        isAuthenticated: initialAuth,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
         isLoading: true,
 
-        setAuth: (user) => {
-          set({ user, isAuthenticated: true });
+        setAuth: (user, accessToken, refreshToken) => {
+          if (typeof document !== 'undefined') {
+            document.cookie = `${JWT_ACCESS_TOKEN_KEY}=true; path=/; max-age=604800; SameSite=Lax`;
+          }
+          set((state) => ({
+            user,
+            accessToken: accessToken || state.accessToken,
+            refreshToken: refreshToken || state.refreshToken,
+            isAuthenticated: true,
+          }));
         },
 
         updateUser: (userUpdates) =>
@@ -53,13 +54,23 @@ export const useAuthStore = create<AuthState>()(
         setLoading: (isLoading) => set({ isLoading }),
 
         clearAuth: () => {
-          set({ user: null, isAuthenticated: false });
+          if (typeof document !== 'undefined') {
+            document.cookie = `${JWT_ACCESS_TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+          }
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+          });
         },
       }),
       {
         name: 'auth-storage',
         partialize: (state) => ({
           user: state.user,
+          accessToken: state.accessToken,
+          refreshToken: state.refreshToken,
           isAuthenticated: state.isAuthenticated,
         }),
       },

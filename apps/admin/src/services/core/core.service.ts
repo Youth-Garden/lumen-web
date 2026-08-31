@@ -18,6 +18,15 @@ export abstract class CoreService extends BaseApiService {
       },
     });
 
+    // Attach Bearer token to request headers
+    this.axiosInstance.interceptors.request.use((reqConfig) => {
+      const token = useAuthStore.getState().accessToken;
+      if (token) {
+        reqConfig.headers.Authorization = `Bearer ${token}`;
+      }
+      return reqConfig;
+    });
+
     // Handle 401 Unauthorized globally
     this.axiosInstance.interceptors.response.use(
       (response) => response,
