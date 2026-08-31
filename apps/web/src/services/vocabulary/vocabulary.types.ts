@@ -1,15 +1,17 @@
 export interface VocabularyExample {
   id: string;
-  sentenceEn: string;
-  translationVi: string;
+  sentence?: Record<string, string>;
+  sentenceEn?: string;
+  translationVi?: string;
 }
 
 export interface VocabularyDefinition {
   id: string;
   partOfSpeech: string;
-  definitionEn: string;
-  translationVi: string;
-  examples: VocabularyExample[];
+  definition?: Record<string, string>;
+  definitionEn?: string;
+  translationVi?: string;
+  examples?: VocabularyExample[];
 }
 
 export interface VocabularyWord {
@@ -18,14 +20,33 @@ export interface VocabularyWord {
   phonetic?: string;
   audioUrl?: string;
   cefrLevel?: string;
-  definitions: VocabularyDefinition[];
+  definitions?: VocabularyDefinition[];
+}
+
+export interface FlashcardSummary {
+  id: string;
+  wordId: string;
+  term: string;
+  phonetic?: string | null;
+  audioUrl?: string | null;
+  cefrLevel?: string | null;
+  definitions?: VocabularyDefinition[];
 }
 
 export interface Deck {
   id: string;
   name: string;
-  description?: string;
+  description?: string | null;
+  category?: string | null;
   flashcardCount: number;
+}
+
+export interface DeckDetail {
+  id: string;
+  name: string;
+  description?: string | null;
+  category?: string | null;
+  flashcards: FlashcardSummary[];
 }
 
 export interface CreateDeckPayload {

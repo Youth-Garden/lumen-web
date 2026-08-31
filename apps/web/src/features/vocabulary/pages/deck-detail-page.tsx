@@ -64,15 +64,20 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
   const dueCount = dueFlashcards?.data.length || 0;
   const flashcards = deckDetail.flashcards || [];
 
-  const studyCards = (dueFlashcards?.data || []).map((fc) => ({
-    id: fc.flashcardId,
+  const studyCards = flashcards.map((fc) => ({
+    id: fc.id,
     word: {
       id: fc.wordId,
       term: fc.term,
-      phonetic: '',
-      audioUrl: '',
-      cefrLevel: '',
-      definitions: [],
+      phonetic: fc.phonetic || '',
+      audioUrl: fc.audioUrl || '',
+      cefrLevel: fc.cefrLevel || '',
+      definitions: (fc.definitions || []).map((def) => ({
+        id: def.id,
+        partOfSpeech: def.partOfSpeech,
+        definition: def.definition,
+        examples: def.examples || [],
+      })),
     },
   }));
 
@@ -93,41 +98,62 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
     }
   };
 
+  const playAudio = (audioUrl?: string | null) => {
+    if (!audioUrl) return;
+    const audio = new Audio(audioUrl);
+    audio.play().catch(() => {});
+  };
+
   return (
     <div className="flex flex-col space-y-6 h-full min-h-[calc(100vh-8rem)]">
-      <div className="flex items-center gap-4 mb-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.push(RouteEnum.VOCABULARY)}
-        >
-          <Icons name="arrow-left" className="h-5 w-5" />
-        </Button>
-        <div className="flex-1">
-          <h2 className="text-3xl font-bold tracking-tight">
-            {deckDetail.name}
-          </h2>
-          {deckDetail.description && (
-            <p className="text-muted-foreground mt-1">
-              {deckDetail.description}
-            </p>
-          )}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-xl"
+            onClick={() => router.push(RouteEnum.VOCABULARY)}
+          >
+            <Icons name="arrow-left" className="h-5 w-5" />
+          </Button>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                {deckDetail.name}
+              </h2>
+              {deckDetail.category && (
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-primary/30 bg-primary/10 text-primary uppercase tracking-wider">
+                  {deckDetail.category}
+                </span>
+              )}
+            </div>
+            {deckDetail.description && (
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {deckDetail.description}
+              </p>
+            )}
+          </div>
         </div>
         <Button
           onClick={() => setIsStudyModalOpen(true)}
-          className="gap-2 shrink-0 rounded-full px-6 shadow-md"
+          className="gap-2 shrink-0 rounded-xl px-6 shadow-md"
           disabled={studyCards.length === 0}
         >
           <Icons name="play" className="h-4 w-4" />
-          {t('learn') || 'Learn Flashcards'} ({studyCards.length})
+          {t('learn') || 'Study Flashcards'} ({studyCards.length})
         </Button>
       </div>
 
-      <Card className="flex-1">
-        <CardHeader className="bg-muted/30 border-b pb-4">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Icons name="book-open" className="h-5 w-5 text-primary" />
-            {flashcards.length} {t('words') || 'Words'}
+      <Card className="flex-1 rounded-2xl border-border/60 overflow-hidden shadow-sm">
+        <CardHeader className="bg-muted/30 border-b border-border/60 pb-4">
+          <CardTitle className="text-lg flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Icons name="book-open" className="h-5 w-5 text-primary" />
+              {flashcards.length} {t('words') || 'Words'}
+            </div>
+            <span className="text-xs font-normal text-muted-foreground">
+              Click word or audio icon to listen
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -138,38 +164,91 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-muted-foreground uppercase bg-muted/20">
+                <thead className="text-xs text-muted-foreground uppercase bg-muted/20 border-b border-border/40">
                   <tr>
-                    <th scope="col" className="px-6 py-4 font-medium">
-                      Term
+                    <th scope="col" className="px-6 py-3.5 font-semibold">
+                      Term / Phonetic
                     </th>
-                    <th scope="col" className="px-6 py-4 font-medium">
-                      Level
+                    <th scope="col" className="px-6 py-3.5 font-semibold">
+                      Type
+                    </th>
+                    <th scope="col" className="px-6 py-3.5 font-semibold">
+                      Meaning (VI)
+                    </th>
+                    <th scope="col" className="px-6 py-3.5 font-semibold">
+                      Explanation (EN)
+                    </th>
+                    <th scope="col" className="px-6 py-3.5 font-semibold">
+                      Example Sentence
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border">
-                  {flashcards.map((fc) => (
-                    <tr
-                      key={fc.id}
-                      className="hover:bg-muted/10 transition-colors"
-                    >
-                      <td className="px-6 py-4 font-medium text-foreground">
-                        {fc.term}
-                      </td>
-                      <td className="px-6 py-4">
-                        {fc.cefrLevel && (
-                          <span
-                            className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getCefrColor(
-                              fc.cefrLevel,
-                            )}`}
-                          >
-                            {fc.cefrLevel}
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                <tbody className="divide-y divide-border/50">
+                  {flashcards.map((fc) => {
+                    const primaryDef = fc.definitions?.[0];
+                    const primaryExample = primaryDef?.examples?.[0];
+                    const meaningVi = primaryDef?.definition?.vi || '—';
+                    const explainEn = primaryDef?.definition?.en || '—';
+                    const exampleEn = primaryExample?.sentence?.en || '';
+                    const exampleVi = primaryExample?.sentence?.vi || '';
+
+                    return (
+                      <tr
+                        key={fc.id}
+                        className="hover:bg-muted/15 transition-colors group"
+                      >
+                        <td className="px-6 py-4 font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <span>{fc.term}</span>
+                            {fc.audioUrl && (
+                              <button
+                                type="button"
+                                onClick={() => playAudio(fc.audioUrl)}
+                                className="text-muted-foreground hover:text-primary transition-colors p-1 rounded-md"
+                                title="Listen pronunciation"
+                              >
+                                <Icons name="volume-2" className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+                          {fc.phonetic && (
+                            <span className="text-xs text-muted-foreground font-mono block mt-0.5">
+                              {fc.phonetic}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {primaryDef?.partOfSpeech && (
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-muted text-muted-foreground border border-border/50">
+                              {primaryDef.partOfSpeech}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-foreground font-medium max-w-xs">
+                          {meaningVi}
+                        </td>
+                        <td className="px-6 py-4 text-muted-foreground text-xs leading-relaxed max-w-xs">
+                          {explainEn}
+                        </td>
+                        <td className="px-6 py-4 text-xs max-w-sm">
+                          {exampleEn ? (
+                            <div className="space-y-1">
+                              <p className="text-foreground italic">
+                                &quot;{exampleEn}&quot;
+                              </p>
+                              {exampleVi && (
+                                <p className="text-muted-foreground">
+                                  {exampleVi}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
