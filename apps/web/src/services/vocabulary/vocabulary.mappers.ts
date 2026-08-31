@@ -25,6 +25,7 @@ export const deckMapper = (deck: any): Deck => ({
   id: deck?.id || '',
   name: deck?.name || '',
   description: deck?.description,
+  category: deck?.category || null,
   flashcardCount: deck?.flashcardCount ?? 0,
 });
 

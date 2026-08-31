@@ -112,7 +112,7 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
             variant="ghost"
             size="icon"
             className="rounded-xl"
-            onClick={() => router.push(RouteEnum.VOCABULARY)}
+            onClick={() => router.back()}
           >
             <Icons name="arrow-left" className="h-5 w-5" />
           </Button>

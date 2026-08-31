@@ -12,6 +12,8 @@ export const registry: MapperRegistry = {
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORD_DETAIL)]:
     wordMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_DECKS)]: deckMapper,
+  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_DECK_DETAIL)]:
+    (data: any) => data,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE)]:
     dueFlashcardMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_DECKS)]:
@@ -19,5 +21,5 @@ export const registry: MapperRegistry = {
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS)]:
     idResponseMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS_REVIEW)]:
-    idResponseMapper, // Assuming review just returns success, or whatever response format. We can map later if it returns stats.
+    idResponseMapper,
 };

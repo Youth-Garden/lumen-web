@@ -3,6 +3,7 @@ export enum RouteEnum {
   LOGIN = '/login',
   DASHBOARD = '/',
   VOCABULARY = '/vocabulary',
+  COLLECTION_DETAIL = '/vocabulary/collections/:id',
   DECKS = '/decks',
   DECK_DETAIL = '/vocabulary/decks/:id',
   STUDY = '/study',
