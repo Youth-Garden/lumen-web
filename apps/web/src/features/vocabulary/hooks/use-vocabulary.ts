@@ -65,10 +65,11 @@ export const useVocabularyWordDetail = (
   id: string,
   options?: { enabled?: boolean },
 ) => {
+  const validId = id && id !== 'undefined' ? id : '';
   return useQuery({
-    queryKey: vocabularyKeys.wordDetail(id),
-    queryFn: () => vocabularyService.getWord(id),
-    enabled: options?.enabled,
+    queryKey: vocabularyKeys.wordDetail(validId),
+    queryFn: () => vocabularyService.getWord(validId),
+    enabled: options?.enabled && Boolean(validId),
   });
 };
 
@@ -80,16 +81,33 @@ export const useVocabularyDecks = () => {
 };
 
 export const useVocabularyDeck = (id: string, options?: { enabled?: boolean }) => {
+  const validId = id && id !== 'undefined' ? id : '';
+  const isEnabled = options?.enabled !== undefined ? options.enabled : Boolean(validId);
+
   return useQuery({
-    queryKey: vocabularyKeys.deckDetail(id),
-    queryFn: () => vocabularyService.getDeck(id).then(res => res.data),
-    enabled: options?.enabled,
+    queryKey: vocabularyKeys.deckDetail(validId),
+    queryFn: () => vocabularyService.getDeck(validId).then((res) => res?.data),
+    enabled: isEnabled,
   });
 };
 
 export const useDueFlashcards = (params?: { deckId?: string; limit?: number }) => {
+  let cleanParams: { deckId?: string; limit?: number } | undefined = undefined;
+
+  if (params) {
+    cleanParams = { ...params };
+    if (cleanParams.deckId === 'undefined' || cleanParams.deckId === undefined) {
+      delete cleanParams.deckId;
+    }
+  }
+
+  const isEnabled = params?.deckId
+    ? Boolean(params.deckId && params.deckId !== 'undefined')
+    : true;
+
   return useQuery({
-    queryKey: vocabularyKeys.dueFlashcards(params),
-    queryFn: () => vocabularyService.listDueFlashcards(params),
+    queryKey: vocabularyKeys.dueFlashcards(cleanParams),
+    queryFn: () => vocabularyService.listDueFlashcards(cleanParams),
+    enabled: isEnabled,
   });
 };

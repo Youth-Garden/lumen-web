@@ -8,7 +8,6 @@ import {
 import {
   Button,
   Card,
-  CardFooter,
   CardTitle,
   Skeleton,
 } from '@lumen/uikit/components';
@@ -70,7 +69,7 @@ export function DeckListPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {/* TOEIC 600 Words Main Folder Card (No Middle Divider Line) */}
+            {/* TOEIC 600 Words Main Folder Card */}
             <Card
               onClick={() =>
                 router.push(
@@ -157,14 +156,14 @@ export function DeckListPage() {
                       </p>
                     )}
                   </div>
-                  <CardFooter className="p-0 pt-3 mt-3 border-t border-border/40 flex justify-between items-center text-xs">
+                  <div className="pt-3 mt-3 border-t border-border/40 flex justify-between items-center text-xs">
                     <span className="text-muted-foreground">
                       Due: {dueCountForFolder}
                     </span>
                     <span className="font-semibold text-primary">
                       Study &rarr;
                     </span>
-                  </CardFooter>
+                  </div>
                 </Card>
               );
             })}

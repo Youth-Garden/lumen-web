@@ -6,7 +6,6 @@ import { formatUrl } from '@lumen/shared-api';
 import {
   Button,
   Card,
-  CardFooter,
   CardTitle,
   Input,
   Skeleton,
@@ -47,7 +46,7 @@ export function CollectionDetailPage({
           <Button
             variant="ghost"
             size="sm"
-            className="gap-2 rounded-xl text-muted-foreground hover:text-foreground pl-0"
+            className="gap-2 rounded-xl text-muted-foreground hover:text-foreground px-3.5 font-medium"
             onClick={() => router.push(RouteEnum.VOCABULARY)}
           >
             <Icons name="arrow-left" className="h-4 w-4" />
@@ -86,7 +85,7 @@ export function CollectionDetailPage({
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <Skeleton key={i} className="h-28 w-full rounded-2xl" />
+              <Skeleton key={i} className="h-24 w-full rounded-2xl" />
             ))}
           </div>
         ) : filteredTopics.length === 0 ? (
@@ -109,14 +108,16 @@ export function CollectionDetailPage({
                   <CardTitle className="text-base font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                     {topic.name}
                   </CardTitle>
+                  <Icons
+                    name="arrow-right"
+                    className="h-4 w-4 shrink-0 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all mt-0.5"
+                  />
                 </div>
 
-                <CardFooter className="p-0 pt-2 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                    <Icons name="book-open" className="h-3.5 w-3.5 text-primary" />
-                    {topic.flashcardCount} words
-                  </div>
-                </CardFooter>
+                <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground pt-3">
+                  <Icons name="book-open" className="h-3.5 w-3.5 text-primary" />
+                  {topic.flashcardCount} words
+                </div>
               </Card>
             ))}
           </div>
