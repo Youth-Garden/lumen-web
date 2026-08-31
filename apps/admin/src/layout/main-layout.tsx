@@ -9,22 +9,8 @@ import { toast } from 'sonner';
 const navItems = [
   { to: '/dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
   { to: '/users', icon: 'users', label: 'Users' },
-  { to: '/toeic', icon: 'file-text', label: 'TOEIC Tests' },
-  {
-    to: '/toeic/missing-explanations',
-    icon: 'file-warning',
-    label: 'QC Explanations',
-  },
   { to: '/vocabulary', icon: 'book-marked', label: 'Vocabulary' },
   { to: '/materials', icon: 'book-open', label: 'Materials' },
-  { to: '/reading', icon: 'book', label: 'Reading' },
-  { to: '/grammar', icon: 'pen-tool', label: 'Grammar' },
-  {
-    to: '/listening-speaking',
-    icon: 'headphones',
-    label: 'Listening/Speaking',
-  },
-  { to: '/quizzes', icon: 'check-circle', label: 'Quizzes' },
 ];
 
 export default function MainLayout() {

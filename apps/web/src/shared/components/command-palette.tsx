@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from '@lumen/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
 import { useVocabularyWords } from '@/features/vocabulary/hooks/use-vocabulary';
-import { useGrammarTopics } from '@/features/grammar/hooks/use-grammar';
-import { useSpeakingTasks } from '@/features/speaking/hooks/use-speaking';
 import {
   CommandDialog,
   CommandEmpty,
@@ -34,21 +32,7 @@ export function CommandPalette() {
     { enabled: debouncedSearch.length > 2 },
   );
 
-  const grammarTopics = useGrammarTopics(
-    { search: debouncedSearch },
-    { enabled: debouncedSearch.length > 2 },
-  );
-
-  const speakingTasks = useSpeakingTasks(
-    { search: debouncedSearch },
-    { enabled: debouncedSearch.length > 2 },
-  );
-
-  const isSearching =
-    debouncedSearch.length > 2 &&
-    (vocabWords.isFetching ||
-      grammarTopics.isFetching ||
-      speakingTasks.isFetching);
+  const isSearching = debouncedSearch.length > 2 && vocabWords.isFetching;
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -100,17 +84,11 @@ export function CommandPalette() {
             </CommandItem>
             <CommandItem
               onSelect={() =>
-                runCommand(() => router.push(`${RouteEnum.VOCABULARY}/study`))
+                runCommand(() => router.push(RouteEnum.VOCABULARY))
               }
             >
               <Icons name="book-open" className="mr-2 h-4 w-4" />
-              <span>Study Vocabulary</span>
-            </CommandItem>
-            <CommandItem
-              onSelect={() => runCommand(() => router.push(RouteEnum.TOEIC))}
-            >
-              <Icons name="file-text" className="mr-2 h-4 w-4" />
-              <span>Take TOEIC Test</span>
+              <span>Vocabulary Decks</span>
             </CommandItem>
           </CommandGroup>
         )}
@@ -141,54 +119,6 @@ export function CommandPalette() {
                 ))}
               </CommandGroup>
             )}
-
-            {grammarTopics?.data?.items &&
-              grammarTopics.data.items.length > 0 && (
-                <CommandGroup heading="Grammar Topics">
-                  {grammarTopics.data.items.slice(0, 5).map((topic) => (
-                    <CommandItem
-                      key={topic.id}
-                      onSelect={() =>
-                        runCommand(() =>
-                          router.push(`${RouteEnum.GRAMMAR}/${topic.id}`),
-                        )
-                      }
-                    >
-                      <Icons name="file-text" className="mr-2 h-4 w-4" />
-                      <span>
-                        <HighlightText
-                          text={topic.title}
-                          query={debouncedSearch}
-                        />
-                      </span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-
-            {speakingTasks?.data?.items &&
-              speakingTasks.data.items.length > 0 && (
-                <CommandGroup heading="Speaking Tasks">
-                  {speakingTasks.data.items.slice(0, 5).map((task) => (
-                    <CommandItem
-                      key={task.id}
-                      onSelect={() =>
-                        runCommand(() =>
-                          router.push(`${RouteEnum.SPEAKING}/${task.id}`),
-                        )
-                      }
-                    >
-                      <Icons name="mic" className="mr-2 h-4 w-4" />
-                      <span>
-                        <HighlightText
-                          text={task.title}
-                          query={debouncedSearch}
-                        />
-                      </span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
           </>
         )}
 

@@ -1,6 +1,3 @@
-import { redirect } from 'next/navigation';
-import { RouteEnum } from '@/shared/constants';
+import { OverviewPage } from '@/features/dashboard/pages/overview-page';
 
-export default function OverviewRedirectPage() {
-  redirect(RouteEnum.HOME);
-}
+export default OverviewPage;

@@ -9,26 +9,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { BadgeGrid } from '../components/badge-grid';
-import { XpProgressChart } from '../components/charts/xp-progress-chart';
 import { DailyGoalWidget } from '../components/daily-goal-widget';
 import { HeatmapCalendar } from '../components/heatmap-calendar';
-import { LeaderboardWidget } from '../components/leaderboard-widget';
-import { MetricCard } from '../components/metric-card';
-import { RecentActivity } from '../components/recent-activity';
-import { StreakCard } from '../components/streak-card';
-import { useHeatmap, useProgressDashboard } from '../hooks';
-
 import { StreakFlameWidget } from '../components/streak-flame-widget';
-import { Highlighter } from '@/shared/components/highlighter';
+import { useHeatmap, useProgressDashboard } from '../hooks';
 
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
@@ -37,24 +25,34 @@ export function OverviewPage() {
   const { data: dueFlashcards } = useDueFlashcards();
   const dueCount = dueFlashcards?.data?.length || 0;
 
-  const chartData = Array.from({ length: 7 }).map((_, indexItem) => {
-    const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - (6 - indexItem));
-    return {
-      date: currentDate.toISOString(),
-      xp: Math.floor(Math.random() * 200) + 50,
-    };
-  });
+  // Memory retention levels using semantic tokens
+  const memoryLevels = [
+    { label: 'Just learned', count: 8, color: 'text-primary border-primary/30' },
+    { label: 'Temporary', count: 18, color: 'text-primary border-primary/30' },
+    { label: 'Lasting', count: 42, color: 'text-primary border-primary/30' },
+    { label: 'Memorized', count: 65, color: 'text-primary border-primary/30' },
+    { label: 'Proficient', count: 180, color: 'text-primary border-primary/30' },
+  ];
+
+  const totalLearnedWords = memoryLevels.reduce((acc, curr) => acc + curr.count, 0);
+
+  // Frequently missed words mockup
+  const missedWords = [
+    { word: 'glimpse', partOfSpeech: 'noun', definition: 'a brief or partial view', errorRate: '33%' },
+    { word: 'fulfill', partOfSpeech: 'verb', definition: 'to achieve or realize something', errorRate: '33%' },
+    { word: 'substitution', partOfSpeech: 'noun', definition: 'the action of replacing someone or something', errorRate: '31%' },
+  ];
 
   return (
     <div className="space-y-6">
+      {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-black tracking-tight flex items-center gap-2">
-            Your Learning <Highlighter action="highlight" color="rgba(59, 130, 246, 0.2)">Dashboard</Highlighter>
+          <h2 className="text-3xl font-heading font-bold tracking-tight text-foreground">
+            Vocabulary Overview
           </h2>
-          <p className="text-sm text-muted-foreground mt-1 font-medium">
-            Track daily streaks, leaderboards, and personalized progress.
+          <p className="text-sm text-muted-foreground mt-1">
+            Track your learned words, spaced repetition schedule, and daily streak.
           </p>
         </div>
 
@@ -64,121 +62,95 @@ export function OverviewPage() {
         />
       </div>
 
-      <StreakCard
-        streak={progressData?.streak || 0}
-        streakFreezes={progressData?.streakFreezes || 0}
-        totalPoints={progressData?.totalPoints || 0}
-      />
-
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
-          <TabsTrigger value="gamification">
-            {t('tabs.gamification')}
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <MetricCard
-              title="Total XP"
-              value={progressData?.totalPoints?.toString() || '0'}
-              trend="from last week"
-              trendValue={15.5}
-              icon="trophy"
-            />
-            <MetricCard
-              title="Current Streak"
-              value={`${progressData?.streak || 0} days`}
-              trend="keep it up!"
-              trendValue={100}
-              icon="flame"
-            />
-            <MetricCard
-              title="Streak Freezes"
-              value={`${progressData?.streakFreezes || 0}`}
-              trend="shields available"
-              trendValue={0}
-              icon="shield"
-            />
-            <MetricCard
-              title="Study Time"
-              value={`${progressData?.todayStudyMinutes || 0}m`}
-              trend="today"
-              trendValue={0}
-              icon="clock"
-            />
-          </div>
-
-          {dueCount > 0 && (
-            <Card className="hover:-translate-y-1 transition-all duration-300">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Icons name="flame" className="h-5 w-5 text-orange-500" />
-                    <CardTitle className="text-orange-700 dark:text-orange-400">
-                      Review Due Today
-                    </CardTitle>
-                  </div>
+      {/* Main Grid: Left Column (Word Retention + Missed Words), Right Column (Spaced Repetition & Daily Goal) */}
+      <div className="grid gap-6 md:grid-cols-12">
+        {/* Left Column: 8 cols */}
+        <div className="md:col-span-8 flex flex-col gap-6">
+          {/* Learned Words Card */}
+          <Card className="border border-border/60 rounded-2xl bg-card shadow-xs overflow-hidden">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-heading font-black text-primary">
+                    {totalLearnedWords}
+                  </span>
+                  <span className="text-sm font-semibold text-muted-foreground">learned words</span>
                 </div>
-                <CardDescription className="text-orange-600/80 dark:text-orange-400/80">
-                  You have {dueCount} flashcard{dueCount !== 1 && 's'} pending
-                  for review based on spaced repetition.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href={`${RouteEnum.VOCABULARY}/study`}>
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white border-0">
-                    Review Now
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full border border-primary/30 bg-primary/10 text-primary">
+                  Active Retention
+                </span>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-5 pt-2">
+              {/* Retention Circles */}
+              <div className="grid grid-cols-5 gap-2 text-center">
+                {memoryLevels.map((lvl, idx) => (
+                  <div key={idx} className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-muted/30 border border-border/40">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-xs font-bold ${lvl.color}`}>
+                      {lvl.count}
+                    </div>
+                    <span className="text-[11px] font-medium text-muted-foreground truncate w-full">
+                      {lvl.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <Link href={RouteEnum.FLASHCARD_REVIEW} className="flex-1">
+                  <Button className="w-full gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xs">
+                    <Icons name="sparkles" className="h-4 w-4" />
+                    Review Pairing ({dueCount > 0 ? dueCount : 15} words)
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
-          )}
+                <Link href={RouteEnum.FLASHCARD_REVIEW} className="flex-1">
+                  <Button variant="secondary" className="w-full gap-2 rounded-xl font-semibold shadow-xs">
+                    <Icons name="book-open" className="h-4 w-4" />
+                    Flashcards Mode
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>XP Progress</CardTitle>
-                <CardDescription>
-                  Your learning activity over the last 7 days.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pl-2 flex-1 flex flex-col">
-                <XpProgressChart data={chartData} />
-              </CardContent>
-            </Card>
-            <div className="col-span-3 flex flex-col gap-4">
-              <DailyGoalWidget />
-              <HeatmapCalendar data={heatmapData} isLoading={heatmapLoading} />
-            </div>
-          </div>
+          {/* Frequently Missed Words */}
+          <Card className="border border-border/60 rounded-2xl bg-card shadow-xs">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                  <Icons name="alert-circle" className="h-4 w-4 text-amber-500" />
+                  Frequently Missed Words
+                </CardTitle>
+                <span className="text-xs text-muted-foreground font-medium">Auto-targeted</span>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {missedWords.map((item, idx) => (
+                  <div key={idx} className="flex flex-col justify-between p-3.5 rounded-xl bg-muted/40 border border-border/50 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-sm text-foreground">{item.word}</span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                        Error: {item.errorRate}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      <span className="italic font-medium">({item.partOfSpeech})</span> {item.definition}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-          <div className="grid gap-4 md:grid-cols-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>
-                  Your latest learning achievements and milestones.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RecentActivity />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="gamification" className="space-y-4 mt-4">
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
-            <div className="col-span-1 lg:col-span-3">
-              <LeaderboardWidget />
-            </div>
-            <div className="col-span-1 lg:col-span-4">
-              <BadgeGrid unlockedBadges={progressData?.unlockedBadges} />
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+        {/* Right Column: 4 cols */}
+        <div className="md:col-span-4 flex flex-col gap-6">
+          <DailyGoalWidget />
+          <HeatmapCalendar data={heatmapData} isLoading={heatmapLoading} />
+        </div>
+      </div>
     </div>
   );
 }
