@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';

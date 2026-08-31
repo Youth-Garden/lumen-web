@@ -1,7 +1,7 @@
 export enum RouteEnum {
   HOME = '/',
   LOGIN = '/login',
-  DASHBOARD = '/overview',
+  DASHBOARD = '/',
   VOCABULARY = '/vocabulary',
   DECKS = '/decks',
   DECK_DETAIL = '/vocabulary/decks/:id',

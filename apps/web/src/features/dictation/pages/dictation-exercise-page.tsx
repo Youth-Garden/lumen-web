@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { DictationPlayer } from '@/features/dictation/components/dictation-player';
 import { useDictationMaterial } from '@/features/dictation/hooks';

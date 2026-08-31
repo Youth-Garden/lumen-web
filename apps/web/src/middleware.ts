@@ -5,13 +5,13 @@ import { routing } from './shared/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-const publicRoutes = [RouteEnum.HOME, RouteEnum.LOGIN];
+const publicRoutes = [RouteEnum.LOGIN];
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;
   const path = req.nextUrl.pathname;
 
-  // We need to check the path ignoring the locale prefix (e.g. /vi/dashboard -> /dashboard)
+  // We need to check the path ignoring the locale prefix (e.g. /vi/overview -> /overview)
   let normalizedPath = path;
   for (const locale of routing.locales) {
     if (path.startsWith(`/${locale}/`) || path === `/${locale}`) {
@@ -20,15 +20,20 @@ export default function middleware(req: NextRequest) {
     }
   }
 
-  // Exact match for root / (Home), since startsWith('/') matches everything
-  const isPublic = publicRoutes.some((route) => 
-    route === '/' ? normalizedPath === '/' : normalizedPath.startsWith(route)
-  );
-
-  // If user is already logged in and tries to access Login or Home -> redirect to dashboard
-  if (token && (normalizedPath.startsWith(RouteEnum.LOGIN) || normalizedPath === '/')) {
-    return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
+  // Handle root path /
+  if (normalizedPath === '/') {
+    if (!token) {
+      return NextResponse.redirect(new URL(RouteEnum.LOGIN, req.url));
+    }
+    // Logged-in user stays on / to render OverviewPage
   }
+
+  // If user is already logged in and tries to access Login -> redirect to / (Dashboard)
+  if (token && normalizedPath.startsWith(RouteEnum.LOGIN)) {
+    return NextResponse.redirect(new URL(RouteEnum.HOME, req.url));
+  }
+
+  const isPublic = publicRoutes.some((route) => normalizedPath.startsWith(route));
 
   // If it's NOT a public route and user has no token -> redirect to login
   if (!isPublic && !token) {

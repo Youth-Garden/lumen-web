@@ -46,7 +46,7 @@ export function FeatureGrid() {
   const t = useTranslations('Index');
 
   return (
-    <section id="features" className="scroll-mt-20 py-28 bg-primary/5">
+    <section id="features" className="scroll-mt-20 py-28 bg-primary/5 relative">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeading
           eyebrow={t('featuresEyebrow')}
@@ -63,12 +63,12 @@ export function FeatureGrid() {
         >
           {FEATURES.map((feature) => (
             <motion.div key={feature.titleKey} variants={fadeUpVariants}>
-              <Card className="group h-full border-border/60 bg-card p-6 shadow-sm ring-1 ring-foreground/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
+              <Card className="group h-full border-border/60 bg-card p-6 shadow-sm ring-1 ring-foreground/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-primary/30">
                 <CardContent className="space-y-4 p-0">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <Icons name={feature.icon} className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-semibold tracking-tight">
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
                     {t(feature.titleKey)}
                   </h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">

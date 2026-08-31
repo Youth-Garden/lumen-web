@@ -1,132 +1,136 @@
-import { createMaterialIcon } from './material-icon';
-import { CommandIcon } from './svgs/command-icon';
+import * as LucideIcons from 'lucide-react';
+import type { ComponentType } from 'react';
 import { GoogleIcon } from './svgs/google-icon';
-import { MoonIcon } from './svgs/moon-icon';
-import { SunIcon } from './svgs/sun-icon';
+import type { IconProps } from './types';
 
-export const registry = {
-  // ── Navigation & Structure ──────────────────────────────────────────
-  home: createMaterialIcon('home'),
-  'layout-dashboard': createMaterialIcon('dashboard'),
-  menu: createMaterialIcon('menu'),
-  'panel-left-close': createMaterialIcon('left_panel_close'),
-  'panel-left-open': createMaterialIcon('left_panel_open'),
-  overview: createMaterialIcon('overview'),
+export const customRegistry: Record<
+  string,
+  ComponentType<IconProps> | ComponentType<any>
+> = {
+  // Navigation & Structure
+  home: LucideIcons.Home,
+  'layout-dashboard': LucideIcons.LayoutDashboard,
+  menu: LucideIcons.Menu,
+  'panel-left-close': LucideIcons.PanelLeftClose,
+  'panel-left-open': LucideIcons.PanelLeftOpen,
+  overview: LucideIcons.LayoutDashboard,
 
-  // ── Actions ─────────────────────────────────────────────────────────
-  check: createMaterialIcon('check'),
-  'check-circle': createMaterialIcon('check_circle'),
-  close: createMaterialIcon('close'),
-  'close-circle': createMaterialIcon('cancel'),
-  plus: createMaterialIcon('add'),
-  'trash-2': createMaterialIcon('delete'),
-  edit: createMaterialIcon('edit'),
-  save: createMaterialIcon('save'),
-  upload: createMaterialIcon('upload'),
-  filter: createMaterialIcon('filter_list'),
-  search: createMaterialIcon('search'),
-  ban: createMaterialIcon('block'),
-  'rotate-ccw': createMaterialIcon('undo'),
-  'x-circle': createMaterialIcon('cancel'),
-  'pen-tool': createMaterialIcon('draw'),
-  undo: createMaterialIcon('undo'),
-  redo: createMaterialIcon('redo'),
-  link: createMaterialIcon('link'),
-  image: createMaterialIcon('image'),
+  // Actions
+  check: LucideIcons.Check,
+  'check-circle': LucideIcons.CheckCircle2,
+  close: LucideIcons.X,
+  'close-circle': LucideIcons.XCircle,
+  plus: LucideIcons.Plus,
+  'trash-2': LucideIcons.Trash2,
+  edit: LucideIcons.Pencil,
+  save: LucideIcons.Save,
+  upload: LucideIcons.Upload,
+  filter: LucideIcons.Filter,
+  search: LucideIcons.Search,
+  ban: LucideIcons.Ban,
+  'rotate-ccw': LucideIcons.RotateCcw,
+  'x-circle': LucideIcons.XCircle,
+  'pen-tool': LucideIcons.PenTool,
+  undo: LucideIcons.Undo,
+  redo: LucideIcons.Redo,
+  link: LucideIcons.Link,
+  image: LucideIcons.Image,
 
-  // ── Chevrons & Arrows ────────────────────────────────────────────────
-  'chevron-down': createMaterialIcon('keyboard_arrow_down'),
-  'chevron-up': createMaterialIcon('keyboard_arrow_up'),
-  'chevron-right': createMaterialIcon('keyboard_arrow_right'),
-  'chevron-left': createMaterialIcon('keyboard_arrow_left'),
-  'arrow-left': createMaterialIcon('arrow_back'),
-  'arrow-right': createMaterialIcon('arrow_forward'),
+  // Chevrons & Arrows
+  'chevron-down': LucideIcons.ChevronDown,
+  'chevron-up': LucideIcons.ChevronUp,
+  'chevron-right': LucideIcons.ChevronRight,
+  'chevron-left': LucideIcons.ChevronLeft,
+  'arrow-left': LucideIcons.ArrowLeft,
+  'arrow-right': LucideIcons.ArrowRight,
 
-  // ── Status & Feedback ────────────────────────────────────────────────
-  info: createMaterialIcon('info'),
-  danger: createMaterialIcon('warning'),
-  star: createMaterialIcon('star'),
-  'loader-2': createMaterialIcon('progress_activity'),
-  activity: createMaterialIcon('monitor_heart'),
-  zap: createMaterialIcon('bolt'),
-  flag: createMaterialIcon('flag'),
+  // Status & Feedback
+  info: LucideIcons.Info,
+  danger: LucideIcons.AlertTriangle,
+  star: LucideIcons.Star,
+  'loader-2': LucideIcons.Loader2,
+  activity: LucideIcons.Activity,
+  zap: LucideIcons.Zap,
+  flag: LucideIcons.Flag,
 
-  // ── Media & Audio ────────────────────────────────────────────────────
-  play: createMaterialIcon('play_arrow'),
-  pause: createMaterialIcon('pause'),
-  square: createMaterialIcon('stop'),
-  'volume-2': createMaterialIcon('volume_up'),
-  headphones: createMaterialIcon('headphones'),
-  mic: createMaterialIcon('mic'),
-  'mic-off': createMaterialIcon('mic_off'),
+  // Media & Audio
+  play: LucideIcons.Play,
+  pause: LucideIcons.Pause,
+  square: LucideIcons.Square,
+  'volume-2': LucideIcons.Volume2,
+  headphones: LucideIcons.Headphones,
+  mic: LucideIcons.Mic,
+  'mic-off': LucideIcons.MicOff,
 
-  // ── Notifications & Communication ───────────────────────────────────
-  bell: createMaterialIcon('notifications'),
-  mail: createMaterialIcon('mail'),
-  send: createMaterialIcon('send'),
+  // Notifications & Communication
+  bell: LucideIcons.Bell,
+  mail: LucideIcons.Mail,
+  send: LucideIcons.Send,
 
-  // ── Content & Reading ────────────────────────────────────────────────
-  'book-open': createMaterialIcon('menu_book'),
-  book: createMaterialIcon('book'),
-  'book-marked': createMaterialIcon('bookmark'),
-  newspaper: createMaterialIcon('newspaper'),
-  'file-text': createMaterialIcon('description'),
-  'file-question': createMaterialIcon('quiz'),
-  layers: createMaterialIcon('layers'),
-  tag: createMaterialIcon('label'),
-  languages: createMaterialIcon('translate'),
+  // Content & Reading
+  'book-open': LucideIcons.BookOpen,
+  book: LucideIcons.Book,
+  'book-marked': LucideIcons.Bookmark,
+  newspaper: LucideIcons.Newspaper,
+  'file-text': LucideIcons.FileText,
+  'file-question': LucideIcons.FileQuestion,
+  layers: LucideIcons.Layers,
+  tag: LucideIcons.Tag,
+  languages: LucideIcons.Languages,
 
-  // ── Charts & Analytics ───────────────────────────────────────────────
-  'bar-chart': createMaterialIcon('bar_chart'),
-  'pie-chart': createMaterialIcon('pie_chart'),
+  // Charts & Analytics
+  'bar-chart': LucideIcons.BarChart3,
+  'pie-chart': LucideIcons.PieChart,
 
-  // ── Users & Identity ─────────────────────────────────────────────────
-  user: createMaterialIcon('person'),
-  users: createMaterialIcon('group'),
-  shield: createMaterialIcon('security'),
-  'shield-check': createMaterialIcon('verified_user'),
-  lock: createMaterialIcon('lock'),
+  // Users & Identity
+  user: LucideIcons.User,
+  users: LucideIcons.Users,
+  shield: LucideIcons.Shield,
+  'shield-check': LucideIcons.ShieldCheck,
+  lock: LucideIcons.Lock,
 
-  // ── Commerce ─────────────────────────────────────────────────────────
-  'credit-card': createMaterialIcon('credit_card'),
+  // Commerce
+  'credit-card': LucideIcons.CreditCard,
 
-  // ── Learning & Education ─────────────────────────────────────────────
-  study: createMaterialIcon('school'),
-  quiz: createMaterialIcon('quiz'),
-  vocabulary: createMaterialIcon('spellcheck'),
-  deck: createMaterialIcon('style'),
-  brain: createMaterialIcon('neurology'),
-  trophy: createMaterialIcon('emoji_events'),
-  award: createMaterialIcon('military_tech'),
-  flame: createMaterialIcon('local_fire_department'),
-  clock: createMaterialIcon('schedule'),
-  cardiology: createMaterialIcon('cardiology'),
+  // Learning & Education
+  study: LucideIcons.GraduationCap,
+  quiz: LucideIcons.HelpCircle,
+  vocabulary: LucideIcons.BookType,
+  deck: LucideIcons.Layers,
+  brain: LucideIcons.Brain,
+  trophy: LucideIcons.Trophy,
+  award: LucideIcons.Award,
+  flame: LucideIcons.Flame,
+  clock: LucideIcons.Clock,
+  cardiology: LucideIcons.HeartPulse,
 
-  // ── Rich Text Editor ─────────────────────────────────────────────────
-  bold: createMaterialIcon('format_bold'),
-  italic: createMaterialIcon('format_italic'),
-  strikethrough: createMaterialIcon('format_strikethrough'),
-  'heading-2': createMaterialIcon('format_h2'),
-  list: createMaterialIcon('format_list_bulleted'),
-  'list-ordered': createMaterialIcon('format_list_numbered'),
-  quote: createMaterialIcon('format_quote'),
+  // Rich Text Editor
+  bold: LucideIcons.Bold,
+  italic: LucideIcons.Italic,
+  strikethrough: LucideIcons.Strikethrough,
+  'heading-2': LucideIcons.Heading2,
+  list: LucideIcons.List,
+  'list-ordered': LucideIcons.ListOrdered,
+  quote: LucideIcons.Quote,
 
-  // ── Visibility ───────────────────────────────────────────────────────
-  eye: createMaterialIcon('visibility'),
-  'eye-off': createMaterialIcon('visibility_off'),
+  // Visibility
+  eye: LucideIcons.Eye,
+  'eye-off': LucideIcons.EyeOff,
 
-  // ── System ───────────────────────────────────────────────────────────
-  settings: createMaterialIcon('settings'),
-  'log-out': createMaterialIcon('logout'),
-  more: createMaterialIcon('more_horiz'),
+  // System
+  settings: LucideIcons.Settings,
+  'log-out': LucideIcons.LogOut,
+  more: LucideIcons.MoreHorizontal,
 
-  // ── Theme ────────────────────────────────────────────────────────────
-  sun: SunIcon,
-  moon: MoonIcon,
-
-  // ── Brand / Special (keep original SVGs — no Material equivalent) ────
+  // Theme & Brand
+  sun: LucideIcons.Sun,
+  moon: LucideIcons.Moon,
+  command: LucideIcons.Command,
   google: GoogleIcon,
-  command: CommandIcon,
-} as const;
+};
 
-export type IconName = keyof typeof registry;
+export function registerIcon(name: string, component: ComponentType<any>) {
+  customRegistry[name] = component;
+}
+
+export type CustomIconName = keyof typeof customRegistry;

@@ -1,3 +1,3 @@
-import HomePage from '@/features/home/pages/home';
+import { OverviewPage } from '@/features/dashboard/pages/overview-page';
 
-export default HomePage;
+export default OverviewPage;

@@ -1,3 +1,5 @@
+'use client';
+
 import { Input as InputPrimitive } from '@base-ui/react/input';
 import { Icons } from '@lumen/uikit/icons';
 import * as React from 'react';

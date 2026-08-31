@@ -1,27 +1,12 @@
 import { PropsWithChildren } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
-import { OpenEffect, Button } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
-import { RouteEnum } from '@/shared/constants';
+import { OpenEffect } from '@lumen/uikit/components';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const t = useTranslations('Auth.Layout');
   return (
     <div className="min-h-screen w-full flex bg-background relative">
-      <div className="absolute top-6 right-6 lg:top-8 lg:right-8 z-50">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-full text-muted-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800"
-        >
-          <Link href={RouteEnum.HOME}>
-            <Icons name="close" className="w-5 h-5" />
-            <span className="sr-only">Close</span>
-          </Link>
-        </Button>
-      </div>
 
       {/* Left side - Cover Image */}
       <div className="hidden lg:flex lg:w-7/12 relative bg-zinc-900 overflow-hidden">
