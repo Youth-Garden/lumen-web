@@ -39,7 +39,7 @@ export const StreakCard = ({
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white shadow-lg shadow-orange-500/20"
           >
-            <Icons name="flame" className="h-9 w-9 fill-current" />
+            <span className="text-3xl select-none">🔥</span>
           </motion.div>
 
           <div>

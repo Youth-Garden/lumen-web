@@ -20,6 +20,7 @@ export interface VocabularyWord {
   phonetic?: string;
   audioUrl?: string;
   cefrLevel?: string;
+  imageUrl?: string | null;
   definitions?: VocabularyDefinition[];
 }
 
@@ -30,6 +31,7 @@ export interface FlashcardSummary {
   phonetic?: string | null;
   audioUrl?: string | null;
   cefrLevel?: string | null;
+  imageUrl?: string | null;
   definitions?: VocabularyDefinition[];
 }
 

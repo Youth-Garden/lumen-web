@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 interface UiState {
   sidebarCollapsed: boolean;
@@ -22,7 +22,7 @@ export const useUiStore = create<UiState>()(
         setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
       }),
       {
-        name: 'lumen-ui-storage',
+        name: 'ui-storage',
       },
     ),
     { name: 'UiStore' },

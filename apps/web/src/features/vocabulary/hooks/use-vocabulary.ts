@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { vocabularyService, vocabularyKeys } from '@/services/vocabulary';
 import {
   CreateDeckPayload,
   CreateFlashcardPayload,
   ReviewFlashcardPayload,
+  vocabularyKeys,
+  vocabularyService,
 } from '@/services/vocabulary';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useCreateDeck = () => {
   const queryClient = useQueryClient();
@@ -80,9 +81,13 @@ export const useVocabularyDecks = () => {
   });
 };
 
-export const useVocabularyDeck = (id: string, options?: { enabled?: boolean }) => {
+export const useVocabularyDeck = (
+  id: string,
+  options?: { enabled?: boolean },
+) => {
   const validId = id && id !== 'undefined' ? id : '';
-  const isEnabled = options?.enabled !== undefined ? options.enabled : Boolean(validId);
+  const isEnabled =
+    options?.enabled !== undefined ? options.enabled : Boolean(validId);
 
   return useQuery({
     queryKey: vocabularyKeys.deckDetail(validId),
@@ -91,12 +96,18 @@ export const useVocabularyDeck = (id: string, options?: { enabled?: boolean }) =
   });
 };
 
-export const useDueFlashcards = (params?: { deckId?: string; limit?: number }) => {
+export const useDueFlashcards = (params?: {
+  deckId?: string;
+  limit?: number;
+}) => {
   let cleanParams: { deckId?: string; limit?: number } | undefined = undefined;
 
   if (params) {
     cleanParams = { ...params };
-    if (cleanParams.deckId === 'undefined' || cleanParams.deckId === undefined) {
+    if (
+      cleanParams.deckId === 'undefined' ||
+      cleanParams.deckId === undefined
+    ) {
       delete cleanParams.deckId;
     }
   }

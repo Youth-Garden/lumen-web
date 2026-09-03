@@ -1,15 +1,11 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useState } from 'react';
 
-import {
-  useDueFlashcards,
-  useVocabularyDeck,
-} from '@/features/vocabulary/hooks';
+import { useVocabularyDeck } from '@/features/vocabulary/hooks';
 import { RouteEnum } from '@/shared/constants';
-import { CefrLevelEnum } from '@/shared/types';
+import { useGoBack } from '@/shared/hooks';
 import {
   Button,
   Card,
@@ -19,7 +15,6 @@ import {
   Skeleton,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { StudySettingsDialog } from '../components/study-settings-dialog';
 import { FlashcardStudyModal } from '../components/flashcard-study-modal';
 
 interface DeckDetailPageProps {
@@ -27,13 +22,8 @@ interface DeckDetailPageProps {
 }
 
 export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
-  const t = useTranslations('Vocabulary.DeckDetail');
-  const router = useRouter();
-
+  const goBack = useGoBack(RouteEnum.VOCABULARY);
   const { data: deckDetail, isLoading } = useVocabularyDeck(deckId);
-  const { data: dueFlashcards } = useDueFlashcards({ deckId });
-
-  const [isStudySettingsOpen, setIsStudySettingsOpen] = useState(false);
   const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
 
   if (isLoading) {
@@ -50,207 +40,185 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)] w-full text-destructive">
         <Icons name="danger" className="h-10 w-10 mb-4" />
-        <p>{t('notFound') || 'Deck not found'}</p>
-        <Button
-          className="mt-4"
-          onClick={() => router.push(RouteEnum.VOCABULARY)}
-        >
-          {t('backToDecks') || 'Back to Decks'}
+        <p className="text-base font-semibold">Deck not found</p>
+        <Button className="mt-4 rounded-xl" onClick={goBack}>
+          Back to Vocabulary
         </Button>
       </div>
     );
   }
 
-  const dueCount = dueFlashcards?.data.length || 0;
   const flashcards = deckDetail.flashcards || [];
 
-  const studyCards = flashcards.map((fc) => ({
-    id: fc.id,
-    word: {
-      id: fc.wordId,
-      term: fc.term,
-      phonetic: fc.phonetic || '',
-      audioUrl: fc.audioUrl || '',
-      cefrLevel: fc.cefrLevel || '',
-      definitions: (fc.definitions || []).map((def) => ({
-        id: def.id,
-        partOfSpeech: def.partOfSpeech,
-        definition: def.definition,
-        examples: def.examples || [],
-      })),
-    },
-  }));
-
-  const getCefrColor = (level?: string | null) => {
-    if (!level) return 'bg-secondary text-secondary-foreground';
-    switch (level.toUpperCase()) {
-      case CefrLevelEnum.A1:
-      case CefrLevelEnum.A2:
-        return 'bg-green-500/10 text-green-500';
-      case CefrLevelEnum.B1:
-      case CefrLevelEnum.B2:
-        return 'bg-blue-500/10 text-blue-500';
-      case CefrLevelEnum.C1:
-      case CefrLevelEnum.C2:
-        return 'bg-purple-500/10 text-purple-500';
-      default:
-        return 'bg-secondary text-secondary-foreground';
+  // Audio helper
+  const playAudio = (url: string) => {
+    try {
+      const audio = new Audio(url);
+      audio.play().catch(() => {});
+    } catch {
+      // Ignore audio playback errors
     }
   };
 
-  const playAudio = (audioUrl?: string | null) => {
-    if (!audioUrl) return;
-    const audio = new Audio(audioUrl);
-    audio.play().catch(() => {});
-  };
+  // Convert flashcard to FlashcardItem for StudyModal
+  const studyCards = flashcards.map((fc) => ({
+    id: fc.id,
+    term: fc.term,
+    phonetic: fc.phonetic || undefined,
+    audioUrl: fc.audioUrl || undefined,
+    cefrLevel: fc.cefrLevel || undefined,
+    definitions: fc.definitions?.map((d) => ({
+      partOfSpeech: d.partOfSpeech,
+      definitionEn: d.definition?.en || '',
+      definitionVi: d.definition?.vi || '',
+      examples: d.examples?.map((ex) => ({
+        en: ex.sentence?.en || '',
+        vi: ex.sentence?.vi || '',
+      })),
+    })),
+  }));
 
   return (
-    <div className="flex flex-col space-y-6 h-full min-h-[calc(100vh-8rem)]">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-xl"
-            onClick={() => router.back()}
+    <div className="flex flex-col space-y-8 p-6 max-w-5xl mx-auto">
+      {/* Header section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6">
+        <div>
+          <button
+            type="button"
+            onClick={goBack}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground px-2.5 py-1 -ml-2.5 rounded-xl hover:bg-muted/60 transition-colors w-fit mb-2"
           >
-            <Icons name="arrow-left" className="h-5 w-5" />
-          </Button>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                {deckDetail.name}
-              </h2>
-              {deckDetail.category && (
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-primary/30 bg-primary/10 text-primary uppercase tracking-wider">
-                  {deckDetail.category}
-                </span>
-              )}
-            </div>
-            {deckDetail.description && (
-              <p className="text-sm text-muted-foreground mt-0.5">
-                {deckDetail.description}
-              </p>
+            <Icons name="arrow-left" className="h-4 w-4" />
+            <span>Back to Folders</span>
+          </button>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-black tracking-tight text-foreground">
+              {deckDetail.name}
+            </h1>
+            {deckDetail.category && (
+              <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary border border-primary/20">
+                {deckDetail.category}
+              </span>
             )}
           </div>
         </div>
-        <Button
-          onClick={() => setIsStudyModalOpen(true)}
-          className="gap-2 shrink-0 rounded-xl px-6 shadow-md"
-          disabled={studyCards.length === 0}
-        >
-          <Icons name="play" className="h-4 w-4" />
-          {t('learn') || 'Study Flashcards'} ({studyCards.length})
-        </Button>
+
+        {/* Action Controls */}
+        <div className="flex items-center gap-2.5">
+          <Button
+            className="rounded-xl font-bold shadow-sm flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+            disabled={flashcards.length === 0}
+            onClick={() => setIsStudyModalOpen(true)}
+          >
+            <Icons name="play" className="h-4 w-4 fill-current" />
+            <span>Study Folder</span>
+          </Button>
+        </div>
       </div>
 
-      <Card className="flex-1 rounded-2xl border-border/60 overflow-hidden shadow-sm">
-        <CardHeader className="bg-muted/30 border-b border-border/60 pb-4">
-          <CardTitle className="text-lg flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icons name="book-open" className="h-5 w-5 text-primary" />
-              {flashcards.length} {t('words') || 'Words'}
-            </div>
-            <span className="text-xs font-normal text-muted-foreground">
-              Click word or audio icon to listen
-            </span>
+      {/* Word List Section */}
+      <Card className="rounded-3xl border border-border/60 shadow-xs overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b border-border/40 py-4 px-6 flex flex-row items-center justify-between">
+          <CardTitle className="text-lg font-bold flex items-center gap-2">
+            <span>Vocabulary Words</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
+
+        <CardContent className="p-6">
           {flashcards.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
-              {t('emptyDeck') || 'This deck has no words yet.'}
+              This deck has no words yet.
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs text-muted-foreground uppercase bg-muted/20 border-b border-border/40">
-                  <tr>
-                    <th scope="col" className="px-6 py-3.5 font-semibold">
-                      Term / Phonetic
-                    </th>
-                    <th scope="col" className="px-6 py-3.5 font-semibold">
-                      Type
-                    </th>
-                    <th scope="col" className="px-6 py-3.5 font-semibold">
-                      Meaning (VI)
-                    </th>
-                    <th scope="col" className="px-6 py-3.5 font-semibold">
-                      Explanation (EN)
-                    </th>
-                    <th scope="col" className="px-6 py-3.5 font-semibold">
-                      Example Sentence
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/50">
-                  {flashcards.map((fc) => {
-                    const primaryDef = fc.definitions?.[0];
-                    const primaryExample = primaryDef?.examples?.[0];
-                    const meaningVi = primaryDef?.definition?.vi || '—';
-                    const explainEn = primaryDef?.definition?.en || '—';
-                    const exampleEn = primaryExample?.sentence?.en || '';
-                    const exampleVi = primaryExample?.sentence?.vi || '';
+            <div className="space-y-3">
+              {flashcards.map((fc) => {
+                const primaryDef = fc.definitions?.[0];
+                const meaningVi = primaryDef?.definition?.vi || '';
+                const explainEn = primaryDef?.definition?.en || '';
+                const examples = primaryDef?.examples || [];
 
-                    return (
-                      <tr
-                        key={fc.id}
-                        className="hover:bg-muted/15 transition-colors group"
-                      >
-                        <td className="px-6 py-4 font-semibold text-foreground">
-                          <div className="flex items-center gap-2">
-                            <span>{fc.term}</span>
-                            {fc.audioUrl && (
-                              <button
-                                type="button"
-                                onClick={() => playAudio(fc.audioUrl)}
-                                className="text-muted-foreground hover:text-primary transition-colors p-1 rounded-md"
-                                title="Listen pronunciation"
-                              >
-                                <Icons name="volume-2" className="h-4 w-4" />
-                              </button>
-                            )}
-                          </div>
-                          {fc.phonetic && (
-                            <span className="text-xs text-muted-foreground font-mono block mt-0.5">
-                              {fc.phonetic}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          {primaryDef?.partOfSpeech && (
-                            <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-muted text-muted-foreground border border-border/50">
-                              {primaryDef.partOfSpeech}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-foreground font-medium max-w-xs">
-                          {meaningVi}
-                        </td>
-                        <td className="px-6 py-4 text-muted-foreground text-xs leading-relaxed max-w-xs">
-                          {explainEn}
-                        </td>
-                        <td className="px-6 py-4 text-xs max-w-sm">
-                          {exampleEn ? (
-                            <div className="space-y-1">
-                              <p className="text-foreground italic">
-                                &quot;{exampleEn}&quot;
-                              </p>
-                              {exampleVi && (
-                                <p className="text-muted-foreground">
-                                  {exampleVi}
-                                </p>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                return (
+                  <div
+                    key={fc.id}
+                    className="rounded-2xl border border-border/60 bg-card p-5 hover:border-primary/40 hover:shadow-sm transition-all flex flex-col sm:flex-row items-start justify-between gap-5"
+                  >
+                    {/* Left: Term info & details */}
+                    <div className="flex-1 min-w-0">
+                      {/* Term row */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-base font-black uppercase tracking-wide text-foreground">
+                          {fc.term}
+                        </span>
+                        {primaryDef?.partOfSpeech && (
+                          <span className="text-sm text-muted-foreground font-medium">
+                            ({primaryDef.partOfSpeech})
+                          </span>
+                        )}
+                        {fc.phonetic && (
+                          <span className="text-sm text-muted-foreground font-mono">
+                            {fc.phonetic}
+                          </span>
+                        )}
+                        {fc.audioUrl && (
+                          <button
+                            type="button"
+                            onClick={() => playAudio(fc.audioUrl)}
+                            className="ml-0.5 p-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                            title="Listen"
+                          >
+                            <Icons name="volume-2" className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Definition */}
+                      {(explainEn || meaningVi) && (
+                        <div className="mt-2.5 text-sm">
+                          <span className="font-semibold text-foreground">Định nghĩa: </span>
+                          <span className="text-muted-foreground">
+                            {[explainEn, meaningVi].filter(Boolean).join('. ')}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Examples */}
+                      {examples.length > 0 && (
+                        <div className="mt-2 text-sm">
+                          <span className="font-semibold text-foreground">Ví dụ:</span>
+                          <ul className="mt-1 space-y-1 list-disc list-inside">
+                            {examples.map((ex) => (
+                              <li key={ex.id} className="text-muted-foreground leading-relaxed">
+                                {ex.sentence?.en && (
+                                  <span className="text-foreground">{ex.sentence.en}</span>
+                                )}
+                                {ex.sentence?.vi && (
+                                  <span className="block ml-5 text-muted-foreground text-xs mt-0.5">
+                                    {ex.sentence.vi}
+                                  </span>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right: Word Image */}
+                    {fc.imageUrl && (
+                      <div className="relative shrink-0 self-center sm:self-start w-full sm:w-36 h-28 sm:h-28 rounded-xl overflow-hidden border border-border/60 bg-muted/40 shadow-xs">
+                        <Image
+                          src={fc.imageUrl}
+                          alt={fc.term}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 144px"
+                          className="object-cover transition-transform duration-300 hover:scale-105"
+                          unoptimized
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </CardContent>
@@ -261,13 +229,6 @@ export function DeckDetailPage({ deckId }: DeckDetailPageProps) {
         isOpen={isStudyModalOpen}
         onClose={() => setIsStudyModalOpen(false)}
         deckName={deckDetail.name}
-      />
-
-      <StudySettingsDialog
-        isOpen={isStudySettingsOpen}
-        onClose={() => setIsStudySettingsOpen(false)}
-        deckId={deckId}
-        totalCards={dueCount}
       />
     </div>
   );

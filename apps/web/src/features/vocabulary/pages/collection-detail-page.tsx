@@ -2,9 +2,9 @@
 
 import { useVocabularyDecks } from '@/features/vocabulary/hooks';
 import { RouteEnum } from '@/shared/constants';
+import { useGoBack } from '@/shared/hooks';
 import { formatUrl } from '@lumen/shared-api';
 import {
-  Button,
   Card,
   CardTitle,
   Input,
@@ -22,6 +22,7 @@ export function CollectionDetailPage({
   collectionId,
 }: CollectionDetailPageProps) {
   const router = useRouter();
+  const goBack = useGoBack(RouteEnum.VOCABULARY);
   const { data, isLoading } = useVocabularyDecks();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -43,15 +44,14 @@ export function CollectionDetailPage({
       {/* Back button & Header */}
       <div className="flex flex-col space-y-3">
         <div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-2 rounded-xl text-muted-foreground hover:text-foreground px-3.5 font-medium"
-            onClick={() => router.push(RouteEnum.VOCABULARY)}
+          <button
+            type="button"
+            onClick={goBack}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground px-2.5 py-1 -ml-2.5 rounded-xl hover:bg-muted/60 transition-colors w-fit"
           >
             <Icons name="arrow-left" className="h-4 w-4" />
-            Back to Collections
-          </Button>
+            <span>Back to Folders</span>
+          </button>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

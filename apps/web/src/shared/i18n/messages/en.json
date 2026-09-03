@@ -284,8 +284,8 @@
       "noDecksAvailable": "No decks available. Please create one first."
     },
     "Decks": {
-      "title": "My Decks",
-      "description": "Manage and review your flashcard decks.",
+      "title": "Vocabulary",
+      "description": "Organize your learning with folders and flashcards.",
       "createDeck": "Create Deck",
       "createDeckDescription": "Create a new deck to organize your flashcards.",
       "deckName": "Deck Name",

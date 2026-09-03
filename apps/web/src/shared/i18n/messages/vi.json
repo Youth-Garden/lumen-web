@@ -253,8 +253,8 @@
       "noDecksAvailable": "Chưa có bộ thẻ nào. Vui lòng tạo mới trước."
     },
     "Decks": {
-      "title": "Bộ thẻ của tôi",
-      "description": "Quản lý và ôn tập các thẻ flashcard của bạn.",
+      "title": "Từ vựng",
+      "description": "Quản lý và ôn tập các thư mục và thẻ từ vựng của bạn.",
       "createDeck": "Tạo bộ thẻ",
       "createDeckDescription": "Tạo một bộ thẻ mới để sắp xếp từ vựng của bạn.",
       "deckName": "Tên bộ thẻ",
