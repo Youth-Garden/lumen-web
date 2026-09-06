@@ -2,17 +2,14 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
-import { cn } from '@lumen/uikit/utils';
-import { PronunciationAccent, type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import { type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
 
 interface StudyFlashcardProps {
   card: VocabularyWord;
   isFlipped: boolean;
-  activePhonetic: string;
-  playingAccent: PronunciationAccent | null;
+  showShortcuts: boolean;
   onFlip: () => void;
   onPlayUsAudio: (e: React.MouseEvent) => void;
   onPlayUkAudio: (e: React.MouseEvent) => void;
@@ -21,130 +18,179 @@ interface StudyFlashcardProps {
 export function StudyFlashcard({
   card,
   isFlipped,
-  activePhonetic,
-  playingAccent,
+  showShortcuts,
   onFlip,
   onPlayUsAudio,
   onPlayUkAudio,
 }: StudyFlashcardProps) {
-  const t = useTranslations('Vocabulary.Study');
-  const firstDef = card.definitions?.[0];
-  const partOfSpeech = firstDef?.partOfSpeech || 'Word';
-  const definitionText = firstDef?.translationVi || firstDef?.definitionEn || '';
-  const exampleText = firstDef?.examples?.[0]?.sentenceEn || '';
-  const hasUsAudio = Boolean(card.audioUsUrl || card.audioUrl);
-  const hasUkAudio = Boolean(card.audioUkUrl);
+  const definitions = card.definitions || [];
+  const primaryDef = definitions[0];
+
+  // Vietnamese translation/meaning
+  const viMeaning =
+    primaryDef?.translationVi ||
+    primaryDef?.definition?.vi ||
+    primaryDef?.definitionEn ||
+    card.term;
+
+  // English definition / explanation
+  const rawEnDef = primaryDef?.definition?.en || primaryDef?.definitionEn || '';
+  const enDefinition = rawEnDef !== viMeaning ? rawEnDef : '';
+
+  // First example sentence (bilingual)
+  const firstExample = primaryDef?.examples?.[0];
+  const exampleEn =
+    firstExample?.sentence?.en ||
+    firstExample?.sentenceEn ||
+    (typeof firstExample?.sentence === 'string' ? firstExample.sentence : '');
+  const exampleVi =
+    firstExample?.sentence?.vi ||
+    firstExample?.translationVi ||
+    '';
+
+  const phoneticUs = card.phoneticUs || card.phonetic || '';
+  const phoneticUk = card.phoneticUk || card.phonetic || '';
 
   return (
     <div
-      className="w-full h-[460px] relative cursor-pointer select-none [perspective:1000px]"
+      className="w-full max-w-[520px] h-[370px] sm:h-[390px] relative cursor-pointer select-none [perspective:1200px]"
       onClick={onFlip}
     >
       <motion.div
         className="w-full h-full relative [transform-style:preserve-3d]"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.45, ease: 'easeOut' }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
       >
         {/* FRONT SIDE */}
         <div
-          className={cn(
-            'absolute inset-0 w-full h-full bg-card rounded-2xl border-2 border-border p-8 flex flex-col justify-between shadow-lg [backface-visibility:hidden]',
-            isFlipped ? 'pointer-events-none' : 'pointer-events-auto'
-          )}
+          className="absolute inset-0 w-full h-full bg-card/90 backdrop-blur-md text-card-foreground rounded-3xl p-6 sm:p-8 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-shadow [backface-visibility:hidden] overflow-hidden"
+          style={{
+            pointerEvents: isFlipped ? 'none' : 'auto',
+          }}
         >
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-wider">
-              {partOfSpeech}
-            </span>
-            <span className="text-xs text-muted-foreground">{t('clickToFlip')}</span>
-          </div>
+          {/* Top spacer */}
+          <div className="w-full h-2" />
 
-          <div className="flex flex-col items-center justify-center my-auto space-y-4">
-            <h1 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight text-center">
+          {/* Center Content: Term & Pronunciations */}
+          <div className="flex flex-col items-center justify-center space-y-4 my-auto w-full">
+            <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
               {card.term}
             </h1>
-            {activePhonetic && (
-              <p className="text-lg text-muted-foreground font-mono">{activePhonetic}</p>
-            )}
 
-            {/* Audio Buttons */}
-            <div className="flex items-center space-x-2 pt-2" onClick={(e) => e.stopPropagation()}>
-              {hasUsAudio && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onPlayUsAudio}
-                  className={cn(
-                    'text-xs flex items-center space-x-1 border-border',
-                    playingAccent === PronunciationAccent.US && 'border-primary text-primary bg-primary/10'
-                  )}
-                >
-                  <Icons name="volume-2" className="w-3.5 h-3.5" />
-                  <span>US</span>
-                </Button>
-              )}
-              {hasUkAudio && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onPlayUkAudio}
-                  className={cn(
-                    'text-xs flex items-center space-x-1 border-border',
-                    playingAccent === PronunciationAccent.UK && 'border-primary text-primary bg-primary/10'
-                  )}
-                >
-                  <Icons name="volume-2" className="w-3.5 h-3.5" />
-                  <span>UK</span>
-                </Button>
-              )}
+            {/* US & UK Audio Buttons */}
+            <div
+              className="flex flex-col items-center space-y-2 pt-1"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {/* US Audio */}
+              <Button
+                variant="subtle"
+                type="button"
+                onClick={onPlayUsAudio}
+                className="h-auto py-1.5 px-4 rounded-full text-foreground hover:bg-muted/70 transition-colors cursor-pointer group border-none shadow-none gap-2.5"
+                title="Nghe phát âm US (Phím U)"
+              >
+                <div className="w-7 h-7 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
+                  <Icons name="volume-2" className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium font-mono text-muted-foreground">
+                  <span className="font-sans font-bold text-foreground mr-1">US</span>
+                  {phoneticUs ? `/${phoneticUs.replace(/^\/|\/$/g, '')}/` : ''}
+                </span>
+              </Button>
+
+              {/* UK Audio */}
+              <Button
+                variant="subtle"
+                type="button"
+                onClick={onPlayUkAudio}
+                className="h-auto py-1.5 px-4 rounded-full text-foreground hover:bg-muted/70 transition-colors cursor-pointer group border-none shadow-none gap-2.5"
+                title="Nghe phát âm UK (Phím K)"
+              >
+                <div className="w-7 h-7 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
+                  <Icons name="volume-2" className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <span className="text-xs sm:text-sm font-medium font-mono text-muted-foreground">
+                  <span className="font-sans font-bold text-foreground mr-1">UK</span>
+                  {phoneticUk ? `/${phoneticUk.replace(/^\/|\/$/g, '')}/` : ''}
+                </span>
+              </Button>
             </div>
           </div>
 
-          <div className="text-center">
-            <span className="text-xs text-muted-foreground/60">{t('spacebarHint')}</span>
+          {/* Bottom hint: Lật - Nhấn Space */}
+          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-primary pb-1 tracking-wide">
+            <Icons name="book-open" className="w-4 h-4 text-primary" />
+            <span>Lật {showShortcuts ? '- Nhấn Space' : ''}</span>
           </div>
         </div>
 
-        {/* BACK SIDE */}
+        {/* BACK SIDE: Detailed Explanation & Examples */}
         <div
-          className={cn(
-            'absolute inset-0 w-full h-full bg-card rounded-2xl border-2 border-primary/40 p-8 flex flex-col justify-between shadow-xl [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto',
-            !isFlipped ? 'pointer-events-none' : 'pointer-events-auto'
-          )}
+          className="absolute inset-0 w-full h-full bg-card/90 backdrop-blur-md text-card-foreground rounded-3xl p-5 sm:p-7 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-shadow [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto"
+          style={{
+            pointerEvents: !isFlipped ? 'none' : 'auto',
+          }}
         >
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary uppercase tracking-wider">
-              {partOfSpeech}
-            </span>
-            <span className="text-xs text-muted-foreground">{t('clickToFlipBack')}</span>
-          </div>
+          {/* Main content */}
+          <div className="w-full flex flex-col items-center my-auto space-y-2.5">
+            {/* Image (if available, compact) */}
+            {card.imageUrl ? (
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-muted/30 shrink-0 mb-1">
+                <Image
+                  src={card.imageUrl}
+                  alt={card.term}
+                  fill
+                  sizes="80px"
+                  className="object-contain"
+                  unoptimized
+                />
+              </div>
+            ) : null}
 
-          <div className="my-auto space-y-4 py-2">
-            <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                {t('meaning')}
-              </p>
-              <p className="text-2xl font-bold text-foreground">{definitionText}</p>
+            {/* Term & Part of speech */}
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-lg sm:text-xl font-bold text-foreground">
+                {card.term}
+              </span>
+              {primaryDef?.partOfSpeech && (
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                  {primaryDef.partOfSpeech}
+                </span>
+              )}
             </div>
 
-            {exampleText && (
-              <div className="p-3.5 rounded-lg bg-muted/60 border border-border/50 text-left">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                  {t('example')}
-                </p>
-                <p className="text-sm italic text-foreground">&quot;{exampleText}&quot;</p>
-              </div>
+            {/* Vietnamese Meaning */}
+            <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
+              {viMeaning}
+            </h2>
+
+            {/* English Definition / Explanation */}
+            {enDefinition && (
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                {enDefinition}
+              </p>
             )}
 
-            {card.imageUrl && (
-              <div className="relative w-full h-32 rounded-lg overflow-hidden border border-border">
-                <Image src={card.imageUrl} alt={card.term} fill className="object-cover" />
+            {/* Example Box (Bilingual) */}
+            {exampleEn && (
+              <div className="w-full max-w-md p-3 rounded-2xl bg-muted/40 text-left space-y-1 border-none mt-1">
+                <p className="text-xs sm:text-sm font-medium text-foreground italic leading-relaxed">
+                  &ldquo;{exampleEn}&rdquo;
+                </p>
+                {exampleVi && (
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {exampleVi}
+                  </p>
+                )}
               </div>
             )}
           </div>
 
-          <div className="text-center">
-            <span className="text-xs text-muted-foreground/60">{t('rateHint')}</span>
+          {/* Bottom hint: Lật - Nhấn Space */}
+          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-primary pt-1 pb-1 tracking-wide shrink-0">
+            <Icons name="book-open" className="w-4 h-4 text-primary" />
+            <span>Lật {showShortcuts ? '- Nhấn Space' : ''}</span>
           </div>
         </div>
       </motion.div>

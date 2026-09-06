@@ -1,8 +1,15 @@
+'use client';
+
 import { PropsWithChildren } from 'react';
+import { usePathname } from '@/shared/i18n/routing';
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
 
 export function DashboardLayout({ children }: PropsWithChildren) {
+  const pathname = usePathname();
+  // Only the root vocabulary dashboard (/vocabulary) has independent two-column scrolling
+  const isVocabDashboard = pathname === '/vocabulary';
+
   return (
     <div
       id="main-layout"
@@ -20,9 +27,13 @@ export function DashboardLayout({ children }: PropsWithChildren) {
         <Header />
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto px-6 pb-6 pt-20 md:px-10 md:pb-8 md:pt-24"
+          className={`flex-1 px-6 md:px-10 min-h-0 ${
+            isVocabDashboard
+              ? 'overflow-hidden pt-1 pb-2 md:pb-2.5 flex flex-col'
+              : 'overflow-y-auto pt-1 pb-10'
+          }`}
         >
-          <div className="mx-auto w-full max-w-5xl animate-in fade-in duration-500">
+          <div className="mx-auto w-full max-w-[1600px] h-full flex flex-col flex-1 min-h-0">
             {children}
           </div>
         </main>

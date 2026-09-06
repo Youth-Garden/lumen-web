@@ -1,0 +1,77 @@
+'use client';
+
+import { Icons } from '@lumen/uikit/icons';
+import { Button } from '@lumen/uikit/components';
+
+interface StudyBottomActionBarProps {
+  title?: string;
+  subtitle?: string;
+  isTopicSelected?: boolean;
+  onLearnNew: () => void;
+  onPractice: () => void;
+  onFlashcard: () => void;
+  onViewDetails?: () => void;
+  onClose?: () => void;
+}
+
+export function StudyBottomActionBar({
+  title,
+  isTopicSelected = false,
+  onLearnNew,
+  onPractice,
+  onFlashcard,
+  onClose,
+}: StudyBottomActionBarProps) {
+  return (
+    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl border border-border/80 px-4 py-2.5 rounded-full shadow-2xl animate-in slide-in-from-bottom duration-200 flex items-center gap-2.5 max-w-fit">
+      {isTopicSelected && title && (
+        <div className="flex items-center gap-1.5 pl-1 pr-2 text-xs font-bold text-foreground">
+          <span className="truncate max-w-[140px] sm:max-w-[200px]">{title}</span>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer"
+              title="Bỏ chọn"
+            >
+              <Icons name="x" className="w-3.5 h-3.5" />
+            </button>
+          )}
+          <span className="text-border/80 ml-1">|</span>
+        </div>
+      )}
+
+      {/* Button 1: Học từ mới */}
+      <Button
+        variant="default"
+        size="sm"
+        onClick={onLearnNew}
+        className="gap-1.5 font-bold cursor-pointer shadow-sm text-xs sm:text-sm h-9 px-4 rounded-full"
+      >
+        <Icons name="sparkles" className="w-3.5 h-3.5" />
+        <span>Học từ mới</span>
+      </Button>
+
+      {/* Button 2: Luyện tập */}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onPractice}
+        className="gap-1.5 font-semibold cursor-pointer text-xs sm:text-sm h-9 px-3.5 rounded-full"
+      >
+        <Icons name="droplet" className="w-3.5 h-3.5 text-primary" />
+        <span>Luyện tập</span>
+      </Button>
+
+      {/* Button 3: Thẻ ghi nhớ */}
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={onFlashcard}
+        className="gap-1.5 font-semibold cursor-pointer text-xs sm:text-sm h-9 px-3.5 rounded-full"
+      >
+        <Icons name="book-open" className="w-3.5 h-3.5" />
+        <span>Thẻ ghi nhớ</span>
+      </Button>
+    </div>
+  );
+}

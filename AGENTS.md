@@ -66,3 +66,9 @@
 - **Complete Refactoring**: When renaming or removing a concept, you MUST refactor 100% of its usages cleanly across all files, components, types, hooks, services, and route definitions.
 - **Zero Compatibility Shims**: Do not leave legacy variable names, prop names, or function wrappers behind to avoid updating caller code.
 
+## Content & Copywriting Neutrality Convention (Strict)
+
+- **No Hardcoded Specialized Content in Generic UI**: NEVER inject or hardcode specialized domain terms (such as "TOEIC", "IELTS", specific certifications, or specialized test names) into general application copy, section titles, headers, badges, or input placeholders (e.g., use "Th? m?c h? th?ng" / "System Folders" instead of "Th? m?c h? th?ng (TOEIC & Curated)", "VD: T? v?ng h?ng ng?y" instead of "VD: T? v?ng TOEIC").
+- **Generic & Reusable Content**: Keep all general platform features (vocabulary, flashcards, decks/folders, dashboard, settings) neutral, generic, and versatile. Specialized domain terms may ONLY appear within modules that are strictly and explicitly designed for that specific purpose (e.g., an actual dedicated TOEIC exam simulation player).
+
+- **No Redundant Count Badges in Headers**: NEVER append count numbers or pill badges (e.g. `(0)`, `[count]`, or `<span ...>{items.length}</span>`) next to section titles, headings, or category labels unless explicitly requested by the user. Keep section headings clean, focused, and minimalist without cluttering count numbers.

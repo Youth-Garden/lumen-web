@@ -81,12 +81,10 @@
     "ctaTitle": "Start your English journey today",
     "ctaSubtitle": "Join thousands of learners building real, lasting fluency with Lumen.",
     "ctaButton": "Get started free",
-
     "statLearners": "Active Learners",
     "statWords": "Words Mastered",
     "statRating": "Average Rating",
     "statSuccess": "Success Rate",
-
     "testimonialsTitle": "What Our Learners Say",
     "testimonialsSubtitle": "Join thousands who have transformed their English skills with Lumen.",
     "testimonial1Quote": "Lumen has completely changed how I study English. The daily practice is addictive and effective!",
@@ -95,37 +93,6 @@
     "joinSuccessStories": "Ready to start your success story?",
     "joinSuccessSubtitle": "Join our community of confident English learners today.",
     "seeFeatures": "See all features",
-    "startFree": "Start for free",
-
-    "howItWorksEyebrow": "How it works",
-    "howItWorksTitle": "Your path to fluency in four steps",
-    "howItWorksSubtitle": "A simple, guided routine that fits into any schedule.",
-    "howItWorksStepLabel": "Step {n}",
-    "step1Title": "Create your free account",
-    "step1Desc": "Sign up in seconds and set your daily learning goal.",
-    "step2Title": "Pick a learning track",
-    "step2Desc": "Choose mock tests, vocabulary, dictation, or any track that fits your goal.",
-    "step3Title": "Practice every day",
-    "step3Desc": "Complete short, engaging exercises tailored to your level.",
-    "step4Title": "Track your progress",
-    "step4Desc": "Watch your scores and streaks grow with detailed analytics.",
-
-    "statLearners": "Active Learners",
-    "statWords": "Words Mastered",
-    "statRating": "Average Rating",
-    "statSuccess": "Success Rate",
-
-    "testimonialsTitle": "What Our Learners Say",
-    "testimonialsSubtitle": "Join thousands who have transformed their English skills with Lumen.",
-    "testimonial1Quote": "Lumen has completely changed how I study English. The daily practice is addictive and effective!",
-    "testimonial2Quote": "The preparation was seamless. My English proficiency improved significantly in just 3 months.",
-    "testimonial3Quote": "I love the personalized learning path. Every exercise feels tailored to my level.",
-    "joinSuccessStories": "Ready to start your success story?",
-    "joinSuccessSubtitle": "Join our community of confident English learners today.",
-    "seeFeatures": "See all features",
-    "startFree": "Start for free",
-
-    "startNow": "Start now",
     "footerTagline": "The all-in-one platform to learn English and build lasting fluency.",
     "footerProductTitle": "Product",
     "footerResourceTitle": "Resources",
@@ -203,18 +170,23 @@
     }
   },
   "Gamification": {
-    "Leaderboard": {
-      "title": "Global Leaderboard",
-      "description": "Top 50 learners ranked by Total XP.",
-      "anonymous": "Anonymous User",
-      "dayStreak": "day streak",
-      "xp": "XP",
-      "empty": "No users on the leaderboard yet."
-    },
-    "Badges": {
-      "title": "Your Badges",
-      "description": "Unlock achievements as you learn and grow."
-    }
+    "streak": "Daily Streak",
+    "daysStreak": "{count} Days Streak",
+    "streakActive": "Active",
+    "streakLost": "Streak Lost",
+    "freezeShields": "Freeze Shields",
+    "buyFreeze": "Buy Freeze (500 XP)",
+    "buyFreezeSuccess": "Streak Freeze purchased successfully!",
+    "insufficientPoints": "Not enough XP points.",
+    "leaderboard": "Leaderboard",
+    "weekly": "Weekly",
+    "allTime": "All-Time",
+    "rank": "Rank #{rank}",
+    "yourRank": "Your Rank",
+    "badges": "Achievements & Badges",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "points": "{xp} XP"
   },
   "Auth": {
     "Login": {
@@ -287,7 +259,9 @@
       "studyAgain": "Study Again",
       "backToFolder": "Back to Folder",
       "masteredWords": "Mastered {mastered} / {total} words ({queue} in queue)",
-      "completed": "Completed"
+      "completed": "Completed",
+      "systemFolders": "System Folders",
+      "selectFolderSubtitle": "Explore system folders or build your own custom flashcards."
     },
     "List": {
       "title": "Vocabulary Bank",
@@ -295,7 +269,7 @@
       "searchPlaceholder": "Search for words...",
       "filterByLevel": "Filter by CEFR",
       "noResults": "No vocabulary found.",
-      "addToFolder": "Add to Folder",
+      "addToFolder": "+ Folder",
       "addToFolderDescription": "Select a folder to add this flashcard to.",
       "cancel": "Cancel",
       "add": "Add",
@@ -304,8 +278,7 @@
       "loadingFolders": "Loading folders...",
       "noFoldersAvailable": "No folders available. Please create one first.",
       "addFolderSuccess": "\"{term}\" has been added to your folder.",
-      "addError": "Failed to add. Please try again.",
-      "addToFolder": "+ Folder"
+      "addError": "Failed to add. Please try again."
     },
     "Folders": {
       "title": "Vocabulary",
@@ -313,7 +286,7 @@
       "createFolder": "Create Folder",
       "createFolderDescription": "Create a new folder to organize your flashcards.",
       "folderName": "Folder Name",
-      "folderNamePlaceholder": "e.g., TOEIC Essential Words",
+      "folderNamePlaceholder": "e.g., Daily Vocabulary",
       "folderDescription": "Description",
       "folderDescriptionPlaceholder": "Optional description for this folder",
       "cancel": "Cancel",
@@ -364,7 +337,7 @@
       "pinnedFolder": "Pinned folder",
       "selectFolderTitle": "Select Vocabulary Folder",
       "selectFolderSubtitle": "Explore curated system folders or build your own custom flashcards.",
-      "systemFolders": "System Folders (TOEIC & Curated)",
+      "systemFolders": "System Folders",
       "customFolders": "My Custom Folders",
       "selectToLearn": "Select to learn",
       "viewWords": "View words",
@@ -627,25 +600,6 @@
       "opinionDiscussion": "Opinion & Discussion",
       "pronunciation": "Pronunciation"
     }
-  },
-  "Gamification": {
-    "streak": "Daily Streak",
-    "daysStreak": "{count} Days Streak",
-    "streakActive": "Active",
-    "streakLost": "Streak Lost",
-    "freezeShields": "Freeze Shields",
-    "buyFreeze": "Buy Freeze (500 XP)",
-    "buyFreezeSuccess": "Streak Freeze purchased successfully!",
-    "insufficientPoints": "Not enough XP points.",
-    "leaderboard": "Leaderboard",
-    "weekly": "Weekly",
-    "allTime": "All-Time",
-    "rank": "Rank #{rank}",
-    "yourRank": "Your Rank",
-    "badges": "Achievements & Badges",
-    "unlocked": "Unlocked",
-    "locked": "Locked",
-    "points": "{xp} XP"
   },
   "AdaptiveLearning": {
     "title": "Weakness Remediation",

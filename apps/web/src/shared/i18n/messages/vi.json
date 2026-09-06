@@ -93,8 +93,6 @@
     "joinSuccessStories": "Sẵn sàng bắt đầu câu chuyện thành công của bạn?",
     "joinSuccessSubtitle": "Tham gia cộng đồng học viên tiếng Anh tự tin của chúng tôi ngay hôm nay.",
     "seeFeatures": "Xem tất cả tính năng",
-    "startFree": "Bắt đầu miễn phí",
-    "startNow": "Bắt đầu ngay",
     "footerTagline": "Nền tảng toàn diện để học tiếng Anh và xây dựng sự thành thạo bền vững.",
     "footerProductTitle": "Sản phẩm",
     "footerResourceTitle": "Tài nguyên",
@@ -172,18 +170,23 @@
     }
   },
   "Gamification": {
-    "Leaderboard": {
-      "title": "Bảng xếp hạng chung",
-      "description": "Top 50 học viên xếp theo Tổng điểm XP.",
-      "anonymous": "Người dùng ẩn danh",
-      "dayStreak": "ngày chuỗi",
-      "xp": "XP",
-      "empty": "Chưa có ai trên bảng xếp hạng."
-    },
-    "Badges": {
-      "title": "Huy hiệu của bạn",
-      "description": "Mở khóa thành tựu khi bạn học và phát triển."
-    }
+    "streak": "Chuỗi ngày học",
+    "daysStreak": "Chuỗi {count} ngày",
+    "streakActive": "Đang hoạt động",
+    "streakLost": "Đã mất chuỗi",
+    "freezeShields": "Khiên đóng băng",
+    "buyFreeze": "Mua khiên (500 XP)",
+    "buyFreezeSuccess": "Mua khiên đóng băng thành công!",
+    "insufficientPoints": "Không đủ điểm XP.",
+    "leaderboard": "Bảng xếp hạng",
+    "weekly": "Hàng tuần",
+    "allTime": "Tất cả thời gian",
+    "rank": "Hạng #{rank}",
+    "yourRank": "Thứ hạng của bạn",
+    "badges": "Huy hiệu & Thành tựu",
+    "unlocked": "Đã mở khóa",
+    "locked": "Chưa mở khóa",
+    "points": "{xp} XP"
   },
   "Auth": {
     "Login": {
@@ -256,7 +259,9 @@
       "studyAgain": "Học lại",
       "backToFolder": "Về thư mục",
       "masteredWords": "Đã thuộc {mastered} / {total} từ (còn {queue} từ trong hàng đợi)",
-      "completed": "Đã hoàn thành"
+      "completed": "Đã hoàn thành",
+      "systemFolders": "Thư mục hệ thống",
+      "selectFolderSubtitle": "Khám phá các thư mục hệ thống hoặc tự tạo thư mục của riêng bạn."
     },
     "List": {
       "title": "Kho từ vựng",
@@ -264,7 +269,7 @@
       "searchPlaceholder": "Tìm kiếm từ vựng...",
       "filterByLevel": "Lọc theo cấp độ CEFR",
       "noResults": "Không tìm thấy từ vựng nào.",
-      "addToFolder": "Thêm vào thư mục",
+      "addToFolder": "+ Thư mục",
       "addToFolderDescription": "Chọn một thư mục để thêm từ vựng này vào.",
       "cancel": "Hủy",
       "add": "Thêm",
@@ -273,8 +278,7 @@
       "loadingFolders": "Đang tải danh sách...",
       "noFoldersAvailable": "Chưa có thư mục nào. Vui lòng tạo mới trước.",
       "addFolderSuccess": "Đã thêm \"{term}\" vào thư mục.",
-      "addError": "Thêm thất bại. Vui lòng thử lại.",
-      "addToFolder": "+ Thư mục"
+      "addError": "Thêm thất bại. Vui lòng thử lại."
     },
     "Folders": {
       "title": "Từ vựng",
@@ -282,7 +286,7 @@
       "createFolder": "Tạo thư mục",
       "createFolderDescription": "Tạo một thư mục mới để sắp xếp từ vựng của bạn.",
       "folderName": "Tên thư mục",
-      "folderNamePlaceholder": "VD: Từ vựng TOEIC cơ bản",
+      "folderNamePlaceholder": "VD: Từ vựng hàng ngày",
       "folderDescription": "Mô tả",
       "folderDescriptionPlaceholder": "Mô tả không bắt buộc cho thư mục này",
       "cancel": "Hủy",
@@ -333,7 +337,7 @@
       "pinnedFolder": "Thư mục đã ghim",
       "selectFolderTitle": "Chọn thư mục từ vựng",
       "selectFolderSubtitle": "Khám phá các thư mục hệ thống hoặc tự tạo thư mục của riêng bạn.",
-      "systemFolders": "Thư mục hệ thống (TOEIC & Curated)",
+      "systemFolders": "Thư mục hệ thống",
       "customFolders": "Thư mục của tôi",
       "selectToLearn": "Chọn học",
       "viewWords": "Xem từ vựng",
@@ -596,25 +600,6 @@
       "opinionDiscussion": "Ý kiến & Thảo luận",
       "pronunciation": "Phát âm"
     }
-  },
-  "Gamification": {
-    "streak": "Chuỗi ngày học",
-    "daysStreak": "Chuỗi {count} ngày",
-    "streakActive": "Đang hoạt động",
-    "streakLost": "Đã mất chuỗi",
-    "freezeShields": "Khiên đóng băng",
-    "buyFreeze": "Mua khiên (500 XP)",
-    "buyFreezeSuccess": "Mua khiên đóng băng thành công!",
-    "insufficientPoints": "Không đủ điểm XP.",
-    "leaderboard": "Bảng xếp hạng",
-    "weekly": "Hàng tuần",
-    "allTime": "Tất cả thời gian",
-    "rank": "Hạng #{rank}",
-    "yourRank": "Thứ hạng của bạn",
-    "badges": "Huy hiệu & Thành tựu",
-    "unlocked": "Đã mở khóa",
-    "locked": "Chưa mở khóa",
-    "points": "{xp} XP"
   },
   "AdaptiveLearning": {
     "title": "Cải thiện điểm yếu",

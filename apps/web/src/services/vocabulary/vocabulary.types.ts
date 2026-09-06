@@ -17,6 +17,9 @@ export interface VocabularyDefinition {
 export interface VocabularyWord {
   id: string;
   term: string;
+  topic?: string | null;
+  topicVi?: string | null;
+  topicImageUrl?: string | null;
   phonetic?: string;
   phoneticUs?: string | null;
   phoneticUk?: string | null;

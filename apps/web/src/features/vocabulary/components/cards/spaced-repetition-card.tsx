@@ -12,7 +12,7 @@ export function SpacedRepetitionCard() {
   if (dismissed) return null;
 
   return (
-    <Card className="relative rounded-3xl border border-border/70 bg-card p-5 shadow-xs space-y-2">
+    <Card className="relative rounded-3xl border-none bg-card p-5 shadow-sm space-y-2">
       <div className="flex items-center justify-between">
         <h5 className="text-sm font-black text-foreground">
           {t('studyLessTitle')}
@@ -20,7 +20,7 @@ export function SpacedRepetitionCard() {
         <button
           type="button"
           onClick={() => setDismissed(true)}
-          className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+          className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
         >
           <Icons name="close" className="h-4 w-4" />
         </button>
