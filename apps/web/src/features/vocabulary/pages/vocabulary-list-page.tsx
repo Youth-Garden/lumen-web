@@ -15,7 +15,7 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 
-import { AddFlashcardDialog } from '@/features/vocabulary/components/add-flashcard-dialog';
+import { AddFlashcardDialog } from '@/features/vocabulary/components/dialogs/add-flashcard-dialog';
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
 import { AudioButton } from '@/shared/components/audio-button';
@@ -69,7 +69,7 @@ export function VocabularyListPage() {
             placeholder={t('searchPlaceholder')}
             className="pl-9"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(event) => setSearch(event.target.value)}
           />
         </div>
 
@@ -102,8 +102,8 @@ export function VocabularyListPage() {
       <ScrollArea className="flex-1 rounded-md border border-border">
         <div className="p-4 grid gap-4">
           {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 w-full rounded-xl" />
+            Array.from({ length: 5 }).map((_, skeletonIndex) => (
+              <Skeleton key={skeletonIndex} className="h-24 w-full rounded-xl" />
             ))
           ) : data?.items.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
@@ -180,7 +180,7 @@ export function VocabularyListPage() {
                         }
                       >
                         <Icons name="plus" className="h-4 w-4" />
-                        {t('addToDeck')}
+                        {t('addToFolder')}
                       </Button>
                     </div>
                   </div>

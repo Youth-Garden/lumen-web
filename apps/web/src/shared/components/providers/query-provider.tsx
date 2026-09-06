@@ -11,7 +11,14 @@ export function QueryProvider({ children }: PropsWithChildren) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 2,
+            refetchOnWindowFocus: false,
+            retry: (failureCount, error: any) => {
+              const status = error?.response?.status ?? error?.status;
+              if (status === 401 || status === 403) {
+                return false;
+              }
+              return failureCount < 2;
+            },
             staleTime: MINUTE * 5, // 5 minutes
             gcTime: MINUTE * 10, // 10 minutes
           },

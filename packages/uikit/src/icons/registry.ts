@@ -1,6 +1,13 @@
 import * as LucideIcons from 'lucide-react';
 import type { ComponentType } from 'react';
-import { GoogleIcon } from './svgs/google-icon';
+import {
+  GithubIcon,
+  GoogleIcon,
+  PlantGrowthIcon,
+  SpinnerIcon,
+  TwitterIcon,
+  YoutubeIcon,
+} from './svgs';
 import type { IconProps } from './types';
 
 export const customRegistry: Record<
@@ -29,6 +36,8 @@ export const customRegistry: Record<
   search: LucideIcons.Search,
   ban: LucideIcons.Ban,
   'rotate-ccw': LucideIcons.RotateCcw,
+  refresh: LucideIcons.RotateCcw,
+  'refresh-cw': LucideIcons.RefreshCw,
   'x-circle': LucideIcons.XCircle,
   'pen-tool': LucideIcons.PenTool,
   undo: LucideIcons.Undo,
@@ -51,6 +60,7 @@ export const customRegistry: Record<
   'loader-2': LucideIcons.Loader2,
   activity: LucideIcons.Activity,
   zap: LucideIcons.Zap,
+  sparkles: LucideIcons.Sparkles,
   flag: LucideIcons.Flag,
 
   // Media & Audio
@@ -74,6 +84,7 @@ export const customRegistry: Record<
   newspaper: LucideIcons.Newspaper,
   'file-text': LucideIcons.FileText,
   'file-question': LucideIcons.FileQuestion,
+  folder: LucideIcons.Folder,
   layers: LucideIcons.Layers,
   tag: LucideIcons.Tag,
   languages: LucideIcons.Languages,
@@ -96,13 +107,14 @@ export const customRegistry: Record<
   study: LucideIcons.GraduationCap,
   quiz: LucideIcons.HelpCircle,
   vocabulary: LucideIcons.BookType,
-  deck: LucideIcons.Layers,
   brain: LucideIcons.Brain,
   trophy: LucideIcons.Trophy,
   award: LucideIcons.Award,
   flame: LucideIcons.Flame,
   clock: LucideIcons.Clock,
   cardiology: LucideIcons.HeartPulse,
+  'plant-growth': PlantGrowthIcon,
+  spinner: SpinnerIcon,
 
   // Rich Text Editor
   bold: LucideIcons.Bold,
@@ -127,6 +139,9 @@ export const customRegistry: Record<
   moon: LucideIcons.Moon,
   command: LucideIcons.Command,
   google: GoogleIcon,
+  github: GithubIcon,
+  twitter: TwitterIcon,
+  youtube: YoutubeIcon,
 };
 
 export function registerIcon(name: string, component: ComponentType<any>) {

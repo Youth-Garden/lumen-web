@@ -51,3 +51,14 @@ export function Icons({
 }
 
 export { customRegistry as registry, registerIcon };
+export {
+  GithubIcon,
+  GoogleIcon,
+  PlantGrowthIcon,
+  SpinnerIcon,
+  TwitterIcon,
+  YoutubeIcon,
+  type PlantGrowthIconProps,
+  type SpinnerIconProps,
+} from './svgs';
+

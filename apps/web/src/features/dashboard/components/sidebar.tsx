@@ -4,13 +4,24 @@ import { Link, usePathname } from '@/shared/i18n/routing';
 import { useTranslations } from 'next-intl';
 
 import { Button, Logo, ScrollArea } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
+import { Icons, type IconName } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 
 import { RouteEnum } from '@/shared/constants';
 import { useUiStore } from '@/store/ui.store';
 
-const navigationGroups = [
+interface NavItem {
+  key: string;
+  href: string;
+  icon: IconName;
+}
+
+interface NavGroup {
+  group: string;
+  items: NavItem[];
+}
+
+const navigationGroups: NavGroup[] = [
   {
     group: 'Main',
     items: [
@@ -38,19 +49,20 @@ export function Sidebar() {
       )}
     >
       {/* Top Header Logo */}
-      <div className="relative flex h-20 shrink-0 items-center justify-between px-6">
-        <Link
-          href={RouteEnum.DASHBOARD}
-          className="flex items-center gap-2 group"
-          onClick={(e) => {
-            if (sidebarCollapsed) {
-              e.preventDefault();
-              toggleSidebar();
-            }
-          }}
-        >
-          <Logo showText={!sidebarCollapsed} iconSize={28} />
-        </Link>
+      <div
+        className={cn(
+          'relative flex h-20 shrink-0 items-center',
+          sidebarCollapsed ? 'justify-center px-0' : 'justify-between px-6',
+        )}
+      >
+        {!sidebarCollapsed && (
+          <Link
+            href={RouteEnum.DASHBOARD}
+            className="flex items-center gap-2 group"
+          >
+            <Logo showText iconSize={28} />
+          </Link>
+        )}
         <Button
           variant="ghost"
           size="icon"
@@ -58,15 +70,26 @@ export function Sidebar() {
           className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-full"
           title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          <Icons name={sidebarCollapsed ? 'panel-left-open' : 'panel-left-close'} className="h-5 w-5" />
+          <Icons
+            name={sidebarCollapsed ? 'panel-left-open' : 'panel-left-close'}
+            className="h-5 w-5"
+          />
         </Button>
       </div>
 
       {/* Navigation List */}
       <ScrollArea className="flex-1 px-3 py-4">
-        <div className="flex flex-col gap-4">
+        <div
+          className={cn('flex flex-col', sidebarCollapsed ? 'gap-1' : 'gap-4')}
+        >
           {navigationGroups.map((group, groupIdx) => (
-            <div key={groupIdx} className="flex flex-col gap-1.5">
+            <div
+              key={groupIdx}
+              className={cn(
+                'flex flex-col',
+                sidebarCollapsed ? 'gap-0' : 'gap-1.5',
+              )}
+            >
               {!sidebarCollapsed && (
                 <span className="px-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/60">
                   {group.group}
@@ -82,27 +105,30 @@ export function Sidebar() {
 
                   return (
                     <li key={item.key}>
-                      <Link href={item.href} className="block w-full">
-                        <Button
-                          variant="ghost"
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          'flex items-center h-11 w-full rounded-2xl transition-colors duration-200 gap-3 px-3.5 select-none outline-none text-sm font-medium',
+                          sidebarCollapsed
+                            ? 'justify-center px-0 w-11 mx-auto'
+                            : 'justify-start',
+                          isActive
+                            ? 'bg-primary/15 text-primary font-semibold'
+                            : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
+                        )}
+                      >
+                        <Icons
+                          name={item.icon}
                           className={cn(
-                            'flex items-center h-11 w-full justify-start rounded-xl transition-all duration-200 gap-3 px-3.5',
-                            sidebarCollapsed && 'justify-center px-0 w-11 mx-auto',
-                            isActive
-                              ? 'bg-primary/15 text-primary font-semibold shadow-xs border border-primary/20'
-                              : 'text-muted-foreground hover:bg-accent/60 hover:text-foreground',
+                            'h-5 w-5 shrink-0',
+                            isActive && 'text-primary',
                           )}
-                        >
-                          <Icons
-                            name={item.icon as any}
-                            className={cn('h-5 w-5 shrink-0', isActive && 'text-primary')}
-                          />
-                          {!sidebarCollapsed && (
-                            <span className="whitespace-nowrap text-sm truncate">
-                              {t(item.key)}
-                            </span>
-                          )}
-                        </Button>
+                        />
+                        {!sidebarCollapsed && (
+                          <span className="whitespace-nowrap truncate">
+                            {t(item.key)}
+                          </span>
+                        )}
                       </Link>
                     </li>
                   );

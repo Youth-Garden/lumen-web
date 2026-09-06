@@ -40,7 +40,7 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link
-              href={RouteEnum.HOME}
+              href={RouteEnum.DASHBOARD}
               className="flex items-center space-x-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Lumen home"
             >
@@ -53,14 +53,14 @@ export function SiteFooter() {
               {t('footerTagline')}
             </p>
             <div className="mt-6 flex space-x-3">
-              {socials.map((s) => (
+              {socials.map((social) => (
                 <Link
-                  key={s}
+                  key={social}
                   href="#"
-                  aria-label={s}
+                  aria-label={social}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <Icons name="languages" className="h-4 w-4" />
+                  <Icons name={social} className="h-4 w-4" />
                 </Link>
               ))}
             </div>
@@ -72,13 +72,13 @@ export function SiteFooter() {
               {t('footerProductTitle')}
             </h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              {productLinks.map((l) => (
-                <li key={l.labelKey}>
+              {productLinks.map((linkItem) => (
+                <li key={linkItem.labelKey}>
                   <Link
-                    href={l.href}
+                    href={linkItem.href}
                     className="transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    {t(l.labelKey)}
+                    {t(linkItem.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -91,13 +91,13 @@ export function SiteFooter() {
               {t('footerResourceTitle')}
             </h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              {resourceLinks.map((l) => (
-                <li key={l.labelKey}>
+              {resourceLinks.map((linkItem) => (
+                <li key={linkItem.labelKey}>
                   <Link
-                    href={l.href}
+                    href={linkItem.href}
                     className="transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    {t(l.labelKey)}
+                    {t(linkItem.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -110,13 +110,13 @@ export function SiteFooter() {
               {t('footerCompanyTitle')}
             </h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              {companyLinks.map((l) => (
-                <li key={l.labelKey}>
+              {companyLinks.map((linkItem) => (
+                <li key={linkItem.labelKey}>
                   <Link
-                    href={l.href}
+                    href={linkItem.href}
                     className="transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    {t(l.labelKey)}
+                    {t(linkItem.labelKey)}
                   </Link>
                 </li>
               ))}

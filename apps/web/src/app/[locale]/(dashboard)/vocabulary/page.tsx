@@ -1,5 +1,3 @@
-import { DeckListPage } from '@/features/vocabulary/pages/deck-list-page';
+import { FolderListPage } from '@/features/vocabulary/pages/folder-list-page';
 
-export default function VocabularyPage() {
-  return <DeckListPage />;
-}
+export default FolderListPage;

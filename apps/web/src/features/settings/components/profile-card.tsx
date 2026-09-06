@@ -52,7 +52,7 @@ export function ProfileCard({ user }: ProfileCardProps) {
   const initials = user?.fullName
     ? user.fullName
         .split(' ')
-        .map((n) => n[0])
+        .map((namePart) => namePart[0])
         .join('')
         .toUpperCase()
         .slice(0, 2)

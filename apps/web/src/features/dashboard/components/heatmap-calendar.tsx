@@ -28,8 +28,8 @@ export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
 
   // Generate last 365 days
   const today = startOfDay(new Date());
-  const days = Array.from({ length: 365 }, (_, i) => {
-    return subDays(today, 364 - i);
+  const days = Array.from({ length: 365 }, (_, dayIndex) => {
+    return subDays(today, 364 - dayIndex);
   });
 
   const heatmapMap = new Map<string, number>();

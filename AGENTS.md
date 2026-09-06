@@ -10,7 +10,13 @@
 ## Frontend Components Convention
 
 - **Data Transformation & Fallbacks**: Do NOT add default values, fallbacks (e.g. `|| ""`, `|| []`, `|| Date.now() + Math.random()`), or data transformations in the UI component layer (like inside `useEffect`). All data mapping, formatting, and fallback logic must be handled cleanly at the mapper/service layer or custom hooks.
+- **Direct Domain / Service Types Reuse**: Strictly avoid defining redundant ad-hoc interfaces or adapter types when existing DTOs/Domain types from `@/services` already solve the problem. Fewer types is better; never create an intermediate type unless genuinely necessary for isolated UI state.
+- **No In-Component Data Restructuring**: Do NOT reshape or map data inside UI components (e.g. `useMemo(() => data.map(...))` to rename fields or repackage objects for subcomponents). Pass and consume shared types directly. Transformations belong strictly in mappers (`[feature].mappers.ts`).
 - **TypeScript `any`**: Strictly avoid using `any` types in components when mapping data. Ensure proper typings are inferred or explicitly defined.
+- **No Nested Button in Link**: NEVER nest `<Button>` inside Next.js `<Link>` or vice-versa. Style `<Link>` directly or use `asChild` to avoid invalid HTML, hydration issues, and lingering click focus rings.
+- **Strict UIKit Component & Icon Reuse**: ALWAYS use components from `@lumen/uikit/components` instead of creating ad-hoc UI duplicates. All SVGs and icons must be imported from `@lumen/uikit/icons` (via `Icons` or custom icons registered in UIKit). Never define raw SVG components inside `features/` or `app/`.
+- **Component Line Count Limit**: Module-specific components (inside `features/[module]/components/`) and page files (inside `features/[module]/pages/`) MUST NOT exceed **300 lines**. If a file grows beyond 300 lines, it MUST be refactored by either: (1) extracting sub-components into separate files, or (2) extracting complex logic into a custom hook. This rule does NOT apply to highly reusable library components in `packages/uikit/src/` or shared utility files, where a higher line count may be justified.
+- **Component Sub-folder Organization**: Inside `features/[module]/components/`, related components MUST be grouped into dedicated sub-folders according to their feature context or domain (for example: `components/study/` for study-related components like `study-view.tsx`, `study-flashcard.tsx`, `study-completed.tsx`, `flashcard-review.tsx`, `folder-selection-view.tsx`, `study-settings-dialog.tsx`; `components/badges/` for badges and achievements; etc.). Avoid dumping all module components into a single flat `components/` directory.
 
 ## Frontend Naming Convention
 
@@ -19,10 +25,12 @@
 ## Service & API Layer Convention
 
 - **Mapper Registry**: ALL API endpoints MUST be explicitly registered in a `MapperRegistry` (`[feature].registry.ts`). No exceptions. Even if the endpoint only returns a simple `{ id: string }`, you must register it with `idResponseMapper`. For endpoints returning `void` or 204 No Content, explicitly register them using `voidResponseMapper` (or `noContentMapper`) from `@/services/core`. NEVER assign `undefined` to an endpoint key in a `MapperRegistry`. Do not rely on the core API client implicitly returning unmapped JSON.
+- **Raw Data in Mappers**: In mapper files (`[feature].mappers.ts`), raw data received from the backend MUST simply be typed as `any` (e.g. `(raw?: any)`). Strictly DO NOT define intermediate `Raw...` interfaces or types (e.g. `RawWord`, `RawDeck`, `RawExample`). The mapper's sole responsibility is taking `raw: any` and mapping it directly into the clean, strongly-typed Frontend models.
 
 ## State & Routing Convention
 
 - **Route Parameters**: In Client Components, always use `useParams()` from `next/navigation` to read route parameters. Do NOT rely on the parent `page.tsx` passing parameters down through component props, as this creates messy boundaries between Server and Client components.
+- **Navigation via RouteEnum**: ALL programmatic navigation MUST use `RouteEnum` from `@/shared/constants`. NEVER push raw URL strings (e.g., `router.push('/vocabulary/folders/123')`). For routes that include dynamic segments (`:id`), MUST use `formatUrl` from `@lumen/shared-api` (e.g., `router.push(formatUrl(RouteEnum.FOLDER_DETAIL, { id: folder.id }))`). Hardcoding URL strings bypasses the single source of truth for routes and causes silent breakage during route refactors.
 
 ## UI & Architecture Convention
 
@@ -51,3 +59,10 @@
 ## Code Commenting Convention
 
 - **No Unnecessary Comments**: Do not add comments for normal, self-explanatory information or clearly written code. Only add comments if a function is multi-step, contains complex logic, or is highly complicated.
+
+## Strict Prohibition on Workarounds and Aliases (MANDATORY)
+
+- **NEVER use temporary workarounds, re-export aliases, or type shims**: Do NOT create bridge aliases like `export const useCreateDeck = useCreateFolder;`, `export type Deck = Folder;`, `export const listDecks = listFolders;`, etc.
+- **Complete Refactoring**: When renaming or removing a concept, you MUST refactor 100% of its usages cleanly across all files, components, types, hooks, services, and route definitions.
+- **Zero Compatibility Shims**: Do not leave legacy variable names, prop names, or function wrappers behind to avoid updating caller code.
+

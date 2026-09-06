@@ -1,13 +1,17 @@
+import { useAuthStore } from '@/store/auth.store';
 import { notificationKeys, notificationService } from '@/services/notification';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 export const useNotifications = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   return useQuery({
     queryKey: notificationKeys.all,
     queryFn: () =>
       notificationService.getNotifications().then((res) => res.data),
-    refetchInterval: 60000, // Refetch every minute
+    enabled: isAuthenticated,
+    refetchInterval: isAuthenticated ? 60000 : false,
   });
 };
 

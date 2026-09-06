@@ -30,7 +30,7 @@ export default function middleware(req: NextRequest) {
 
   // If user is already logged in and tries to access Login -> redirect to / (Dashboard)
   if (token && normalizedPath.startsWith(RouteEnum.LOGIN)) {
-    return NextResponse.redirect(new URL(RouteEnum.HOME, req.url));
+    return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
   }
 
   const isPublic = publicRoutes.some((route) => normalizedPath.startsWith(route));

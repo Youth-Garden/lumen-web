@@ -20,7 +20,7 @@ import { useProgressSettings } from '@/features/dashboard/hooks/use-progress-set
 import { useProgressDashboard } from '@/features/dashboard/hooks/use-progress-dashboard';
 import { useAuthStore } from '@/store/auth.store';
 
-import { LanguageSwitcher } from '../components/language-switcher';
+import { LanguageSwitcher } from '@/shared/components/language-switcher';
 import { ProfileCard } from '../components/profile-card';
 
 export const SettingsPage = () => {
@@ -120,11 +120,11 @@ export const SettingsPage = () => {
                   id="dailyGoalMinutes"
                   type="number"
                   min="1"
-                  className="rounded-xl border-border/60"
+                  className="border-border/60"
                   {...progressForm.register('dailyGoalMinutes')}
                 />
               </div>
-              <Button type="submit" size="sm" className="rounded-xl" disabled={isUpdatingProgress}>
+              <Button type="submit" size="sm" disabled={isUpdatingProgress}>
                 {isUpdatingProgress
                   ? t('buttons.saving')
                   : t('buttons.saveGoals')}

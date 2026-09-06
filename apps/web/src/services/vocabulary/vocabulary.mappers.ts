@@ -1,12 +1,17 @@
-import { VocabularyWord, Deck, DueFlashcard } from './vocabulary.types';
+import { VocabularyWord, Folder, DueFlashcard } from './vocabulary.types';
 
-export const wordMapper = (raw: any): VocabularyWord => {
+export const wordMapper = (raw?: any): VocabularyWord => {
   return {
     id: raw?.id || '',
     term: raw?.term || '',
     phonetic: raw?.phonetic,
+    phoneticUs: raw?.phoneticUs,
+    phoneticUk: raw?.phoneticUk,
     audioUrl: raw?.audioUrl,
+    audioUsUrl: raw?.audioUsUrl,
+    audioUkUrl: raw?.audioUkUrl,
     cefrLevel: raw?.cefrLevel,
+    imageUrl: raw?.imageUrl || null,
     definitions: (raw?.definitions || []).map((definition: any) => ({
       id: definition?.id || '',
       partOfSpeech: definition?.partOfSpeech || '',
@@ -21,31 +26,34 @@ export const wordMapper = (raw: any): VocabularyWord => {
   };
 };
 
-export const deckMapper = (deck: any): Deck => ({
-  id: deck?.id || '',
-  name: deck?.name || '',
-  description: deck?.description,
-  category: deck?.category || null,
-  flashcardCount: deck?.flashcardCount ?? 0,
+export const folderMapper = (folder?: any): Folder => ({
+  id: folder?.id || '',
+  name: folder?.name || '',
+  description: folder?.description,
+  category: folder?.category || null,
+  flashcardCount: folder?.flashcardCount ?? 0,
+  flashcards: Array.isArray(folder?.flashcards)
+    ? folder.flashcards.map((flashcard: any) => wordMapper(flashcard))
+    : undefined,
 });
 
-export const deckListMapper = (raw: any): Deck[] => {
+export const folderListMapper = (raw?: any): Folder[] => {
   if (!Array.isArray(raw)) return [];
-  return raw.map(deckMapper);
+  return raw.map((item) => folderMapper(item));
 };
 
-export const dueFlashcardMapper = (item: any): DueFlashcard => ({
+export const dueFlashcardMapper = (item?: any): DueFlashcard => ({
   flashcardId: item?.flashcardId || '',
   wordId: item?.wordId || '',
   term: item?.term || '',
-  deckId: item?.deckId || '',
-  deckName: item?.deckName || '',
+  folderId: item?.folderId || '',
+  folderName: item?.folderName || '',
   nextReviewDate: item?.nextReviewDate || '',
   easeFactor: item?.easeFactor ?? 0,
   repetitions: item?.repetitions ?? 0,
 });
 
-export const dueFlashcardsMapper = (raw: any): DueFlashcard[] => {
+export const dueFlashcardsMapper = (raw?: any): DueFlashcard[] => {
   if (!Array.isArray(raw)) return [];
-  return raw.map(dueFlashcardMapper);
+  return raw.map((item) => dueFlashcardMapper(item));
 };

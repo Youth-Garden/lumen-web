@@ -52,8 +52,12 @@ export abstract class CoreService extends BaseApiService {
           !originalRequest._retry
         ) {
           const authStore = useAuthStore.getState();
+          const isOnLoginPage =
+            typeof window !== 'undefined' &&
+            (window.location.pathname.includes('/login') ||
+              window.location.pathname.includes(RouteEnum.LOGIN));
 
-          if (authStore.isAuthenticated) {
+          if (authStore.isAuthenticated && authStore.refreshToken) {
             if (CoreService.isRefreshing) {
               return new Promise(function (resolve, reject) {
                 CoreService.failedQueue.push({ resolve, reject });
@@ -101,26 +105,31 @@ export abstract class CoreService extends BaseApiService {
               }
             } catch (refreshError) {
               CoreService.processQueue(refreshError, null);
-              toast.error(
-                'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
-              );
+
+              if (!isOnLoginPage) {
+                toast.error(
+                  'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
+                  { id: 'session-expired' },
+                );
+              }
+
               authStore.clearAuth();
-              import('@/services/auth')
-                .then(({ authService }) => {
-                  return authService.logout();
-                })
-                .catch(() => {})
-                .finally(() => {
-                  window.location.href = RouteEnum.LOGIN;
-                });
+              if (typeof window !== 'undefined' && !isOnLoginPage) {
+                window.location.href = RouteEnum.LOGIN;
+              }
               return Promise.reject(refreshError);
             } finally {
               CoreService.isRefreshing = false;
             }
           } else {
             // Not authenticated or no refresh token
-            // We should clear auth and redirect to login, unless this is a login/refresh/logout request itself
+            const hadAuth = Boolean(authStore.accessToken);
+            authStore.clearAuth();
+
+            // Only notify if user WAS logged in, is not already on login page, and not an auth endpoint
             if (
+              hadAuth &&
+              !isOnLoginPage &&
               !originalRequest.url?.includes(ApiEndpointEnum.LOGIN) &&
               !originalRequest.url?.includes(ApiEndpointEnum.GOOGLE_LOGIN) &&
               !originalRequest.url?.includes(ApiEndpointEnum.REFRESH_TOKEN) &&
@@ -128,40 +137,39 @@ export abstract class CoreService extends BaseApiService {
             ) {
               toast.error(
                 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
+                { id: 'session-expired' },
               );
-              authStore.clearAuth();
-              import('@/services/auth')
-                .then(({ authService }) => {
-                  return authService.logout();
-                })
-                .catch(() => {})
-                .finally(() => {
-                  if (window.location.pathname !== RouteEnum.LOGIN) {
-                    window.location.href = RouteEnum.LOGIN;
-                  }
-                });
-            } else {
-              // Show toast for 401 errors when not authenticated (e.g. login failure)
-              if (!originalRequest.disabledToast && error.response) {
-                const message =
-                  error.response.data?.message ||
-                  error.message ||
-                  'Unauthorized';
-                const errorData = error.response.data;
-                const errors = errorData?.error ?? errorData?.errors ?? [];
-                toast.error(message, {
-                  description:
-                    Array.isArray(errors) && errors.length > 0
-                      ? errors
-                          .map((e: any) =>
-                            typeof e === 'string'
-                              ? e
-                              : e.message || JSON.stringify(e),
-                          )
-                          .join('\n')
-                      : undefined,
-                });
+              if (typeof window !== 'undefined') {
+                window.location.href = RouteEnum.LOGIN;
               }
+            } else if (
+              !hadAuth &&
+              !isOnLoginPage &&
+              !originalRequest.disabledToast &&
+              error.response &&
+              (originalRequest.url?.includes(ApiEndpointEnum.LOGIN) ||
+                originalRequest.url?.includes(ApiEndpointEnum.GOOGLE_LOGIN))
+            ) {
+              // Show toast ONLY for explicit login failures, never for background queries
+              const message =
+                error.response.data?.message ||
+                error.message ||
+                'Unauthorized';
+              const errorData = error.response.data;
+              const errors = errorData?.error ?? errorData?.errors ?? [];
+              toast.error(message, {
+                id: 'auth-error',
+                description:
+                  Array.isArray(errors) && errors.length > 0
+                    ? errors
+                        .map((e: any) =>
+                          typeof e === 'string'
+                            ? e
+                            : e.message || JSON.stringify(e),
+                        )
+                        .join('\n')
+                    : undefined,
+              });
             }
           }
         } else {

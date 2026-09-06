@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/store/auth.store';
 import {
   DashboardProgressResponse,
   UpdateProgressSettingsPayload,
@@ -7,9 +8,12 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useProgressDashboard = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   return useQuery<DashboardProgressResponse>({
     queryKey: progressKeys.dashboard(),
     queryFn: () => progressService.getDashboardData(),
+    enabled: isAuthenticated,
   });
 };
 

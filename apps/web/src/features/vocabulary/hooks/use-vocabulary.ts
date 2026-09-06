@@ -1,5 +1,5 @@
 import {
-  CreateDeckPayload,
+  CreateFolderPayload,
   CreateFlashcardPayload,
   ReviewFlashcardPayload,
   vocabularyKeys,
@@ -7,14 +7,14 @@ import {
 } from '@/services/vocabulary';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useCreateDeck = () => {
+export const useCreateFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: CreateDeckPayload) =>
-      vocabularyService.createDeck(payload),
+    mutationFn: (payload: CreateFolderPayload) =>
+      vocabularyService.createFolder(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: vocabularyKeys.decks() });
+      queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
     },
   });
 };
@@ -26,7 +26,7 @@ export const useCreateFlashcard = () => {
     mutationFn: (payload: CreateFlashcardPayload) =>
       vocabularyService.createFlashcard(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: vocabularyKeys.decks() });
+      queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
       queryClient.invalidateQueries({
         queryKey: vocabularyKeys.dueFlashcards(),
       });
@@ -48,8 +48,13 @@ export const useReviewFlashcard = () => {
   });
 };
 
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export const useVocabularyWords = (
   params?: {
+    page?: number;
+    limit?: number;
     search?: string;
     cefrLevel?: string;
   },
@@ -66,7 +71,8 @@ export const useVocabularyWordDetail = (
   id: string,
   options?: { enabled?: boolean },
 ) => {
-  const validId = id && id !== 'undefined' ? id : '';
+  const isUuid = UUID_REGEX.test(id);
+  const validId = id && id !== 'undefined' && isUuid ? id : '';
   return useQuery({
     queryKey: vocabularyKeys.wordDetail(validId),
     queryFn: () => vocabularyService.getWord(validId),
@@ -74,51 +80,56 @@ export const useVocabularyWordDetail = (
   });
 };
 
-export const useVocabularyDecks = () => {
+export const useVocabularyFolders = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: vocabularyKeys.decks(),
-    queryFn: () => vocabularyService.listDecks(),
+    queryKey: vocabularyKeys.folders(),
+    queryFn: () => vocabularyService.listFolders(),
+    retry: false,
+    ...options,
   });
 };
 
-export const useVocabularyDeck = (
+export const useVocabularyFolderDetail = (
   id: string,
   options?: { enabled?: boolean },
 ) => {
-  const validId = id && id !== 'undefined' ? id : '';
+  const isUuid = UUID_REGEX.test(id);
+  const validId = id && id !== 'undefined' && isUuid ? id : '';
   const isEnabled =
-    options?.enabled !== undefined ? options.enabled : Boolean(validId);
+    options?.enabled !== undefined
+      ? options.enabled && Boolean(validId)
+      : Boolean(validId);
 
   return useQuery({
-    queryKey: vocabularyKeys.deckDetail(validId),
-    queryFn: () => vocabularyService.getDeck(validId).then((res) => res?.data),
+    queryKey: vocabularyKeys.folderDetail(validId),
+    queryFn: () => vocabularyService.getFolder(validId).then((res) => res?.data),
     enabled: isEnabled,
+    retry: false,
   });
 };
 
 export const useDueFlashcards = (params?: {
-  deckId?: string;
+  folderId?: string;
   limit?: number;
 }) => {
-  let cleanParams: { deckId?: string; limit?: number } | undefined = undefined;
+  let cleanParams: { folderId?: string; limit?: number } | undefined = undefined;
 
   if (params) {
     cleanParams = { ...params };
-    if (
-      cleanParams.deckId === 'undefined' ||
-      cleanParams.deckId === undefined
-    ) {
-      delete cleanParams.deckId;
+    const isUuid = cleanParams.folderId && UUID_REGEX.test(cleanParams.folderId);
+    if (!isUuid) {
+      delete cleanParams.folderId;
     }
   }
 
-  const isEnabled = params?.deckId
-    ? Boolean(params.deckId && params.deckId !== 'undefined')
+  const isEnabled = params?.folderId
+    ? Boolean(params.folderId && params.folderId !== 'undefined' && UUID_REGEX.test(params.folderId))
     : true;
 
   return useQuery({
     queryKey: vocabularyKeys.dueFlashcards(cleanParams),
     queryFn: () => vocabularyService.listDueFlashcards(cleanParams),
     enabled: isEnabled,
+    retry: false,
   });
 };

@@ -39,11 +39,11 @@ const TESTIMONIALS = [
 function Stars({ rating }: { rating: number }) {
   return (
     <div className="flex gap-1">
-      {Array.from({ length: 5 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, starIndex) => (
         <Icons
-          key={i}
+          key={starIndex}
           name="star"
-          className={`h-4 w-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`}
+          className={`h-4 w-4 ${starIndex < rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`}
         />
       ))}
     </div>

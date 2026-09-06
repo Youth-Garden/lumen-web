@@ -11,7 +11,15 @@ function useAuthUpdater() {
     let isMounted = true;
 
     const loadProfile = async () => {
-      if (!isAuthenticated) {
+      const isOnLoginPage =
+        typeof window !== 'undefined' &&
+        window.location.pathname.includes('/login');
+
+      if (
+        !isAuthenticated ||
+        !useAuthStore.getState().accessToken ||
+        isOnLoginPage
+      ) {
         setLoading(false);
         return;
       }

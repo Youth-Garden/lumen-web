@@ -23,13 +23,13 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
 
   return (
     <span className={className}>
-      {parts.map((part, i) =>
+      {parts.map((part, index) =>
         regex.test(part) ? (
-          <mark key={i} className={`bg-transparent ${highlightClassName}`}>
+          <mark key={index} className={`bg-transparent ${highlightClassName}`}>
             {part}
           </mark>
         ) : (
-          <span key={i}>{part}</span>
+          <span key={index}>{part}</span>
         ),
       )}
     </span>

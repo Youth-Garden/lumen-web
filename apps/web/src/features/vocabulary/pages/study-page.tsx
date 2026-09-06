@@ -5,9 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
-import { useDueFlashcards } from '@/features/vocabulary/hooks';
-import { useReviewFlashcard } from '@/features/vocabulary/hooks';
-import { FlashcardReview } from '../components/flashcard-review';
+import { useDueFlashcards, useReviewFlashcard } from '@/features/vocabulary/hooks';
+import { FlashcardReview } from '../components/study/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
 import { OpenEffect } from '@lumen/uikit/components';
 import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
@@ -18,7 +17,7 @@ export function StudyPage() {
   const t = useTranslations('Vocabulary.Study');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const deckId = searchParams.get('deckId') || undefined;
+  const folderId = searchParams.get('folderId') || undefined;
   const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined;
   
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,7 +26,7 @@ export function StudyPage() {
     data: dueFlashcardsResponse,
     isLoading,
     isError,
-  } = useDueFlashcards({ deckId, limit });
+  } = useDueFlashcards({ folderId, limit });
   const { mutateAsync: reviewFlashcard, isPending: isReviewing } =
     useReviewFlashcard();
 
@@ -94,8 +93,8 @@ export function StudyPage() {
           >
             {t('backToWords')}
           </Button>
-          <Button onClick={() => router.push(RouteEnum.DECKS)}>
-            {t('backToDecks')}
+          <Button onClick={() => router.push(RouteEnum.VOCABULARY)}>
+            {t('backToFolders')}
           </Button>
         </div>
       </OpenEffect>

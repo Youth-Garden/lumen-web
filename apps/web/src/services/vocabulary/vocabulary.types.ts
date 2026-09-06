@@ -18,46 +18,32 @@ export interface VocabularyWord {
   id: string;
   term: string;
   phonetic?: string;
+  phoneticUs?: string | null;
+  phoneticUk?: string | null;
   audioUrl?: string;
+  audioUsUrl?: string | null;
+  audioUkUrl?: string | null;
   cefrLevel?: string;
   imageUrl?: string | null;
   definitions?: VocabularyDefinition[];
 }
 
-export interface FlashcardSummary {
-  id: string;
-  wordId: string;
-  term: string;
-  phonetic?: string | null;
-  audioUrl?: string | null;
-  cefrLevel?: string | null;
-  imageUrl?: string | null;
-  definitions?: VocabularyDefinition[];
-}
-
-export interface Deck {
+export interface Folder {
   id: string;
   name: string;
   description?: string | null;
   category?: string | null;
-  flashcardCount: number;
+  flashcardCount?: number;
+  flashcards?: VocabularyWord[];
 }
 
-export interface DeckDetail {
-  id: string;
-  name: string;
-  description?: string | null;
-  category?: string | null;
-  flashcards: FlashcardSummary[];
-}
-
-export interface CreateDeckPayload {
+export interface CreateFolderPayload {
   name: string;
   description?: string;
 }
 
 export interface CreateFlashcardPayload {
-  deckId: string;
+  folderId: string;
   wordId: string;
 }
 
@@ -65,11 +51,12 @@ export interface DueFlashcard {
   flashcardId: string;
   wordId: string;
   term: string;
-  deckId: string;
-  deckName: string;
-  nextReviewDate: string;
-  easeFactor: number;
-  repetitions: number;
+  folderId: string;
+  folderName: string;
+  due?: string;
+  nextReviewDate?: string;
+  easeFactor?: number;
+  repetitions?: number;
 }
 
 export enum FlashcardRating {
@@ -77,6 +64,11 @@ export enum FlashcardRating {
   HARD = 2,
   GOOD = 3,
   EASY = 4,
+}
+
+export enum PronunciationAccent {
+  US = 'us',
+  UK = 'uk',
 }
 
 export interface ReviewFlashcardPayload {
