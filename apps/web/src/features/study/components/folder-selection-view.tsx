@@ -6,8 +6,8 @@ import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary/vocabulary.types';
 import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { FolderCard } from '../cards/folder-card';
-import { StudyBottomActionBar } from './study-bottom-action-bar';
+import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
+import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
 
 interface FolderSelectionViewProps {
   activeFolderId: string | null;

@@ -13,19 +13,19 @@ import { toast } from 'sonner';
 import {
   createNextExerciseForWord,
   getCardPrimaryDefinition,
-} from '../components/study/quiz-generator';
+} from '@/features/study/utils/quiz-generator';
 import {
   StudyExerciseType,
   StudyFeedbackState,
   StudyQueueItem,
-} from '../components/study/study.types';
+} from '@/features/study/types/study.types';
 import type {
   MissedWordStat,
   UseStudySessionProps,
-} from './use-study-session.types';
-import { useStudySettings } from './use-study-settings';
-import { useStudyShortcuts } from './use-study-shortcuts';
-import { useReviewFlashcard } from './use-vocabulary';
+} from '@/features/study/hooks/use-study-session.types';
+import { useStudySettings } from '@/features/study/hooks/use-study-settings';
+import { useStudyShortcuts } from '@/features/study/hooks/use-study-shortcuts';
+import { useReviewFlashcard } from '@/features/vocabulary/hooks/use-vocabulary';
 
 export type { MissedWordStat, UseStudySessionProps };
 

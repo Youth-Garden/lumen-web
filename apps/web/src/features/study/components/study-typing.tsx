@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
-import { MasteryFlowerBadge } from '../mastery/mastery-flower-badge';
-import type { StudyQueueItem } from './study.types';
+import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
+import type { StudyQueueItem } from '@/features/study/types/study.types';
 
 interface StudyTypingProps {
   item: StudyQueueItem;

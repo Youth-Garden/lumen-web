@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { useDueFlashcards, useReviewFlashcard } from '@/features/vocabulary/hooks';
-import { FlashcardReview } from '../components/study/flashcard-review';
+import { FlashcardReview } from '@/features/study/components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
 import { OpenEffect } from '@lumen/uikit/components';
 import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';

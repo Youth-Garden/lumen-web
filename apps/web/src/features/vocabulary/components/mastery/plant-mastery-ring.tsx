@@ -41,6 +41,11 @@ function describeArc(
   startAngle: number,
   endAngle: number,
 ) {
+  // To avoid drawing errors when startAngle == endAngle
+  if (Math.abs(endAngle - startAngle) < 0.1) {
+    endAngle = startAngle + 0.1;
+  }
+  
   const start = polarToCartesian(centerX, centerY, radius, endAngle);
   const end = polarToCartesian(centerX, centerY, radius, startAngle);
   const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
@@ -59,15 +64,17 @@ function describeArc(
   ].join(' ');
 }
 
-// 5 equal arc segments, 56° arc each, 16° gap between segments
-// Total: 5 × 56° + 5 × 16° = 280° + 80° = 360° ✓
-// Starting from top-right, going clockwise
+// 5 equal arc segments.
+// To account for strokeLinecap="round" adding ~13.2 degrees of extension per segment,
+// we set mathematical gap to 26 degrees to get a visual gap of ~13 degrees (~4px).
+// 26 degree gap, 46 degree arc. Total = 72 * 5 = 360.
+// Starting from top-right, going clockwise. 0 degrees is exactly in the top gap.
 const ARC_SEGMENTS = [
-  { start: 8,   end: 64 },
-  { start: 80,  end: 136 },
-  { start: 152, end: 208 },
-  { start: 224, end: 280 },
-  { start: 296, end: 352 },
+  { start: 13,  end: 59 },
+  { start: 85,  end: 131 },
+  { start: 157, end: 203 },
+  { start: 229, end: 275 },
+  { start: 301, end: 347 },
 ];
 
 export function PlantMasteryRing({
@@ -100,6 +107,7 @@ export function PlantMasteryRing({
           let isSolidlyFilled = false;
           let isPartiallyFilled = false;
           let partialRatio = 0;
+          let activeEndAngle = segment.end;
 
           if (isGaugeMode) {
             // Gauge Mode (Level indicator): Fills notches based on level (1 to 5)
@@ -112,6 +120,7 @@ export function PlantMasteryRing({
                 if (learningStep > 0) {
                   isPartiallyFilled = true;
                   partialRatio = Math.min(1, learningStep / 6);
+                  activeEndAngle = segment.start + (segment.end - segment.start) * partialRatio;
                 }
               } else {
                 // Levels 1-5: first notch is fully solid
@@ -120,11 +129,6 @@ export function PlantMasteryRing({
             }
             // For index > 0, they remain completely dim.
           }
-
-          // Compute arc length for partial fill using stroke-dasharray/offset
-          // Circumference of radius 19.5 = 2 * PI * 19.5 ~ 122.5
-          // Segment angle is 56 degrees, so arc length = (56 / 360) * 122.5 ~ 19.06
-          const arcLength = 19.06;
 
           return (
             <React.Fragment key={index}>
@@ -141,7 +145,7 @@ export function PlantMasteryRing({
               {/* Foreground Filled Notch */}
               {(isSolidlyFilled || isPartiallyFilled) && (
                 <path
-                  d={describeArc(24, 24, 19.5, segment.start, segment.end)}
+                  d={describeArc(24, 24, 19.5, segment.start, activeEndAngle)}
                   fill="none"
                   strokeWidth="4.5"
                   strokeLinecap="round"
@@ -150,15 +154,7 @@ export function PlantMasteryRing({
                       ? 'stroke-amber-500 dark:stroke-amber-400'
                       : 'stroke-primary'
                   }
-                  style={
-                    isPartiallyFilled
-                      ? {
-                          strokeDasharray: arcLength,
-                          strokeDashoffset: arcLength * (1 - partialRatio),
-                          transition: 'stroke-dashoffset 0.3s ease-out',
-                        }
-                      : undefined
-                  }
+                  style={{ transition: 'd 0.3s ease-out' }}
                 />
               )}
             </React.Fragment>
@@ -177,7 +173,7 @@ export function PlantMasteryRing({
           className="relative z-10 flex items-center justify-center select-none pointer-events-none"
         >
           <PlantGrowthIcon
-            stage={clampedLevel}
+            stage={clampedLevel > 0 ? clampedLevel : Math.min(5, learningStep)}
             isWilted={isWilted}
             className="w-full h-full"
           />

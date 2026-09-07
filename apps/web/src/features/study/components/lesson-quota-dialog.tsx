@@ -14,7 +14,7 @@ import {
   LESSON_QUOTA_CONFIGS,
   LessonQuotaPreset,
   useStudySettings,
-} from '../../hooks/use-study-settings';
+} from '@/features/study/hooks/use-study-settings';
 
 export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Study');

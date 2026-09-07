@@ -2,36 +2,32 @@
 
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
-import { MasteryFlowerBadge } from '../mastery/mastery-flower-badge';
-import type { StudyQueueItem } from './study.types';
+import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
+import type { StudyQueueItem } from '@/features/study/types/study.types';
 
-interface StudyChoiceMeaningProps {
+interface StudyChoiceTermProps {
   item: StudyQueueItem;
   masteryLevel: number;
   learningStep?: number;
   selectedIndex: number | null;
-  isPlayingAudio: boolean;
-  onPlayAudio: () => void;
   onSelectOption: (index: number) => void;
   onOpenMastery: () => void;
 }
 
-export function StudyChoiceMeaning({
+export function StudyChoiceTerm({
   item,
   masteryLevel,
   learningStep = 0,
   selectedIndex,
-  isPlayingAudio,
-  onPlayAudio,
   onSelectOption,
   onOpenMastery,
-}: StudyChoiceMeaningProps) {
+}: StudyChoiceTermProps) {
   const t = useTranslations('Vocabulary.Study');
   const options = item.options || [];
 
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center animate-in fade-in-50 duration-200">
-      <div className="w-full flex items-center justify-between mb-6 px-1">
+      <div className="w-full flex items-center justify-between mb-8 px-1">
         <div className="space-y-1">
           {item.isReviewingFailed && (
             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
@@ -40,7 +36,7 @@ export function StudyChoiceMeaning({
             </div>
           )}
           <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
-            {t('chooseMeaning')}
+            {t('chooseTerm')}
           </h2>
         </div>
 
@@ -51,23 +47,14 @@ export function StudyChoiceMeaning({
         />
       </div>
 
-      <div className="my-6 flex flex-col items-center gap-2">
-        <button
-          type="button"
-          onClick={onPlayAudio}
-          className={
-            'w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-transform active:scale-95 cursor-pointer ' +
-            (isPlayingAudio
-              ? 'bg-primary text-primary-foreground scale-105 ring-4 ring-primary/30'
-              : 'bg-primary text-primary-foreground hover:bg-primary/90')
-          }
-          title={t('audioListenHint')}
-        >
-          <Icons name="volume-2" className="w-10 h-10" />
-        </button>
-
-        <span className="text-xs text-muted-foreground font-medium">
-          {t('audioListenHint')}
+      <div className="my-6 text-center space-y-1.5 max-w-md px-4">
+        {item.partOfSpeechPrompt && (
+          <span className="italic text-sm text-muted-foreground mr-1.5">
+            ({item.partOfSpeechPrompt})
+          </span>
+        )}
+        <span className="text-xl sm:text-2xl font-black text-foreground leading-snug">
+          {item.meaningPrompt}
         </span>
       </div>
 
@@ -87,16 +74,9 @@ export function StudyChoiceMeaning({
                   : 'bg-card hover:bg-muted/70 active:scale-[0.99]')
               }
             >
-              <div>
-                {option.subLabel && (
-                  <span className="italic text-xs text-muted-foreground mr-1">
-                    {option.subLabel}
-                  </span>
-                )}
-                <span className="text-sm sm:text-base font-bold text-foreground line-clamp-2">
-                  {option.label}
-                </span>
-              </div>
+              <span className="text-base sm:text-lg font-bold text-foreground">
+                {option.label}
+              </span>
 
               <span className="text-[11px] font-semibold text-muted-foreground mt-3">
                 {t('pressKeyHint', { key: (index + 1).toString() })}

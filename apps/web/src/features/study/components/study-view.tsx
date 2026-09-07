@@ -6,20 +6,20 @@ import { Icons } from '@lumen/uikit/icons';
 import { PortalProps, usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { useStudySession } from '../../hooks/use-study-session';
-import { MasteryFlowerBadge } from '../mastery/mastery-flower-badge';
+import { useStudySession } from '@/features/study/hooks/use-study-session';
+import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import {
   MasteryFlowerDialog,
   MasteryFlowerDialogData,
-} from '../mastery/mastery-flower-dialog';
-import { StudyChoiceMeaning } from './study-choice-meaning';
-import { StudyChoiceTerm } from './study-choice-term';
-import { StudyCompleted } from './study-completed';
-import { StudyFeedbackDrawer } from './study-feedback-drawer';
-import { StudyFlashcard } from './study-flashcard';
-import { StudySettingsDialog } from './study-settings-dialog';
-import { StudyTyping } from './study-typing';
-import { StudyExerciseType } from './study.types';
+} from '@/features/vocabulary/components/mastery/mastery-flower-dialog';
+import { StudyChoiceMeaning } from '@/features/study/components/study-choice-meaning';
+import { StudyChoiceTerm } from '@/features/study/components/study-choice-term';
+import { StudyCompleted } from '@/features/study/components/study-completed';
+import { StudyFeedbackDrawer } from '@/features/study/components/study-feedback-drawer';
+import { StudyFlashcard } from '@/features/study/components/study-flashcard';
+import { StudySettingsDialog } from '@/features/study/components/study-settings-dialog';
+import { StudyTyping } from '@/features/study/components/study-typing';
+import { StudyExerciseType } from '@/features/study/types/study.types';
 
 export interface StudyViewData {
   cards: VocabularyWord[];

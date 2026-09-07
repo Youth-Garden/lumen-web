@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { PlantGrowthIcon, Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
-import { MissedWordStat } from '../../hooks/use-study-session';
+import { MissedWordStat } from '@/features/study/hooks/use-study-session';
 
 interface StudyCompletedProps {
   totalInBatch: number;

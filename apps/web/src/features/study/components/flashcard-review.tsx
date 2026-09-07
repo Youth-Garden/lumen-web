@@ -12,8 +12,8 @@ import { usePortal } from '@lumen/uikit/portal';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
-import { FlashcardGradeButtons } from './flashcard-grade-buttons';
-import { KeyboardShortcutsDialog } from './keyboard-shortcuts-dialog';
+import { FlashcardGradeButtons } from '@/features/study/components/flashcard-grade-buttons';
+import { KeyboardShortcutsDialog } from '@/features/study/components/keyboard-shortcuts-dialog';
 
 export enum FlashcardShortcutKey {
   GradeAgain = '1',

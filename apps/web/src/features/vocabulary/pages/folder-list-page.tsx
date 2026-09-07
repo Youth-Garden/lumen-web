@@ -13,8 +13,8 @@ import { SentencePracticeCard } from '@/features/vocabulary/components/cards/sen
 import { FolderCatalogSection } from '@/features/vocabulary/components/cards/folder-catalog-section';
 import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
 import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
-import { FolderSelectionView } from '@/features/vocabulary/components/study/folder-selection-view';
-import { StudyView, type StudyViewData } from '@/features/vocabulary/components/study/study-view';
+import { FolderSelectionView } from '@/features/study/components/folder-selection-view';
+import { StudyView, type StudyViewData } from '@/features/study/components/study-view';
 import {
   useDueFlashcards,
   useVocabularyFolderDetail,

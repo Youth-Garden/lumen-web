@@ -11,9 +11,9 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps, usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
-import { useStudySettings } from '../../hooks/use-study-settings';
-import { LessonQuotaDialog } from './lesson-quota-dialog';
-import { PronunciationAccentDialog } from './pronunciation-accent-dialog';
+import { useStudySettings } from '@/features/study/hooks/use-study-settings';
+import { LessonQuotaDialog } from '@/features/study/components/lesson-quota-dialog';
+import { PronunciationAccentDialog } from '@/features/study/components/pronunciation-accent-dialog';
 
 export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Study');

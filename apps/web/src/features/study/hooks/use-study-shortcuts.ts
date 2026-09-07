@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, type RefObject } from 'react';
-import { StudyExerciseType } from '../components/study/study.types';
+import { StudyExerciseType } from '@/features/study/types/study.types';
 
 export interface UseStudyShortcutsProps {
   isOpen: boolean;

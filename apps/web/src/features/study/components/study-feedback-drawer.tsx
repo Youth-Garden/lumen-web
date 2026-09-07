@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
-import type { StudyFeedbackState } from './study.types';
+import type { StudyFeedbackState } from '@/features/study/types/study.types';
 
 interface StudyFeedbackDrawerProps {
   feedback: StudyFeedbackState | null;

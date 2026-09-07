@@ -10,8 +10,8 @@ import { RouteEnum } from '@/shared/constants';
 import { useGoBack, usePronunciation } from '@/shared/hooks';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
-import { StudyView, type StudyViewData } from '../components/study/study-view';
-import { StudyBottomActionBar } from '../components/study/study-bottom-action-bar';
+import { StudyView, type StudyViewData } from '@/features/study/components/study-view';
+import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
 import { FolderTopicGrid } from '../components/folder-detail/folder-topic-grid';
 import { TopicWordsList } from '../components/folder-detail/topic-words-list';
 

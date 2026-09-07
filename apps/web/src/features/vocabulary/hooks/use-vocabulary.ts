@@ -48,9 +48,6 @@ export const useReviewFlashcard = () => {
   });
 };
 
-const UUID_REGEX =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 export const useVocabularyWords = (
   params?: {
     page?: number;
@@ -71,12 +68,10 @@ export const useVocabularyWordDetail = (
   id: string,
   options?: { enabled?: boolean },
 ) => {
-  const isUuid = UUID_REGEX.test(id);
-  const validId = id && id !== 'undefined' && isUuid ? id : '';
   return useQuery({
-    queryKey: vocabularyKeys.wordDetail(validId),
-    queryFn: () => vocabularyService.getWord(validId),
-    enabled: options?.enabled && Boolean(validId),
+    queryKey: vocabularyKeys.wordDetail(id),
+    queryFn: () => vocabularyService.getWord(id),
+    ...options,
   });
 };
 
@@ -93,43 +88,22 @@ export const useVocabularyFolderDetail = (
   id: string,
   options?: { enabled?: boolean },
 ) => {
-  const isUuid = UUID_REGEX.test(id);
-  const validId = id && id !== 'undefined' && isUuid ? id : '';
-  const isEnabled =
-    options?.enabled !== undefined
-      ? options.enabled && Boolean(validId)
-      : Boolean(validId);
-
   return useQuery({
-    queryKey: vocabularyKeys.folderDetail(validId),
-    queryFn: () => vocabularyService.getFolder(validId).then((res) => res?.data),
-    enabled: isEnabled,
+    queryKey: vocabularyKeys.folderDetail(id),
+    queryFn: () => vocabularyService.getFolder(id).then((res) => res?.data),
     retry: false,
+    ...options,
   });
 };
 
 export const useDueFlashcards = (params?: {
   folderId?: string;
   limit?: number;
-}) => {
-  let cleanParams: { folderId?: string; limit?: number } | undefined = undefined;
-
-  if (params) {
-    cleanParams = { ...params };
-    const isUuid = cleanParams.folderId && UUID_REGEX.test(cleanParams.folderId);
-    if (!isUuid) {
-      delete cleanParams.folderId;
-    }
-  }
-
-  const isEnabled = params?.folderId
-    ? Boolean(params.folderId && params.folderId !== 'undefined' && UUID_REGEX.test(params.folderId))
-    : true;
-
+}, options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: vocabularyKeys.dueFlashcards(cleanParams),
-    queryFn: () => vocabularyService.listDueFlashcards(cleanParams),
-    enabled: isEnabled,
+    queryKey: vocabularyKeys.dueFlashcards(params),
+    queryFn: () => vocabularyService.listDueFlashcards(params),
     retry: false,
+    ...options,
   });
 };

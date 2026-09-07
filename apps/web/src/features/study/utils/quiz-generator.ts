@@ -3,7 +3,7 @@ import {
   StudyExerciseType,
   type ChoiceOption,
   type StudyQueueItem,
-} from './study.types';
+} from '@/features/study/types/study.types';
 
 export function getCardPrimaryDefinition(card: VocabularyWord): {
   meaning: string;
