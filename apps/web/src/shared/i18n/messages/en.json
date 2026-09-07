@@ -312,7 +312,21 @@
       "saveProgressError": "Failed to save learning progress.",
       "backToStudy": "Back to vocabulary study",
       "createFirstFolder": "Create your first folder",
-      "foldersCount": "{count} folders"
+      "foldersCount": "{count} folders",
+      "chooseTerm": "Choose word",
+      "chooseMeaning": "Choose meaning",
+      "typeWord": "Type word",
+      "pressKeyHint": "Press {key}",
+      "hintAction": "Hint ({count}) - Press Shift",
+      "checkAction": "Check - Press Enter",
+      "correctTitle": "Correct",
+      "incorrectTitle": "Incorrect",
+      "correctAnswerLabel": "Correct answer:",
+      "continueSpace": "Continue - Press Space",
+      "previousMistake": "Previous mistake",
+      "frequentlyMissedTag": "Frequently missed",
+      "typePlaceholder": "Type the English word...",
+      "audioListenHint": "Click to listen again"
     },
     "List": {
       "title": "Vocabulary Bank",

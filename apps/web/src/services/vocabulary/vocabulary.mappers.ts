@@ -48,9 +48,13 @@ export const dueFlashcardMapper = (item?: any): DueFlashcard => ({
   term: item?.term || '',
   folderId: item?.folderId || '',
   folderName: item?.folderName || '',
-  nextReviewDate: item?.nextReviewDate || '',
-  easeFactor: item?.easeFactor ?? 0,
-  repetitions: item?.repetitions ?? 0,
+  masteryScore: item?.masteryScore ?? 0,
+  level: item?.level ?? 0,
+  isWilted: item?.isWilted ?? false,
+  learningStep: item?.learningStep ?? 0,
+  reviewCountAtCurrentLevel: item?.reviewCountAtCurrentLevel ?? 0,
+  intervalDays: item?.intervalDays ?? 0,
+  nextReviewAt: item?.nextReviewAt || null,
 });
 
 export const dueFlashcardsMapper = (raw?: any): DueFlashcard[] => {

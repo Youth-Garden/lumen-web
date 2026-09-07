@@ -90,19 +90,19 @@ export function FlashcardReview({
         switch (event.key) {
           case FlashcardShortcutKey.GradeAgain:
             event.preventDefault();
-            handleGrade(FlashcardRating.AGAIN);
+            handleGrade(FlashcardRating.WRONG);
             break;
           case FlashcardShortcutKey.GradeHard:
             event.preventDefault();
-            handleGrade(FlashcardRating.HARD);
+            handleGrade(FlashcardRating.CORRECT);
             break;
           case FlashcardShortcutKey.GradeGood:
             event.preventDefault();
-            handleGrade(FlashcardRating.GOOD);
+            handleGrade(FlashcardRating.FAST_TRACK_TEMP);
             break;
           case FlashcardShortcutKey.GradeEasy:
             event.preventDefault();
-            handleGrade(FlashcardRating.EASY);
+            handleGrade(FlashcardRating.FAST_TRACK_KNOWN);
             break;
         }
       }

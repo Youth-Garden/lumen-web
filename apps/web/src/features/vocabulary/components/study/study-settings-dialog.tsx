@@ -31,10 +31,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
       : t('accentUsLabel');
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => !open && onDismiss?.()}
-    >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="max-w-md p-6 rounded-xl border-none shadow-2xl bg-card space-y-4 transition-all duration-200">
         <DialogHeader className="pb-1">
           <DialogTitle className="text-lg font-bold text-foreground">
@@ -43,7 +40,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
         </DialogHeader>
 
         <div className="space-y-1">
-          {/* Row 1: Sound effects */}
+          {/* Row 1: Bật hiệu ứng âm thanh */}
           <div className="flex items-center justify-between py-3 px-1">
             <span className="text-sm font-semibold text-foreground">
               {t('soundEffectsTitle')}
@@ -71,7 +68,6 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
             </button>
           </div>
 
-          {/* Row 2: Auto-play audio */}
           <div className="flex items-center justify-between py-3 px-1">
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
@@ -81,6 +77,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
                 {t('autoPlayAudioDesc')}
               </p>
             </div>
+
             <button
               type="button"
               role="switch"
@@ -100,40 +97,45 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
             </button>
           </div>
 
-          {/* Row 3: Max questions per session */}
-          <button
+          {/* Row 3: Số câu hỏi tối đa mỗi lần học */}
+          <Button
             type="button"
+            variant="ghost"
             onClick={(event) => {
               event.stopPropagation();
               presentQuota({});
             }}
-            className="w-full flex items-center justify-between py-2.5 px-2.5 rounded-lg hover:bg-muted/40 transition-colors text-left cursor-pointer group"
+            className="w-full flex items-center justify-between text-left p-2.5 h-12"
           >
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
                 {t('maxQuestionsPerSession')}
               </p>
               <p className="text-xs font-semibold text-primary">
-                {settings.lessonQuotaPreset === 'FEW' && `${t('quotaFew')} (${t('quotaFewDesc')})`}
-                {settings.lessonQuotaPreset === 'MODERATE' && `${t('quotaModerate')} (${t('quotaModerateDesc')})`}
-                {settings.lessonQuotaPreset === 'MANY' && `${t('quotaMany')} (${t('quotaManyDesc')})`}
-                {settings.lessonQuotaPreset === 'A_LOT' && `${t('quotaALot')} (${t('quotaALotDesc')})`}
+                {settings.lessonQuotaPreset === 'FEW' &&
+                  `${t('quotaFew')} (${t('quotaFewDesc')})`}
+                {settings.lessonQuotaPreset === 'MODERATE' &&
+                  `${t('quotaModerate')} (${t('quotaModerateDesc')})`}
+                {settings.lessonQuotaPreset === 'MANY' &&
+                  `${t('quotaMany')} (${t('quotaManyDesc')})`}
+                {settings.lessonQuotaPreset === 'A_LOT' &&
+                  `${t('quotaALot')} (${t('quotaALotDesc')})`}
               </p>
             </div>
             <Icons
               name="chevron-right"
               className="w-4 h-4 text-muted-foreground"
             />
-          </button>
+          </Button>
 
-          {/* Row 4: Vocabulary pronunciation accent */}
-          <button
-            type="button"
+          {/* Row 4: Giọng phát âm từ vựng */}
+          <Button
+            variant="ghost"
             onClick={(event) => {
               event.stopPropagation();
               presentAccent({});
             }}
-            className="w-full flex items-center justify-between py-2.5 px-2.5 rounded-lg hover:bg-muted/40 transition-colors text-left cursor-pointer group"
+            className="w-full flex items-center justify-between text-left p-2.5 h-12"
           >
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
@@ -147,7 +149,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               name="chevron-right"
               className="w-4 h-4 text-muted-foreground"
             />
-          </button>
+          </Button>
 
           <div className="pt-3">
             <Button

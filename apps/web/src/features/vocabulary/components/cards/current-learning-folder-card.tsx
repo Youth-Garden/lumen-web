@@ -43,7 +43,7 @@ export function CurrentLearningFolderCard({
         </h3>
 
         <Button
-          variant="subtle"
+          variant="secondary"
           size="sm"
           onClick={onSwitchFolder}
           className="gap-1.5 font-semibold h-8 px-2.5"

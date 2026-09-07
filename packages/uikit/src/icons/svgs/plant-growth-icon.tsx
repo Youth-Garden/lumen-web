@@ -266,57 +266,46 @@ export function PlantGrowthIcon({
         </g>
       )}
 
-      {/* Stage 5 (Wilted): Thirsty, drooping wilted flower needing water */}
+      {/* Stage 5 (Wilted): Thirsty, gracefully drooping flower needing review/water */}
       {clampedStage === 5 && isWilted && (
         <g>
-          {/* Curved drooping stem leaning heavily */}
+          {/* Smooth gracefully arched stem leaning to the right without kinks */}
           <path
-            d="M30 51 C32 42 37 36 43 32 C46 30 47 26 44 23"
+            d="M30 51 C31 38 36 26 44 23"
             stroke="url(#wiltedStem)"
             strokeWidth="3.2"
             strokeLinecap="round"
           />
 
-          {/* Drooping wilted leaves hanging limp towards ground */}
+          {/* Softly drooping leaves attached naturally to the stem */}
           <path
             d="M31 43 C23 44 19 49 21 52 C26 51 29 46 31 43 Z"
             fill="#65A30D"
           />
           <path
-            d="M37 38 C42 41 43 47 41 50 C38 48 37 43 37 38 Z"
+            d="M36 36 C42 39 44 45 42 48 C39 46 38 41 36 36 Z"
             fill="#4D7C0F"
           />
 
-          {/* Drooping flower head tilted downward */}
-          <g transform="translate(42, 23) rotate(42)">
-            {/* Shriveled / curled wilted petals in brownish amber tones */}
-            {[0, 35, 70, 105, 140, 175, 210, 245, 280, 315].map((angle) => (
-              <path
-                key={angle}
-                d="M-2 -3 C-3 -9 1 -11 2 -9 C3 -7 0 -4 0 0 Z"
-                fill={angle % 2 === 0 ? '#D97706' : '#B45309'}
-                opacity="0.9"
-                transform={`rotate(${angle})`}
-              />
-            ))}
-            {/* Dried center disc */}
-            <circle cx="0" cy="0" r="5.2" fill="#542F0C" />
-            <circle cx="0" cy="0" r="3.6" fill="#78350F" />
+          {/* Drooping flower head bowed naturally */}
+          <g transform="translate(44, 23) rotate(52)">
+            {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(
+              (angle) => (
+                <ellipse
+                  key={angle}
+                  cx="0"
+                  cy="-7.5"
+                  rx="2.2"
+                  ry="3.6"
+                  fill={angle % 60 === 0 ? '#B45309' : '#D97706'}
+                  transform={`rotate(${angle})`}
+                  opacity="0.9"
+                />
+              ),
+            )}
+            <circle cx="0" cy="0" r="5" fill="#542F0C" />
+            <circle cx="0" cy="0" r="3.5" fill="#78350F" />
           </g>
-
-          {/* 1 falling / detached petal gently floating down */}
-          <path
-            d="M48 36 C50 34 52 36 51 38 C49 39 47 38 48 36 Z"
-            fill="#D97706"
-            opacity="0.8"
-          />
-
-          {/* Thirsty dry indicator: tiny water drop outline seeking moisture */}
-          <path
-            d="M20 28 C20 28 17 32 17 34 C17 35.6 18.3 37 20 37 C21.7 37 23 35.6 23 34 C23 32 20 28 20 28 Z"
-            fill="#38BDF8"
-            opacity="0.85"
-          />
         </g>
       )}
     </svg>

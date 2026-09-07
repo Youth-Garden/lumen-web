@@ -56,17 +56,31 @@ export interface DueFlashcard {
   term: string;
   folderId: string;
   folderName: string;
-  due?: string;
-  nextReviewDate?: string;
-  easeFactor?: number;
-  repetitions?: number;
+  masteryScore: number;
+  level: number;
+  isWilted: boolean;
+  learningStep: number;
+  reviewCountAtCurrentLevel: number;
+  intervalDays: number;
+  nextReviewAt?: string | null;
+}
+
+export interface CardWithProgress extends VocabularyWord {
+  flashcardId?: string;
+  masteryScore?: number;
+  level?: number;
+  isWilted?: boolean;
+  learningStep?: number;
+  reviewCountAtCurrentLevel?: number;
+  intervalDays?: number;
+  nextReviewAt?: string | null;
 }
 
 export enum FlashcardRating {
-  AGAIN = 1,
-  HARD = 2,
-  GOOD = 3,
-  EASY = 4,
+  WRONG = 'WRONG',
+  CORRECT = 'CORRECT',
+  FAST_TRACK_TEMP = 'FAST_TRACK_TEMP',
+  FAST_TRACK_KNOWN = 'FAST_TRACK_KNOWN',
 }
 
 export enum PronunciationAccent {

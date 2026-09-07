@@ -2,6 +2,7 @@
 
 import { PronunciationAccent } from '@/services/vocabulary/vocabulary.types';
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -28,10 +29,7 @@ export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
   ];
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => !open && onDismiss?.()}
-    >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="max-w-sm p-6 rounded-xl border-none shadow-2xl bg-card space-y-4 transition-all duration-200">
         <DialogHeader className="pb-1">
           <DialogTitle className="text-base font-bold text-foreground">
@@ -47,14 +45,15 @@ export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
             const isSelected = settings.accent === item.value;
 
             return (
-              <button
+              <Button
+                variant="ghost"
                 key={item.value}
                 type="button"
                 onClick={() => {
                   updateSettings({ accent: item.value });
                   onDismiss?.();
                 }}
-                className={`w-full flex items-center justify-between py-2.5 px-3 rounded-lg text-left cursor-pointer transition-colors ${
+                className={`w-full flex items-center justify-between text-left ${
                   isSelected ? 'bg-primary/10' : 'hover:bg-muted/40'
                 }`}
               >
@@ -74,7 +73,7 @@ export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
                     className="w-4 h-4 text-primary shrink-0"
                   />
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>

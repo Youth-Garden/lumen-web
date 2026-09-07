@@ -2,19 +2,22 @@
 
 import { useTranslations } from 'next-intl';
 
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Icons } from '@lumen/uikit/icons';
+import type {
+  VocabularyDefinition,
+  VocabularyWord,
+} from '@/services/vocabulary/vocabulary.types';
 import { Button } from '@lumen/uikit/components';
-import { type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import { Icons } from '@lumen/uikit/icons';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface StudyFlashcardProps {
   card: VocabularyWord;
   isFlipped: boolean;
   showShortcuts: boolean;
   onFlip: () => void;
-  onPlayUsAudio: (e: React.MouseEvent) => void;
-  onPlayUkAudio: (e: React.MouseEvent) => void;
+  onPlayUsAudio: (event: React.MouseEvent) => void;
+  onPlayUkAudio: (event: React.MouseEvent) => void;
 }
 
 const formatPartOfSpeech = (pos?: string): string => {
@@ -28,12 +31,13 @@ const formatPartOfSpeech = (pos?: string): string => {
   return pos;
 };
 
-const getViMeaning = (def: any): string => {
+const getViMeaning = (definition?: VocabularyDefinition | null): string => {
+  if (!definition) return '';
   return (
-    def?.definition?.vi ||
-    def?.translationVi ||
-    def?.definitionEn ||
-    def?.definition?.en ||
+    definition.definition?.vi ||
+    definition.translationVi ||
+    definition.definitionEn ||
+    definition.definition?.en ||
     ''
   );
 };
@@ -83,34 +87,40 @@ export function StudyFlashcard({
             >
               {/* US Audio */}
               <Button
-                variant="subtle"
+                variant="ghost"
                 type="button"
                 onClick={onPlayUsAudio}
-                className="h-auto py-1.5 px-4 rounded-lg text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
+                size="sm"
+                className="text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
                 title={t('listenUsHint')}
               >
                 <div className="w-7 h-7 rounded-md bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
                   <Icons name="volume-2" className="w-3.5 h-3.5 text-primary" />
                 </div>
                 <span className="text-xs sm:text-sm font-medium font-mono text-muted-foreground">
-                  <span className="font-sans font-bold text-foreground mr-1">US</span>
+                  <span className="font-sans font-bold text-foreground mr-1">
+                    US
+                  </span>
                   {phoneticUs ? `/${phoneticUs.replace(/^\/|\/$/g, '')}/` : ''}
                 </span>
               </Button>
 
               {/* UK Audio */}
               <Button
-                variant="subtle"
+                variant="ghost"
                 type="button"
                 onClick={onPlayUkAudio}
-                className="h-auto py-1.5 px-4 rounded-lg text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
+                size="sm"
+                className="text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
                 title={t('listenUkHint')}
               >
                 <div className="w-7 h-7 rounded-md bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
                   <Icons name="volume-2" className="w-3.5 h-3.5 text-primary" />
                 </div>
                 <span className="text-xs sm:text-sm font-medium font-mono text-muted-foreground">
-                  <span className="font-sans font-bold text-foreground mr-1">UK</span>
+                  <span className="font-sans font-bold text-foreground mr-1">
+                    UK
+                  </span>
                   {phoneticUk ? `/${phoneticUk.replace(/^\/|\/$/g, '')}/` : ''}
                 </span>
               </Button>
@@ -119,8 +129,14 @@ export function StudyFlashcard({
 
           {/* Bottom note hint: Pinned to the bottom */}
           <div className="absolute bottom-2.5 sm:bottom-3 inset-x-0 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs text-muted-foreground/50 font-normal select-none pointer-events-none">
-            <Icons name="rotate-cw" className="w-3 h-3 text-muted-foreground/40" />
-            <span>{t('flip')}{showShortcuts ? ` - ${t('pressSpace')}` : ''}</span>
+            <Icons
+              name="rotate-cw"
+              className="w-3 h-3 text-muted-foreground/40"
+            />
+            <span>
+              {t('flip')}
+              {showShortcuts ? ` - ${t('pressSpace')}` : ''}
+            </span>
           </div>
         </div>
 
@@ -181,8 +197,14 @@ export function StudyFlashcard({
 
           {/* Bottom note hint: Pinned to the bottom */}
           <div className="absolute bottom-2.5 sm:bottom-3 inset-x-0 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs text-muted-foreground/50 font-normal select-none pointer-events-none">
-            <Icons name="rotate-cw" className="w-3 h-3 text-muted-foreground/40" />
-            <span>{t('flip')}{showShortcuts ? ` - ${t('pressSpace')}` : ''}</span>
+            <Icons
+              name="rotate-cw"
+              className="w-3 h-3 text-muted-foreground/40"
+            />
+            <span>
+              {t('flip')}
+              {showShortcuts ? ` - ${t('pressSpace')}` : ''}
+            </span>
           </div>
         </div>
       </motion.div>

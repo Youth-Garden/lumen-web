@@ -8,13 +8,14 @@ import {
   DialogTitle,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { PlantGrowthIcon } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
+import { PlantMasteryRing } from './plant-mastery-ring';
 
 export interface MasteryFlowerDialogData {
+  level: number; // 0 to 5
   term?: string;
-  level?: number;
+  isWilted?: boolean;
 }
 
 export function MasteryFlowerDialog({
@@ -24,6 +25,7 @@ export function MasteryFlowerDialog({
 }: PortalProps<MasteryFlowerDialogData>) {
   const t = useTranslations('Vocabulary.Mastery');
   const currentLevel = data?.level ?? 0;
+  const isWilted = Boolean(data?.isWilted);
 
   const repetitionLevels = [
     { level: 1, title: t('level1Title'), time: t('level1Time') },
@@ -52,8 +54,12 @@ export function MasteryFlowerDialog({
         <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
           {/* CURRENT WORD STATUS (if opened for a specific word) */}
           {data?.term && (
-            <div className="flex items-center gap-3 py-1">
-              <PlantGrowthIcon stage={currentLevel} className="w-10 h-10" />
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/40">
+              <PlantMasteryRing
+                level={currentLevel}
+                isWilted={isWilted}
+                size={44}
+              />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-foreground truncate">
                   &ldquo;{data.term}&rdquo;
@@ -90,16 +96,16 @@ export function MasteryFlowerDialog({
           )}
 
           {/* STAGE 1: NEW WORD LEARNING */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               {t('stage1Title')}
             </p>
 
             <div className="space-y-2">
               {/* Step 1: Not learned */}
-              <div className="flex items-start gap-3">
-                <PlantGrowthIcon stage={0} className="w-8 h-8 mt-0.5" />
-                <div className="space-y-0.5">
+              <div className="p-3 rounded-lg bg-muted/30 flex items-center gap-3">
+                <PlantMasteryRing level={0} size={38} />
+                <div className="space-y-0.5 flex-1">
                   <p className="text-sm font-bold text-foreground">
                     {t('step1Title')}
                   </p>
@@ -109,33 +115,29 @@ export function MasteryFlowerDialog({
                 </div>
               </div>
 
-              {/* Transition arrow */}
-              <div className="flex justify-center text-primary/70">
-                <Icons name="arrow-down" className="w-4 h-4" />
-              </div>
-
-              {/* Step 2: In learning */}
-              <div className="flex items-start gap-3">
-                <PlantGrowthIcon stage={2} className="w-8 h-8 mt-0.5" />
-                <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-foreground">
+              {/* Step 2: In learning (5 progressive notches container) */}
+              <div className="p-4 rounded-2xl bg-muted/30 border border-border/50 space-y-3">
+                <div className="flex items-center justify-around px-1 py-2">
+                  {[1, 2, 3, 4, 5].map((stageLevel) => (
+                    <div key={stageLevel} className="flex flex-col items-center gap-1">
+                      <PlantMasteryRing level={stageLevel} size={54} />
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-1 text-center pt-1">
+                  <p className="text-sm font-bold text-foreground tracking-tight">
                     {t('step2Title')}
                   </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed max-w-xs mx-auto">
                     {t('step2Desc')}
                   </p>
                 </div>
               </div>
 
-              {/* Transition arrow */}
-              <div className="flex justify-center text-primary/70">
-                <Icons name="arrow-down" className="w-4 h-4" />
-              </div>
-
               {/* Step 3: Finished */}
-              <div className="flex items-start gap-3">
-                <PlantGrowthIcon stage={5} className="w-8 h-8 mt-0.5" />
-                <div className="space-y-0.5">
+              <div className="p-3 rounded-lg bg-muted/30 flex items-center gap-3">
+                <PlantMasteryRing level={5} size={38} />
+                <div className="space-y-0.5 flex-1">
                   <p className="text-sm font-bold text-foreground">
                     {t('step3Title')}
                   </p>
@@ -158,9 +160,9 @@ export function MasteryFlowerDialog({
               {t('stage2Desc')}
             </p>
 
-            <div className="flex items-start gap-3 py-1">
-              <PlantGrowthIcon stage={5} isWilted className="w-8 h-8 mt-0.5" />
-              <div className="space-y-0.5 text-xs">
+            <div className="p-3 rounded-lg bg-muted/30 flex items-center gap-3">
+              <PlantMasteryRing level={5} isWilted size={40} />
+              <div className="space-y-0.5 text-xs flex-1">
                 <p className="font-bold text-foreground">
                   {t('waterPlantTitle')}
                 </p>
@@ -177,34 +179,32 @@ export function MasteryFlowerDialog({
               {t('stage3Title')}
             </p>
 
-            <div className="grid grid-cols-5 gap-1.5 text-center py-1">
+            <div className="flex items-end justify-around py-2 gap-1">
               {repetitionLevels.map((lvl) => {
                 const isCurrent = lvl.level === currentLevel;
 
                 return (
                   <div
                     key={lvl.level}
-                    className={`p-2 rounded-lg flex flex-col items-center justify-between gap-1 transition-all ${
-                      isCurrent ? 'bg-primary/10' : 'bg-transparent'
+                    className={`flex flex-col items-center gap-1.5 transition-all ${
+                      isCurrent ? 'opacity-100' : 'opacity-70'
                     }`}
                   >
-                    {/* Ring showing level/5 segments */}
-                    <div className="relative w-8 h-8 flex items-center justify-center">
-                      <PlantGrowthIcon stage={lvl.level} className="w-7 h-7" />
-                    </div>
+                    {/* Ring only — no inner plant icon, shows 1→5 filled notches */}
+                    <PlantMasteryRing
+                      level={lvl.level}
+                      size={44}
+                      showInnerIcon={false}
+                    />
 
                     <span
-                      className={`text-xs ${
+                      className={`text-[10px] leading-tight text-center ${
                         isCurrent
                           ? 'font-bold text-primary'
-                          : 'font-medium text-foreground'
+                          : 'font-medium text-muted-foreground'
                       }`}
                     >
-                      {lvl.level}. {lvl.title}
-                    </span>
-
-                    <span className="text-[10px] text-muted-foreground">
-                      {lvl.time}
+                      {lvl.title}
                     </span>
                   </div>
                 );

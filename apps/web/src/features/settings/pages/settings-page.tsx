@@ -16,8 +16,8 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useProgressSettings } from '@/features/dashboard/hooks/use-progress-settings';
 import { useProgressDashboard } from '@/features/dashboard/hooks/use-progress-dashboard';
+import { useProgressSettings } from '@/features/dashboard/hooks/use-progress-settings';
 import { useAuthStore } from '@/store/auth.store';
 
 import { LanguageSwitcher } from '@/shared/components/language-switcher';
@@ -60,7 +60,7 @@ export const SettingsPage = () => {
   });
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-10">
+    <div className="max-w- mx-auto space-y-6 pb-10">
       <div>
         <h1 className="text-3xl font-heading font-bold tracking-tight text-foreground">
           {t('title')}
@@ -75,7 +75,9 @@ export const SettingsPage = () => {
         {/* 2. Appearance & Preferences */}
         <Card className="border border-border/60 rounded-2xl bg-card shadow-xs">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">{t('appearance.title')}</CardTitle>
+            <CardTitle className="text-lg font-bold">
+              {t('appearance.title')}
+            </CardTitle>
             <CardDescription>{t('appearance.description')}</CardDescription>
           </CardHeader>
           <CardContent className="divide-y divide-border/50">
@@ -107,13 +109,18 @@ export const SettingsPage = () => {
         {/* 3. Learning Goals */}
         <Card className="border border-border/60 rounded-2xl bg-card shadow-xs">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">{t('goals.title')}</CardTitle>
+            <CardTitle className="text-lg font-bold">
+              {t('goals.title')}
+            </CardTitle>
             <CardDescription>{t('goals.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={onProgressSubmit} className="flex items-end gap-4">
               <div className="space-y-1.5 flex-1 max-w-xs">
-                <Label htmlFor="dailyGoalMinutes" className="text-xs font-semibold">
+                <Label
+                  htmlFor="dailyGoalMinutes"
+                  className="text-xs font-semibold"
+                >
                   {t('goals.dailyGoalMinutes')}
                 </Label>
                 <Input

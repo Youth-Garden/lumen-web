@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 
-import { useState } from 'react';
-import { Card, Button } from '@lumen/uikit/components';
+import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { useState } from 'react';
 
 export function NotificationPromptCard() {
   const t = useTranslations('Vocabulary.Folders');
@@ -28,7 +28,7 @@ export function NotificationPromptCard() {
 
       <Button
         size="sm"
-        variant={isEnabled ? 'subtle' : 'default'}
+        variant={isEnabled ? 'ghost' : 'default'}
         onClick={() => setIsEnabled(!isEnabled)}
         className="w-full text-xs font-bold h-9 cursor-pointer"
       >

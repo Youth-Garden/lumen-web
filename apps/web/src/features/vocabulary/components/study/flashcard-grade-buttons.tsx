@@ -32,7 +32,7 @@ export function FlashcardGradeButtons({
             variant="outline"
             size="lg"
             className="flex-1 h-16 text-lg font-bold border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-none flex flex-col gap-1"
-            onClick={() => onGrade(FlashcardRating.AGAIN)}
+            onClick={() => onGrade(FlashcardRating.WRONG)}
             disabled={isSubmitting}
           >
             <span>{t('gradeAgain')}</span>
@@ -44,7 +44,7 @@ export function FlashcardGradeButtons({
             variant="outline"
             size="lg"
             className="flex-1 h-16 text-lg font-bold border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-none flex flex-col gap-1"
-            onClick={() => onGrade(FlashcardRating.HARD)}
+            onClick={() => onGrade(FlashcardRating.CORRECT)}
             disabled={isSubmitting}
           >
             <span>{t('gradeHard')}</span>
@@ -56,7 +56,7 @@ export function FlashcardGradeButtons({
             variant="outline"
             size="lg"
             className="flex-1 h-16 text-lg font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none flex flex-col gap-1"
-            onClick={() => onGrade(FlashcardRating.GOOD)}
+            onClick={() => onGrade(FlashcardRating.FAST_TRACK_TEMP)}
             disabled={isSubmitting}
           >
             <span>{t('gradeGood')}</span>
@@ -68,7 +68,7 @@ export function FlashcardGradeButtons({
             variant="outline"
             size="lg"
             className="flex-1 h-16 text-lg font-bold border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground rounded-none flex flex-col gap-1"
-            onClick={() => onGrade(FlashcardRating.EASY)}
+            onClick={() => onGrade(FlashcardRating.FAST_TRACK_KNOWN)}
             disabled={isSubmitting}
           >
             <span>{t('gradeEasy')}</span>

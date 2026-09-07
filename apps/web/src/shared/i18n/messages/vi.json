@@ -312,7 +312,21 @@
       "saveProgressError": "Không thể lưu tiến độ học tập.",
       "backToStudy": "Quay lại trang học từ vựng",
       "createFirstFolder": "Tạo thư mục đầu tiên",
-      "foldersCount": "{count} thư mục"
+      "foldersCount": "{count} thư mục",
+      "chooseTerm": "Chọn từ",
+      "chooseMeaning": "Chọn nghĩa",
+      "typeWord": "Nhập từ",
+      "pressKeyHint": "Nhấn {key}",
+      "hintAction": "Gợi ý ({count}) - Nhấn Shift",
+      "checkAction": "Kiểm tra - Nhấn Enter",
+      "correctTitle": "Chính xác",
+      "incorrectTitle": "Không chính xác",
+      "correctAnswerLabel": "Đáp án đúng:",
+      "continueSpace": "Tiếp tục - Nhấn Space",
+      "previousMistake": "Lỗi sai trước đây",
+      "frequentlyMissedTag": "Từ hay sai",
+      "typePlaceholder": "Nhập từ tiếng Anh...",
+      "audioListenHint": "Bấm để nghe lại âm thanh"
     },
     "List": {
       "title": "Kho từ vựng",
