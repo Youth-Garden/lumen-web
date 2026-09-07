@@ -1,19 +1,31 @@
+'use client';
+
+import React from 'react';
 import { cn } from '@lumen/uikit/utils';
 
 interface BackdropProps {
   isOpen?: boolean;
   onPress?: () => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export const Backdrop = ({ isOpen, onPress, className }: BackdropProps) => {
+export const Backdrop = ({ isOpen, onPress, className, style }: BackdropProps) => {
   if (!isOpen) return null;
 
   return (
     <div
-      onClick={onPress}
+      onClick={(e) => {
+        e.stopPropagation();
+        onPress?.();
+      }}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        onPress?.();
+      }}
+      style={style}
       className={cn(
-        'fixed inset-0 z-50 bg-black/40 transition-all duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+        'fixed inset-0 z-50 bg-black/40 transition-all duration-200 cursor-pointer pointer-events-auto select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         className,
       )}
       aria-hidden="true"

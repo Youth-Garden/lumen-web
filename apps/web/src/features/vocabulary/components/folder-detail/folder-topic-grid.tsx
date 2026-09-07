@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import Image from 'next/image';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -29,6 +31,7 @@ export function FolderTopicGrid({
   onSelectTopic,
   onGoBack,
 }: FolderTopicGridProps) {
+  const t = useTranslations('Vocabulary.Folders');
   const radius = 36;
   const circumference = 2 * Math.PI * radius;
 
@@ -42,7 +45,7 @@ export function FolderTopicGrid({
           className="flex items-center gap-1.5 -ml-2.5 px-2.5 py-1 text-sm font-medium w-fit text-muted-foreground hover:text-foreground cursor-pointer rounded-lg hover:bg-muted/60 transition-colors"
         >
           <Icons name="arrow-left" className="h-4 w-4" />
-          <span>Quay lại danh mục thư mục</span>
+          <span>{t('backToFolders')}</span>
         </button>
 
         <div className="flex items-center gap-3">
@@ -57,7 +60,7 @@ export function FolderTopicGrid({
         </div>
 
         <p className="text-sm text-muted-foreground mt-1">
-          {description || 'Thư mục từ vựng'}
+          {description || t('defaultFolderDescription')}
         </p>
       </div>
 

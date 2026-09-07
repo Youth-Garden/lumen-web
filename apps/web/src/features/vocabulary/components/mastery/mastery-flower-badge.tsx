@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import React from 'react';
 import { PlantGrowthIcon } from '@lumen/uikit/icons';
 
@@ -10,10 +12,11 @@ interface MasteryFlowerBadgeProps {
 }
 
 export function MasteryFlowerBadge({
-  level = 1,
+  level = 0,
   onClick,
   className = '',
 }: MasteryFlowerBadgeProps) {
+  const t = useTranslations('Vocabulary.Mastery');
   // 5 circular arc segments around the center
   // Center is (24, 24), radius = 21
   const segments = [
@@ -62,35 +65,43 @@ export function MasteryFlowerBadge({
     ].join(' ');
   };
 
+  const currentLevel = Math.max(0, Math.min(5, Math.round(level)));
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center p-1 rounded-full hover:bg-muted/60 transition-transform active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 ${className}`}
-      title={`Stage ${level}/5: Tap to see memory growth`}
+      className={`relative inline-flex items-center justify-center p-1 rounded-full hover:bg-muted/60 transition-transform active:scale-95 cursor-pointer outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 select-none ${className}`}
+      title={
+        currentLevel === 0
+          ? t('seedBadgeTooltip')
+          : t('levelBadgeTooltip', { level: currentLevel })
+      }
     >
       <div className="relative w-11 h-11 flex items-center justify-center">
-        {/* SVG Segmented Ring (5 segments) */}
+        {/* SVG Segmented Ring (5 segments: green when filled, muted when unfilled) */}
         <svg className="w-11 h-11 -rotate-90 absolute inset-0" viewBox="0 0 48 48">
           {segments.map((seg, idx) => {
-            const isFilled = idx < level;
+            const isFilled = idx < currentLevel;
             return (
               <path
                 key={idx}
                 d={describeArc(24, 24, 21, seg.startAngle, seg.endAngle)}
                 fill="none"
-                stroke={isFilled ? '#f59e0b' : '#525252'}
+                stroke={isFilled ? '#22c55e' : 'currentColor'}
                 strokeWidth="3.2"
                 strokeLinecap="round"
-                className="transition-colors duration-300"
+                className={`transition-colors duration-300 ${
+                  isFilled ? 'opacity-100' : 'opacity-20'
+                }`}
               />
             );
           })}
         </svg>
 
-        {/* Center Plant Growth Stage (seed -> sprout -> seedling -> plant -> bud -> bloom) */}
+        {/* Center Plant Growth Stage (0: seed -> 1: sprout -> 2: leaves -> 3: seedling -> 4: bud -> 5: flower) */}
         <div className="w-8 h-8 flex items-center justify-center pointer-events-none">
-          <PlantGrowthIcon stage={level} className="w-8 h-8" />
+          <PlantGrowthIcon stage={currentLevel} className="w-8 h-8" />
         </div>
       </div>
     </button>

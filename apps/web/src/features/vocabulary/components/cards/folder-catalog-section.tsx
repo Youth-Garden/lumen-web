@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useMemo } from 'react';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
@@ -19,6 +21,7 @@ export function FolderCatalogSection({
   onViewFolder,
   onCreateFolder,
 }: FolderCatalogSectionProps) {
+  const t = useTranslations('Vocabulary.Folders');
   // 1. Separate User folders (displayed first) and Categorized folders
   const { userFolders, categorizedGroups } = useMemo(() => {
     const userList: Folder[] = [];
@@ -42,15 +45,15 @@ export function FolderCatalogSection({
 
   return (
     <div className="space-y-6 w-full relative">
-      {/* 1. User Folders (Thư mục của tôi) - Displayed First */}
+      {/* 1. User Folders - Displayed First */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold tracking-tight text-foreground">
-              Thư mục của tôi
+              {t('myFolders')}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Các thư mục từ vựng do bạn tự tạo
+              {t('myFoldersSubtitle')}
             </p>
           </div>
 
@@ -62,14 +65,14 @@ export function FolderCatalogSection({
               className="gap-1.5 text-xs font-semibold cursor-pointer"
             >
               <Icons name="plus" className="h-3.5 w-3.5" />
-              <span>Tạo thư mục</span>
+              <span>{t('createFolder')}</span>
             </Button>
           )}
         </div>
 
         {userFolders.length === 0 ? (
           <div className="p-5 rounded-2xl bg-card shadow-sm text-center text-xs text-muted-foreground">
-            Bạn chưa tạo thư mục cá nhân nào. Hãy bấm &quot;Tạo thư mục&quot; để bắt đầu!
+            {t('noCustomFoldersHint')}
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
@@ -86,7 +89,7 @@ export function FolderCatalogSection({
         )}
       </div>
 
-      {/* 2. Categorized Folders (e.g. Từ vựng TOEIC, Từ vựng IELTS, v.v.) */}
+      {/* 2. Categorized Folders (e.g. TOEIC, IELTS, etc.) */}
       {categorizedGroups.map(([categoryName, groupFolders]) => (
         <div key={categoryName} className="space-y-3">
           <div>
@@ -94,7 +97,7 @@ export function FolderCatalogSection({
               {categoryName}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Kho từ vựng chuyên đề tiêu biểu
+              {t('systemFoldersSubtitle')}
             </p>
           </div>
 

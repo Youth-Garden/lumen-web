@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import type { Folder } from '@/services/vocabulary/vocabulary.types';
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -20,6 +22,7 @@ export function CurrentLearningFolderCard({
   onStudyNow,
   onViewFolder,
 }: CurrentLearningFolderCardProps) {
+  const t = useTranslations('Vocabulary.Folders');
   if (!activeFolder) {
     return null;
   }
@@ -36,7 +39,7 @@ export function CurrentLearningFolderCard({
       {/* Top Header outside card: Label and Switch folder button */}
       <div className="flex items-center justify-between px-1">
         <h3 className="text-base font-bold tracking-tight text-foreground">
-          Thư mục đã ghim
+          {t('pinnedFolder')}
         </h3>
 
         <Button
@@ -46,7 +49,7 @@ export function CurrentLearningFolderCard({
           className="gap-1.5 font-semibold h-8 px-2.5"
         >
           <Icons name="refresh-cw" className="h-3.5 w-3.5 text-primary" />
-          <span>Đổi thư mục</span>
+          <span>{t('switchFolder')}</span>
         </Button>
       </div>
 
@@ -65,7 +68,7 @@ export function CurrentLearningFolderCard({
               <span className="flex items-center gap-1 font-semibold text-primary">
                 <Icons name="check" className="h-3.5 w-3.5" />
                 <span>
-                  {learnedApprox}/{wordCount} đã học
+                  {t('learnedCountSummary', { learned: learnedApprox, total: wordCount })}
                 </span>
               </span>
               {dueCount > 0 && (
@@ -73,7 +76,7 @@ export function CurrentLearningFolderCard({
                   <span>•</span>
                   <span className="flex items-center gap-1 text-amber-500 font-semibold">
                     <Icons name="clock" className="h-3.5 w-3.5" />
-                    <span>{dueCount} cần ôn</span>
+                    <span>{t('dueCountSummary', { count: dueCount })}</span>
                   </span>
                 </>
               )}
@@ -90,7 +93,7 @@ export function CurrentLearningFolderCard({
             className="gap-1.5 text-xs font-semibold cursor-pointer"
           >
             <Icons name="play" className="h-3.5 w-3.5 fill-current" />
-            <span>Học bài mới</span>
+            <span>{t('learnNewWords')}</span>
           </Button>
 
           <Button
@@ -99,7 +102,7 @@ export function CurrentLearningFolderCard({
             className="gap-1.5 text-xs font-semibold cursor-pointer"
           >
             <Icons name="eye" className="h-3.5 w-3.5" />
-            <span>Xem chi tiết</span>
+            <span>{t('viewFolder')}</span>
           </Button>
         </div>
       </Card>

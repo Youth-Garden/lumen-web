@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -25,6 +27,7 @@ import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import type { VocabularyWord } from '@/services/vocabulary/vocabulary.types';
 
 export function FolderListPage() {
+  const t = useTranslations('Vocabulary.Folders');
   const router = useRouter();
 
   const { data, isLoading } = useVocabularyFolders();
@@ -95,7 +98,7 @@ export function FolderListPage() {
     [activeFolderDetail?.flashcards],
   );
 
-  // Unique flashcards by term (1 từ vựng có thể thuộc nhiều topic nhưng chỉ tính 1 lần)
+  // Unique flashcards by term
   const uniqueFlashcards: VocabularyWord[] = useMemo(() => {
     const seen = new Set<string>();
     const list: VocabularyWord[] = [];
@@ -140,7 +143,7 @@ export function FolderListPage() {
       if (dueCards.length > 0) {
         presentStudyView({
           cards: dueCards,
-          folderName: `${activeFolder.name} - Ôn tập`,
+          folderName: `${activeFolder.name} - ${t('reviewNormal')}`,
         });
         return;
       }
@@ -153,7 +156,7 @@ export function FolderListPage() {
     if (!frequentlyMissedCards.length || !activeFolder) return;
     presentStudyView({
       cards: frequentlyMissedCards,
-      folderName: `${activeFolder.name} - Từ hay sai`,
+      folderName: `${activeFolder.name} - ${t('frequentlyMissedTitle')}`,
     });
   };
 

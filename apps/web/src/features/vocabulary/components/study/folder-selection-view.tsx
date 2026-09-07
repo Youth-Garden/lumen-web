@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary/vocabulary.types';
 import { Button, Skeleton } from '@lumen/uikit/components';
@@ -26,6 +28,8 @@ export function FolderSelectionView({
   onCreateFolder,
   onViewFolderWords,
 }: FolderSelectionViewProps) {
+  const t = useTranslations('Vocabulary.Folders');
+  const tStudy = useTranslations('Vocabulary.Study');
   const [selectedFolderForAction, setSelectedFolderForAction] = useState<Folder | null>(null);
 
   // 1. Separate user-created folders and group other folders by category
@@ -73,7 +77,7 @@ export function FolderSelectionView({
               className="gap-1.5 -ml-2.5 w-fit text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <Icons name="arrow-left" className="h-4 w-4" />
-              <span>Quay lại trang học từ vựng</span>
+              <span>{tStudy('backToStudy')}</span>
             </Button>
           </div>
         )}
@@ -81,10 +85,10 @@ export function FolderSelectionView({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Chọn thư mục học
+              {t('selectFolderTitle')}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Chọn một thư mục để bắt đầu lộ trình học từ vựng hoặc chuyển đổi thư mục ghim
+              {t('selectFolderSubtitle')}
             </p>
           </div>
 
@@ -94,7 +98,7 @@ export function FolderSelectionView({
             className="gap-2 cursor-pointer font-semibold shrink-0"
           >
             <Icons name="plus" className="h-4 w-4" />
-            <span>Tạo thư mục mới</span>
+            <span>{t('createNewFolder')}</span>
           </Button>
         </div>
       </div>
@@ -105,7 +109,7 @@ export function FolderSelectionView({
           <div className="flex items-center gap-2">
             <Icons name="folder" className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-bold tracking-tight text-foreground">
-              Thư mục của tôi
+              {t('myFolders')}
             </h2>
             <span className="text-xs font-medium text-muted-foreground">
               ({userFolders.length})
@@ -126,11 +130,11 @@ export function FolderSelectionView({
               className="h-10 w-10 text-muted-foreground/40"
             />
             <p className="text-sm font-medium text-muted-foreground">
-              Bạn chưa tạo thư mục cá nhân nào
+              {t('noCustomFolders')}
             </p>
             <Button size="sm" className="gap-2 cursor-pointer" onClick={onCreateFolder}>
               <Icons name="plus" className="h-4 w-4" />
-              <span>Tạo thư mục đầu tiên</span>
+              <span>{tStudy('createFirstFolder')}</span>
             </Button>
           </div>
         ) : (
@@ -158,7 +162,7 @@ export function FolderSelectionView({
               {categoryName}
             </h2>
             <span className="text-xs font-medium text-muted-foreground">
-              ({folderList.length} thư mục)
+              ({tStudy('foldersCount', { count: folderList.length })})
             </span>
           </div>
 
@@ -181,7 +185,7 @@ export function FolderSelectionView({
       {selectedFolderForAction && (
         <StudyBottomActionBar
           title={selectedFolderForAction.name}
-          subtitle={`${selectedFolderForAction.flashcardCount || 0} từ vựng`}
+          subtitle={t('wordsCount', { count: selectedFolderForAction.flashcardCount || 0 })}
           onLearnNew={() => {
             onSelectFolder(selectedFolderForAction.id);
             onViewFolderWords(selectedFolderForAction.id);

@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons, PlantGrowthIcon } from '@lumen/uikit/icons';
 import { SegmentedMasteryGauge } from './segmented-mastery-gauge';
@@ -21,6 +23,8 @@ export function MasteryOverviewCard({
   onReviewAll,
   onFlashcards,
 }: MasteryOverviewCardProps) {
+  const t = useTranslations('Vocabulary.Folders');
+  const tMastery = useTranslations('Vocabulary.Mastery');
   const stage1 = Math.max(1, Math.round(learnedWords * 0.08));
   const stage2 = Math.max(1, Math.round(learnedWords * 0.15));
   const stage3 = Math.max(2, Math.round(learnedWords * 0.25));
@@ -28,11 +32,11 @@ export function MasteryOverviewCard({
   const stage5 = Math.max(0, learnedWords - stage1 - stage2 - stage3 - stage4);
 
   const stages = [
-    { level: 1, count: stage1, label: 'Mới học' },
-    { level: 2, count: stage2, label: 'Nhớ tạm' },
-    { level: 3, count: stage3, label: 'Nhớ lâu' },
-    { level: 4, count: stage4, label: 'Thuộc lòng' },
-    { level: 5, count: stage5, label: 'Thông thạo' },
+    { level: 1, count: stage1, label: tMastery('stageLevel1') },
+    { level: 2, count: stage2, label: tMastery('stageLevel2') },
+    { level: 3, count: stage3, label: tMastery('stageLevel3') },
+    { level: 4, count: stage4, label: tMastery('stageLevel4') },
+    { level: 5, count: stage5, label: tMastery('stageLevel5') },
   ];
 
   return (
@@ -43,7 +47,7 @@ export function MasteryOverviewCard({
           <span className="text-2xl font-black text-primary">
             {learnedWords}
           </span>
-          <span className="text-base font-bold text-foreground">từ đã học</span>
+          <span className="text-base font-bold text-foreground">{tMastery('learnedWordsCount', { count: '' }).trim()}</span>
         </div>
         <Icons name="chevron-right" className="h-4 w-4 text-muted-foreground" />
       </div>
@@ -69,8 +73,8 @@ export function MasteryOverviewCard({
           />
           <span>
             {dueCount > 0
-              ? `${dueCount} từ cần luyện tập`
-              : 'Đã hoàn thành luyện tập hôm nay'}
+              ? tMastery('needsPracticeCount', { count: dueCount })
+              : tMastery('practiceCompletedToday')}
           </span>
         </div>
         <Icons name="info" className="h-3.5 w-3.5 text-primary/70" />
@@ -84,7 +88,7 @@ export function MasteryOverviewCard({
           className="gap-1.5 text-xs font-semibold cursor-pointer"
         >
           <Icons name="rotate-ccw" className="h-3.5 w-3.5" />
-          <span>Ôn tập</span>
+          <span>{t('reviewNormal')}</span>
         </Button>
 
         <Button
@@ -93,7 +97,7 @@ export function MasteryOverviewCard({
           className="gap-1.5 text-xs font-semibold cursor-pointer"
         >
           <Icons name="layers" className="h-3.5 w-3.5 text-primary" />
-          <span>Flashcards</span>
+          <span>{t('flashcardsAction')}</span>
         </Button>
       </div>
     </Card>

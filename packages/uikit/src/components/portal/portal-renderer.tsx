@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { usePortalStore } from '../../store/portal.store';
-import { PortalInstance } from '../../types/portal.types';
 import { Backdrop } from '../ui/backdrop';
+import { PortalInstance } from '../../types/portal.types';
 
 export const PortalRenderer = () => {
   const { portals, onDismiss } = usePortalStore();
@@ -50,25 +50,22 @@ const PortalInstanceItem = ({
     );
   }
 
-  // Added a specific z-index wrapping wrapper for stacking correctly if multiple portals exist
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-      <div className="pointer-events-auto w-full h-full">
-        <Backdrop
-          isOpen={instance.isOpen}
-          onPress={() => {
-            if (!instance.disableCloseByBackdrop) {
-              onDismiss();
-            }
-          }}
-        />
-        <Component
-          id={instance.id}
-          data={instance.data}
-          isOpen={instance.isOpen}
-          onDismiss={onDismiss}
-        />
-      </div>
-    </div>
+    <>
+      <Backdrop
+        isOpen={instance.isOpen}
+        onPress={() => {
+          if (!instance.disableCloseByBackdrop) {
+            onDismiss();
+          }
+        }}
+      />
+      <Component
+        id={instance.id}
+        data={instance.data}
+        isOpen={instance.isOpen}
+        onDismiss={onDismiss}
+      />
+    </>
   );
 };

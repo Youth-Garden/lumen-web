@@ -13,6 +13,7 @@
 - **Direct Domain / Service Types Reuse**: Strictly avoid defining redundant ad-hoc interfaces or adapter types when existing DTOs/Domain types from `@/services` already solve the problem. Fewer types is better; never create an intermediate type unless genuinely necessary for isolated UI state.
 - **No In-Component Data Restructuring**: Do NOT reshape or map data inside UI components (e.g. `useMemo(() => data.map(...))` to rename fields or repackage objects for subcomponents). Pass and consume shared types directly. Transformations belong strictly in mappers (`[feature].mappers.ts`).
 - **TypeScript `any`**: Strictly avoid using `any` types in components when mapping data. Ensure proper typings are inferred or explicitly defined.
+- **No Manual Button Re-styling (Prioritize Variants)**: Tuyệt đối KHÔNG tự ý re-style, không ghi đè style thủ công (như tùy tiện ghi đè `border`, `rounded`, `bg`, `shadow`, padding) lên component `<Button>`. Component `Button` của hệ thống đã có đầy đủ các `variant` (`default`, `secondary`, `outline`, `ghost`, `subtle`, `destructive`) và `size` (`default`, `sm`, `lg`, `icon`, `icon-sm`). BẮT BUỘC chỉ sử dụng trực tiếp các `variant` và `size` có sẵn, không can thiệp class ghi đè phá vỡ design system.
 - **No Nested Button in Link**: NEVER nest `<Button>` inside Next.js `<Link>` or vice-versa. Style `<Link>` directly or use `asChild` to avoid invalid HTML, hydration issues, and lingering click focus rings.
 - **Strict UIKit Component & Icon Reuse**: ALWAYS use components from `@lumen/uikit/components` instead of creating ad-hoc UI duplicates. All SVGs and icons must be imported from `@lumen/uikit/icons` (via `Icons` or custom icons registered in UIKit). Never define raw SVG components inside `features/` or `app/`.
 - **Component Line Count Limit**: Module-specific components (inside `features/[module]/components/`) and page files (inside `features/[module]/pages/`) MUST NOT exceed **300 lines**. If a file grows beyond 300 lines, it MUST be refactored by either: (1) extracting sub-components into separate files, or (2) extracting complex logic into a custom hook. This rule does NOT apply to highly reusable library components in `packages/uikit/src/` or shared utility files, where a higher line count may be justified.
@@ -72,3 +73,15 @@
 - **Generic & Reusable Content**: Keep all general platform features (vocabulary, flashcards, decks/folders, dashboard, settings) neutral, generic, and versatile. Specialized domain terms may ONLY appear within modules that are strictly and explicitly designed for that specific purpose (e.g., an actual dedicated TOEIC exam simulation player).
 
 - **No Redundant Count Badges in Headers**: NEVER append count numbers or pill badges (e.g. `(0)`, `[count]`, or `<span ...>{items.length}</span>`) next to section titles, headings, or category labels unless explicitly requested by the user. Keep section headings clean, focused, and minimalist without cluttering count numbers.
+
+## Strict UI Aesthetics & Anti-Border / Anti-Card-Clutter Convention (MANDATORY)
+
+- **Tuyệt đối HẠN CHẾ dùng Border**: Tuyệt đối KHÔNG lạm dụng các đường viền cứng (`border`, `border border-border/80`, `border-border/50`). Thiết kế của Lumen hướng đến sự phẳng, thoáng đãng, tinh tế và hiện đại.
+- **Tuyệt đối KHÔNG lạm dụng Background Card (Anti-Card-Clutter / Anti-Box-in-Box)**:
+  - KHÔNG bọc từng hàng (row), từng đoạn văn bản, hoặc từng mục lựa chọn vào các hộp nền riêng biệt (`bg-muted/20`, `bg-muted/30`, `rounded-2xl border...`).
+  - Tránh triệt để tình trạng "hộp lồng trong hộp" (box-in-box) gây ngột ngạt và rối rắm giao diện.
+  - Sử dụng trực tiếp bề mặt nền của Dialog / Page kết hợp với khoảng cách (padding/gap) và phân cấp kiểu chữ (typography hierarchy) tự nhiên, rõ ràng.
+
+# Strict Prohibition on Opening Browser for Testing (Bắt buộc)
+- TUYỆT ĐỐI KHÔNG ĐƯỢC MỞ BROWSER (không dùng browser_subagent, puppeteer hay bất kỳ browser automation nào) để kiểm tra giao diện hoặc tính năng. Các trang/tính năng yêu cầu đăng nhập của người dùng mà agent không thể đăng nhập được.
+- Mọi kiểm tra tính đúng đắn phải thực hiện qua việc đọc hiểu code, phân tích logic, chạy `tsc --noEmit`, chạy `eslint` hoặc test code trực tiếp trong terminal, tuyệt đối không tự mở trình duyệt.

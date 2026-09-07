@@ -17,7 +17,7 @@ export interface LessonQuotaConfig {
 export const LESSON_QUOTA_CONFIGS: Record<LessonQuotaPreset, LessonQuotaConfig> = {
   FEW: {
     preset: 'FEW',
-    label: 'A few',
+    label: 'Few',
     rangeText: '7-10 questions',
     targetCount: 7,
     minCount: 7,
@@ -53,6 +53,7 @@ export interface StudySettings {
   lessonQuotaPreset: LessonQuotaPreset;
   wordsPerSession: number;
   autoPlayAudio: boolean;
+  soundEffectsEnabled: boolean;
   accent: PronunciationAccent;
 }
 
@@ -60,6 +61,7 @@ const DEFAULT_SETTINGS: StudySettings = {
   lessonQuotaPreset: 'A_LOT',
   wordsPerSession: 20,
   autoPlayAudio: true,
+  soundEffectsEnabled: true,
   accent: PronunciationAccent.US,
 };
 
@@ -81,6 +83,10 @@ export function useStudySettings() {
           ...parsed,
           lessonQuotaPreset: preset,
           wordsPerSession: target,
+          soundEffectsEnabled:
+            parsed.soundEffectsEnabled !== undefined
+              ? parsed.soundEffectsEnabled
+              : true,
         });
       }
     } catch {
@@ -93,8 +99,12 @@ export function useStudySettings() {
   const updateSettings = useCallback((newSettings: Partial<StudySettings>) => {
     setSettings((prev) => {
       const updated = { ...prev, ...newSettings };
-      if (newSettings.lessonQuotaPreset && LESSON_QUOTA_CONFIGS[newSettings.lessonQuotaPreset]) {
-        updated.wordsPerSession = LESSON_QUOTA_CONFIGS[newSettings.lessonQuotaPreset].targetCount;
+      if (
+        newSettings.lessonQuotaPreset &&
+        LESSON_QUOTA_CONFIGS[newSettings.lessonQuotaPreset]
+      ) {
+        updated.wordsPerSession =
+          LESSON_QUOTA_CONFIGS[newSettings.lessonQuotaPreset].targetCount;
       }
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
@@ -105,7 +115,9 @@ export function useStudySettings() {
     });
   }, []);
 
-  const currentQuotaConfig = LESSON_QUOTA_CONFIGS[settings.lessonQuotaPreset] || LESSON_QUOTA_CONFIGS.A_LOT;
+  const currentQuotaConfig =
+    LESSON_QUOTA_CONFIGS[settings.lessonQuotaPreset] ||
+    LESSON_QUOTA_CONFIGS.A_LOT;
 
   return {
     settings,

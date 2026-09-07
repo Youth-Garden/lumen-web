@@ -33,10 +33,30 @@ export function useStudyShortcuts({
     if (!isOpen || isFinished) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      // 1. Ignore if typing in text fields or content editable
+      const target = event.target as HTMLElement | null;
       if (
-        event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target?.isContentEditable
       ) {
+        return;
+      }
+
+      // 2. Ignore ALL study shortcuts if any modal/dialog is currently open
+      const hasAnyDialogOpen = Boolean(
+        document.querySelector('[role="dialog"]') ||
+        document.querySelector('[aria-modal="true"]')
+      );
+      if (hasAnyDialogOpen) {
+        return;
+      }
+
+      // 3. If currently focused on any button, let native keyboard interaction work
+      const isButtonTarget =
+        target instanceof HTMLButtonElement ||
+        Boolean(target?.closest('button'));
+      if (isButtonTarget) {
         return;
       }
 

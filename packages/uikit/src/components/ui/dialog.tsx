@@ -1,5 +1,6 @@
 'use client';
 
+
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import * as React from 'react';
 
@@ -7,8 +8,23 @@ import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 import { Button } from './button';
 
-function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+function Dialog({
+  onOpenChange,
+  ...props
+}: DialogPrimitive.Root.Props) {
+  return (
+    <DialogPrimitive.Root
+      data-slot="dialog"
+      onOpenChange={(open, eventDetails) => {
+        // Bỏ qua outsidePress vì Backdrop của PortalRenderer đã xử lý click-outside
+        if (!open && eventDetails?.reason === 'outside-press') {
+          return;
+        }
+        onOpenChange?.(open, eventDetails);
+      }}
+      {...props}
+    />
+  );
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
@@ -42,17 +58,20 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
+  style,
   showCloseButton = true,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
 }) {
+  
   return (
     <DialogPortal>
       <DialogPrimitive.Popup
         data-slot="dialog-content"
+        
         className={cn(
-          'fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl bg-popover/95 backdrop-blur-2xl p-6 text-sm text-popover-foreground shadow-2xl transition-all duration-200 outline-none sm:max-w-md data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
+          'fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover/95 backdrop-blur-2xl p-6 text-sm text-popover-foreground shadow-2xl transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
           className,
         )}
         {...props}

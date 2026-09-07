@@ -31,47 +31,102 @@ export function PlantGrowthIcon({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      {/* Soil mound at bottom */}
-      <path
-        d="M12 50 C12 43 20 40 32 40 C44 40 52 43 52 50 C52 53 44 54 32 54 C20 54 12 53 12 50 Z"
-        fill="#8B5A2B"
-        opacity="0.9"
-      />
-      <path
-        d="M16 49 C18 44 24 42 32 42 C40 42 46 44 48 49"
-        stroke="#A76D38"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
+      <defs>
+        {/* Seed Gradients */}
+        <linearGradient id="seedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#B45309" />
+          <stop offset="60%" stopColor="#78350F" />
+          <stop offset="100%" stopColor="#451A03" />
+        </linearGradient>
+        <linearGradient id="seedHighlight" x1="0%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%" stopColor="#FDE68A" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.1" />
+        </linearGradient>
+        <linearGradient id="sproutGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#16A34A" />
+          <stop offset="100%" stopColor="#4ADE80" />
+        </linearGradient>
 
-      {/* Stage 0: Just a seed on the soil */}
+        {/* Wilted flower gradient */}
+        <linearGradient id="wiltedStem" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#4D7C0F" />
+          <stop offset="100%" stopColor="#A16207" />
+        </linearGradient>
+      </defs>
+
+      {/* Subtle curved soil baseline */}
+      <path
+        d="M16 52 C26 50 38 50 48 52"
+        stroke="#854D0E"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
+      {/* Small soil mound */}
+      <ellipse cx="32" cy="51.5" rx="11" ry="2.2" fill="#713F12" opacity="0.3" />
+
+      {/* Stage 0: Cute, organic seed with tiny green sprout popping out */}
       {clampedStage === 0 && (
-        <ellipse
-          cx="32"
-          cy="42"
-          rx="3.5"
-          ry="2.5"
-          fill="#D97706"
-          stroke="#92400E"
-          strokeWidth="1"
-        />
+        <g transform="translate(0, 1)">
+          {/* Soil cleft where seed rests */}
+          <path
+            d="M24 51 Q32 53 40 51"
+            stroke="#542F0C"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Seed body - charming teardrop/almond seed shape */}
+          <g transform="rotate(-15 32 44)">
+            {/* Outer seed shell */}
+            <path
+              d="M32 30 C37 30 42 37 40 44 C38 49 34 51 31 51 C26 51 23 47 24 41 C25 35 28 30 32 30 Z"
+              fill="url(#seedGrad)"
+            />
+            {/* Natural seed seam / stripe */}
+            <path
+              d="M32 32 C35 36 36 43 33 49"
+              stroke="#D97706"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              opacity="0.8"
+            />
+            {/* Soft specular highlight */}
+            <path
+              d="M26 38 C26 34 29 32 31 32"
+              stroke="url(#seedHighlight)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+
+            {/* Tiny fresh green sprout leaf cracking out of top */}
+            <path
+              d="M32 30 C33 24 37 22 39 21 C39 25 36 28 32 30 Z"
+              fill="url(#sproutGrad)"
+            />
+            <path
+              d="M32 30 C29 25 28 22 30 20 C32 23 33 27 32 30 Z"
+              fill="#22C55E"
+            />
+          </g>
+        </g>
       )}
 
-      {/* Stage 1: Tiny Sprout popping up */}
+      {/* Stage 1: Tiny sprout popping up */}
       {clampedStage === 1 && (
         <g>
           <path
-            d="M32 42 Q32 36 33 33"
-            stroke="#22C55E"
-            strokeWidth="2.5"
+            d="M32 51 Q32 41 32 36"
+            stroke="#16A34A"
+            strokeWidth="3"
             strokeLinecap="round"
           />
           <path
-            d="M33 34 Q38 31 39 35 Q35 37 33 34"
+            d="M32 38 C38 35 40 30 38 27 C34 27 33 32 32 38 Z"
             fill="#4ADE80"
           />
           <path
-            d="M32 35 Q27 33 28 37 Q31 38 32 35"
+            d="M32 39 C26 36 24 31 26 28 C30 28 31 33 32 39 Z"
             fill="#22C55E"
           />
         </g>
@@ -81,17 +136,17 @@ export function PlantGrowthIcon({
       {clampedStage === 2 && (
         <g>
           <path
-            d="M32 42 Q32 32 32 26"
+            d="M32 51 Q32 38 32 30"
             stroke="#16A34A"
-            strokeWidth="3"
+            strokeWidth="3.2"
             strokeLinecap="round"
           />
           <path
-            d="M31 33 C23 31 20 26 23 23 C28 23 30 28 31 33 Z"
+            d="M32 36 C22 33 19 26 22 23 C27 23 30 29 32 36 Z"
             fill="#4ADE80"
           />
           <path
-            d="M33 30 C41 28 44 23 41 20 C36 20 34 25 33 30 Z"
+            d="M32 34 C42 31 45 24 42 21 C37 21 34 27 32 34 Z"
             fill="#22C55E"
           />
         </g>
@@ -101,95 +156,92 @@ export function PlantGrowthIcon({
       {clampedStage === 3 && (
         <g>
           <path
-            d="M32 42 Q31 28 32 19"
+            d="M32 51 Q32 34 32 21"
             stroke="#16A34A"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
           <path
-            d="M31 35 C21 34 18 29 21 26 C26 26 29 31 31 35 Z"
+            d="M32 40 C21 38 18 32 21 29 C26 29 29 35 32 40 Z"
             fill="#22C55E"
           />
           <path
-            d="M33 33 C43 32 46 27 43 24 C38 24 35 29 33 33 Z"
+            d="M32 36 C43 34 46 28 43 25 C38 25 35 31 32 36 Z"
             fill="#16A34A"
           />
           <path
-            d="M31 24 C25 21 24 16 27 14 C30 14 31 19 31 24 Z"
+            d="M32 26 C24 23 23 17 26 15 C30 15 31 21 32 26 Z"
             fill="#4ADE80"
           />
           <path
-            d="M33 22 C39 19 40 14 37 12 C34 12 33 17 33 22 Z"
+            d="M32 24 C40 21 41 15 38 13 C34 13 33 19 32 24 Z"
             fill="#22C55E"
           />
         </g>
       )}
 
-      {/* Stage 4: Plant with Flower Bud */}
+      {/* Stage 4: Elegant Flower Bud ready to bloom */}
       {clampedStage === 4 && (
         <g>
           <path
-            d="M32 42 Q32 28 32 18"
+            d="M32 51 Q32 34 32 22"
             stroke="#16A34A"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
+          {/* Lower leaves */}
           <path
-            d="M31 34 C21 33 18 27 21 24 C26 24 29 29 31 34 Z"
+            d="M32 40 C21 38 18 32 21 29 C26 29 29 35 32 40 Z"
             fill="#22C55E"
           />
           <path
-            d="M33 30 C43 29 46 23 43 20 C38 20 35 25 33 30 Z"
+            d="M32 36 C43 34 46 28 43 25 C38 25 35 31 32 36 Z"
             fill="#16A34A"
           />
+          {/* Flower Bud Petals & Sepals */}
           <path
-            d="M27 18 Q32 22 37 18 Q32 15 27 18 Z"
+            d="M32 14 C27 17 27 24 32 25 C37 24 37 17 32 14 Z"
+            fill="#F59E0B"
+          />
+          <path
+            d="M32 16 C29 18 29 23 32 24 C35 23 35 18 32 16 Z"
+            fill="#FBBF24"
+          />
+          <path
+            d="M27 22 C29 26 35 26 37 22 C34 25 30 25 27 22 Z"
             fill="#15803D"
           />
-          <circle
-            cx="32"
-            cy="15"
-            r="6"
-            fill="#FBBF24"
-            stroke="#D97706"
-            strokeWidth="1.5"
-          />
-          <circle cx="32" cy="15" r="2.5" fill="#78350F" />
         </g>
       )}
 
-      {/* Stage 5: Full Blooming Sunflower */}
-      {clampedStage === 5 && (
-        <g
-          className={
-            isWilted ? 'origin-bottom-center rotate-12 transition-transform' : ''
-          }
-        >
+      {/* Stage 5: Full Sunflower (Healthy vs Wilted) */}
+      {clampedStage === 5 && !isWilted && (
+        <g>
           <path
-            d={isWilted ? 'M32 42 Q34 29 36 21' : 'M32 42 Q32 28 32 20'}
+            d="M32 51 Q32 34 32 22"
             stroke="#16A34A"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
           <path
-            d="M31 34 C20 33 17 26 20 23 C26 23 29 29 31 34 Z"
+            d="M32 40 C20 38 17 31 20 28 C26 28 29 34 32 40 Z"
             fill="#22C55E"
           />
           <path
-            d="M33 31 C44 30 47 23 44 20 C38 20 35 26 33 31 Z"
+            d="M32 36 C44 34 47 27 44 24 C38 24 35 31 32 36 Z"
             fill="#16A34A"
           />
 
-          {/* Sunflower Petals */}
-          <g transform={isWilted ? 'translate(36, 17)' : 'translate(32, 16)'}>
+          {/* Healthy Blooming Sunflower Petals */}
+          <g transform="translate(32, 18)">
             {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(
               (angle) => (
                 <ellipse
                   key={angle}
                   cx="0"
-                  cy="-10.5"
-                  rx="3.2"
-                  ry="5"
+                  cy="-10"
+                  rx="3"
+                  ry="4.8"
                   fill="#F59E0B"
                   transform={`rotate(${angle})`}
                 />
@@ -200,19 +252,71 @@ export function PlantGrowthIcon({
                 <ellipse
                   key={angle}
                   cx="0"
-                  cy="-9"
-                  rx="2.5"
-                  ry="4"
+                  cy="-8.5"
+                  rx="2.3"
+                  ry="3.8"
                   fill="#FBBF24"
                   transform={`rotate(${angle})`}
                 />
               ),
             )}
-            <circle cx="0" cy="0" r="6.5" fill="#78350F" />
-            <circle cx="0" cy="0" r="4.5" fill="#92400E" />
-            <circle cx="-1.5" cy="-1.5" r="1" fill="#B45309" opacity="0.8" />
-            <circle cx="1.5" cy="1.5" r="1" fill="#B45309" opacity="0.8" />
+            <circle cx="0" cy="0" r="6" fill="#78350F" />
+            <circle cx="0" cy="0" r="4.2" fill="#92400E" />
           </g>
+        </g>
+      )}
+
+      {/* Stage 5 (Wilted): Thirsty, drooping wilted flower needing water */}
+      {clampedStage === 5 && isWilted && (
+        <g>
+          {/* Curved drooping stem leaning heavily */}
+          <path
+            d="M30 51 C32 42 37 36 43 32 C46 30 47 26 44 23"
+            stroke="url(#wiltedStem)"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+          />
+
+          {/* Drooping wilted leaves hanging limp towards ground */}
+          <path
+            d="M31 43 C23 44 19 49 21 52 C26 51 29 46 31 43 Z"
+            fill="#65A30D"
+          />
+          <path
+            d="M37 38 C42 41 43 47 41 50 C38 48 37 43 37 38 Z"
+            fill="#4D7C0F"
+          />
+
+          {/* Drooping flower head tilted downward */}
+          <g transform="translate(42, 23) rotate(42)">
+            {/* Shriveled / curled wilted petals in brownish amber tones */}
+            {[0, 35, 70, 105, 140, 175, 210, 245, 280, 315].map((angle) => (
+              <path
+                key={angle}
+                d="M-2 -3 C-3 -9 1 -11 2 -9 C3 -7 0 -4 0 0 Z"
+                fill={angle % 2 === 0 ? '#D97706' : '#B45309'}
+                opacity="0.9"
+                transform={`rotate(${angle})`}
+              />
+            ))}
+            {/* Dried center disc */}
+            <circle cx="0" cy="0" r="5.2" fill="#542F0C" />
+            <circle cx="0" cy="0" r="3.6" fill="#78350F" />
+          </g>
+
+          {/* 1 falling / detached petal gently floating down */}
+          <path
+            d="M48 36 C50 34 52 36 51 38 C49 39 47 38 48 36 Z"
+            fill="#D97706"
+            opacity="0.8"
+          />
+
+          {/* Thirsty dry indicator: tiny water drop outline seeking moisture */}
+          <path
+            d="M20 28 C20 28 17 32 17 34 C17 35.6 18.3 37 20 37 C21.7 37 23 35.6 23 34 C23 32 20 28 20 28 Z"
+            fill="#38BDF8"
+            opacity="0.85"
+          />
         </g>
       )}
     </svg>

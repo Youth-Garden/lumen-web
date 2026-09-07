@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useParams } from 'next/navigation';
 import { useState, useMemo } from 'react';
 
@@ -20,6 +22,7 @@ interface FolderDetailPageProps {
 export function FolderDetailPage({
   folderId: propFolderId,
 }: FolderDetailPageProps = {}) {
+  const t = useTranslations('Vocabulary.Folders');
   const params = useParams();
   const routeId = typeof params?.id === 'string' ? params.id : '';
   const folderId = propFolderId || routeId;
@@ -42,7 +45,7 @@ export function FolderDetailPage({
     const topicMap = new Map<string, { count: number; viName: string; imageUrl: string }>();
 
     flashcards.forEach((card) => {
-      const top = card.topic?.trim() || 'Chủ đề chung';
+      const top = card.topic?.trim() || t('generalTopic');
       const existing = topicMap.get(top);
       if (existing) {
         existing.count += 1;
@@ -65,16 +68,16 @@ export function FolderDetailPage({
         count: data.count,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [flashcards]);
+  }, [flashcards, t]);
 
   // Words for currently selected topic
   const displayedFlashcards = useMemo(() => {
     if (!selectedTopic) return [];
     return flashcards.filter((card) => {
-      const top = card.topic?.trim() || 'Chủ đề chung';
+      const top = card.topic?.trim() || t('generalTopic');
       return top === selectedTopic;
     });
-  }, [flashcards, selectedTopic]);
+  }, [flashcards, selectedTopic, t]);
 
   const selectedTopicStat = useMemo(() => {
     if (!selectedTopic) return null;
@@ -95,7 +98,7 @@ export function FolderDetailPage({
     let cardsToStudy = flashcards;
     if (topicName) {
       cardsToStudy = flashcards.filter((card) => {
-        const top = card.topic?.trim() || 'Chủ đề chung';
+        const top = card.topic?.trim() || t('generalTopic');
         return top === topicName;
       });
     } else {
@@ -107,7 +110,7 @@ export function FolderDetailPage({
       selectedTopic: topicName,
       folderName: topicName
         ? `${selectedTopicStat?.viName || topicName} (${topicName})`
-        : folderDetail?.name || 'Thư mục từ vựng',
+        : folderDetail?.name || t('defaultFolderDescription'),
     });
   };
 
@@ -134,8 +137,8 @@ export function FolderDetailPage({
   if (!folderDetail) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-6 space-y-4">
-        <h2 className="text-xl font-bold text-foreground">Không tìm thấy thư mục</h2>
-        <p className="text-sm text-muted-foreground">Thư mục này không tồn tại hoặc đã bị xóa.</p>
+        <h2 className="text-xl font-bold text-foreground">{t('folderNotFound')}</h2>
+        <p className="text-sm text-muted-foreground">{t('folderNotFoundDesc')}</p>
       </div>
     );
   }

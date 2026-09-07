@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Icons } from '@lumen/uikit/icons';
@@ -15,6 +17,27 @@ interface StudyFlashcardProps {
   onPlayUkAudio: (e: React.MouseEvent) => void;
 }
 
+const formatPartOfSpeech = (pos?: string): string => {
+  if (!pos) return '';
+  const trimmed = pos.trim().toLowerCase().replace(/\.$/, '');
+  if (trimmed === 'n' || trimmed === 'noun') return 'noun';
+  if (trimmed === 'v' || trimmed === 'verb') return 'verb';
+  if (trimmed === 'adj' || trimmed === 'adjective') return 'adjective';
+  if (trimmed === 'adv' || trimmed === 'adverb') return 'adverb';
+  if (trimmed === 'prep' || trimmed === 'preposition') return 'preposition';
+  return pos;
+};
+
+const getViMeaning = (def: any): string => {
+  return (
+    def?.definition?.vi ||
+    def?.translationVi ||
+    def?.definitionEn ||
+    def?.definition?.en ||
+    ''
+  );
+};
+
 export function StudyFlashcard({
   card,
   isFlipped,
@@ -23,37 +46,14 @@ export function StudyFlashcard({
   onPlayUsAudio,
   onPlayUkAudio,
 }: StudyFlashcardProps) {
+  const t = useTranslations('Vocabulary.Study');
   const definitions = card.definitions || [];
-  const primaryDef = definitions[0];
-
-  // Vietnamese translation/meaning
-  const viMeaning =
-    primaryDef?.translationVi ||
-    primaryDef?.definition?.vi ||
-    primaryDef?.definitionEn ||
-    card.term;
-
-  // English definition / explanation
-  const rawEnDef = primaryDef?.definition?.en || primaryDef?.definitionEn || '';
-  const enDefinition = rawEnDef !== viMeaning ? rawEnDef : '';
-
-  // First example sentence (bilingual)
-  const firstExample = primaryDef?.examples?.[0];
-  const exampleEn =
-    firstExample?.sentence?.en ||
-    firstExample?.sentenceEn ||
-    (typeof firstExample?.sentence === 'string' ? firstExample.sentence : '');
-  const exampleVi =
-    firstExample?.sentence?.vi ||
-    firstExample?.translationVi ||
-    '';
-
   const phoneticUs = card.phoneticUs || card.phonetic || '';
   const phoneticUk = card.phoneticUk || card.phonetic || '';
 
   return (
     <div
-      className="w-full max-w-[520px] h-[370px] sm:h-[390px] relative cursor-pointer select-none [perspective:1200px]"
+      className="w-full max-w-[500px] h-[370px] sm:h-[390px] relative cursor-pointer select-none [perspective:1200px]"
       onClick={onFlip}
     >
       <motion.div
@@ -63,14 +63,13 @@ export function StudyFlashcard({
       >
         {/* FRONT SIDE */}
         <div
-          className="absolute inset-0 w-full h-full bg-card/90 backdrop-blur-md text-card-foreground rounded-3xl p-6 sm:p-8 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-shadow [backface-visibility:hidden] overflow-hidden"
+          className="absolute inset-0 w-full h-full bg-white dark:bg-card text-card-foreground shadow-xl shadow-slate-200/80 dark:shadow-black/50 rounded-xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
           style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
             pointerEvents: isFlipped ? 'none' : 'auto',
           }}
         >
-          {/* Top spacer */}
-          <div className="w-full h-2" />
-
           {/* Center Content: Term & Pronunciations */}
           <div className="flex flex-col items-center justify-center space-y-4 my-auto w-full">
             <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
@@ -87,10 +86,10 @@ export function StudyFlashcard({
                 variant="subtle"
                 type="button"
                 onClick={onPlayUsAudio}
-                className="h-auto py-1.5 px-4 rounded-full text-foreground hover:bg-muted/70 transition-colors cursor-pointer group border-none shadow-none gap-2.5"
-                title="Nghe phát âm US (Phím U)"
+                className="h-auto py-1.5 px-4 rounded-lg text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
+                title={t('listenUsHint')}
               >
-                <div className="w-7 h-7 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
+                <div className="w-7 h-7 rounded-md bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
                   <Icons name="volume-2" className="w-3.5 h-3.5 text-primary" />
                 </div>
                 <span className="text-xs sm:text-sm font-medium font-mono text-muted-foreground">
@@ -104,10 +103,10 @@ export function StudyFlashcard({
                 variant="subtle"
                 type="button"
                 onClick={onPlayUkAudio}
-                className="h-auto py-1.5 px-4 rounded-full text-foreground hover:bg-muted/70 transition-colors cursor-pointer group border-none shadow-none gap-2.5"
-                title="Nghe phát âm UK (Phím K)"
+                className="h-auto py-1.5 px-4 rounded-lg text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
+                title={t('listenUkHint')}
               >
-                <div className="w-7 h-7 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
+                <div className="w-7 h-7 rounded-md bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
                   <Icons name="volume-2" className="w-3.5 h-3.5 text-primary" />
                 </div>
                 <span className="text-xs sm:text-sm font-medium font-mono text-muted-foreground">
@@ -118,79 +117,72 @@ export function StudyFlashcard({
             </div>
           </div>
 
-          {/* Bottom hint: Lật - Nhấn Space */}
-          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-primary pb-1 tracking-wide">
-            <Icons name="book-open" className="w-4 h-4 text-primary" />
-            <span>Lật {showShortcuts ? '- Nhấn Space' : ''}</span>
+          {/* Bottom note hint: Pinned to the bottom */}
+          <div className="absolute bottom-2.5 sm:bottom-3 inset-x-0 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs text-muted-foreground/50 font-normal select-none pointer-events-none">
+            <Icons name="rotate-cw" className="w-3 h-3 text-muted-foreground/40" />
+            <span>{t('flip')}{showShortcuts ? ` - ${t('pressSpace')}` : ''}</span>
           </div>
         </div>
 
-        {/* BACK SIDE: Detailed Explanation & Examples */}
+        {/* BACK SIDE */}
         <div
-          className="absolute inset-0 w-full h-full bg-card/90 backdrop-blur-md text-card-foreground rounded-3xl p-5 sm:p-7 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-shadow [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto"
+          className="absolute inset-0 w-full h-full bg-white dark:bg-card text-card-foreground shadow-xl shadow-slate-200/80 dark:shadow-black/50 rounded-xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
           style={{
+            transform: 'rotateY(180deg)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
             pointerEvents: !isFlipped ? 'none' : 'auto',
           }}
         >
-          {/* Main content */}
-          <div className="w-full flex flex-col items-center my-auto space-y-2.5">
-            {/* Image (if available, compact) */}
+          {/* Center Content: Image + Parts of Speech with Vietnamese Meanings */}
+          <div className="flex flex-col items-center justify-center space-y-3.5 my-auto w-full max-w-sm">
+            {/* Image (if available) */}
             {card.imageUrl ? (
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-muted/30 shrink-0 mb-1">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-lg overflow-hidden bg-transparent shrink-0">
                 <Image
                   src={card.imageUrl}
                   alt={card.term}
                   fill
-                  sizes="80px"
+                  sizes="150px"
                   className="object-contain"
                   unoptimized
                 />
               </div>
             ) : null}
 
-            {/* Term & Part of speech */}
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-lg sm:text-xl font-bold text-foreground">
-                {card.term}
-              </span>
-              {primaryDef?.partOfSpeech && (
-                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                  {primaryDef.partOfSpeech}
-                </span>
+            {/* Definitions (grouped by part of speech) */}
+            <div className="space-y-2.5 w-full">
+              {definitions.length > 0 ? (
+                definitions.map((def, idx) => {
+                  const pos = formatPartOfSpeech(def.partOfSpeech);
+                  const meaning = getViMeaning(def);
+                  if (!meaning) return null;
+
+                  return (
+                    <div key={def.id || idx} className="space-y-0.5">
+                      {pos && (
+                        <p className="italic text-xs sm:text-sm text-muted-foreground underline underline-offset-4 decoration-muted-foreground/30">
+                          {pos}
+                        </p>
+                      )}
+                      <p className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+                        {meaning}
+                      </p>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+                  {card.term}
+                </p>
               )}
             </div>
-
-            {/* Vietnamese Meaning */}
-            <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
-              {viMeaning}
-            </h2>
-
-            {/* English Definition / Explanation */}
-            {enDefinition && (
-              <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                {enDefinition}
-              </p>
-            )}
-
-            {/* Example Box (Bilingual) */}
-            {exampleEn && (
-              <div className="w-full max-w-md p-3 rounded-2xl bg-muted/40 text-left space-y-1 border-none mt-1">
-                <p className="text-xs sm:text-sm font-medium text-foreground italic leading-relaxed">
-                  &ldquo;{exampleEn}&rdquo;
-                </p>
-                {exampleVi && (
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {exampleVi}
-                  </p>
-                )}
-              </div>
-            )}
           </div>
 
-          {/* Bottom hint: Lật - Nhấn Space */}
-          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-primary pt-1 pb-1 tracking-wide shrink-0">
-            <Icons name="book-open" className="w-4 h-4 text-primary" />
-            <span>Lật {showShortcuts ? '- Nhấn Space' : ''}</span>
+          {/* Bottom note hint: Pinned to the bottom */}
+          <div className="absolute bottom-2.5 sm:bottom-3 inset-x-0 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs text-muted-foreground/50 font-normal select-none pointer-events-none">
+            <Icons name="rotate-cw" className="w-3 h-3 text-muted-foreground/40" />
+            <span>{t('flip')}{showShortcuts ? ` - ${t('pressSpace')}` : ''}</span>
           </div>
         </div>
       </motion.div>

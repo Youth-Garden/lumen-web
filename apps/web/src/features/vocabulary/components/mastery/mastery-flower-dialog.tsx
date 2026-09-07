@@ -7,8 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
-import { PortalProps } from '@lumen/uikit/portal';
+import { Icons } from '@lumen/uikit/icons';
 import { PlantGrowthIcon } from '@lumen/uikit/icons';
+import { PortalProps } from '@lumen/uikit/portal';
+import { useTranslations } from 'next-intl';
 
 export interface MasteryFlowerDialogData {
   term?: string;
@@ -20,107 +22,215 @@ export function MasteryFlowerDialog({
   onDismiss,
   data,
 }: PortalProps<MasteryFlowerDialogData>) {
-  const currentLevel = Math.min(5, Math.max(1, data?.level || 1));
+  const t = useTranslations('Vocabulary.Mastery');
+  const currentLevel = data?.level ?? 0;
 
-  const levels = [
-    { title: 'Mới học', time: 'Lần 1' },
-    { title: 'Nhớ tạm', time: '1 ngày' },
-    { title: 'Ghi nhớ', time: '3 ngày' },
-    { title: 'Khắc sâu', time: '1 tuần' },
-    { title: 'Thành thạo', time: '1 tháng+' },
+  const repetitionLevels = [
+    { level: 1, title: t('level1Title'), time: t('level1Time') },
+    { level: 2, title: t('level2Title'), time: t('level2Time') },
+    { level: 3, title: t('level3Title'), time: t('level3Time') },
+    { level: 4, title: t('level4Title'), time: t('level4Time') },
+    { level: 5, title: t('level5Title'), time: t('level5Time') },
   ];
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent className="max-w-md p-5 sm:p-6 rounded-3xl border-none shadow-2xl bg-card space-y-4 z-[60]">
-        <DialogHeader className="pb-1">
-          <DialogTitle className="text-base sm:text-lg font-bold text-foreground">
-            Cấp độ ghi nhớ & Lặp lại ngắt quãng
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => !open && onDismiss?.()}
+    >
+      <DialogContent className="max-w-md max-h-[88vh] p-6 rounded-xl border-none shadow-2xl bg-card flex flex-col overflow-hidden transition-all duration-200">
+        <DialogHeader className="pb-2 shrink-0 text-left">
+          <DialogTitle className="text-lg font-bold text-foreground">
+            {t('dialogTitle')}
           </DialogTitle>
+          <p className="text-xs text-muted-foreground pt-0.5">
+            {t('dialogDescription')}
+          </p>
         </DialogHeader>
 
-        {/* Current Word Status */}
-        {data?.term && (
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-muted/40">
-            <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <PlantGrowthIcon stage={currentLevel} className="w-8 h-8" />
+        {/* SCROLLABLE BODY */}
+        <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
+          {/* CURRENT WORD STATUS (if opened for a specific word) */}
+          {data?.term && (
+            <div className="flex items-center gap-3 py-1">
+              <PlantGrowthIcon stage={currentLevel} className="w-10 h-10" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-foreground truncate">
+                  &ldquo;{data.term}&rdquo;
+                </p>
+                {currentLevel === 0 ? (
+                  <>
+                    <p className="text-xs text-muted-foreground">
+                      {t('currentStatus')}{' '}
+                      <span className="font-bold text-primary">
+                        {t('notLearnedSeed')}
+                      </span>
+                    </p>
+                    <p className="text-[11px] text-muted-foreground/80">
+                      {t('seedHint')}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-muted-foreground">
+                      {t('memoryLevel', {
+                        level: currentLevel,
+                        title: repetitionLevels[currentLevel - 1]?.title,
+                      })}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground/80">
+                      {t('nextOptimalReview', {
+                        time: repetitionLevels[currentLevel - 1]?.time,
+                      })}
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-bold text-foreground">&quot;{data.term}&quot;</p>
-              <p className="text-xs text-muted-foreground">
-                Cấp độ hiện tại:{' '}
-                <span className="font-bold text-primary">
-                  Cấp {currentLevel}/5
-                </span>{' '}
-                ({levels[currentLevel - 1].title})
-              </p>
+          )}
+
+          {/* STAGE 1: NEW WORD LEARNING */}
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t('stage1Title')}
+            </p>
+
+            <div className="space-y-2">
+              {/* Step 1: Not learned */}
+              <div className="flex items-start gap-3">
+                <PlantGrowthIcon stage={0} className="w-8 h-8 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="text-sm font-bold text-foreground">
+                    {t('step1Title')}
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {t('step1Desc')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Transition arrow */}
+              <div className="flex justify-center text-primary/70">
+                <Icons name="arrow-down" className="w-4 h-4" />
+              </div>
+
+              {/* Step 2: In learning */}
+              <div className="flex items-start gap-3">
+                <PlantGrowthIcon stage={2} className="w-8 h-8 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="text-sm font-bold text-foreground">
+                    {t('step2Title')}
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {t('step2Desc')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Transition arrow */}
+              <div className="flex justify-center text-primary/70">
+                <Icons name="arrow-down" className="w-4 h-4" />
+              </div>
+
+              {/* Step 3: Finished */}
+              <div className="flex items-start gap-3">
+                <PlantGrowthIcon stage={5} className="w-8 h-8 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="text-sm font-bold text-foreground">
+                    {t('step3Title')}
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {t('step3Desc')}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        )}
 
-        {/* 5 Growth Stages */}
-        <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            5 Cấp độ ghi nhớ
-          </p>
-          <div className="grid grid-cols-5 gap-1.5 text-center">
-            {levels.map((lvl, idx) => {
-              const stageNum = idx + 1;
-              const isCurrent = stageNum === currentLevel;
-              const isPassed = stageNum <= currentLevel;
+          {/* STAGE 2: SPACED REPETITION */}
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center gap-2 text-primary font-bold text-xs sm:text-sm">
+              <Icons name="sparkles" className="w-4 h-4" />
+              <span>{t('stage2Title')}</span>
+            </div>
 
-              return (
-                <div
-                  key={idx}
-                  className={`p-2 rounded-2xl flex flex-col items-center justify-between gap-1 transition-all ${
-                    isCurrent
-                      ? 'bg-primary/15 shadow-xs'
-                      : isPassed
-                        ? 'bg-primary/5'
-                        : 'bg-muted/30 opacity-60'
-                  }`}
-                >
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    <PlantGrowthIcon stage={stageNum} className="w-7 h-7" />
-                  </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {t('stage2Desc')}
+            </p>
 
-                  <span
-                    className={`w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                      isCurrent
-                        ? 'bg-primary text-primary-foreground'
-                        : isPassed
-                          ? 'bg-primary/20 text-primary'
-                          : 'bg-muted text-muted-foreground'
+            <div className="flex items-start gap-3 py-1">
+              <PlantGrowthIcon stage={5} isWilted className="w-8 h-8 mt-0.5" />
+              <div className="space-y-0.5 text-xs">
+                <p className="font-bold text-foreground">
+                  {t('waterPlantTitle')}
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  {t('waterPlantDesc')}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* STAGE 3: 5 MEMORY LEVELS */}
+          <div className="space-y-2 pt-1">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t('stage3Title')}
+            </p>
+
+            <div className="grid grid-cols-5 gap-1.5 text-center py-1">
+              {repetitionLevels.map((lvl) => {
+                const isCurrent = lvl.level === currentLevel;
+
+                return (
+                  <div
+                    key={lvl.level}
+                    className={`p-2 rounded-lg flex flex-col items-center justify-between gap-1 transition-all ${
+                      isCurrent ? 'bg-primary/10' : 'bg-transparent'
                     }`}
                   >
-                    {stageNum}
-                  </span>
+                    {/* Ring showing level/5 segments */}
+                    <div className="relative w-8 h-8 flex items-center justify-center">
+                      <PlantGrowthIcon stage={lvl.level} className="w-7 h-7" />
+                    </div>
 
-                  <span className="text-[11px] font-bold text-foreground truncate w-full">
-                    {lvl.title}
-                  </span>
+                    <span
+                      className={`text-xs ${
+                        isCurrent
+                          ? 'font-bold text-primary'
+                          : 'font-medium text-foreground'
+                      }`}
+                    >
+                      {lvl.level}. {lvl.title}
+                    </span>
 
-                  <span className="text-[10px] text-muted-foreground">
-                    {lvl.time}
-                  </span>
-                </div>
-              );
-            })}
+                    <span className="text-[10px] text-muted-foreground">
+                      {lvl.time}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-[11px] text-muted-foreground text-center pt-1 leading-relaxed">
+              {t('intervalNote')}
+            </p>
+
+            <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+              {t('masteryNote')}
+            </p>
           </div>
         </div>
 
-        {/* 1 Sentence Explanation */}
-        <p className="text-xs text-muted-foreground text-center leading-relaxed">
-          Hệ thống tự động nhắc bạn ôn tập vào thời điểm vàng để từ vựng được ghi nhớ lâu dài.
-        </p>
-
-        {/* Footer Button */}
-        <Button
-          onClick={() => onDismiss?.()}
-          className="w-full h-10 font-bold rounded-xl cursor-pointer"
-        >
-          Đã hiểu
-        </Button>
+        {/* FOOTER BUTTON */}
+        <div className="pt-3 shrink-0">
+          <Button
+            variant="default"
+            className="w-full"
+            onClick={() => onDismiss?.()}
+          >
+            {t('understandBtn')}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

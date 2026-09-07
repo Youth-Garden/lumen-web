@@ -1,7 +1,7 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
 import { usePathname } from '@/shared/i18n/routing';
+import { PropsWithChildren } from 'react';
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
 
@@ -22,7 +22,7 @@ export function DashboardLayout({ children }: PropsWithChildren) {
       <Sidebar />
       <div
         id="main-content-wrapper"
-        className="relative flex flex-col flex-1 overflow-hidden z-10 bg-muted/50 dark:bg-slate-900/50 backdrop-blur-2xl my-2 mr-2 rounded-2xl md:rounded-[2rem]"
+        className="relative flex flex-col flex-1 overflow-hidden z-10 bg-muted/50 backdrop-blur-2xl my-2 mr-2 rounded-2xl md:rounded-[2rem]"
       >
         <Header />
         <main

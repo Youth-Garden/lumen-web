@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { Button, Card } from '@lumen/uikit/components';
@@ -18,6 +20,8 @@ export function FrequentlyMissedWordsCard({
   onReviewMissed,
   onFlashcardsMissed,
 }: FrequentlyMissedWordsCardProps) {
+  const t = useTranslations('Vocabulary.Folders');
+  const tStudy = useTranslations('Vocabulary.Study');
   const { playPronunciation } = usePronunciation();
 
   // Deduplicate words by term so the same word appearing in multiple topics is only shown once
@@ -46,10 +50,10 @@ export function FrequentlyMissedWordsCard({
       {/* Header - Compact */}
       <div>
         <h4 className="text-sm font-bold tracking-tight text-foreground">
-          Bạn có {displayCards.length} từ vựng hay trả lời sai
+          {t('frequentlyMissedHeader', { count: displayCards.length })}
         </h4>
         <p className="text-[11px] text-muted-foreground mt-0.5">
-          Ôn tập kỹ các từ này để giảm tỉ lệ sai sót và củng cố phản xạ ghi nhớ
+          {t('frequentlyMissedSubtitle')}
         </p>
       </div>
 
@@ -74,7 +78,7 @@ export function FrequentlyMissedWordsCard({
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-500">
-                    Tỉ lệ sai: {errorRate}%
+                    {t('errorRate', { rate: errorRate })}
                   </span>
 
                   <button
@@ -88,7 +92,7 @@ export function FrequentlyMissedWordsCard({
                       });
                     }}
                     className="p-0.5 rounded-md text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-                    aria-label="Phát âm"
+                    aria-label={tStudy('listenUsHint')}
                   >
                     <Icons name="volume-2" className="h-3.5 w-3.5 text-primary" />
                   </button>
@@ -140,7 +144,7 @@ export function FrequentlyMissedWordsCard({
           className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer h-8"
         >
           <Icons name="rotate-ccw" className="h-3.5 w-3.5" />
-          <span>Ôn tập thông thường</span>
+          <span>{t('reviewNormal')}</span>
         </Button>
 
         <Button
@@ -150,7 +154,7 @@ export function FrequentlyMissedWordsCard({
           className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer h-8"
         >
           <Icons name="layers" className="h-3.5 w-3.5 text-primary" />
-          <span>Thẻ Flashcard</span>
+          <span>{t('flashcardsAction')}</span>
         </Button>
       </div>
     </Card>

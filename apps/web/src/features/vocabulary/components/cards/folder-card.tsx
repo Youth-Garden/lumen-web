@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import Image from 'next/image';
 import type { Folder } from '@/services/vocabulary/vocabulary.types';
 import { Icons } from '@lumen/uikit/icons';
@@ -32,6 +34,7 @@ export function FolderCard({
   onSelectFolder,
   onViewFolderWords,
 }: FolderCardProps) {
+  const t = useTranslations('Vocabulary.Folders');
   const coverUrl =
     FOLDER_COVERS[folder.id] ||
     FOLDER_COVERS[folder.name] ||
@@ -78,7 +81,7 @@ export function FolderCard({
       <div className="relative z-10 flex items-start justify-end pointer-events-none w-full min-h-[22px]">
         {isActive && (
           <span className="px-2.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold shadow-md">
-            Đang học
+            {t('activeBadge')}
           </span>
         )}
       </div>

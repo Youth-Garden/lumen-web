@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 
@@ -22,6 +24,7 @@ export function StudyBottomActionBar({
   onFlashcard,
   onClose,
 }: StudyBottomActionBarProps) {
+  const t = useTranslations('Vocabulary.Study');
   return (
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl border border-border/80 px-4 py-2.5 rounded-full shadow-2xl animate-in slide-in-from-bottom duration-200 flex items-center gap-2.5 max-w-fit">
       {isTopicSelected && title && (
@@ -31,7 +34,7 @@ export function StudyBottomActionBar({
             <button
               onClick={onClose}
               className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer"
-              title="Bỏ chọn"
+              title={t('deselect')}
             >
               <Icons name="x" className="w-3.5 h-3.5" />
             </button>
@@ -40,7 +43,7 @@ export function StudyBottomActionBar({
         </div>
       )}
 
-      {/* Button 1: Học từ mới */}
+      {/* Button 1: Learn New */}
       <Button
         variant="default"
         size="sm"
@@ -48,10 +51,10 @@ export function StudyBottomActionBar({
         className="gap-1.5 font-bold cursor-pointer shadow-sm text-xs sm:text-sm h-9 px-4 rounded-full"
       >
         <Icons name="sparkles" className="w-3.5 h-3.5" />
-        <span>Học từ mới</span>
+        <span>{t('learnNew')}</span>
       </Button>
 
-      {/* Button 2: Luyện tập */}
+      {/* Button 2: Practice */}
       <Button
         variant="outline"
         size="sm"
@@ -59,10 +62,10 @@ export function StudyBottomActionBar({
         className="gap-1.5 font-semibold cursor-pointer text-xs sm:text-sm h-9 px-3.5 rounded-full"
       >
         <Icons name="droplet" className="w-3.5 h-3.5 text-primary" />
-        <span>Luyện tập</span>
+        <span>{t('practice')}</span>
       </Button>
 
-      {/* Button 3: Thẻ ghi nhớ */}
+      {/* Button 3: Flashcards */}
       <Button
         variant="secondary"
         size="sm"
@@ -70,7 +73,7 @@ export function StudyBottomActionBar({
         className="gap-1.5 font-semibold cursor-pointer text-xs sm:text-sm h-9 px-3.5 rounded-full"
       >
         <Icons name="book-open" className="w-3.5 h-3.5" />
-        <span>Thẻ ghi nhớ</span>
+        <span>{t('flashcards')}</span>
       </Button>
     </div>
   );

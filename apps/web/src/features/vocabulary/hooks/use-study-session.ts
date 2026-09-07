@@ -1,6 +1,8 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { toast } from 'sonner';
 import { usePronunciation } from '@/shared/hooks';
 import {
   FlashcardRating,
@@ -19,23 +21,30 @@ export function useStudySession({
   isOpen,
   onClose,
 }: UseStudySessionProps) {
+  const t = useTranslations('Vocabulary.Study');
+  const tFolders = useTranslations('Vocabulary.Folders');
   const { settings, currentQuotaConfig } = useStudySettings();
   const { playPronunciation, isPlaying, playingAccent } = usePronunciation();
   const reviewMutation = useReviewFlashcard();
+
+  const storageKey = useMemo(
+    () => `lumen_study_session_${selectedTopic ? encodeURIComponent(selectedTopic) : 'general'}`,
+    [selectedTopic]
+  );
 
   // Filter pool by topic if selected
   const poolCards = useMemo(() => {
     let list = cards;
     if (selectedTopic) {
       list = cards.filter((card) => {
-        const top = card.topic?.trim() || 'Chủ đề chung';
+        const top = card.topic?.trim() || tFolders('generalTopic');
         return top === selectedTopic;
       });
     }
 
     const count = settings.wordsPerSession || currentQuotaConfig.targetCount || 20;
     return list.slice(0, count);
-  }, [cards, selectedTopic, settings.wordsPerSession, currentQuotaConfig.targetCount]);
+  }, [cards, selectedTopic, settings.wordsPerSession, currentQuotaConfig.targetCount, tFolders]);
 
   const [activeQueue, setActiveQueue] = useState<VocabularyWord[]>([]);
   const [reviewQueue, setReviewQueue] = useState<VocabularyWord[]>([]);
@@ -47,55 +56,97 @@ export function useStudySession({
   >({});
   const canFlipRef = useRef(true);
 
-  // Initialize session
+  // Initialize or restore session
   useEffect(() => {
-    if (isOpen && poolCards.length > 0) {
-      setActiveQueue(poolCards);
-      setReviewQueue([]);
-      setMasteredIds([]);
-      setIsReviewPhase(false);
-      setIsFlipped(false);
-      setMissedWordsMap({});
-      canFlipRef.current = false;
-      const timer = setTimeout(() => {
-        canFlipRef.current = true;
-      }, 250);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, poolCards]);
+    if (!isOpen || poolCards.length === 0) return;
 
-  // Lock body scroll
+    // Check for saved progress in localStorage
+    try {
+      const savedRaw = localStorage.getItem(storageKey);
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw);
+        if (
+          Array.isArray(saved?.activeQueueIds) &&
+          (saved.activeQueueIds.length > 0 || (saved.reviewQueueIds && saved.reviewQueueIds.length > 0))
+        ) {
+          const cardMap = new Map(poolCards.map((c) => [c.id, c]));
+          const restoredActive = (saved.activeQueueIds as string[])
+            .map((id) => cardMap.get(id))
+            .filter(Boolean) as VocabularyWord[];
+          const restoredReview = ((saved.reviewQueueIds || []) as string[])
+            .map((id) => cardMap.get(id))
+            .filter(Boolean) as VocabularyWord[];
+
+          if (restoredActive.length > 0 || restoredReview.length > 0) {
+            setActiveQueue(restoredActive);
+            setReviewQueue(restoredReview);
+            setMasteredIds(saved.masteredIds || []);
+            setIsReviewPhase(Boolean(saved.isReviewPhase));
+            setIsFlipped(false);
+            setMissedWordsMap(saved.missedWordsMap || {});
+            canFlipRef.current = false;
+            const timer = setTimeout(() => {
+              canFlipRef.current = true;
+            }, 250);
+            return () => clearTimeout(timer);
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // Default init
+    setActiveQueue(poolCards);
+    setReviewQueue([]);
+    setMasteredIds([]);
+    setIsReviewPhase(false);
+    setIsFlipped(false);
+    setMissedWordsMap({});
+    canFlipRef.current = false;
+    const timer = setTimeout(() => {
+      canFlipRef.current = true;
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [poolCards, isOpen, storageKey]);
+
+  // Current Card
+  const currentCard = activeQueue[0] || null;
+
+  // Auto-flip debouncing protection
   useEffect(() => {
-    if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = originalOverflow;
-      };
-    }
-  }, [isOpen]);
+    canFlipRef.current = false;
+    const timer = setTimeout(() => {
+      canFlipRef.current = true;
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [currentCard?.id]);
 
-  const currentCard = activeQueue[0];
-  const isFinished =
-    poolCards.length > 0 &&
-    activeQueue.length === 0 &&
-    reviewQueue.length === 0;
-  const progressPercent =
-    poolCards.length > 0
-      ? (masteredIds.length / poolCards.length) * 100
-      : 0;
+  // Status flags
+  const isFinished = poolCards.length > 0 && activeQueue.length === 0 && reviewQueue.length === 0;
+  const progressPercent = poolCards.length > 0 ? (masteredIds.length / poolCards.length) * 100 : 0;
 
+  // Phonetic based on accent
   const activePhonetic = useMemo(() => {
     if (!currentCard) return '';
-    if (settings.accent === 'uk')
-      return currentCard.phoneticUk || currentCard.phonetic || '';
+    if (settings.accent === PronunciationAccent.UK && currentCard.phoneticUk) {
+      return currentCard.phoneticUk;
+    }
     return currentCard.phoneticUs || currentCard.phonetic || '';
   }, [currentCard, settings.accent]);
 
+  // Plant growth mastery stage (0 to 5)
   const currentCardMastery = useMemo(() => {
-    if (!currentCard) return 1;
-    return (currentCard.id.charCodeAt(0) % 5) + 1;
-  }, [currentCard]);
+    if (!currentCard) return 0;
+    if (isReviewPhase) {
+      const rep = (currentCard as any).repetitions;
+      return rep ? Math.min(5, Math.max(1, Number(rep))) : 1;
+    }
+    if (masteredIds.includes(currentCard.id)) {
+      return 1;
+    }
+    return 0;
+  }, [currentCard, isReviewPhase, masteredIds]);
 
   // Audio Handlers
   const handlePlayUsAudio = useCallback(() => {
@@ -161,7 +212,6 @@ export function useStudySession({
     });
   }, []);
 
-  // Action 1: "Thông thạo - Nhấn 1" (Mastered / Easy)
   const handleMastered = useCallback(async () => {
     if (!currentCard || reviewMutation.isPending) return;
 
@@ -183,7 +233,6 @@ export function useStudySession({
     if (remaining.length > 0) {
       setActiveQueue(remaining);
     } else if (reviewQueue.length > 0) {
-      // Switch review queue to active
       setActiveQueue(reviewQueue);
       setReviewQueue([]);
       setIsReviewPhase(true);
@@ -192,7 +241,6 @@ export function useStudySession({
     }
   }, [currentCard, activeQueue, reviewQueue, reviewMutation]);
 
-  // Action 2: "Nhớ tạm - Nhấn 3" (Hard / Need Review)
   const handleReview = useCallback(async () => {
     if (!currentCard || reviewMutation.isPending) return;
 
@@ -214,14 +262,12 @@ export function useStudySession({
       setActiveQueue(remaining);
       setReviewQueue(newReview);
     } else {
-      // Cycle reviewQueue
       setActiveQueue(newReview);
       setReviewQueue([]);
       setIsReviewPhase(true);
     }
   }, [currentCard, activeQueue, reviewQueue, reviewMutation]);
 
-  // Action 3: "Chưa biết - Nhấn Enter" (Again)
   const handleDontKnow = useCallback(async () => {
     if (!currentCard || reviewMutation.isPending) return;
     recordMissedWord(currentCard);
@@ -238,18 +284,50 @@ export function useStudySession({
     setIsFlipped(false);
 
     const remaining = activeQueue.slice(1);
-    // Put to end of active queue so it is tested again in this round
     setActiveQueue([...remaining, currentCard]);
   }, [currentCard, activeQueue, reviewMutation, recordMissedWord]);
 
   const handleRestart = useCallback(() => {
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {}
     setActiveQueue(poolCards);
     setReviewQueue([]);
     setMasteredIds([]);
     setIsReviewPhase(false);
     setIsFlipped(false);
     setMissedWordsMap({});
-  }, [poolCards]);
+  }, [poolCards, storageKey]);
+
+  const handleSaveProgress = useCallback(() => {
+    if (!isOpen || poolCards.length === 0) return;
+
+    try {
+      const payload = {
+        activeQueueIds: activeQueue.map((c) => c.id),
+        reviewQueueIds: reviewQueue.map((c) => c.id),
+        masteredIds,
+        isReviewPhase,
+        missedWordsMap,
+        updatedAt: Date.now(),
+      };
+      localStorage.setItem(storageKey, JSON.stringify(payload));
+      toast.success(t('saveProgressSuccess'));
+    } catch (err) {
+      console.error('Failed to save study progress:', err);
+      toast.error(t('saveProgressError'));
+    }
+  }, [
+    isOpen,
+    poolCards.length,
+    activeQueue,
+    reviewQueue,
+    masteredIds,
+    isReviewPhase,
+    missedWordsMap,
+    storageKey,
+    t,
+  ]);
 
   const missedWordsList: MissedWordStat[] = useMemo(() => {
     return Object.values(missedWordsMap).sort(
@@ -257,7 +335,6 @@ export function useStudySession({
     );
   }, [missedWordsMap]);
 
-  // Global Keyboard Shortcuts (Extracted to dedicated hook)
   useStudyShortcuts({
     isOpen,
     isFinished,
@@ -291,7 +368,14 @@ export function useStudySession({
     isPlaying,
     missedWordsList,
     settings,
-    handleFlip, handleMastered, handleReview, handleDontKnow, handleRestart,
-    handlePlayUsAudio, handlePlayUkAudio, handlePlayAudio,
+    handleFlip,
+    handleMastered,
+    handleReview,
+    handleDontKnow,
+    handleRestart,
+    handleSaveProgress,
+    handlePlayUsAudio,
+    handlePlayUkAudio,
+    handlePlayAudio,
   };
 }

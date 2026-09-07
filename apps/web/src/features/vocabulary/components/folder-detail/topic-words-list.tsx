@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import Image from 'next/image';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
@@ -26,6 +28,7 @@ export function TopicWordsList({
   onBackToTopics,
   onPlayAudio,
 }: TopicWordsListProps) {
+  const t = useTranslations('Vocabulary.Folders');
   return (
     <div className="space-y-6">
       {/* Header with Back to Topics button */}
@@ -36,7 +39,7 @@ export function TopicWordsList({
           className="flex items-center gap-1.5 -ml-2.5 px-2.5 py-1 text-sm font-medium w-fit text-muted-foreground hover:text-foreground cursor-pointer rounded-lg hover:bg-muted/60 transition-colors"
         >
           <Icons name="arrow-left" className="h-4 w-4" />
-          <span>Quay lại danh sách chủ đề</span>
+          <span>{t('backToTopics')}</span>
         </button>
 
         <div className="flex items-center gap-3">
@@ -47,7 +50,7 @@ export function TopicWordsList({
             ({topicName})
           </span>
           <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary">
-            {flashcards.length} từ vựng
+            {t('wordsCount', { count: flashcards.length })}
           </span>
         </div>
       </div>
@@ -94,7 +97,7 @@ export function TopicWordsList({
                         accent: PronunciationAccent.US,
                       })
                     }
-                    title="Nghe phát âm US"
+                    title={t('listenUs')}
                   >
                     <Icons name="volume-2" className="h-3 w-3 text-primary" />
                     <span>US</span>
@@ -112,7 +115,7 @@ export function TopicWordsList({
                         accent: PronunciationAccent.UK,
                       })
                     }
-                    title="Nghe phát âm UK"
+                    title={t('listenUk')}
                   >
                     <Icons name="volume-2" className="h-3 w-3 text-sky-500" />
                     <span>UK</span>
