@@ -1,6 +1,5 @@
 'use client';
 
-
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import * as React from 'react';
 
@@ -8,10 +7,7 @@ import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 import { Button } from './button';
 
-function Dialog({
-  onOpenChange,
-  ...props
-}: DialogPrimitive.Root.Props) {
+function Dialog({ onOpenChange, ...props }: DialogPrimitive.Root.Props) {
   return (
     <DialogPrimitive.Root
       data-slot="dialog"
@@ -64,12 +60,11 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
 }) {
-  
   return (
     <DialogPortal>
       <DialogPrimitive.Popup
         data-slot="dialog-content"
-        
+
         className={cn(
           'fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover/95 backdrop-blur-2xl p-6 text-sm text-popover-foreground shadow-2xl transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
           className,

@@ -3,10 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-/**
- * Custom hook to navigate back to the previous page in history,
- * with an optional fallback route when no previous history exists.
- */
 export function useGoBack(fallbackRoute?: string): () => void {
   const router = useRouter();
 

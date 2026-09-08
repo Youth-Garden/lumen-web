@@ -95,7 +95,10 @@ export function Highlighter({
   ]);
 
   return (
-    <span ref={elementRef} className={`relative inline-block bg-transparent ${className}`}>
+    <span
+      ref={elementRef}
+      className={`relative inline-block bg-transparent ${className}`}
+    >
       {children}
     </span>
   );

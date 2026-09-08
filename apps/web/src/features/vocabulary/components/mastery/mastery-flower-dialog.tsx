@@ -36,10 +36,7 @@ export function MasteryFlowerDialog({
   ];
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => !open && onDismiss?.()}
-    >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="max-w-md max-h-[88vh] p-6 rounded-xl border-none shadow-2xl bg-card flex flex-col overflow-hidden transition-all duration-200">
         <DialogHeader className="pb-2 shrink-0 text-left">
           <DialogTitle className="text-lg font-bold text-foreground">
@@ -119,7 +116,10 @@ export function MasteryFlowerDialog({
               <div className="p-4 rounded-2xl bg-muted/30 border border-border/50 space-y-3">
                 <div className="flex items-center justify-around px-1 py-2">
                   {[1, 2, 3, 4, 5].map((stageLevel) => (
-                    <div key={stageLevel} className="flex flex-col items-center gap-1">
+                    <div
+                      key={stageLevel}
+                      className="flex flex-col items-center gap-1"
+                    >
                       <PlantMasteryRing level={stageLevel} size={54} />
                     </div>
                   ))}

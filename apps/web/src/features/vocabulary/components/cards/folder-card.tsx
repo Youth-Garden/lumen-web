@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import Image from 'next/image';
-import type { Folder } from '@/services/vocabulary/vocabulary.types';
+import type { Folder } from '@/services/vocabulary';
 import { Icons } from '@lumen/uikit/icons';
 
 export const FOLDER_COVERS: Record<string, string> = {
@@ -13,9 +13,9 @@ export const FOLDER_COVERS: Record<string, string> = {
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
   'Từ vựng TOEIC':
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  'TOEIC':
+  TOEIC:
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  'user_default':
+  user_default:
     'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=80',
 };
 
@@ -96,7 +96,9 @@ export function FolderCard({
         <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold shadow-sm">
           <div className="flex items-center gap-1 text-emerald-400">
             <Icons name="check" className="w-3 h-3 stroke-[2.5]" />
-            <span className="text-white">{learnedApprox}/{totalWords}</span>
+            <span className="text-white">
+              {learnedApprox}/{totalWords}
+            </span>
           </div>
 
           <span className="w-1 h-1 rounded-full bg-white/30" />

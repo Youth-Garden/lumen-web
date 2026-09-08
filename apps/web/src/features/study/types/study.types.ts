@@ -1,4 +1,4 @@
-import { type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import type { VocabularyWord } from '@/services/vocabulary';
 
 export enum StudyExerciseType {
   FLASHCARD = 'FLASHCARD',
@@ -32,5 +32,10 @@ export interface StudyFeedbackState {
   correctAnswer: string;
   meaning: string;
   partOfSpeech?: string;
-  imageUrl?: string | null;
+  imageUrl?: string;
+}
+
+export interface MissedWordStat {
+  card: VocabularyWord;
+  errorCount: number;
 }

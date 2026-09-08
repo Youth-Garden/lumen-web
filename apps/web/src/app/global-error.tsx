@@ -2,10 +2,8 @@
 
 export default function GlobalError({
   error,
-  reset,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
 }) {
   return (
     <html lang="en">
@@ -17,12 +15,20 @@ export default function GlobalError({
             A critical error occurred while rendering the application. We have
             been notified and are looking into it.
           </p>
-          <button
-            onClick={() => reset()}
-            className="mt-6 px-6 py-2 bg-primary text-primary-foreground rounded-md shadow hover:bg-primary/90 transition-colors"
-          >
-            Try again
-          </button>
+          <div className="flex items-center gap-4 mt-6">
+            <button
+              onClick={() => window.history.back()}
+              className="px-6 py-2 bg-primary text-primary-foreground rounded-md shadow hover:bg-primary/90 transition-colors"
+            >
+              Go back
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-secondary text-secondary-foreground rounded-md shadow hover:bg-secondary/90 transition-colors"
+            >
+              Reload
+            </button>
+          </div>
         </div>
       </body>
     </html>

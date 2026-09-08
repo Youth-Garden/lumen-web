@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { useState, useMemo } from 'react';
-import type { Folder } from '@/services/vocabulary/vocabulary.types';
+import type { Folder } from '@/services/vocabulary';
 import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
@@ -30,9 +30,9 @@ export function FolderSelectionView({
 }: FolderSelectionViewProps) {
   const t = useTranslations('Vocabulary.Folders');
   const tStudy = useTranslations('Vocabulary.Study');
-  const [selectedFolderForAction, setSelectedFolderForAction] = useState<Folder | null>(null);
+  const [selectedFolderForAction, setSelectedFolderForAction] =
+    useState<Folder | null>(null);
 
-  // 1. Separate user-created folders and group other folders by category
   const { userFolders, categoryMap } = useMemo(() => {
     const userList: Folder[] = [];
     const grouped = new Map<string, Folder[]>();
@@ -132,7 +132,11 @@ export function FolderSelectionView({
             <p className="text-sm font-medium text-muted-foreground">
               {t('noCustomFolders')}
             </p>
-            <Button size="sm" className="gap-2 cursor-pointer" onClick={onCreateFolder}>
+            <Button
+              size="sm"
+              className="gap-2 cursor-pointer"
+              onClick={onCreateFolder}
+            >
               <Icons name="plus" className="h-4 w-4" />
               <span>{tStudy('createFirstFolder')}</span>
             </Button>
@@ -143,7 +147,9 @@ export function FolderSelectionView({
               <FolderCard
                 key={folder.id}
                 folder={folder}
-                isActive={folder.id === (selectedFolderForAction?.id || activeFolderId)}
+                isActive={
+                  folder.id === (selectedFolderForAction?.id || activeFolderId)
+                }
                 isUserFolder={true}
                 onSelectFolder={() => handleFolderClick(folder)}
                 onViewFolderWords={onViewFolderWords}
@@ -171,7 +177,9 @@ export function FolderSelectionView({
               <FolderCard
                 key={folder.id}
                 folder={folder}
-                isActive={folder.id === (selectedFolderForAction?.id || activeFolderId)}
+                isActive={
+                  folder.id === (selectedFolderForAction?.id || activeFolderId)
+                }
                 isUserFolder={false}
                 onSelectFolder={() => handleFolderClick(folder)}
                 onViewFolderWords={onViewFolderWords}
@@ -185,7 +193,9 @@ export function FolderSelectionView({
       {selectedFolderForAction && (
         <StudyBottomActionBar
           title={selectedFolderForAction.name}
-          subtitle={t('wordsCount', { count: selectedFolderForAction.flashcardCount || 0 })}
+          subtitle={t('wordsCount', {
+            count: selectedFolderForAction.flashcardCount || 0,
+          })}
           onLearnNew={() => {
             onSelectFolder(selectedFolderForAction.id);
             onViewFolderWords(selectedFolderForAction.id);

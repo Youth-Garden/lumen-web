@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
-import type { Folder } from '@/services/vocabulary/vocabulary.types';
+import type { Folder } from '@/services/vocabulary';
 import { FolderCard } from './folder-card';
 
 interface FolderCatalogSectionProps {
@@ -22,7 +22,6 @@ export function FolderCatalogSection({
   onCreateFolder,
 }: FolderCatalogSectionProps) {
   const t = useTranslations('Vocabulary.Folders');
-  // 1. Separate User folders (displayed first) and Categorized folders
   const { userFolders, categorizedGroups } = useMemo(() => {
     const userList: Folder[] = [];
     const catMap = new Map<string, Folder[]>();

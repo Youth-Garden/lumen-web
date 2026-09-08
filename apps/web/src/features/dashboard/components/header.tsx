@@ -88,7 +88,9 @@ export function Header() {
                 seed={user?.email}
                 alt={user?.fullName || user?.email || 'User'}
               />
-              <AvatarFallback className="text-xs">{userInitials}</AvatarFallback>
+              <AvatarFallback className="text-xs">
+                {userInitials}
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">

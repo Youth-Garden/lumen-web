@@ -10,7 +10,7 @@ import {
 import { SettingsCard } from './settings-card';
 import { useTranslations } from 'next-intl';
 
-import { UserInfo } from '@/services/auth/auth.types';
+import { UserInfo } from '@/services/auth';
 
 interface SecurityCardProps {
   user: UserInfo | null;

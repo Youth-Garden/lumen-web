@@ -25,7 +25,8 @@ export default function NotFound() {
               Lost in space?
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-              The page you are looking for doesn&apos;t exist, has been removed, or the link is incorrect.
+              The page you are looking for doesn&apos;t exist, has been removed,
+              or the link is incorrect.
             </p>
           </div>
 

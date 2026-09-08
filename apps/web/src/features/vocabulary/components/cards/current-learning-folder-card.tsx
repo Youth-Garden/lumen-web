@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import type { Folder } from '@/services/vocabulary/vocabulary.types';
+import type { Folder } from '@/services/vocabulary';
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -68,7 +68,10 @@ export function CurrentLearningFolderCard({
               <span className="flex items-center gap-1 font-semibold text-primary">
                 <Icons name="check" className="h-3.5 w-3.5" />
                 <span>
-                  {t('learnedCountSummary', { learned: learnedApprox, total: wordCount })}
+                  {t('learnedCountSummary', {
+                    learned: learnedApprox,
+                    total: wordCount,
+                  })}
                 </span>
               </span>
               {dueCount > 0 && (

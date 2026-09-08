@@ -3,8 +3,7 @@
 import React, { useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import { cn } from '@lumen/uikit/utils';
 
-interface PulsatingButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PulsatingButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   pulseColor?: string;
   duration?: string;
   distance?: string;
@@ -55,7 +54,9 @@ export const PulsatingButton = React.forwardRef<
         }
         {...props}
       >
-        <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          {children}
+        </span>
         <span
           aria-hidden="true"
           className={cn(

@@ -1,6 +1,6 @@
 'use client';
 
-import { useDueFlashcards } from '@/features/vocabulary/hooks/use-vocabulary';
+import { useDueFlashcards } from '@/features/study/hooks';
 import { RouteEnum } from '@/shared/constants';
 import {
   Button,
@@ -23,7 +23,6 @@ export function OverviewPage() {
   const { data: dueFlashcards } = useDueFlashcards();
   const dueCount = dueFlashcards?.data?.length || 0;
 
-  // Memory retention levels using semantic tokens
   const memoryLevels = [
     {
       label: 'Just learned',
@@ -45,7 +44,6 @@ export function OverviewPage() {
     0,
   );
 
-  // Frequently missed words mockup
   const missedWords = [
     {
       word: 'glimpse',

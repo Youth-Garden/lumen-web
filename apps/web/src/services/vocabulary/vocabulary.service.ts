@@ -5,9 +5,7 @@ import { registry } from './vocabulary.registry';
 import {
   CreateFlashcardPayload,
   CreateFolderPayload,
-  DueFlashcard,
   Folder,
-  ReviewFlashcardPayload,
   VocabularyWord,
 } from './vocabulary.types';
 
@@ -62,27 +60,6 @@ export class VocabularyService extends CoreService {
   ): Promise<BaseResponse<{ id: string }>> {
     return this._post<{ id: string }>(
       ApiEndpointEnum.VOCABULARY_FLASHCARDS,
-      payload,
-    );
-  }
-
-  listDueFlashcards(params?: {
-    folderId?: string;
-    limit?: number;
-  }): Promise<BaseResponse<DueFlashcard[]>> {
-    return this._get<DueFlashcard[]>(
-      ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE,
-      {
-        params,
-      },
-    );
-  }
-
-  reviewFlashcard(
-    payload: ReviewFlashcardPayload,
-  ): Promise<BaseResponse<void>> {
-    return this._post<void>(
-      ApiEndpointEnum.VOCABULARY_FLASHCARDS_REVIEW,
       payload,
     );
   }

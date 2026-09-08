@@ -1,8 +1,7 @@
 'use client';
 
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
-import { DueFlashcard } from '@/services/vocabulary';
-import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
+import { DueFlashcard, FlashcardRating } from '@/services/study';
 import { AudioButton } from '@/shared/components/audio-button';
 import { useKeydownEventListener } from '@/shared/hooks/use-keydown-event-listener';
 import { playAudio } from '@/shared/utils/audio';

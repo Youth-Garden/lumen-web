@@ -75,7 +75,10 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
                 <FormItem>
                   <FormLabel>{t('folderName')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('folderNamePlaceholder')} {...field} />
+                    <Input
+                      placeholder={t('folderNamePlaceholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -7,7 +7,10 @@ import { useMemo } from 'react';
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePronunciation } from '@/shared/hooks';
-import { PronunciationAccent, type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import {
+  PronunciationAccent,
+  type VocabularyWord,
+} from '@/services/vocabulary';
 
 interface FrequentlyMissedWordsCardProps {
   missedCards: VocabularyWord[];
@@ -24,7 +27,6 @@ export function FrequentlyMissedWordsCard({
   const tStudy = useTranslations('Vocabulary.Study');
   const { playPronunciation } = usePronunciation();
 
-  // Deduplicate words by term so the same word appearing in multiple topics is only shown once
   const displayCards = useMemo(() => {
     if (!missedCards || missedCards.length === 0) return [];
     const seen = new Set<string>();
@@ -94,7 +96,10 @@ export function FrequentlyMissedWordsCard({
                     className="p-0.5 rounded-md text-muted-foreground hover:text-primary transition-colors cursor-pointer"
                     aria-label={tStudy('listenUsHint')}
                   >
-                    <Icons name="volume-2" className="h-3.5 w-3.5 text-primary" />
+                    <Icons
+                      name="volume-2"
+                      className="h-3.5 w-3.5 text-primary"
+                    />
                   </button>
                 </div>
 

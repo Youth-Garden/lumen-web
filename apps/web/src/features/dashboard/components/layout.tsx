@@ -7,7 +7,6 @@ import { Sidebar } from '../components/sidebar';
 
 export function DashboardLayout({ children }: PropsWithChildren) {
   const pathname = usePathname();
-  // Only the root vocabulary dashboard (/vocabulary) has independent two-column scrolling
   const isVocabDashboard = pathname === '/vocabulary';
 
   return (
@@ -15,7 +14,6 @@ export function DashboardLayout({ children }: PropsWithChildren) {
       id="main-layout"
       className="relative flex h-screen overflow-hidden bg-background"
     >
-      {/* Glassmorphism ambient glows */}
       <div className="absolute top-0 left-0 -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 -z-10 h-[600px] w-[600px] rounded-full bg-blue-500/10 opacity-30 blur-[100px] pointer-events-none" />
 

@@ -25,11 +25,15 @@ export function Icons({
   style,
   ...props
 }: IconsProps) {
-  let IconComponent: React.ComponentType<any> | undefined = customRegistry[name];
+  let IconComponent: React.ComponentType<any> | undefined =
+    customRegistry[name];
 
   if (!IconComponent) {
     const pascalName = toPascalCase(name);
-    const catalog = LucideIcons as unknown as Record<string, React.ComponentType<any>>;
+    const catalog = LucideIcons as unknown as Record<
+      string,
+      React.ComponentType<any>
+    >;
     IconComponent = catalog[name] || catalog[pascalName];
   }
 
@@ -61,4 +65,3 @@ export {
   type PlantGrowthIconProps,
   type SpinnerIconProps,
 } from './svgs';
-

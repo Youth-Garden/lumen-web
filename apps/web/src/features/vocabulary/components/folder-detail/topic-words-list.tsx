@@ -5,7 +5,10 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
-import { PronunciationAccent, type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import {
+  PronunciationAccent,
+  type VocabularyWord,
+} from '@/services/vocabulary';
 
 export interface TopicWordsListProps {
   topicName: string;

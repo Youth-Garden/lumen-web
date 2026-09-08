@@ -5,11 +5,11 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
-import { useDueFlashcards, useReviewFlashcard } from '@/features/vocabulary/hooks';
+import { useDueFlashcards, useReviewFlashcard } from '@/features/study/hooks';
 import { FlashcardReview } from '@/features/study/components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
 import { OpenEffect } from '@lumen/uikit/components';
-import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
+import { FlashcardRating } from '@/services/study';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -18,8 +18,10 @@ export function StudyPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const folderId = searchParams.get('folderId') || undefined;
-  const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined;
-  
+  const limit = searchParams.get('limit')
+    ? parseInt(searchParams.get('limit')!, 10)
+    : undefined;
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const {
@@ -43,7 +45,6 @@ export function StudyPage() {
         flashcardId: currentFlashcard.flashcardId,
         quality: grade,
       });
-      // Move to next card
       setCurrentIndex((prev) => prev + 1);
     } catch (error) {
       console.error('Failed to review flashcard:', error);
@@ -127,7 +128,7 @@ export function StudyPage() {
       <div className="flex-1 flex flex-col justify-center">
         {currentFlashcard && (
           <FlashcardReview
-            key={currentFlashcard.flashcardId} // Force remount on new card for animation
+            key={currentFlashcard.flashcardId}
             flashcard={currentFlashcard}
             onGrade={handleGrade}
             isSubmitting={isReviewing}

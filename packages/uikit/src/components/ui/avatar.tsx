@@ -36,7 +36,11 @@ function AvatarImage({
   seed?: string;
   avatarStyle?: (typeof AvatarStyles)[number];
 }) {
-  const src = propSrc ? propSrc : (seed ? getAvatarUrl(avatarStyle, seed) : undefined);
+  const src = propSrc
+    ? propSrc
+    : seed
+      ? getAvatarUrl(avatarStyle, seed)
+      : undefined;
 
   return (
     <AvatarPrimitive.Image

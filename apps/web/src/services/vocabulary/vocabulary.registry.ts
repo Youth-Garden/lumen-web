@@ -1,11 +1,7 @@
 import { ApiEndpointEnum } from '@/shared/constants';
 import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
 import { idResponseMapper } from '@/services/core';
-import {
-  folderMapper,
-  wordMapper,
-  dueFlashcardMapper,
-} from './vocabulary.mappers';
+import { folderMapper, wordMapper } from './vocabulary.mappers';
 
 export const registry: MapperRegistry = {
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_WORDS)]: wordMapper,
@@ -18,10 +14,6 @@ export const registry: MapperRegistry = {
   ) => data,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FOLDERS)]:
     idResponseMapper,
-  [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FLASHCARDS_DUE)]:
-    dueFlashcardMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS)]:
-    idResponseMapper,
-  [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS_REVIEW)]:
     idResponseMapper,
 };

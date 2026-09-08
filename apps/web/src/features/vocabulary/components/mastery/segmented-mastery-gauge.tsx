@@ -16,11 +16,7 @@ export function SegmentedMasteryGauge({
 }: SegmentedMasteryGaugeProps) {
   return (
     <div className="flex flex-col items-center space-y-1">
-      <PlantMasteryRing
-        level={level}
-        size={44}
-        showInnerIcon={false}
-      >
+      <PlantMasteryRing level={level} size={44} showInnerIcon={false}>
         <span className="font-black text-sm text-foreground select-none">
           {count}
         </span>

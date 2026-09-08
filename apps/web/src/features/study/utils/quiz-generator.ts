@@ -1,4 +1,4 @@
-import { type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import { type VocabularyWord } from '@/services/vocabulary';
 import {
   StudyExerciseType,
   type ChoiceOption,
@@ -22,9 +22,12 @@ export function getCardPrimaryDefinition(card: VocabularyWord): {
     const normalized = partOfSpeech.toLowerCase().replace(/\.$/, '');
     if (normalized === 'n' || normalized === 'noun') partOfSpeech = 'noun';
     else if (normalized === 'v' || normalized === 'verb') partOfSpeech = 'verb';
-    else if (normalized === 'adj' || normalized === 'adjective') partOfSpeech = 'adjective';
-    else if (normalized === 'adv' || normalized === 'adverb') partOfSpeech = 'adverb';
-    else if (normalized === 'prep' || normalized === 'preposition') partOfSpeech = 'preposition';
+    else if (normalized === 'adj' || normalized === 'adjective')
+      partOfSpeech = 'adjective';
+    else if (normalized === 'adv' || normalized === 'adverb')
+      partOfSpeech = 'adverb';
+    else if (normalized === 'prep' || normalized === 'preposition')
+      partOfSpeech = 'preposition';
   }
 
   return { meaning, partOfSpeech };
@@ -44,14 +47,14 @@ function shuffleArray<T>(items: T[]): T[] {
 export function createChoiceTermQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
-  isReviewingFailed = false
+  isReviewingFailed = false,
 ): StudyQueueItem {
   const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
 
   const otherCards = pool.filter(
     (candidateCard) =>
       candidateCard.id !== card.id &&
-      candidateCard.term.toLowerCase() !== card.term.toLowerCase()
+      candidateCard.term.toLowerCase() !== card.term.toLowerCase(),
   );
   const distractors = shuffleArray(otherCards).slice(0, 3);
 
@@ -61,16 +64,24 @@ export function createChoiceTermQuestion(
     isCorrect: true,
   };
 
-  const distractorOptions: ChoiceOption[] = distractors.map((distractorCard) => ({
-    id: distractorCard.id,
-    label: distractorCard.term,
-    isCorrect: false,
-  }));
+  const distractorOptions: ChoiceOption[] = distractors.map(
+    (distractorCard) => ({
+      id: distractorCard.id,
+      label: distractorCard.term,
+      isCorrect: false,
+    }),
+  );
 
   const options = shuffleArray([correctOption, ...distractorOptions]);
 
   return {
-    id: 'choice_term_' + card.id + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    id:
+      'choice_term_' +
+      card.id +
+      '_' +
+      Date.now() +
+      '_' +
+      Math.random().toString(36).substring(2, 6),
     card,
     exerciseType: StudyExerciseType.CHOICE_TERM,
     meaningPrompt: meaning,
@@ -83,34 +94,48 @@ export function createChoiceTermQuestion(
 export function createChoiceMeaningQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
-  isReviewingFailed = false
+  isReviewingFailed = false,
 ): StudyQueueItem {
   const primary = getCardPrimaryDefinition(card);
 
-  const otherCards = pool.filter((candidateCard) => candidateCard.id !== card.id);
+  const otherCards = pool.filter(
+    (candidateCard) => candidateCard.id !== card.id,
+  );
   const distractors = shuffleArray(otherCards).slice(0, 3);
 
   const correctOption: ChoiceOption = {
     id: card.id,
     label: primary.meaning,
-    subLabel: primary.partOfSpeech ? '(' + primary.partOfSpeech + ')' : undefined,
+    subLabel: primary.partOfSpeech
+      ? '(' + primary.partOfSpeech + ')'
+      : undefined,
     isCorrect: true,
   };
 
-  const distractorOptions: ChoiceOption[] = distractors.map((distractorCard) => {
-    const definition = getCardPrimaryDefinition(distractorCard);
-    return {
-      id: distractorCard.id,
-      label: definition.meaning,
-      subLabel: definition.partOfSpeech ? '(' + definition.partOfSpeech + ')' : undefined,
-      isCorrect: false,
-    };
-  });
+  const distractorOptions: ChoiceOption[] = distractors.map(
+    (distractorCard) => {
+      const definition = getCardPrimaryDefinition(distractorCard);
+      return {
+        id: distractorCard.id,
+        label: definition.meaning,
+        subLabel: definition.partOfSpeech
+          ? '(' + definition.partOfSpeech + ')'
+          : undefined,
+        isCorrect: false,
+      };
+    },
+  );
 
   const options = shuffleArray([correctOption, ...distractorOptions]);
 
   return {
-    id: 'choice_meaning_' + card.id + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    id:
+      'choice_meaning_' +
+      card.id +
+      '_' +
+      Date.now() +
+      '_' +
+      Math.random().toString(36).substring(2, 6),
     card,
     exerciseType: StudyExerciseType.CHOICE_MEANING,
     meaningPrompt: primary.meaning,
@@ -122,12 +147,18 @@ export function createChoiceMeaningQuestion(
 
 export function createTypingQuestion(
   card: VocabularyWord,
-  isReviewingFailed = false
+  isReviewingFailed = false,
 ): StudyQueueItem {
   const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
 
   return {
-    id: 'typing_' + card.id + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    id:
+      'typing_' +
+      card.id +
+      '_' +
+      Date.now() +
+      '_' +
+      Math.random().toString(36).substring(2, 6),
     card,
     exerciseType: StudyExerciseType.TYPING,
     meaningPrompt: meaning,
@@ -140,7 +171,7 @@ export function createNextExerciseForWord(
   card: VocabularyWord,
   pool: VocabularyWord[],
   previousExerciseType?: StudyExerciseType,
-  isReviewingFailed = false
+  isReviewingFailed = false,
 ): StudyQueueItem {
   let nextExerciseType = StudyExerciseType.CHOICE_TERM;
 
@@ -152,7 +183,9 @@ export function createNextExerciseForWord(
     nextExerciseType = StudyExerciseType.CHOICE_TERM;
   } else {
     nextExerciseType =
-      Math.random() > 0.5 ? StudyExerciseType.CHOICE_TERM : StudyExerciseType.CHOICE_MEANING;
+      Math.random() > 0.5
+        ? StudyExerciseType.CHOICE_TERM
+        : StudyExerciseType.CHOICE_MEANING;
   }
 
   if (nextExerciseType === StudyExerciseType.CHOICE_TERM) {

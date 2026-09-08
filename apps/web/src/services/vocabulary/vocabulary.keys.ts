@@ -7,6 +7,4 @@ export const vocabularyKeys = {
     [...vocabularyKeys.all, 'word-detail', id] as const,
   folders: () => [...vocabularyKeys.all, 'folders'] as const,
   folderDetail: (id: string) => [...vocabularyKeys.folders(), id] as const,
-  dueFlashcards: (params?: Record<string, unknown>) =>
-    [...vocabularyKeys.all, 'due-flashcards', params] as const,
 };

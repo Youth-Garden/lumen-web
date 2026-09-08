@@ -1,42 +1,42 @@
 export interface VocabularyExample {
   id: string;
   sentence?: Record<string, string>;
-  sentenceEn?: string;
-  translationVi?: string;
+  sentenceEn: string;
+  translationVi: string;
 }
 
 export interface VocabularyDefinition {
   id: string;
   partOfSpeech: string;
   definition?: Record<string, string>;
-  definitionEn?: string;
-  translationVi?: string;
-  examples?: VocabularyExample[];
+  definitionEn: string;
+  translationVi: string;
+  examples: VocabularyExample[];
 }
 
 export interface VocabularyWord {
   id: string;
   term: string;
-  topic?: string | null;
-  topicVi?: string | null;
-  topicImageUrl?: string | null;
+  topic?: string;
+  topicVi?: string;
+  topicImageUrl?: string;
   phonetic?: string;
-  phoneticUs?: string | null;
-  phoneticUk?: string | null;
+  phoneticUs?: string;
+  phoneticUk?: string;
   audioUrl?: string;
-  audioUsUrl?: string | null;
-  audioUkUrl?: string | null;
+  audioUsUrl?: string;
+  audioUkUrl?: string;
   cefrLevel?: string;
-  imageUrl?: string | null;
-  definitions?: VocabularyDefinition[];
+  imageUrl?: string;
+  definitions: VocabularyDefinition[];
 }
 
 export interface Folder {
   id: string;
   name: string;
-  description?: string | null;
-  category?: string | null;
-  flashcardCount?: number;
+  description?: string;
+  category?: string;
+  flashcardCount: number;
   flashcards?: VocabularyWord[];
 }
 
@@ -50,45 +50,7 @@ export interface CreateFlashcardPayload {
   wordId: string;
 }
 
-export interface DueFlashcard {
-  flashcardId: string;
-  wordId: string;
-  term: string;
-  folderId: string;
-  folderName: string;
-  masteryScore: number;
-  level: number;
-  isWilted: boolean;
-  learningStep: number;
-  reviewCountAtCurrentLevel: number;
-  intervalDays: number;
-  nextReviewAt?: string | null;
-}
-
-export interface CardWithProgress extends VocabularyWord {
-  flashcardId?: string;
-  masteryScore?: number;
-  level?: number;
-  isWilted?: boolean;
-  learningStep?: number;
-  reviewCountAtCurrentLevel?: number;
-  intervalDays?: number;
-  nextReviewAt?: string | null;
-}
-
-export enum FlashcardRating {
-  WRONG = 'WRONG',
-  CORRECT = 'CORRECT',
-  FAST_TRACK_TEMP = 'FAST_TRACK_TEMP',
-  FAST_TRACK_KNOWN = 'FAST_TRACK_KNOWN',
-}
-
 export enum PronunciationAccent {
   US = 'us',
   UK = 'uk',
-}
-
-export interface ReviewFlashcardPayload {
-  flashcardId: string;
-  quality: FlashcardRating;
 }

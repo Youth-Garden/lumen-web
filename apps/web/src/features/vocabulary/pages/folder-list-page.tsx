@@ -14,9 +14,12 @@ import { FolderCatalogSection } from '@/features/vocabulary/components/cards/fol
 import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
 import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
 import { FolderSelectionView } from '@/features/study/components/folder-selection-view';
-import { StudyView, type StudyViewData } from '@/features/study/components/study-view';
 import {
-  useDueFlashcards,
+  StudyView,
+  type StudyViewData,
+} from '@/features/study/components/study-view';
+import { useDueFlashcards } from '@/features/study/hooks';
+import {
   useVocabularyFolderDetail,
   useVocabularyFolders,
 } from '@/features/vocabulary/hooks';
@@ -24,7 +27,7 @@ import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
-import type { VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import type { VocabularyWord } from '@/services/vocabulary';
 
 export function FolderListPage() {
   const t = useTranslations('Vocabulary.Folders');
@@ -39,7 +42,6 @@ export function FolderListPage() {
 
   const allFolders = useMemo(() => data?.data || [], [data?.data]);
 
-  // Sync selected folder from localStorage or pick the first available folder dynamically
   useEffect(() => {
     if (allFolders.length > 0 && !selectedFolderId) {
       const savedId =
@@ -63,12 +65,10 @@ export function FolderListPage() {
     [allFolders, selectedFolderId],
   );
 
-  // Load due flashcards for the active folder directly from backend
   const { data: dueFlashcards } = useDueFlashcards({
     folderId: activeFolder?.id,
   });
 
-  // Load detail / flashcards for active folder directly from backend
   const { data: activeFolderDetail } = useVocabularyFolderDetail(
     activeFolder?.id || '',
     {
@@ -78,7 +78,6 @@ export function FolderListPage() {
 
   const dueCountForActive = dueFlashcards?.data?.length || 0;
 
-  // Select folder directly from right column or selection view
   const handleSelectFolder = (folderId: string) => {
     setSelectedFolderId(folderId);
     if (typeof window !== 'undefined') {
@@ -98,7 +97,6 @@ export function FolderListPage() {
     [activeFolderDetail?.flashcards],
   );
 
-  // Unique flashcards by term
   const uniqueFlashcards: VocabularyWord[] = useMemo(() => {
     const seen = new Set<string>();
     const list: VocabularyWord[] = [];
@@ -112,12 +110,13 @@ export function FolderListPage() {
     return list;
   }, [allFlashcards]);
 
-  // Frequently missed cards (top cards that are due or focus words, deduplicated by term)
   const frequentlyMissedCards = useMemo(() => {
     if (!uniqueFlashcards.length) return [];
     if (dueFlashcards?.data && dueFlashcards.data.length > 0) {
       const dueWordIds = new Set(dueFlashcards.data.map((df) => df.wordId));
-      const matched = uniqueFlashcards.filter((card) => dueWordIds.has(card.id));
+      const matched = uniqueFlashcards.filter((card) =>
+        dueWordIds.has(card.id),
+      );
       if (matched.length > 0) {
         return matched.slice(0, 3);
       }
@@ -125,7 +124,6 @@ export function FolderListPage() {
     return uniqueFlashcards.slice(0, 3);
   }, [uniqueFlashcards, dueFlashcards?.data]);
 
-  // Launch study with full set of cards from the folder (Dynamic Queue picks N)
   const handleStudyAll = () => {
     if (!allFlashcards.length || !activeFolder) return;
     presentStudyView({
@@ -134,7 +132,6 @@ export function FolderListPage() {
     });
   };
 
-  // Launch study with due cards
   const handleStudyDue = () => {
     if (!allFlashcards.length || !activeFolder) return;
     if (dueFlashcards?.data && dueFlashcards.data.length > 0) {
@@ -151,7 +148,6 @@ export function FolderListPage() {
     handleStudyAll();
   };
 
-  // Launch study for frequently missed cards
   const handleStudyMissed = () => {
     if (!frequentlyMissedCards.length || !activeFolder) return;
     presentStudyView({
@@ -166,7 +162,6 @@ export function FolderListPage() {
     Math.max(dueCountForActive * 4, Math.round(totalWordsCount * 0.42)),
   );
 
-  // If user clicked "Đổi thư mục", render full-page FolderSelectionView
   if (isSelectingFolder || (!isLoading && !activeFolder)) {
     return (
       <FolderSelectionView

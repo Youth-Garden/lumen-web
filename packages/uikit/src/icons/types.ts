@@ -11,4 +11,3 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'style'> {
 }
 
 export type IconComponent = ComponentType<IconProps>;
-

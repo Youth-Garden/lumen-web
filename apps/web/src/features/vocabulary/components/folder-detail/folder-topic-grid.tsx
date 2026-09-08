@@ -8,14 +8,14 @@ import { Icons } from '@lumen/uikit/icons';
 export interface TopicStatItem {
   name: string;
   viName: string;
-  imageUrl?: string | null;
+  imageUrl?: string;
   count: number;
 }
 
 export interface FolderTopicGridProps {
   folderName: string;
-  category?: string | null;
-  description?: string | null;
+  category?: string;
+  description?: string;
   selectedTopic: string | null;
   topicStats: TopicStatItem[];
   onSelectTopic: (topicName: string) => void;
@@ -72,7 +72,8 @@ export function FolderTopicGrid({
 
           const masteredCount = 0;
           const dueCount = 0;
-          const progressRatio = topicItem.count > 0 ? masteredCount / topicItem.count : 0;
+          const progressRatio =
+            topicItem.count > 0 ? masteredCount / topicItem.count : 0;
           const strokeDashoffset = circumference * (1 - progressRatio);
 
           return (

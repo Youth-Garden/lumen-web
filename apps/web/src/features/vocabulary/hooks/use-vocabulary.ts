@@ -1,10 +1,10 @@
 import {
   CreateFolderPayload,
   CreateFlashcardPayload,
-  ReviewFlashcardPayload,
   vocabularyKeys,
   vocabularyService,
 } from '@/services/vocabulary';
+import { studyKeys } from '@/services/study';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useCreateFolder = () => {
@@ -28,21 +28,7 @@ export const useCreateFlashcard = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
       queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.dueFlashcards(),
-      });
-    },
-  });
-};
-
-export const useReviewFlashcard = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (payload: ReviewFlashcardPayload) =>
-      vocabularyService.reviewFlashcard(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.dueFlashcards(),
+        queryKey: studyKeys.dueFlashcards(),
       });
     },
   });
@@ -91,18 +77,6 @@ export const useVocabularyFolderDetail = (
   return useQuery({
     queryKey: vocabularyKeys.folderDetail(id),
     queryFn: () => vocabularyService.getFolder(id).then((res) => res?.data),
-    retry: false,
-    ...options,
-  });
-};
-
-export const useDueFlashcards = (params?: {
-  folderId?: string;
-  limit?: number;
-}, options?: { enabled?: boolean }) => {
-  return useQuery({
-    queryKey: vocabularyKeys.dueFlashcards(params),
-    queryFn: () => vocabularyService.listDueFlashcards(params),
     retry: false,
     ...options,
   });

@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  Canvas,
-  useFrame,
-  useThree,
-} from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
   forwardRef,
@@ -117,38 +113,39 @@ type SilkPlaneProps = {
   };
 };
 
-const SilkPlane = forwardRef<THREE.Mesh, SilkPlaneProps>(
-  function SilkPlane({ uniforms }, ref) {
-    const { viewport } = useThree();
-    const internalRef = useRef<THREE.Mesh>(null);
+const SilkPlane = forwardRef<THREE.Mesh, SilkPlaneProps>(function SilkPlane(
+  { uniforms },
+  ref,
+) {
+  const { viewport } = useThree();
+  const internalRef = useRef<THREE.Mesh>(null);
 
-    useImperativeHandle(ref, () => internalRef.current as THREE.Mesh);
+  useImperativeHandle(ref, () => internalRef.current as THREE.Mesh);
 
-    useLayoutEffect(() => {
-      if (internalRef.current) {
-        internalRef.current.scale.set(viewport.width, viewport.height, 1);
-      }
-    }, [viewport]);
+  useLayoutEffect(() => {
+    if (internalRef.current) {
+      internalRef.current.scale.set(viewport.width, viewport.height, 1);
+    }
+  }, [viewport]);
 
-    useFrame((_, delta) => {
-      if (internalRef.current) {
-        const material = internalRef.current.material as THREE.ShaderMaterial;
-        material.uniforms.uTime.value += 0.1 * delta;
-      }
-    });
+  useFrame((_, delta) => {
+    if (internalRef.current) {
+      const material = internalRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.uTime.value += 0.1 * delta;
+    }
+  });
 
-    return (
-      <mesh ref={internalRef}>
-        <planeGeometry args={[1, 1, 1, 1]} />
-        <shaderMaterial
-          uniforms={uniforms}
-          vertexShader={vertexShader}
-          fragmentShader={fragmentShader}
-        />
-      </mesh>
-    );
-  }
-);
+  return (
+    <mesh ref={internalRef}>
+      <planeGeometry args={[1, 1, 1, 1]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </mesh>
+  );
+});
 SilkPlane.displayName = 'SilkPlane';
 
 export function Silk({
@@ -172,7 +169,7 @@ export function Silk({
       uTime: { value: 0 },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   useEffect(() => {

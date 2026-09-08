@@ -29,7 +29,9 @@ export function StudyBottomActionBar({
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl border border-border/80 px-4 py-2.5 rounded-full shadow-2xl animate-in slide-in-from-bottom duration-200 flex items-center gap-2.5 max-w-fit">
       {isTopicSelected && title && (
         <div className="flex items-center gap-1.5 pl-1 pr-2 text-xs font-bold text-foreground">
-          <span className="truncate max-w-[140px] sm:max-w-[200px]">{title}</span>
+          <span className="truncate max-w-[140px] sm:max-w-[200px]">
+            {title}
+          </span>
           {onClose && (
             <button
               onClick={onClose}

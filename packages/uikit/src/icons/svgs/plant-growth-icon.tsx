@@ -63,7 +63,14 @@ export function PlantGrowthIcon({
         opacity="0.6"
       />
       {/* Small soil mound */}
-      <ellipse cx="32" cy="51.5" rx="11" ry="2.2" fill="#713F12" opacity="0.3" />
+      <ellipse
+        cx="32"
+        cy="51.5"
+        rx="11"
+        ry="2.2"
+        fill="#713F12"
+        opacity="0.3"
+      />
 
       {/* Stage 0: Cute, organic seed with tiny green sprout popping out */}
       {clampedStage === 0 && (

@@ -21,17 +21,13 @@ export function usePWA() {
   );
 
   useEffect(() => {
-    // Register service worker
     if ('serviceWorker' in navigator && !isInstalled) {
       navigator.serviceWorker
         .register('/sw.js')
         .then(() => setIsInstalled(true))
-        .catch(() => {
-          // Service worker registration failed
-        });
+        .catch(() => {});
     }
 
-    // Listen for install prompt
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setInstallEvent(e);
@@ -43,7 +39,6 @@ export function usePWA() {
       handleBeforeInstallPrompt as EventListenerOrEventListenerObject,
     );
 
-    // Online/offline status
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 

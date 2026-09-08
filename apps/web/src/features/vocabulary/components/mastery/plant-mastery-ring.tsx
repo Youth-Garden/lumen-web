@@ -4,17 +4,11 @@ import React from 'react';
 import { PlantGrowthIcon } from '@lumen/uikit/icons';
 
 export interface PlantMasteryRingProps {
-  /** Current progress or Spaced Repetition level (0 to 5) */
   level: number;
-  /** Inner learning step (0 to 6) for level 0 */
   learningStep?: number;
-  /** Whether the word is due for review / flower is wilted */
   isWilted?: boolean;
-  /** Outer diameter in pixels (default: 44) */
   size?: number;
-  /** Show the center plant growth icon (default: true) */
   showInnerIcon?: boolean;
-  /** Custom inner content */
   children?: React.ReactNode;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
@@ -41,11 +35,10 @@ function describeArc(
   startAngle: number,
   endAngle: number,
 ) {
-  // To avoid drawing errors when startAngle == endAngle
   if (Math.abs(endAngle - startAngle) < 0.1) {
     endAngle = startAngle + 0.1;
   }
-  
+
   const start = polarToCartesian(centerX, centerY, radius, endAngle);
   const end = polarToCartesian(centerX, centerY, radius, startAngle);
   const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
@@ -70,8 +63,8 @@ function describeArc(
 // 26 degree gap, 46 degree arc. Total = 72 * 5 = 360.
 // Starting from top-right, going clockwise. 0 degrees is exactly in the top gap.
 const ARC_SEGMENTS = [
-  { start: 13,  end: 59 },
-  { start: 85,  end: 131 },
+  { start: 13, end: 59 },
+  { start: 85, end: 131 },
   { start: 157, end: 203 },
   { start: 229, end: 275 },
   { start: 301, end: 347 },
@@ -97,37 +90,31 @@ export function PlantMasteryRing({
       className="relative flex items-center justify-center shrink-0"
     >
       {/* 5 segmented notch ring */}
-      <svg
-        className="absolute inset-0 w-full h-full"
-        viewBox="0 0 48 48"
-      >
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 48 48">
         {ARC_SEGMENTS.map((segment, index) => {
           const isGaugeMode = !showInnerIcon;
-          
+
           let isSolidlyFilled = false;
           let isPartiallyFilled = false;
           let partialRatio = 0;
           let activeEndAngle = segment.end;
 
           if (isGaugeMode) {
-            // Gauge Mode (Level indicator): Fills notches based on level (1 to 5)
             isSolidlyFilled = index < clampedLevel;
           } else {
-            // Badge Mode (Around Plant Icon): ONLY the first notch (index 0) is ever active!
             if (index === 0) {
               if (clampedLevel === 0) {
-                // Learning phase: partially fill based on learningStep (0-6)
                 if (learningStep > 0) {
                   isPartiallyFilled = true;
                   partialRatio = Math.min(1, learningStep / 6);
-                  activeEndAngle = segment.start + (segment.end - segment.start) * partialRatio;
+                  activeEndAngle =
+                    segment.start +
+                    (segment.end - segment.start) * partialRatio;
                 }
               } else {
-                // Levels 1-5: first notch is fully solid
                 isSolidlyFilled = true;
               }
             }
-            // For index > 0, they remain completely dim.
           }
 
           return (
@@ -141,7 +128,7 @@ export function PlantMasteryRing({
                 className="stroke-border dark:stroke-muted"
                 opacity={0.35}
               />
-              
+
               {/* Foreground Filled Notch */}
               {(isSolidlyFilled || isPartiallyFilled) && (
                 <path

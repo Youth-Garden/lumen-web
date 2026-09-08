@@ -47,7 +47,9 @@ export function MasteryOverviewCard({
           <span className="text-2xl font-black text-primary">
             {learnedWords}
           </span>
-          <span className="text-base font-bold text-foreground">{tMastery('learnedWordsCount', { count: '' }).trim()}</span>
+          <span className="text-base font-bold text-foreground">
+            {tMastery('learnedWordsCount', { count: '' }).trim()}
+          </span>
         </div>
         <Icons name="chevron-right" className="h-4 w-4 text-muted-foreground" />
       </div>

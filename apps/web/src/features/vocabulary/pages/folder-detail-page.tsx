@@ -10,7 +10,10 @@ import { RouteEnum } from '@/shared/constants';
 import { useGoBack, usePronunciation } from '@/shared/hooks';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
-import { StudyView, type StudyViewData } from '@/features/study/components/study-view';
+import {
+  StudyView,
+  type StudyViewData,
+} from '@/features/study/components/study-view';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
 import { FolderTopicGrid } from '../components/folder-detail/folder-topic-grid';
 import { TopicWordsList } from '../components/folder-detail/topic-words-list';
@@ -39,10 +42,12 @@ export function FolderDetailPage({
     [folderDetail?.flashcards],
   );
 
-  // Group words into topics with accurate counts
   const topicStats = useMemo(() => {
     if (!flashcards.length) return [];
-    const topicMap = new Map<string, { count: number; viName: string; imageUrl: string }>();
+    const topicMap = new Map<
+      string,
+      { count: number; viName: string; imageUrl: string }
+    >();
 
     flashcards.forEach((card) => {
       const top = card.topic?.trim() || t('generalTopic');
@@ -50,7 +55,8 @@ export function FolderDetailPage({
       if (existing) {
         existing.count += 1;
         if (!existing.viName && card.topicVi) existing.viName = card.topicVi;
-        if (!existing.imageUrl && card.topicImageUrl) existing.imageUrl = card.topicImageUrl;
+        if (!existing.imageUrl && card.topicImageUrl)
+          existing.imageUrl = card.topicImageUrl;
       } else {
         topicMap.set(top, {
           count: 1,
@@ -70,7 +76,6 @@ export function FolderDetailPage({
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [flashcards, t]);
 
-  // Words for currently selected topic
   const displayedFlashcards = useMemo(() => {
     if (!selectedTopic) return [];
     return flashcards.filter((card) => {
@@ -81,7 +86,9 @@ export function FolderDetailPage({
 
   const selectedTopicStat = useMemo(() => {
     if (!selectedTopic) return null;
-    return topicStats.find((topicItem) => topicItem.name === selectedTopic) || null;
+    return (
+      topicStats.find((topicItem) => topicItem.name === selectedTopic) || null
+    );
   }, [topicStats, selectedTopic]);
 
   const handleTopicClick = (topicName: string) => {
@@ -137,8 +144,12 @@ export function FolderDetailPage({
   if (!folderDetail) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-6 space-y-4">
-        <h2 className="text-xl font-bold text-foreground">{t('folderNotFound')}</h2>
-        <p className="text-sm text-muted-foreground">{t('folderNotFoundDesc')}</p>
+        <h2 className="text-xl font-bold text-foreground">
+          {t('folderNotFound')}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {t('folderNotFoundDesc')}
+        </p>
       </div>
     );
   }

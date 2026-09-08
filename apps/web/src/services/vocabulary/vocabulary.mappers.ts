@@ -1,17 +1,20 @@
-import { VocabularyWord, Folder, DueFlashcard } from './vocabulary.types';
+import { VocabularyWord, Folder } from './vocabulary.types';
 
 export const wordMapper = (raw?: any): VocabularyWord => {
   return {
     id: raw?.id || '',
     term: raw?.term || '',
-    phonetic: raw?.phonetic,
-    phoneticUs: raw?.phoneticUs,
-    phoneticUk: raw?.phoneticUk,
-    audioUrl: raw?.audioUrl,
-    audioUsUrl: raw?.audioUsUrl,
-    audioUkUrl: raw?.audioUkUrl,
-    cefrLevel: raw?.cefrLevel,
-    imageUrl: raw?.imageUrl || null,
+    topic: raw?.topic || undefined,
+    topicVi: raw?.topicVi || undefined,
+    topicImageUrl: raw?.topicImageUrl || undefined,
+    phonetic: raw?.phonetic || undefined,
+    phoneticUs: raw?.phoneticUs || undefined,
+    phoneticUk: raw?.phoneticUk || undefined,
+    audioUrl: raw?.audioUrl || undefined,
+    audioUsUrl: raw?.audioUsUrl || undefined,
+    audioUkUrl: raw?.audioUkUrl || undefined,
+    cefrLevel: raw?.cefrLevel || undefined,
+    imageUrl: raw?.imageUrl || undefined,
     definitions: (raw?.definitions || []).map((definition: any) => ({
       id: definition?.id || '',
       partOfSpeech: definition?.partOfSpeech || '',
@@ -29,8 +32,8 @@ export const wordMapper = (raw?: any): VocabularyWord => {
 export const folderMapper = (folder?: any): Folder => ({
   id: folder?.id || '',
   name: folder?.name || '',
-  description: folder?.description,
-  category: folder?.category || null,
+  description: folder?.description || undefined,
+  category: folder?.category || undefined,
   flashcardCount: folder?.flashcardCount ?? 0,
   flashcards: Array.isArray(folder?.flashcards)
     ? folder.flashcards.map((flashcard: any) => wordMapper(flashcard))
@@ -40,24 +43,4 @@ export const folderMapper = (folder?: any): Folder => ({
 export const folderListMapper = (raw?: any): Folder[] => {
   if (!Array.isArray(raw)) return [];
   return raw.map((item) => folderMapper(item));
-};
-
-export const dueFlashcardMapper = (item?: any): DueFlashcard => ({
-  flashcardId: item?.flashcardId || '',
-  wordId: item?.wordId || '',
-  term: item?.term || '',
-  folderId: item?.folderId || '',
-  folderName: item?.folderName || '',
-  masteryScore: item?.masteryScore ?? 0,
-  level: item?.level ?? 0,
-  isWilted: item?.isWilted ?? false,
-  learningStep: item?.learningStep ?? 0,
-  reviewCountAtCurrentLevel: item?.reviewCountAtCurrentLevel ?? 0,
-  intervalDays: item?.intervalDays ?? 0,
-  nextReviewAt: item?.nextReviewAt || null,
-});
-
-export const dueFlashcardsMapper = (raw?: any): DueFlashcard[] => {
-  if (!Array.isArray(raw)) return [];
-  return raw.map((item) => dueFlashcardMapper(item));
 };

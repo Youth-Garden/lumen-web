@@ -103,7 +103,10 @@ export function VocabularyListPage() {
         <div className="p-4 grid gap-4">
           {isLoading ? (
             Array.from({ length: 5 }).map((_, skeletonIndex) => (
-              <Skeleton key={skeletonIndex} className="h-24 w-full rounded-xl" />
+              <Skeleton
+                key={skeletonIndex}
+                className="h-24 w-full rounded-xl"
+              />
             ))
           ) : data?.items.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">

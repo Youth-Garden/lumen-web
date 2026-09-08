@@ -20,7 +20,9 @@ export function SentencePracticeCard({
   return (
     <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-3">
       <div>
-        <h4 className="text-sm font-bold text-foreground">{t('sentencePracticeTitle')}</h4>
+        <h4 className="text-sm font-bold text-foreground">
+          {t('sentencePracticeTitle')}
+        </h4>
         <p className="text-xs text-muted-foreground mt-0.5">
           {t('sentencePracticeDesc', { used: usedCount, total: totalWords })}
         </p>

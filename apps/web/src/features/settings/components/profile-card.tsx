@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { useUpdateProfile } from '@/features/auth/hooks/use-update-profile';
-import { UserInfo } from '@/services/auth/auth.types';
+import { UserInfo } from '@/services/auth';
 
 interface ProfileCardProps {
   user: UserInfo | null;
@@ -98,7 +98,10 @@ export function ProfileCard({ user }: ProfileCardProps) {
         </div>
 
         {isEditing && (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4 border-t pt-4">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 space-y-4 border-t pt-4"
+          >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="fullName">{t('profile.fullName')}</Label>

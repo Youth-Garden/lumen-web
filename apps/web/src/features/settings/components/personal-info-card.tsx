@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { useUpdateProfile } from '@/features/auth/hooks/use-update-profile';
-import { UserInfo } from '@/services/auth/auth.types';
+import { UserInfo } from '@/services/auth';
 
 interface PersonalInfoCardProps {
   user: UserInfo | null;
@@ -24,7 +24,7 @@ interface PersonalInfoCardProps {
 
 interface InfoRowProps {
   label: string;
-  value?: string | null;
+  value?: string;
 }
 
 function InfoRow({ label, value }: InfoRowProps) {
@@ -87,7 +87,9 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <Label htmlFor="personal-fullName">{t('profile.fullName')}</Label>
+                <Label htmlFor="personal-fullName">
+                  {t('profile.fullName')}
+                </Label>
                 <Input id="personal-fullName" {...form.register('fullName')} />
               </div>
               <div className="space-y-1.5">

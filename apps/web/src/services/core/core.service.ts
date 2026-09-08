@@ -31,7 +31,6 @@ export abstract class CoreService extends BaseApiService {
       },
     });
 
-    // Attach Bearer token to request headers
     this.axiosInstance.interceptors.request.use((reqConfig) => {
       const token = useAuthStore.getState().accessToken;
       if (token) {
@@ -40,7 +39,6 @@ export abstract class CoreService extends BaseApiService {
       return reqConfig;
     });
 
-    // Handle 401 Unauthorized globally
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
@@ -91,7 +89,6 @@ export abstract class CoreService extends BaseApiService {
               const newRefreshToken = data?.data?.refreshToken;
 
               if (isSuccess) {
-                // Update auth store
                 authStore.setAuth(
                   user || authStore.user,
                   newAccessToken || authStore.accessToken,
@@ -122,11 +119,9 @@ export abstract class CoreService extends BaseApiService {
               CoreService.isRefreshing = false;
             }
           } else {
-            // Not authenticated or no refresh token
             const hadAuth = Boolean(authStore.accessToken);
             authStore.clearAuth();
 
-            // Only notify if user WAS logged in, is not already on login page, and not an auth endpoint
             if (
               hadAuth &&
               !isOnLoginPage &&
@@ -150,11 +145,8 @@ export abstract class CoreService extends BaseApiService {
               (originalRequest.url?.includes(ApiEndpointEnum.LOGIN) ||
                 originalRequest.url?.includes(ApiEndpointEnum.GOOGLE_LOGIN))
             ) {
-              // Show toast ONLY for explicit login failures, never for background queries
               const message =
-                error.response.data?.message ||
-                error.message ||
-                'Unauthorized';
+                error.response.data?.message || error.message || 'Unauthorized';
               const errorData = error.response.data;
               const errors = errorData?.error ?? errorData?.errors ?? [];
               toast.error(message, {

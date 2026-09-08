@@ -64,7 +64,10 @@ export function StudyTyping({
         <div className="space-y-1">
           {item.isReviewingFailed && (
             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
-              <Icons name="zap" className="w-3.5 h-3.5 text-amber-500 fill-current" />
+              <Icons
+                name="zap"
+                className="w-3.5 h-3.5 text-amber-500 fill-current"
+              />
               <span>{t('frequentlyMissedTag')}</span>
             </div>
           )}
@@ -116,7 +119,11 @@ export function StudyTyping({
             className="gap-2 font-bold cursor-pointer"
           >
             <Icons name="lightbulb" className="w-4 h-4 text-amber-500" />
-            <span>{t('hintAction', { count: (targetTerm.length - hintCount).toString() })}</span>
+            <span>
+              {t('hintAction', {
+                count: (targetTerm.length - hintCount).toString(),
+              })}
+            </span>
           </Button>
 
           <Button

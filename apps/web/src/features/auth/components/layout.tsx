@@ -1,3 +1,5 @@
+'use client';
+
 import { PropsWithChildren } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, type Variants } from 'framer-motion';

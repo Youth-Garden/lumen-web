@@ -1,6 +1,6 @@
 'use client';
 
-import { HeatmapItem } from '@/services/progress/progress.types';
+import { HeatmapItem } from '@/services/progress';
 import {
   Card,
   CardContent,
@@ -26,7 +26,6 @@ interface HeatmapCalendarProps {
 export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
   const t = useTranslations('Dashboard');
 
-  // Generate last 365 days
   const today = startOfDay(new Date());
   const days = Array.from({ length: 365 }, (_, dayIndex) => {
     return subDays(today, 364 - dayIndex);
@@ -67,7 +66,6 @@ export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
                 const dateStr = format(date, 'yyyy-MM-dd');
                 const count = heatmapMap.get(dateStr) || 0;
 
-                // Align first item with correct day of week (optional polish)
                 const startOffset = idx === 0 ? date.getDay() : 0;
 
                 return (

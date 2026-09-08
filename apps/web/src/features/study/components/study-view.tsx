@@ -1,6 +1,6 @@
 'use client';
 
-import { type VocabularyWord } from '@/services/vocabulary/vocabulary.types';
+import { type VocabularyWord } from '@/services/vocabulary';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps, usePortal } from '@lumen/uikit/portal';
@@ -23,7 +23,7 @@ import { StudyExerciseType } from '@/features/study/types/study.types';
 
 export interface StudyViewData {
   cards: VocabularyWord[];
-  selectedTopic?: string | null;
+  selectedTopic?: string;
   folderName?: string;
 }
 

@@ -10,7 +10,12 @@ interface BackdropProps {
   style?: React.CSSProperties;
 }
 
-export const Backdrop = ({ isOpen, onPress, className, style }: BackdropProps) => {
+export const Backdrop = ({
+  isOpen,
+  onPress,
+  className,
+  style,
+}: BackdropProps) => {
   if (!isOpen) return null;
 
   return (

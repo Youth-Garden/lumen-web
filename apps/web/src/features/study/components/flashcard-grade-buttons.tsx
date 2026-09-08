@@ -1,6 +1,6 @@
 'use client';
 
-import { FlashcardRating } from '@/services/vocabulary/vocabulary.types';
+import { FlashcardRating } from '@/services/study';
 import { Button } from '@lumen/uikit/components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';

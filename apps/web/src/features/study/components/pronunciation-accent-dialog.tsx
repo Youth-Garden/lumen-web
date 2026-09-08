@@ -1,6 +1,6 @@
 'use client';
 
-import { PronunciationAccent } from '@/services/vocabulary/vocabulary.types';
+import { PronunciationAccent } from '@/services/vocabulary';
 import {
   Button,
   Dialog,

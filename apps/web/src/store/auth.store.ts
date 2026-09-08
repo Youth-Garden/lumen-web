@@ -17,11 +17,14 @@ interface AuthState {
   refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isSessionExpired: boolean;
 
   setAuth: (user: User, accessToken?: string, refreshToken?: string) => void;
   updateUser: (user: Partial<User>) => void;
   setLoading: (isLoading: boolean) => void;
   clearAuth: () => void;
+  expireSession: () => void;
+  resetSessionExpired: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -33,6 +36,7 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: null,
         isAuthenticated: false,
         isLoading: true,
+        isSessionExpired: false,
 
         setAuth: (user, accessToken, refreshToken) => {
           if (typeof document !== 'undefined') {
@@ -43,6 +47,7 @@ export const useAuthStore = create<AuthState>()(
             accessToken: accessToken || state.accessToken,
             refreshToken: refreshToken || state.refreshToken,
             isAuthenticated: true,
+            isSessionExpired: false,
           }));
         },
 
@@ -62,8 +67,24 @@ export const useAuthStore = create<AuthState>()(
             accessToken: null,
             refreshToken: null,
             isAuthenticated: false,
+            isSessionExpired: false,
           });
         },
+
+        expireSession: () => {
+          if (typeof document !== 'undefined') {
+            document.cookie = `${JWT_ACCESS_TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+          }
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            isSessionExpired: true,
+          });
+        },
+
+        resetSessionExpired: () => set({ isSessionExpired: false }),
       }),
       {
         name: 'auth-storage',

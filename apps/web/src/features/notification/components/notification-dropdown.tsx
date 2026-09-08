@@ -88,7 +88,6 @@ export const NotificationDropdown = () => {
                   }`}
                   onClick={() => {
                     handleMarkAsRead(notification.id, notification.isRead);
-                    // Add routing logic here if notifications start having actionUrls
                   }}
                 >
                   <div className="flex items-start justify-between gap-3">

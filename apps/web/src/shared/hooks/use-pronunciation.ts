@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { PronunciationAccent } from '@/services/vocabulary/vocabulary.types';
+import { PronunciationAccent } from '@/services/vocabulary';
 
 export interface PronunciationOptions {
   term: string;
@@ -87,7 +87,6 @@ export function usePronunciation() {
           ? options.audioUkUrl
           : options.audioUsUrl || options.audioUrl;
 
-      // Stop previous audio / speech
       stopPronunciation();
 
       if (!remoteAudioUrl) {

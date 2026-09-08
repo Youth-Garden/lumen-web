@@ -45,7 +45,10 @@ export function CommandPalette() {
 
   const vocabWords = useVocabularyWords(
     { search: debouncedSearch },
-    { enabled: commandPaletteOpen && isAuthenticated && debouncedSearch.length > 1 },
+    {
+      enabled:
+        commandPaletteOpen && isAuthenticated && debouncedSearch.length > 1,
+    },
   );
 
   const isSearching = debouncedSearch.length > 1 && vocabWords.isFetching;
@@ -119,13 +122,21 @@ export function CommandPalette() {
                     key={folder.id}
                     onSelect={() =>
                       runCommand(() =>
-                        router.push(formatUrl(RouteEnum.FOLDER_DETAIL, { id: folder.id })),
+                        router.push(
+                          formatUrl(RouteEnum.FOLDER_DETAIL, { id: folder.id }),
+                        ),
                       )
                     }
                   >
-                    <Icons name="folder" className="mr-2 h-4 w-4 text-primary" />
+                    <Icons
+                      name="folder"
+                      className="mr-2 h-4 w-4 text-primary"
+                    />
                     <span>
-                      <HighlightText text={folder.name} query={debouncedSearch} />
+                      <HighlightText
+                        text={folder.name}
+                        query={debouncedSearch}
+                      />
                     </span>
                     {folder.category && (
                       <span className="ml-auto rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">

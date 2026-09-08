@@ -6,12 +6,6 @@ export const SettingsCard = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof Card>
 >(({ className, ...props }, ref) => {
-  return (
-    <Card
-      ref={ref}
-      className={className}
-      {...props}
-    />
-  );
+  return <Card ref={ref} className={className} {...props} />;
 });
 SettingsCard.displayName = 'SettingsCard';

@@ -7,7 +7,6 @@ export enum ApiEndpointEnum {
   LOGOUT = '/api/iam/logout',
   GOOGLE_LOGIN = '/api/iam/google-login',
 
-  // Progress
   PROGRESS_DASHBOARD = '/api/progress/dashboard',
   PROGRESS_ACTIVITIES = '/api/progress/activities',
   PROGRESS_SETTINGS = '/api/progress/settings',
@@ -16,21 +15,19 @@ export enum ApiEndpointEnum {
   PROGRESS_HEATMAP = '/api/progress/heatmap',
   PROGRESS_STREAK_FREEZE = '/api/progress/streak-freeze',
 
-  // Vocabulary
   VOCABULARY_WORDS = '/api/vocabulary/words',
   VOCABULARY_WORD_DETAIL = '/api/vocabulary/words/:id',
   VOCABULARY_FOLDERS = '/api/vocabulary/words/folders',
   VOCABULARY_FOLDER_DETAIL = '/api/vocabulary/words/folders/:id',
   VOCABULARY_FLASHCARDS = '/api/vocabulary/words/flashcards',
-  VOCABULARY_FLASHCARDS_DUE = '/api/vocabulary/words/flashcards/due',
-  VOCABULARY_FLASHCARDS_REVIEW = '/api/vocabulary/words/flashcards/review',
 
-  // Material
+  STUDY_FLASHCARDS_DUE = '/api/vocabulary/words/flashcards/due',
+  STUDY_FLASHCARDS_REVIEW = '/api/vocabulary/words/flashcards/review',
+
   MATERIALS = '/api/materials',
   MATERIAL_DETAIL = '/api/materials/:id',
   MATERIAL_DICTATION = '/api/materials/dictation',
 
-  // Notifications
   NOTIFICATIONS = '/api/notifications',
   NOTIFICATION_MARK_READ = '/api/notifications/:id/read',
   NOTIFICATION_MARK_ALL_READ = '/api/notifications/read-all',

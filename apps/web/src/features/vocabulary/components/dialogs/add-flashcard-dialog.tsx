@@ -26,7 +26,10 @@ import {
   SelectValue,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useVocabularyFolders, useCreateFlashcard } from '@/features/vocabulary/hooks';
+import {
+  useVocabularyFolders,
+  useCreateFlashcard,
+} from '@/features/vocabulary/hooks';
 import { PortalProps } from '@lumen/uikit/portal';
 
 const formSchema = z.object({
@@ -48,7 +51,8 @@ export function AddFlashcardDialog({
   const { wordId, term } = data || { wordId: '', term: '' };
   const t = useTranslations('Vocabulary.List');
 
-  const { data: foldersData, isLoading: isLoadingFolders } = useVocabularyFolders();
+  const { data: foldersData, isLoading: isLoadingFolders } =
+    useVocabularyFolders();
   const { mutateAsync: createFlashcard, isPending } = useCreateFlashcard();
 
   const form = useForm<FormValues>({

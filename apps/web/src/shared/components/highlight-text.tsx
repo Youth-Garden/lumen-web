@@ -17,7 +17,6 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
     return <span className={className}>{text}</span>;
   }
 
-  // Split text on query term, keeping the match in the result array (case-insensitive)
   const regex = new RegExp(`(${query})`, 'gi');
   const parts = text.split(regex);
 

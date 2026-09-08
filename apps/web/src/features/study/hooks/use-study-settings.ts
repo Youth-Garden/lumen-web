@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { PronunciationAccent } from '@/services/vocabulary/vocabulary.types';
+import { PronunciationAccent } from '@/services/vocabulary';
 
 export type LessonQuotaPreset = 'FEW' | 'MODERATE' | 'MANY' | 'A_LOT';
 
@@ -14,7 +14,10 @@ export interface LessonQuotaConfig {
   maxCount: number;
 }
 
-export const LESSON_QUOTA_CONFIGS: Record<LessonQuotaPreset, LessonQuotaConfig> = {
+export const LESSON_QUOTA_CONFIGS: Record<
+  LessonQuotaPreset,
+  LessonQuotaConfig
+> = {
   FEW: {
     preset: 'FEW',
     label: 'Few',
@@ -90,7 +93,6 @@ export function useStudySettings() {
         });
       }
     } catch {
-      // Fallback to default
     } finally {
       setIsLoaded(true);
     }
@@ -108,9 +110,7 @@ export function useStudySettings() {
       }
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch {
-        // Ignore localStorage errors
-      }
+      } catch {}
       return updated;
     });
   }, []);

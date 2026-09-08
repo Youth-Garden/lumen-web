@@ -19,8 +19,8 @@ export function QueryProvider({ children }: PropsWithChildren) {
               }
               return failureCount < 2;
             },
-            staleTime: MINUTE * 5, // 5 minutes
-            gcTime: MINUTE * 10, // 10 minutes
+            staleTime: MINUTE * 5,
+            gcTime: MINUTE * 10,
           },
           mutations: {
             retry: 0,

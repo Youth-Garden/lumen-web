@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import type {
   VocabularyDefinition,
   VocabularyWord,
-} from '@/services/vocabulary/vocabulary.types';
+} from '@/services/vocabulary';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';

@@ -37,7 +37,9 @@ export function StudyFeedbackDrawer({
               <div
                 className={
                   'w-7 h-7 rounded-full flex items-center justify-center shrink-0 ' +
-                  (isCorrect ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400')
+                  (isCorrect
+                    ? 'bg-emerald-500/20 text-emerald-400'
+                    : 'bg-rose-500/20 text-rose-400')
                 }
               >
                 <Icons
