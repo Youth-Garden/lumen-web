@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { PlantGrowthIcon } from '@lumen/uikit/icons';
+import React from 'react';
 
 export interface PlantMasteryRingProps {
   level: number;
@@ -106,7 +106,7 @@ export function PlantMasteryRing({
               if (clampedLevel === 0) {
                 if (learningStep > 0) {
                   isPartiallyFilled = true;
-                  partialRatio = Math.min(1, learningStep / 6);
+                  partialRatio = Math.min(1, learningStep / 5);
                   activeEndAngle =
                     segment.start +
                     (segment.end - segment.start) * partialRatio;

@@ -124,13 +124,9 @@ export default function LoginPage() {
 
   async function handleResend() {
     if (resendIn > 0) return;
-    try {
-      await authService.sendEmailOtp({ email: form.getValues('email') });
-      toast.success(t('otpSent'));
-      startResendTimer();
-    } catch {
-      // Errors handled globally
-    }
+    await authService.sendEmailOtp({ email: form.getValues('email') });
+    toast.success(t('otpSent'));
+    startResendTimer();
   }
 
   return (

@@ -113,14 +113,18 @@ export function MasteryFlowerDialog({
               </div>
 
               {/* Step 2: In learning (5 progressive notches container) */}
-              <div className="p-4 rounded-2xl bg-muted/30 border border-border/50 space-y-3">
+              <div className="p-4 rounded-2xl bg-muted/30 space-y-3">
                 <div className="flex items-center justify-around px-1 py-2">
                   {[1, 2, 3, 4, 5].map((stageLevel) => (
                     <div
                       key={stageLevel}
                       className="flex flex-col items-center gap-1"
                     >
-                      <PlantMasteryRing level={stageLevel} size={54} />
+                      <PlantMasteryRing
+                        level={0}
+                        learningStep={stageLevel}
+                        size={54}
+                      />
                     </div>
                   ))}
                 </div>

@@ -1,5 +1,8 @@
 'use client';
 
+import { LessonQuotaDialog } from '@/features/study/components/lesson-quota-dialog';
+import { PronunciationAccentDialog } from '@/features/study/components/pronunciation-accent-dialog';
+import { useStudySettings } from '@/features/study/hooks/use-study-settings';
 import { PronunciationAccent } from '@/services/vocabulary';
 import {
   Button,
@@ -11,13 +14,10 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps, usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
-import { useStudySettings } from '@/features/study/hooks/use-study-settings';
-import { LessonQuotaDialog } from '@/features/study/components/lesson-quota-dialog';
-import { PronunciationAccentDialog } from '@/features/study/components/pronunciation-accent-dialog';
 
 export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Study');
-  const { settings, currentQuotaConfig, updateSettings } = useStudySettings();
+  const { settings, updateSettings } = useStudySettings();
   const [presentQuota] = usePortal(LessonQuotaDialog, {
     key: 'lesson_quota_dialog',
   });
@@ -32,16 +32,16 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent className="max-w-md p-6 rounded-xl border-none shadow-2xl bg-card space-y-4 transition-all duration-200">
+      <DialogContent className="bg-card">
         <DialogHeader className="pb-1">
           <DialogTitle className="text-lg font-bold text-foreground">
             {t('settingsTitle')}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1">
           {/* Row 1: Bật hiệu ứng âm thanh */}
-          <div className="flex items-center justify-between py-3 px-1">
+          <div className="flex items-center justify-between py-3">
             <span className="text-sm font-semibold text-foreground">
               {t('soundEffectsTitle')}
             </span>
@@ -68,7 +68,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
             </button>
           </div>
 
-          <div className="flex items-center justify-between py-3 px-1">
+          <div className="flex items-center justify-between py-3">
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
                 {t('autoPlayAudioTitle')}
@@ -97,15 +97,12 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
             </button>
           </div>
 
-          {/* Row 3: Số câu hỏi tối đa mỗi lần học */}
-          <Button
-            type="button"
-            variant="ghost"
+          <div
             onClick={(event) => {
               event.stopPropagation();
               presentQuota({});
             }}
-            className="w-full flex items-center justify-between text-left p-2.5 h-12"
+            className="w-full flex items-center justify-between text-left h-12 cursor-pointer"
           >
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
@@ -126,16 +123,14 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               name="chevron-right"
               className="w-4 h-4 text-muted-foreground"
             />
-          </Button>
+          </div>
 
-          {/* Row 4: Giọng phát âm từ vựng */}
-          <Button
-            variant="ghost"
+          <div
             onClick={(event) => {
               event.stopPropagation();
               presentAccent({});
             }}
-            className="w-full flex items-center justify-between text-left p-2.5 h-12"
+            className="w-full flex items-center justify-between text-left h-12 cursor-pointer"
           >
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
@@ -149,7 +144,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               name="chevron-right"
               className="w-4 h-4 text-muted-foreground"
             />
-          </Button>
+          </div>
 
           <div className="pt-3">
             <Button

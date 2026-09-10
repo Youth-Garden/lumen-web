@@ -2,69 +2,8 @@
 
 import { PropsWithChildren } from 'react';
 import { useTranslations } from 'next-intl';
-import { motion, type Variants } from 'framer-motion';
 import { OpenEffect } from '@lumen/uikit/components';
 import { Silk } from './silk';
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.3,
-    },
-  },
-};
-
-const charVariants: Variants = {
-  hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: {
-      duration: 0.7,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  },
-};
-
-const subtitleVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      delay: 0.2,
-      ease: 'easeOut',
-    },
-  },
-};
-
-function AnimatedHeadline({ text }: { text: string }) {
-  return (
-    <motion.h1
-      className="text-5xl font-bold mb-4 tracking-tight leading-[1.1] gradient-text drop-shadow-[0_0_30px_rgba(102,171,255,0.4)]"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      aria-label={text}
-    >
-      {text.split('').map((char, i) => (
-        <motion.span
-          key={`${char}-${i}`}
-          variants={charVariants}
-          className="inline-block whitespace-pre"
-          aria-hidden="true"
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.h1>
-  );
-}
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const t = useTranslations('Auth.Layout');
@@ -74,7 +13,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
       {/* Left side - Silk Brand Background */}
       <div className="hidden lg:flex lg:w-7/12 relative overflow-hidden">
         {/* React Bits Silk WebGL background */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a] via-[#2563eb] to-[#38bdf8]">
           <Silk
             speed={5}
             scale={1}
@@ -100,15 +39,12 @@ export default function AuthLayout({ children }: PropsWithChildren) {
 
         {/* Content */}
         <div className="absolute bottom-16 left-16 z-20 text-white max-w-lg">
-          <AnimatedHeadline text={t('title')} />
-          <motion.p
-            className="text-zinc-100/90 text-lg leading-relaxed"
-            variants={subtitleVariants}
-            initial="hidden"
-            animate="visible"
-          >
+          <h1 className="text-5xl font-bold mb-4 tracking-tight leading-[1.1] text-white">
+            {t('title')}
+          </h1>
+          <p className="text-zinc-100/90 text-lg leading-relaxed">
             {t('subtitle')}
-          </motion.p>
+          </p>
         </div>
       </div>
 

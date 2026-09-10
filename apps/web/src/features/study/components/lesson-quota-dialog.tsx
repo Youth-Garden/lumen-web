@@ -36,7 +36,7 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent className="max-w-sm p-6 rounded-xl border-none shadow-2xl bg-card space-y-4 transition-all duration-200">
+      <DialogContent className="max-w-[360px] sm:max-w-[360px] bg-card">
         <DialogHeader className="pb-1">
           <DialogTitle className="text-base font-bold text-foreground">
             {t('maxQuestionsPerSession')}
@@ -46,7 +46,7 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
           </p>
         </DialogHeader>
 
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1">
           {presets.map((presetKey) => {
             const config = LESSON_QUOTA_CONFIGS[presetKey];
             const localized = getPresetLabel(presetKey);

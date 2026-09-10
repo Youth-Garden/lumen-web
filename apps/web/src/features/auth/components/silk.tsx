@@ -9,6 +9,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 
 type SilkProps = {
@@ -157,6 +158,7 @@ export function Silk({
   lightMode = false,
 }: SilkProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const [isReady, setIsReady] = useState(false);
 
   const uniforms = useMemo(
     () => ({
@@ -182,9 +184,25 @@ export function Silk({
   }, [speed, scale, noiseIntensity, color, rotation, lightMode, uniforms]);
 
   return (
-    <Canvas dpr={[1, 2]} frameloop="always">
-      <SilkPlane ref={meshRef} uniforms={uniforms} />
-    </Canvas>
+    <div
+      className={`w-full h-full transition-opacity duration-700 ease-out ${
+        isReady ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
+      <Canvas
+        dpr={[1, 1.5]}
+        frameloop="always"
+        gl={{
+          powerPreference: 'high-performance',
+          antialias: false,
+          depth: false,
+          stencil: false,
+        }}
+        onCreated={() => setIsReady(true)}
+      >
+        <SilkPlane ref={meshRef} uniforms={uniforms} />
+      </Canvas>
+    </div>
   );
 }
 
