@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, type RefObject } from 'react';
-import { StudyExerciseType } from '@/features/study/types/study.types';
+import { StudyExerciseType, StudySessionMode } from '@/features/study/types/study.types';
 import {
   ChoiceShortcutKey,
+  FlashcardReviewShortcutKey,
   FlashcardShortcutKey,
   StudyGlobalShortcutKey,
 } from '../constants';
@@ -14,11 +15,14 @@ export interface UseStudyShortcutsProps {
   isFlipped: boolean;
   isFeedbackOpen: boolean;
   exerciseType: StudyExerciseType;
+  mode?: StudySessionMode;
   canFlipRef: RefObject<boolean | null>;
   onFlip: () => void;
   onMastered: () => void;
   onReview: () => void;
   onDontKnow: () => void;
+  onFlashcardAgain?: () => void;
+  onFlashcardKnown?: () => void;
   onSelectChoice?: (index: number) => void;
   onContinueFeedback?: () => void;
   onPlayUsAudio: () => void;
@@ -32,11 +36,14 @@ export function useStudyShortcuts({
   isFlipped,
   isFeedbackOpen,
   exerciseType,
+  mode,
   canFlipRef,
   onFlip,
   onMastered,
   onReview,
   onDontKnow,
+  onFlashcardAgain,
+  onFlashcardKnown,
   onSelectChoice,
   onContinueFeedback,
   onPlayUsAudio,
@@ -106,15 +113,25 @@ export function useStudyShortcuts({
           if (event.code === FlashcardShortcutKey.SPACE) {
             event.preventDefault();
             onFlip();
-          } else if (event.key === FlashcardShortcutKey.MASTERED) {
-            event.preventDefault();
-            onMastered();
-          } else if (event.key === FlashcardShortcutKey.REVIEW) {
-            event.preventDefault();
-            onReview();
-          } else if (event.key === FlashcardShortcutKey.ENTER) {
-            event.preventDefault();
-            onDontKnow();
+          } else if (mode === StudySessionMode.FLASHCARD) {
+            if (event.key === FlashcardReviewShortcutKey.AGAIN) {
+              event.preventDefault();
+              onFlashcardAgain?.();
+            } else if (event.key === FlashcardReviewShortcutKey.KNOWN) {
+              event.preventDefault();
+              onFlashcardKnown?.();
+            }
+          } else {
+            if (event.key === FlashcardShortcutKey.MASTERED) {
+              event.preventDefault();
+              onMastered();
+            } else if (event.key === FlashcardShortcutKey.REVIEW) {
+              event.preventDefault();
+              onReview();
+            } else if (event.key === FlashcardShortcutKey.ENTER) {
+              event.preventDefault();
+              onDontKnow();
+            }
           }
         }
       } else if (
@@ -145,11 +162,14 @@ export function useStudyShortcuts({
     isFlipped,
     isFeedbackOpen,
     exerciseType,
+    mode,
     canFlipRef,
     onFlip,
     onMastered,
     onReview,
     onDontKnow,
+    onFlashcardAgain,
+    onFlashcardKnown,
     onSelectChoice,
     onContinueFeedback,
     onPlayUsAudio,

@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { cn } from '@lumen/uikit/utils';
+import React from 'react';
 
 interface BackdropProps {
   isOpen?: boolean;
@@ -30,7 +30,7 @@ export const Backdrop = ({
       }}
       style={style}
       className={cn(
-        'fixed inset-0 z-50 bg-black/40 transition-all duration-200 cursor-pointer pointer-events-auto select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+        'fixed inset-0 isolate z-50 bg-black/40 transition-all duration-200 cursor-pointer pointer-events-auto select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         className,
       )}
       aria-hidden="true"

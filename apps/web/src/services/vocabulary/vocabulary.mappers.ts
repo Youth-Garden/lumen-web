@@ -15,6 +15,12 @@ export const wordMapper = (raw?: any): VocabularyWord => {
     audioUkUrl: raw?.audioUkUrl || undefined,
     cefrLevel: raw?.cefrLevel || undefined,
     imageUrl: raw?.imageUrl || undefined,
+    level: raw?.level ?? 0,
+    learningStep: raw?.learningStep ?? 0,
+    masteryScore: raw?.masteryScore ?? 0,
+    isWilted: raw?.isWilted ?? false,
+    flashcardId: raw?.flashcardId || raw?.id || undefined,
+    wordId: raw?.wordId || undefined,
     definitions: (raw?.definitions || []).map((definition: any) => ({
       id: definition?.id || '',
       partOfSpeech: definition?.partOfSpeech || '',

@@ -35,5 +35,8 @@ export enum FlashcardRating {
 
 export interface ReviewFlashcardPayload {
   flashcardId: string;
-  quality: FlashcardRating;
+  quality?: FlashcardRating;
+  isCorrect?: boolean;
+  isFastTrackKnown?: boolean;
+  isFastTrackTempMemory?: boolean;
 }

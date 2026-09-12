@@ -45,7 +45,7 @@ export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full rounded-3xl border-none bg-card shadow-xs">
       <CardHeader>
         <CardTitle>{t('activityHeatmap')}</CardTitle>
       </CardHeader>

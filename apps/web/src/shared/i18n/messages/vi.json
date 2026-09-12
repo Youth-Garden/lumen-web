@@ -216,6 +216,13 @@
       "invalidEmail": "Email không hợp lệ",
       "otpLength": "Mã OTP phải có 6 chữ số",
       "otpDigits": "Mã OTP chỉ được chứa số"
+    },
+    "Welcome": {
+      "badge": "Khởi đầu cùng Lumen",
+      "title": "Chào mừng bạn đến với Lumen",
+      "subtitle": "Chọn ngôn ngữ mẹ đẻ của bạn để cá nhân hóa trải nghiệm học tập tốt nhất.",
+      "selectTitle": "Ngôn ngữ mẹ đẻ của bạn",
+      "continueBtn": "Tiếp tục"
     }
   },
   "Vocabulary": {
@@ -287,7 +294,9 @@
       "showShortcuts": "Hiện phím tắt",
       "masteredBtn": "Đã thuộc",
       "familiarBtn": "Nhớ tạm",
-      "againBtn": "Học lại",
+      "againBtn": "Ôn lại",
+      "flashcardAgain": "Ôn lại",
+      "flashcardKnown": "Đã thuộc",
       "spaceToFlip": "Space để lật",
       "ok": "OK",
       "deselect": "Bỏ chọn",
@@ -396,8 +405,8 @@
       "createNewFolder": "Tạo thư mục mới",
       "frequentlyMissedHeader": "Bạn có {count} từ vựng hay sai",
       "iUnderstand": "Đã hiểu",
-      "reviewNormal": "Ôn tập",
-      "flashcardsAction": "Flashcards",
+      "reviewNormal": "Luyện tập",
+      "flashcardsAction": "Thẻ ghi nhớ",
       "learnNewWords": "Học từ mới",
       "pinnedFolder": "Thư mục đã ghim",
       "selectFolderTitle": "Chọn thư mục từ vựng",
@@ -428,7 +437,13 @@
       "defaultFolderDescription": "Thư mục từ vựng",
       "generalTopic": "Chủ đề chung",
       "folderNotFound": "Không tìm thấy thư mục",
-      "folderNotFoundDesc": "Thư mục này không tồn tại hoặc đã bị xóa."
+      "folderNotFoundDesc": "Thư mục này không tồn tại hoặc đã bị xóa.",
+      "markKnown": "Đánh dấu đã thuộc",
+      "markUnknown": "Đánh dấu chưa biết",
+      "wordDetail": "Chi tiết từ vựng",
+      "cefrLevel": "Trình độ",
+      "definition": "Định nghĩa",
+      "examples": "Ví dụ"
     },
     "Mastery": {
       "dialogTitle": "Hành trình Tri thức & Lặp lại Ngắt quãng",
@@ -591,12 +606,12 @@
     }
   },
   "Settings": {
-    "title": "Cài đặt",
-    "subtitle": "Quản lý tài khoản, tùy chọn và giao diện của bạn.",
+    "title": "Cài đặt tài khoản",
+    "subtitle": "Quản lý thông tin cá nhân, tùy chọn giao diện và mục tiêu học tập",
     "profileUpdateSuccess": "Cập nhật hồ sơ thành công",
     "profileUpdateFailed": "Cập nhật hồ sơ thất bại",
     "goalsUpdateSuccess": "Cập nhật mục tiêu học tập thành công",
-    "goalsUpdateFailed": "Cập nhật mục tiêu học tập thất bại",
+    "goalsUpdateFailed": "Không thể cập nhật mục tiêu học tập",
     "sections": {
       "profile": "Hồ sơ của tôi",
       "goals": "Mục tiêu học tập",
@@ -605,12 +620,14 @@
       "security": "Mật khẩu & Bảo mật"
     },
     "appearance": {
-      "title": "Giao diện",
-      "description": "Tùy chỉnh giao diện và cách hiển thị của Lumen.",
-      "theme": "Chủ đề",
-      "themeDescription": "Chọn bảng màu và chế độ sáng hoặc tối.",
+      "title": "Giao diện & Tùy chọn",
+      "description": "Tùy chỉnh giao diện và ngôn ngữ mẹ đẻ hiển thị trong ứng dụng.",
+      "theme": "Chế độ giao diện",
+      "themeDescription": "Chuyển đổi giữa chế độ sáng, tối hoặc theo hệ thống",
       "language": "Ngôn ngữ",
-      "languageDescription": "Chọn ngôn ngữ sử dụng trong toàn ứng dụng."
+      "languageDescription": "Chọn ngôn ngữ sử dụng trong toàn ứng dụng.",
+      "nativeLanguage": "Ngôn ngữ mẹ đẻ",
+      "nativeLanguageDescription": "Ngôn ngữ dịch nghĩa và hiển thị mặc định trong ứng dụng"
     },
     "tabs": {
       "profile": "Hồ sơ",

@@ -24,19 +24,11 @@ export function OverviewPage() {
   const dueCount = dueFlashcards?.data?.length || 0;
 
   const memoryLevels = [
-    {
-      label: 'Just learned',
-      count: 8,
-      color: 'text-primary border-primary/30',
-    },
-    { label: 'Temporary', count: 18, color: 'text-primary border-primary/30' },
-    { label: 'Lasting', count: 42, color: 'text-primary border-primary/30' },
-    { label: 'Memorized', count: 65, color: 'text-primary border-primary/30' },
-    {
-      label: 'Proficient',
-      count: 180,
-      color: 'text-primary border-primary/30',
-    },
+    { label: 'Just learned', count: 8 },
+    { label: 'Temporary', count: 18 },
+    { label: 'Lasting', count: 42 },
+    { label: 'Memorized', count: 65 },
+    { label: 'Proficient', count: 180 },
   ];
 
   const totalLearnedWords = memoryLevels.reduce(
@@ -85,7 +77,7 @@ export function OverviewPage() {
         {/* Left Column: 8 cols */}
         <div className="md:col-span-8 flex flex-col gap-6">
           {/* Learned Words Card */}
-          <Card className="border border-border/60 rounded-2xl bg-card shadow-xs overflow-hidden">
+          <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-baseline gap-2">
@@ -96,7 +88,7 @@ export function OverviewPage() {
                     learned words
                   </span>
                 </div>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full border border-primary/30 bg-primary/10 text-primary">
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary">
                   Active Retention
                 </span>
               </div>
@@ -107,11 +99,9 @@ export function OverviewPage() {
                 {memoryLevels.map((lvl, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-muted/30 border border-border/40"
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-2xl bg-muted/30"
                   >
-                    <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-xs font-bold ${lvl.color}`}
-                    >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                       {lvl.count}
                     </div>
                     <span className="text-[11px] font-medium text-muted-foreground truncate w-full">
@@ -124,18 +114,18 @@ export function OverviewPage() {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Link href={RouteEnum.FLASHCARD_REVIEW} className="flex-1">
-                  <Button className="w-full gap-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xs">
-                    <Icons name="sparkles" className="h-4 w-4" />
-                    Review Pairing ({dueCount > 0 ? dueCount : 15} words)
+                  <Button className="w-full">
+                    <Icons name="sparkles" />
+                    <span>Review Pairing ({dueCount > 0 ? dueCount : 15} words)</span>
                   </Button>
                 </Link>
                 <Link href={RouteEnum.FLASHCARD_REVIEW} className="flex-1">
                   <Button
                     variant="secondary"
-                    className="w-full gap-2 rounded-xl font-semibold shadow-xs"
+                    className="w-full"
                   >
-                    <Icons name="book-open" className="h-4 w-4" />
-                    Flashcards Mode
+                    <Icons name="book-open" />
+                    <span>Flashcards Mode</span>
                   </Button>
                 </Link>
               </div>
@@ -143,7 +133,7 @@ export function OverviewPage() {
           </Card>
 
           {/* Frequently Missed Words */}
-          <Card className="border border-border/60 rounded-2xl bg-card shadow-xs">
+          <Card className="rounded-3xl border-none bg-card shadow-xs">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
@@ -163,13 +153,13 @@ export function OverviewPage() {
                 {missedWords.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col justify-between p-3.5 rounded-xl bg-muted/40 border border-border/50 space-y-2"
+                    className="flex flex-col justify-between p-3.5 rounded-2xl bg-muted/30 space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-sm text-foreground">
                         {item.word}
                       </span>
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400">
                         Error: {item.errorRate}
                       </span>
                     </div>

@@ -1,22 +1,30 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { usePathname, useRouter, routing } from '@/shared/i18n/routing';
-import { Icons } from '@lumen/uikit/icons';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  buttonVariants,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { cookieHelper } from '@lumen/utils';
+
+import { NATIVE_LANGUAGE_STORAGE_KEY } from '@/shared/constants';
+import { routing, usePathname, useRouter } from '@/shared/i18n/routing';
+
+interface LanguageSwitcherProps {
+  align?: 'start' | 'end';
+}
 
 const LABELS: Record<string, { label: string; flag: string }> = {
-  en: { label: 'English', flag: '🇺🇸' },
   vi: { label: 'Tiếng Việt', flag: '🇻🇳' },
+  en: { label: 'English', flag: '🇺🇸' },
+  ja: { label: '日本語', flag: '🇯🇵' },
 };
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ align = 'end' }: LanguageSwitcherProps) {
   const t = useTranslations('Settings');
   const locale = useLocale();
   const pathname = usePathname();
@@ -24,6 +32,17 @@ export function LanguageSwitcher() {
 
   const change = (next: string) => {
     if (next !== locale) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(NATIVE_LANGUAGE_STORAGE_KEY, next);
+        cookieHelper.set(NATIVE_LANGUAGE_STORAGE_KEY, next, {
+          expires: 365,
+          path: '/',
+        });
+        cookieHelper.set('NEXT_LOCALE', next, {
+          expires: 365,
+          path: '/',
+        });
+      }
       router.replace(pathname, { locale: next });
     }
   };
@@ -36,7 +55,7 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={t('appearance.language')}
+        aria-label={t('appearance.nativeLanguage')}
         className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 text-foreground transition-all hover:border-primary/40 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 shadow-sm"
       >
         <span className="text-sm">{currentLabel.flag}</span>

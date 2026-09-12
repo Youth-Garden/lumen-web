@@ -1,102 +1,118 @@
 # Đặc Tả Kiến Trúc & Luồng Học Từ Vựng (Vocabulary Learning Flow Specification)
 
-Tài liệu quy chuẩn luồng học từ vựng thông minh theo cơ chế **Dynamic Learning Queue** (tương tự mô hình Lingoland/Duolingo/Anki) tích hợp cho nền tảng Lumen.
+Tài liệu quy chuẩn luồng học từ vựng thông minh theo cơ chế **Dynamic Learning Queue** kết hợp **Spaced Repetition** tích hợp cho nền tảng Lumen.
 
 ---
 
-## 1. Khởi tạo phiên học & Lọc danh sách từ (Word Pool)
+## 1. Triết Lý Cốt Lõi: Intake Scope vs. Continuous Review
 
-### Trường hợp A: Bấm Learn tại Folder (Thư mục chính)
+### 1.1. Bản chất của Folder & Topic: Phạm Vi Nạp Từ Mới (Intake Boundary / Scope)
 
-- **Phạm vi gom từ**: Gom toàn bộ từ vựng thuộc tất cả các topic con nằm trong Folder đó.
-- **Xử lý**: Trộn ngẫu nhiên (shuffle) toàn bộ danh sách.
-- **Quota mục tiêu ($N$)**: Rút ra đúng số lượng từ mục tiêu theo cấu hình bài học của người dùng:
-  - **A few**: 7 - 10 câu ($N = 7$ từ gốc)
-  - **Moderate**: 10 - 15 câu ($N = 10$ từ gốc)
-  - **Many**: 15 - 20 câu ($N = 15$ từ gốc)
-  - **A lot**: 20 - 26 câu ($N = 20$ từ gốc - Mặc định)
+- **Không tạo ốc đảo cô lập (Anti-Silos)**: Hệ thống từ vựng không phân chia cô lập theo kiểu "từ của folder nào chỉ được học và ôn trong folder đó".
+- **Vai trò của Folder & Topic**:
+  - Đóng vai trò là **giới hạn phạm vi nạp từ mới (Intake Scope)** trong một khoảng thời gian nhất định (ví dụ: người dùng đặt mục tiêu nạp bộ từ TOEIC 600 trong tháng này, hoặc học chuyên đề Hợp đồng trong tuần này).
+  - Giúp người học không bị ngợp và định hình lộ trình rõ ràng khi bắt đầu tiếp cận khối lượng từ vựng mới.
+- **Tính liên tục của Spaced Repetition (Global Review)**:
+  - Một khi một từ vựng đã được nạp vào trí nhớ (`level >= 1` hoặc đã qua bước thiết lập ban đầu), từ đó trở thành một phần trong vốn từ vựng toàn cục của người dùng.
+  - Chu trình ôn tập định kỳ (Spaced Repetition Review) và luyện tập phản xạ diễn ra liên tục, tổng hợp xuyên suốt toàn bộ các từ đã học, không bị rào cản bởi ranh giới folder.
 
-### Trường hợp B: Bấm Learn tại 1 Topic cụ thể (Chuyên đề)
+### 1.2. Vai Trò Của Flashcard vs. Bài Tập Tương Tác (Interactive Games / Quizzes)
 
-- **Ưu tiên 1**: Lấy toàn bộ từ vựng thuộc Topic hiện tại trực tiếp theo `card.topic`.
-- **Phạm vi**: Học tập trung toàn bộ danh sách từ của chủ đề được chọn.
+Hệ thống phân định rạch ròi 2 hình thức tương tác theo từng giai đoạn nhận thức của người học:
+
+1. **Flashcard (Thẻ 2 mặt chi tiết) — Cổng Nạp Đầu Vào (First-Time Onboarding Gate Only)**:
+   - **Chỉ xuất hiện DUY NHẤT một lần** khi người học lần đầu tiên bắt gặp từ mới (`level === 0, learningStep === 0`).
+   - **Mục đích**:
+     - Cho phép người học khám phá từ: xem cách viết, nghe phát âm chuẩn US/UK, xem loại từ, nghĩa tiếng Việt, giải nghĩa bản xứ, và câu ví dụ ngữ cảnh song ngữ.
+     - **Chọn mức xuất phát điểm (Self-Assessment Baseline)**:
+       - **Thông thạo ngay (Phím 1)**: Nếu người học đã biết rõ từ này từ trước $\rightarrow$ Nhảy vọt lên Level 5, không cần học lại các bước cơ bản.
+       - **Nhớ tạm (Phím 3)**: Người học đã mang máng biết từ $\rightarrow$ Đưa vào Level 2 để ôn luyện nhanh.
+       - **Chưa biết (Enter)**: Người học chưa từng biết từ này $\rightarrow$ Bắt đầu từ Level 0, đưa vào chu trình luyện tập chi tiết.
+
+2. **Bài tập tương tác & Mini-games — Toàn Bộ Chu Trình Luyện Tập & Ôn Tập (Interactive Practice)**:
+   - **TUYỆT ĐỐI KHÔNG DÙNG FLASHCARD** cho các phiên sau:
+     - Các bước luyện tập tiếp theo trong cùng phiên học.
+     - Giai đoạn vét hàng đợi (Queue clearing).
+     - **Luyện tập các từ hay sai (Frequently Missed Words)**.
+     - Các phiên ôn tập định kỳ Spaced Repetition (Due Review).
+   - **Hình thức**: 100% chuyển sang các bài tập tương tác đa giác quan để kích thích phản xạ chủ động (**Active Recall**):
+     - Trắc nghiệm chọn nghĩa tiếng Việt (`CHOICE_MEANING`).
+     - Trắc nghiệm chọn từ tiếng Anh (`CHOICE_TERM`).
+     - Gõ chính tả theo phát âm và ngữ cảnh (`TYPING`).
+     - Bài tập ngữ cảnh / điền từ vào câu.
 
 ---
 
-## 2. Cơ chế Dynamic Learning Queue (Hàng Đợi Học Linh Hoạt)
+# Đặc Tả Kiến Trúc & Luồng Học Từ Vựng (Vocabulary Learning Flow Specification)
 
-Mỗi phiên học vận hành dựa trên **2 hàng đợi độc lập**:
-
-1. **`ActiveQueue`**: Hàng đợi các từ đang học trong vòng lặp hiện tại.
-2. **`ReviewQueue`**: Hàng đợi gom các từ trả lời "Nhớ tạm" (Phím 3) hoặc "Chưa biết" (Enter) cần học lặp lại.
-
-### Quy tắc hiển thị bước học (Progress Range)
-
-- Bộ đếm thanh tiến độ header tính toán tỷ lệ từ hoàn thành (`masteredIds.length / poolCards.length * 100`).
-- Độ dài thực tế của phiên học phụ thuộc vào mức độ thuộc từ của người dùng. Từ đánh dấu "Chưa biết" sẽ được đưa về cuối hàng đợi để kiểm tra lại ngay trong phiên.
+Tài liệu quy chuẩn luồng học từ vựng thông minh theo cơ chế **Dynamic Learning Queue** kết hợp **Spaced Repetition** tích hợp cho nền tảng Lumen.
 
 ---
 
-## 3. Vòng Lặp Học Từng Thẻ (Step-by-Step Flashcard Interaction)
+## 1. Triết Lý 3 Chế Độ Học & Vòng Lặp Thông Minh (The 3 Study Modes)
 
-Ở mỗi bước, hiển thị thẻ đầu tiên trong `ActiveQueue` ([StudyFlashcard]):
+Hệ thống phân định rạch ròi 3 chế độ học tập với mục đích nhận thức và giao diện chuyên biệt:
+
+| Tiêu chí | 1. Học từ mới (`LEARN_NEW`) | 2. Luyện tập (`PRACTICE`) | 3. Thẻ ghi nhớ (`FLASHCARD`) |
+| :--- | :--- | :--- | :--- |
+| **Bản chất** | Nạp từ mới từ Pinned Folder kết hợp đan xen ôn từ cũ. | Luyện phản xạ chủ động (**Active Recall**) cho từ đã học. | Ôn lướt nhanh thẻ nhớ truyền thống cho từ đã học. |
+| **Flashcard lật 2 mặt** | **Có** (chỉ xuất hiện ở lần đầu gặp từ mới để chọn xuất phát điểm). | **TUYỆT ĐỐI KHÔNG CÓ FLASHCARD**. | **100% FLASHCARD** (không có câu trắc nghiệm hay gõ từ). |
+| **Bài tập tương tác** | Có (trắc nghiệm, điền từ củng cố sau flashcard). | **100% bài tập**: Chọn từ (`CHOICE_TERM`), Chọn nghĩa (`CHOICE_MEANING`), Điền từ (`TYPING`). | **Không có bài tập tương tác**. |
+| **Giao diện đáy** | 3 nút xuất phát điểm (1: Mastered, 3: Temp, Enter: Unknown). | Các lựa chọn đáp án trắc nghiệm / bàn phím gõ từ + Drawer giải thích. | **2 nút đánh giá tiến độ chu trình hoa**:<br>- **[ Ôn lại ]** (Đỏ): Giảm progress hoa, đưa về cuối queue.<br>- **[ Đã thuộc ]** (Xanh): Tăng progress hoa, hoàn thành thẻ. |
+| **Nguồn từ** | Pinned Folder (ưu tiên từ chưa học `level === 0`). | Từ đến hạn ôn (`Due Cards`) hoặc Từ hay sai (`Missed Words`). | Từ đến hạn ôn (`Due Cards`) hoặc Từ hay sai (`Missed Words`). |
+
+---
+
+## 2. Quy Tắc Vòng Lặp Học Tập Khép Kín (Learning Cycle State Machine)
+
+Học từ vựng là một chu trình liên tục giữa **Nạp mới** và **Bảo tồn trí nhớ**:
 
 ```mermaid
-graph TD
-  Start[Lấy từ từ ActiveQueue] --> Front[Mặt trước: Term + Phát âm US/UK subtle buttons]
-  Front -->|Space / Enter / Click| Back[Mặt sau: Nghĩa Việt + Giải nghĩa Anh + Ví dụ song ngữ]
-  Back --> Choice{Đánh giá ghi nhớ}
-  Choice -->|Phím 1: Thông thạo| Mastered[Ghi nhận Mastery -> Xóa khỏi queue]
-  Choice -->|Phím 3: Nhớ tạm| Review[Đưa vào ReviewQueue -> Ôn cuối phiên]
-  Choice -->|Enter: Chưa biết| Again[Đưa về cuối ActiveQueue -> Học lại ngay]
+graph LR
+  A[Học từ mới - Pinned Folder] -->|Nạp & ghi nhận tiến độ| B{Còn từ đến hạn ôn tập?}
+  B -->|dueCount > 0| C[Ưu tiên: Luyện tập Quizzes & Thẻ ghi nhớ]
+  C -->|Ôn tập hoàn tất| D[dueCount = 0]
+  D -->|Tự động chuyển nút Luyện tập -> Học từ mới| A
+  B -->|dueCount = 0| A
 ```
 
-### 3.1. Mặt trước Flashcard (Front Side)
-
-- Hiển thị từ vựng (`term`) kiểu chữ đậm rõ nét.
-- Nút phát âm US và UK kiểu `subtle` (không viền, nền trong suốt, hover làm nổi bật).
-- Gợi ý thao tác lật thẻ: "Lật - Nhấn Space".
-
-### 3.2. Mặt sau Flashcard (Back Side - Detailed Explanation)
-
-- **Từ vựng & Loại từ**: `term` kèm badge phân loại (`n.`, `v.`, `adj.`...).
-- **Nghĩa tiếng Việt**: Chữ to, đậm, rõ ràng (lấy từ `definition.vi`).
-- **Giải nghĩa tiếng Anh**: Định nghĩa nguyên bản tiếng Anh (`definition.en`) giúp hiểu sâu ngữ cảnh.
-- **Hộp ví dụ thực tế song ngữ**:
-  - Câu tiếng Anh in nghiêng (`example.sentence.en`).
-  - Dịch nghĩa tiếng Việt bên dưới (`example.sentence.vi`).
-- Ảnh minh họa từ vựng (nếu có) hiển thị gọn gàng.
-
-### 3.3. Các phím tắt thao tác (Keyboard Shortcuts)
-
-- `Space`: Lật qua lại giữa 2 mặt của thẻ.
-- `1`: Đánh giá **Thông thạo** (Mastered).
-- `3`: Đánh giá **Nhớ tạm** (Review).
-- `Enter`: Đánh giá **Chưa biết** (Again - khi đang ở mặt sau) hoặc Lật thẻ (khi ở mặt trước).
-- `U`: Phát âm giọng Mỹ (US).
-- `K`: Phát âm giọng Anh (UK).
-- `Escape`: Thoát phiên học.
+- **Quy tắc chuyển đổi nút thông minh**:
+  - Khi còn từ cần luyện tập (`dueCount > 0`): Nút **Luyện tập** hiển thị nổi bật kèm số lượng từ cần ôn (ví dụ: `Luyện tập • 12`).
+  - Khi đã luyện tập hết các từ cần ôn (`dueCount === 0`): Nút Luyện tập tự động chuyển trạng thái/nhãn thành **"Học từ mới"** (hoặc hiển thị huy hiệu "Đã hoàn thành ôn tập" và chuyển trọng tâm CTA sang nạp từ mới từ Pinned Folder).
 
 ---
 
-## 4. Giai đoạn Vét Hàng Đợi (Review Phase)
+## 3. Đặc Tả Chi Tiết Từng Chế Độ
 
-- Khi `ActiveQueue` rỗng:
-  1. Hệ thống kiểm tra `ReviewQueue`.
-  2. **Nếu `ReviewQueue` còn từ**:
-     - Chuyển toàn bộ các từ trong `ReviewQueue` thành `ActiveQueue` mới.
-     - Tiêu đề trên thẻ chuyển thành **"Từ ôn tập"**.
-     - Lặp lại cho đến khi người dùng thông thạo toàn bộ.
-  3. **Nếu `ReviewQueue` rỗng**:
-     - Toàn bộ từ trong quota đã được ghi nhớ $\rightarrow$ Chuyển sang màn hình Tổng kết ([StudyCompleted]).
+### 3.1. Chế độ 1: Học từ mới (`LEARN_NEW`)
+- Bắt đầu bằng Flashcard lật 2 mặt cho các từ mới hoàn toàn (`level === 0, learningStep === 0`):
+  - Phím `Space`: Lật thẻ.
+  - Phím `1`: Đánh dấu **Thông thạo ngay** $\rightarrow$ Level 5.
+  - Phím `3`: Đánh dấu **Nhớ tạm** $\rightarrow$ Level 2.
+  - Phím `Enter`: Đánh dấu **Chưa biết** $\rightarrow$ Level 0.
+- Các bước sau đó đan xen bài tập tương tác (trắc nghiệm, điền từ) cho từ mới và một số từ cũ để củng cố ghi nhớ dài hạn.
+
+### 3.2. Chế độ 2: Luyện tập (`PRACTICE`)
+- **100% là bài tập tương tác / mini-games**:
+  - `CHOICE_TERM`: Cho nghĩa tiếng Việt $\rightarrow$ Chọn từ tiếng Anh đúng trong 4 đáp án.
+  - `CHOICE_MEANING`: Cho từ tiếng Anh $\rightarrow$ Chọn nghĩa tiếng Việt đúng.
+  - `TYPING`: Cho phát âm, ngữ cảnh và loại từ $\rightarrow$ Gõ chính xác từ tiếng Anh.
+- Trả lời đúng $\rightarrow$ Tăng bước tiến độ mầm cây $\rightarrow$ Chuyển câu tiếp theo.
+- Trả lời sai $\rightarrow$ Mở drawer sửa sai $\rightarrow$ Đưa từ vào cuối hàng đợi để kiểm tra lại phản xạ ngay trong phiên.
+
+### 3.3. Chế độ 3: Thẻ ghi nhớ (`FLASHCARD`)
+- **Giao diện chuyên biệt cho ôn lướt nhanh**:
+  - Header: Tiêu đề phiên học + Biểu tượng **Sunflower / Plant Mastery Ring** (thể hiện tiến độ mầm cây/hoa hiện tại của từ).
+  - Center: Thẻ Flashcard 2 mặt (Mặt trước: từ, phát âm US/UK kèm audio, gợi ý phím Space; Mặt sau: giải nghĩa tiếng Việt, nghĩa tiếng Anh, ví dụ ngữ cảnh song ngữ).
+  - Bottom Action Bar (luôn hiển thị rõ ràng):
+    - **Nút đỏ `[ Ôn lại ]`** (Phím `1` / `Enter`): Bấm khi quên từ $\rightarrow$ Giảm bước tiến độ hoa, đưa thẻ về cuối hàng đợi để ôn lại, gửi API review `isCorrect: false`.
+    - **Nút xanh `[ Đã thuộc ]`** (Phím `2` / `3`): Bấm khi đã thuộc $\rightarrow$ Tăng bước tiến độ hoa, hoàn thành thẻ và loại khỏi hàng đợi, gửi API review `isCorrect: true`.
 
 ---
 
-## 5. Kết Thúc Phiên Học (Session Completion)
+## 4. Đồng Bộ Dữ Liệu & Hoàn Thành (Persistence & Completion)
 
-1. **Thống kê chi tiết**:
-   - Số lượng từ hoàn thành trong phiên.
-   - Danh sách các từ người dùng bấm "Chưa biết" nhiều lần nhất kèm số lần sai để theo dõi.
-2. **Cập nhật dữ liệu (Persistence)**:
-   - Gửi kết quả đánh giá thẻ về backend API (`POST /vocabulary/flashcards/:id/review`).
-   - Hệ thống cập nhật cấp độ bông hoa ghi nhớ (Spaced Repetition Mastery 1-5).
+1. **Gửi kết quả đánh giá**: Gửi qua API `POST /api/vocabulary/words/flashcards/review` cập nhật Spaced Repetition mastery.
+2. **Tổng kết phiên**: Hiển thị bảng tổng kết số từ đã thuộc, số từ cần rèn luyện thêm, và cập nhật trạng thái vòng lặp về Dashboard.
+
+

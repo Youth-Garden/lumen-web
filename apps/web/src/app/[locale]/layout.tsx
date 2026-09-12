@@ -1,5 +1,5 @@
 import { Providers } from '@/shared/components/providers';
-import { routing } from '@/shared/i18n/routing';
+import { type Locale, routing } from '@/shared/i18n/routing';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -28,7 +28,7 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as Locale)) {
     notFound();
   }
 

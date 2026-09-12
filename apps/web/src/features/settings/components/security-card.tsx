@@ -1,13 +1,13 @@
 'use client';
 
 import {
+  Card,
   CardContent,
   CardHeader,
   CardTitle,
   Input,
   Label,
 } from '@lumen/uikit/components';
-import { SettingsCard } from './settings-card';
 import { useTranslations } from 'next-intl';
 
 import { UserInfo } from '@/services/auth';
@@ -20,7 +20,7 @@ export function SecurityCard({ user }: SecurityCardProps) {
   const t = useTranslations('Settings');
 
   return (
-    <SettingsCard>
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>{t('account.title')}</CardTitle>
       </CardHeader>
@@ -39,6 +39,6 @@ export function SecurityCard({ user }: SecurityCardProps) {
           </p>
         </div>
       </CardContent>
-    </SettingsCard>
+    </Card>
   );
 }

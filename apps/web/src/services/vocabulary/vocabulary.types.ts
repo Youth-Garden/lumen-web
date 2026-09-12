@@ -28,6 +28,12 @@ export interface VocabularyWord {
   audioUkUrl?: string;
   cefrLevel?: string;
   imageUrl?: string;
+  level?: number;
+  learningStep?: number;
+  masteryScore?: number;
+  isWilted?: boolean;
+  flashcardId?: string;
+  wordId?: string;
   definitions: VocabularyDefinition[];
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
-import { customRegistry, registerIcon, type CustomIconName } from './registry';
+import { registry, registerIcon, type IconRegistryName } from './registry';
 import type { IconProps } from './types';
 
 function toPascalCase(str: string): string {
@@ -10,7 +10,7 @@ function toPascalCase(str: string): string {
     .join('');
 }
 
-export type IconName = CustomIconName | (string & {});
+export type IconName = IconRegistryName | (string & {});
 
 export interface IconsProps extends IconProps {
   name: IconName;
@@ -26,7 +26,7 @@ export function Icons({
   ...props
 }: IconsProps) {
   let IconComponent: React.ComponentType<any> | undefined =
-    customRegistry[name];
+    registry[name];
 
   if (!IconComponent) {
     const pascalName = toPascalCase(name);
@@ -54,14 +54,5 @@ export function Icons({
   );
 }
 
-export { customRegistry as registry, registerIcon };
-export {
-  GithubIcon,
-  GoogleIcon,
-  PlantGrowthIcon,
-  SpinnerIcon,
-  TwitterIcon,
-  YoutubeIcon,
-  type PlantGrowthIconProps,
-  type SpinnerIconProps,
-} from './svgs';
+export { registerIcon };
+export type { IconProps, IconComponent } from './types';

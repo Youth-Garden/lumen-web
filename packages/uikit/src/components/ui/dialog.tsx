@@ -12,7 +12,6 @@ function Dialog({ onOpenChange, ...props }: DialogPrimitive.Root.Props) {
     <DialogPrimitive.Root
       data-slot="dialog"
       onOpenChange={(open, eventDetails) => {
-        // Bỏ qua outsidePress vì Backdrop của PortalRenderer đã xử lý click-outside
         if (!open && eventDetails?.reason === 'outside-press') {
           return;
         }

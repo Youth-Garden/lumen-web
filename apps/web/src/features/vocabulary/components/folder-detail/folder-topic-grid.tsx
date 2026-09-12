@@ -10,6 +10,8 @@ export interface TopicStatItem {
   viName: string;
   imageUrl?: string;
   count: number;
+  learnedCount: number;
+  dueCount: number;
 }
 
 export interface FolderTopicGridProps {
@@ -32,7 +34,7 @@ export function FolderTopicGrid({
   onGoBack,
 }: FolderTopicGridProps) {
   const t = useTranslations('Vocabulary.Folders');
-  const radius = 36;
+  const radius = 37;
   const circumference = 2 * Math.PI * radius;
 
   return (
@@ -70,11 +72,15 @@ export function FolderTopicGrid({
           const topicImg = topicItem.imageUrl;
           const isSelected = selectedTopic === topicItem.name;
 
-          const masteredCount = 0;
-          const dueCount = 0;
+          const learnedCount = topicItem.learnedCount ?? 0;
+          const dueCount = topicItem.dueCount ?? 0;
           const progressRatio =
-            topicItem.count > 0 ? masteredCount / topicItem.count : 0;
+            topicItem.count > 0 ? Math.min(1, learnedCount / topicItem.count) : 0;
           const strokeDashoffset = circumference * (1 - progressRatio);
+          const progressStroke =
+            progressRatio >= 1
+              ? '#10b981'
+              : '#0ea5e9';
 
           return (
             <div
@@ -82,7 +88,7 @@ export function FolderTopicGrid({
               onClick={() => onSelectTopic(topicItem.name)}
               className={`group flex flex-col items-center justify-between text-center select-none cursor-pointer transition-all duration-200 p-2.5 rounded-2xl w-36 sm:w-40 ${
                 isSelected
-                  ? 'bg-card/90 shadow-md ring-2 ring-primary scale-105'
+                  ? 'bg-primary/10 shadow-sm scale-105'
                   : 'hover:bg-muted/40 hover:scale-102'
               }`}
             >
@@ -97,25 +103,27 @@ export function FolderTopicGrid({
                     cy="44"
                     r={radius}
                     stroke="currentColor"
-                    strokeWidth="4.5"
-                    className="text-muted/20"
+                    strokeWidth="2.5"
+                    className="text-black/[0.06] dark:text-white/[0.08]"
                     fill="none"
                   />
-                  <circle
-                    cx="44"
-                    cy="44"
-                    r={radius}
-                    stroke="#22c55e"
-                    strokeWidth="4.5"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    className="transition-all duration-500"
-                    fill="none"
-                  />
+                  {progressRatio > 0 && (
+                    <circle
+                      cx="44"
+                      cy="44"
+                      r={radius}
+                      stroke={progressStroke}
+                      strokeWidth="3"
+                      strokeDasharray={circumference}
+                      strokeDashoffset={strokeDashoffset}
+                      strokeLinecap="round"
+                      className="transition-all duration-700 ease-out"
+                      fill="none"
+                    />
+                  )}
                 </svg>
 
-                <div className="w-16 h-16 sm:w-17 sm:h-17 rounded-full overflow-hidden relative shadow-sm bg-muted/40 border border-border/40 transition-transform group-hover:scale-105">
+                <div className="w-16 h-16 sm:w-17 sm:h-17 rounded-full overflow-hidden relative bg-muted/40 transition-transform group-hover:scale-105">
                   {topicImg ? (
                     <Image
                       src={topicImg}
@@ -148,7 +156,7 @@ export function FolderTopicGrid({
                 <div className="flex items-center gap-1 text-[#22c55e]">
                   <Icons name="check" className="w-3.5 h-3.5 stroke-[2.5]" />
                   <span>
-                    {masteredCount}/{topicItem.count}
+                    {learnedCount}/{topicItem.count}
                   </span>
                 </div>
 

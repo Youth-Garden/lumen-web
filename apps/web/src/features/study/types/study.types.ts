@@ -1,5 +1,11 @@
 import type { VocabularyWord } from '@/services/vocabulary';
 
+export enum StudySessionMode {
+  LEARN_NEW = 'LEARN_NEW',
+  PRACTICE = 'PRACTICE',
+  FLASHCARD = 'FLASHCARD',
+}
+
 export enum StudyExerciseType {
   FLASHCARD = 'FLASHCARD',
   CHOICE_TERM = 'CHOICE_TERM',

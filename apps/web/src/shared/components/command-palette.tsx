@@ -18,15 +18,14 @@ import {
   CommandSeparator,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { type PortalProps, usePortal } from '@lumen/uikit/portal';
 import { useAuthStore } from '@/store/auth.store';
-import { useUiStore } from '@/store/ui.store';
 import { useLogout } from '@/features/auth/hooks';
 import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 
-export function CommandPalette() {
+export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
   const router = useRouter();
-  const { commandPaletteOpen, setCommandPaletteOpen } = useUiStore();
   const { logout } = useLogout();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
@@ -34,7 +33,7 @@ export function CommandPalette() {
   const debouncedSearch = useDebounce(search, 400);
 
   const { data: foldersData } = useVocabularyFolders({
-    enabled: commandPaletteOpen && isAuthenticated,
+    enabled: Boolean(isOpen) && isAuthenticated,
   });
   const allFolders = foldersData?.data || [];
   const filteredFolders = debouncedSearch
@@ -47,36 +46,30 @@ export function CommandPalette() {
     { search: debouncedSearch },
     {
       enabled:
-        commandPaletteOpen && isAuthenticated && debouncedSearch.length > 1,
+        Boolean(isOpen) && isAuthenticated && debouncedSearch.length > 1,
     },
   );
 
   const isSearching = debouncedSearch.length > 1 && vocabWords.isFetching;
 
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setCommandPaletteOpen(!commandPaletteOpen);
-      }
-    };
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, [commandPaletteOpen, setCommandPaletteOpen]);
-
   const runCommand = React.useCallback(
     (command: () => void) => {
-      setCommandPaletteOpen(false);
+      onDismiss?.();
       setSearch('');
       command();
     },
-    [setCommandPaletteOpen],
+    [onDismiss],
   );
 
   return (
     <CommandDialog
-      open={commandPaletteOpen}
-      onOpenChange={setCommandPaletteOpen}
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onDismiss?.();
+          setSearch('');
+        }
+      }}
     >
       <CommandInput
         placeholder="Search folders, words, or commands... (Ctrl + K)"
@@ -198,4 +191,28 @@ export function CommandPalette() {
       </CommandList>
     </CommandDialog>
   );
+}
+
+export function CommandPaletteShortcutListener() {
+  const [presentCommandPalette, dismissCommandPalette, isOpen] = usePortal(
+    CommandPalette,
+    { key: 'command_palette' },
+  );
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        if (isOpen) {
+          dismissCommandPalette();
+        } else {
+          presentCommandPalette();
+        }
+      }
+    };
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, [isOpen, presentCommandPalette, dismissCommandPalette]);
+
+  return null;
 }

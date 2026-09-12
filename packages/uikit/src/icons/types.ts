@@ -8,6 +8,8 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'style'> {
   style?: CSSProperties;
   testID?: string;
   variant?: 'bold' | 'linear';
+  stage?: number;
+  isWilted?: boolean;
 }
 
 export type IconComponent = ComponentType<IconProps>;

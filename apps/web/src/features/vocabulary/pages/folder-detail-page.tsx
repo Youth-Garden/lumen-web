@@ -6,16 +6,21 @@ import { useParams } from 'next/navigation';
 import { useState, useMemo } from 'react';
 
 import { useVocabularyFolderDetail } from '@/features/vocabulary/hooks';
+import { useDueFlashcards } from '@/features/study/hooks';
 import { RouteEnum } from '@/shared/constants';
-import { useGoBack, usePronunciation } from '@/shared/hooks';
+import { useGoBack } from '@/shared/hooks';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import {
   StudyView,
   type StudyViewData,
 } from '@/features/study/components/study-view';
+import { StudySessionMode } from '@/features/study/types/study.types';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
-import { FolderTopicGrid } from '../components/folder-detail/folder-topic-grid';
+import {
+  FolderTopicGrid,
+  type TopicStatItem,
+} from '../components/folder-detail/folder-topic-grid';
 import { TopicWordsList } from '../components/folder-detail/topic-words-list';
 
 interface FolderDetailPageProps {
@@ -31,8 +36,11 @@ export function FolderDetailPage({
   const folderId = propFolderId || routeId;
 
   const goBack = useGoBack(RouteEnum.VOCABULARY);
-  const { playPronunciation } = usePronunciation();
   const { data: folderDetail, isLoading } = useVocabularyFolderDetail(folderId);
+  const { data: dueFlashcardsResponse } = useDueFlashcards(
+    { folderId },
+    { enabled: Boolean(folderId) },
+  );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [isViewingWords, setIsViewingWords] = useState(false);
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
@@ -42,24 +50,50 @@ export function FolderDetailPage({
     [folderDetail?.flashcards],
   );
 
-  const topicStats = useMemo(() => {
+  const dueFlashcards = useMemo(
+    () => dueFlashcardsResponse?.data || [],
+    [dueFlashcardsResponse?.data],
+  );
+
+  const topicStats: TopicStatItem[] = useMemo(() => {
     if (!flashcards.length) return [];
+    const dueIdSet = new Set(
+      dueFlashcards.flatMap((df) => [df.flashcardId, df.wordId]),
+    );
+
     const topicMap = new Map<
       string,
-      { count: number; viName: string; imageUrl: string }
+      {
+        count: number;
+        learnedCount: number;
+        dueCount: number;
+        viName: string;
+        imageUrl: string;
+      }
     >();
 
     flashcards.forEach((card) => {
       const top = card.topic?.trim() || t('generalTopic');
+      const isLearned =
+        (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 1;
+      const isDue =
+        dueIdSet.has(card.id) ||
+        Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
+        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId));
+
       const existing = topicMap.get(top);
       if (existing) {
         existing.count += 1;
+        if (isLearned) existing.learnedCount += 1;
+        if (isDue) existing.dueCount += 1;
         if (!existing.viName && card.topicVi) existing.viName = card.topicVi;
         if (!existing.imageUrl && card.topicImageUrl)
           existing.imageUrl = card.topicImageUrl;
       } else {
         topicMap.set(top, {
           count: 1,
+          learnedCount: isLearned ? 1 : 0,
+          dueCount: isDue ? 1 : 0,
           viName: card.topicVi || top,
           imageUrl: card.topicImageUrl || '',
         });
@@ -72,9 +106,11 @@ export function FolderDetailPage({
         viName: data.viName,
         imageUrl: data.imageUrl,
         count: data.count,
+        learnedCount: data.learnedCount,
+        dueCount: data.dueCount,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [flashcards, t]);
+  }, [flashcards, dueFlashcards, t]);
 
   const displayedFlashcards = useMemo(() => {
     if (!selectedTopic) return [];
@@ -101,7 +137,10 @@ export function FolderDetailPage({
     setSelectedTopic(null);
   };
 
-  const startStudy = (topicName: string | null) => {
+  const startStudy = (
+    topicName: string | null,
+    mode?: StudySessionMode,
+  ) => {
     let cardsToStudy = flashcards;
     if (topicName) {
       cardsToStudy = flashcards.filter((card) => {
@@ -115,6 +154,7 @@ export function FolderDetailPage({
     presentStudyView({
       cards: cardsToStudy,
       selectedTopic: topicName,
+      mode,
       folderName: topicName
         ? `${selectedTopicStat?.viName || topicName} (${topicName})`
         : folderDetail?.name || t('defaultFolderDescription'),
@@ -172,18 +212,29 @@ export function FolderDetailPage({
           topicViName={selectedTopicStat?.viName}
           flashcards={displayedFlashcards}
           onBackToTopics={handleBackToTopics}
-          onPlayAudio={playPronunciation}
         />
       )}
 
       {/* Floating Bottom Sticky Action Bar */}
       <StudyBottomActionBar
-        isTopicSelected={Boolean(isViewingWords && selectedTopic)}
-        title={selectedTopicStat?.viName || selectedTopic || ''}
-        onLearnNew={() => startStudy(isViewingWords ? selectedTopic : null)}
-        onPractice={() => startStudy(isViewingWords ? selectedTopic : null)}
-        onFlashcard={() => startStudy(isViewingWords ? selectedTopic : null)}
-        onClose={isViewingWords ? handleBackToTopics : undefined}
+        onLearnNew={() =>
+          startStudy(
+            isViewingWords ? selectedTopic : null,
+            StudySessionMode.LEARN_NEW,
+          )
+        }
+        onPractice={() =>
+          startStudy(
+            isViewingWords ? selectedTopic : null,
+            StudySessionMode.PRACTICE,
+          )
+        }
+        onFlashcard={() =>
+          startStudy(
+            isViewingWords ? selectedTopic : null,
+            StudySessionMode.FLASHCARD,
+          )
+        }
       />
     </div>
   );

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import type { Folder } from '@/services/vocabulary';
+import { useDragScroll } from '@/shared/hooks';
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -11,6 +12,8 @@ interface CurrentLearningFolderCardProps {
   dueCount: number;
   onSwitchFolder: () => void;
   onStudyNow: () => void;
+  onPractice?: () => void;
+  onFlashcards?: () => void;
   onViewFolder?: () => void;
   isLoading?: boolean;
 }
@@ -20,9 +23,13 @@ export function CurrentLearningFolderCard({
   dueCount,
   onSwitchFolder,
   onStudyNow,
+  onPractice,
+  onFlashcards,
   onViewFolder,
 }: CurrentLearningFolderCardProps) {
   const t = useTranslations('Vocabulary.Folders');
+  const tStudy = useTranslations('Vocabulary.Study');
+  const scrollRef = useDragScroll<HTMLDivElement>();
   if (!activeFolder) {
     return null;
   }
@@ -36,76 +43,134 @@ export function CurrentLearningFolderCard({
 
   return (
     <div className="space-y-2.5">
-      {/* Top Header outside card: Label and Switch folder button */}
       <div className="flex items-center justify-between px-1">
         <h3 className="text-base font-bold tracking-tight text-foreground">
           {t('pinnedFolder')}
         </h3>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={onSwitchFolder}
-          className="gap-1.5 font-semibold h-8 px-2.5"
-        >
-          <Icons name="refresh-cw" className="h-3.5 w-3.5 text-primary" />
+        <Button variant="secondary" size="sm" onClick={onSwitchFolder}>
+          <Icons name="refresh-cw" className="text-primary" />
           <span>{t('switchFolder')}</span>
         </Button>
       </div>
 
       {/* Main Card */}
       <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0 shadow-xs">
-            <Icons name="folder" className="h-6 w-6" />
-          </div>
+        <div className="flex items-center justify-between gap-3">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={onViewFolder}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onViewFolder?.();
+              }
+            }}
+            className="flex items-center gap-3.5 min-w-0 flex-1 text-left cursor-pointer group outline-none"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0 shadow-xs group-hover:bg-primary/25 transition-colors">
+              <Icons name="folder" className="h-6 w-6" />
+            </div>
 
-          <div className="space-y-1 min-w-0 flex-1">
-            <h4 className="text-base font-bold text-foreground truncate">
-              {displayName}
-            </h4>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
-              <span className="flex items-center gap-1 font-semibold text-primary">
-                <Icons name="check" className="h-3.5 w-3.5" />
-                <span>
-                  {t('learnedCountSummary', {
-                    learned: learnedApprox,
-                    total: wordCount,
-                  })}
-                </span>
-              </span>
-              {dueCount > 0 && (
-                <>
-                  <span>•</span>
-                  <span className="flex items-center gap-1 text-amber-500 font-semibold">
-                    <Icons name="clock" className="h-3.5 w-3.5" />
-                    <span>{t('dueCountSummary', { count: dueCount })}</span>
+            <div className="space-y-0.5 min-w-0 flex-1">
+              <h4 className="text-base font-bold text-foreground truncate group-hover:text-primary transition-colors">
+                {displayName}
+              </h4>
+              <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground flex-wrap leading-tight">
+                <span className="flex items-center gap-1 font-semibold text-primary">
+                  <Icons name="check" className="h-3 w-3" />
+                  <span>
+                    {t('learnedCountSummary', {
+                      learned: learnedApprox,
+                      total: wordCount,
+                    })}
                   </span>
-                </>
-              )}
+                </span>
+                {dueCount > 0 && (
+                  <>
+                    <span className="text-muted-foreground/60">•</span>
+                    <span className="flex items-center gap-1 text-amber-500 font-semibold">
+                      <Icons name="clock" className="h-3 w-3" />
+                      <span>{t('dueCountSummary', { count: dueCount })}</span>
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
+
+          {onViewFolder && (
+            <Button
+              variant="text"
+              size="icon-sm"
+              onClick={onViewFolder}
+              aria-label={t('viewFolder')}
+            >
+              <Icons name="chevron-right" />
+            </Button>
+          )}
         </div>
 
-        {/* Action Controls */}
-        <div className="grid grid-cols-2 gap-2.5 pt-0.5">
-          <Button
-            variant="default"
-            onClick={onStudyNow}
-            disabled={wordCount === 0}
-            className="gap-1.5 text-xs font-semibold cursor-pointer"
-          >
-            <Icons name="play" className="h-3.5 w-3.5 fill-current" />
-            <span>{t('learnNewWords')}</span>
-          </Button>
+        {/* Action Controls - Horizontally scrollable row */}
+        <div
+          ref={scrollRef}
+          className="flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5 -mx-1 px-1 cursor-grab active:cursor-grabbing select-none"
+        >
+          {dueCount > 0 ? (
+            <>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={onPractice || onStudyNow}
+                disabled={wordCount === 0}
+              >
+                <Icons name="sparkles" />
+                <span>{tStudy('practice')}</span>
+              </Button>
+
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onStudyNow}
+                disabled={wordCount === 0}
+              >
+                <Icons name="play" className="fill-current" />
+                <span>{tStudy('learnNew')}</span>
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={onStudyNow}
+                disabled={wordCount === 0}
+              >
+                <Icons name="play" className="fill-current" />
+                <span>{tStudy('learnNew')}</span>
+              </Button>
+
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onPractice || onStudyNow}
+                disabled={wordCount === 0}
+              >
+                <Icons name="sparkles" />
+                <span>{tStudy('practice')}</span>
+              </Button>
+            </>
+          )}
 
           <Button
             variant="outline"
-            onClick={onViewFolder}
-            className="gap-1.5 text-xs font-semibold cursor-pointer"
+            size="sm"
+            onClick={onFlashcards || onStudyNow}
+            disabled={wordCount === 0}
           >
-            <Icons name="eye" className="h-3.5 w-3.5" />
-            <span>{t('viewFolder')}</span>
+            <Icons name="layers" />
+            <span>{tStudy('flashcards')}</span>
           </Button>
         </div>
       </Card>

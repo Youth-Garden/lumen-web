@@ -1,7 +1,9 @@
 'use client';
 
-import { PlantGrowthIcon } from '@lumen/uikit/icons';
+import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
+
+import { Icons } from '@lumen/uikit/icons';
 
 export interface PlantMasteryRingProps {
   level: number;
@@ -97,22 +99,16 @@ export function PlantMasteryRing({
           let isSolidlyFilled = false;
           let isPartiallyFilled = false;
           let partialRatio = 0;
-          let activeEndAngle = segment.end;
 
           if (isGaugeMode) {
             isSolidlyFilled = index < clampedLevel;
           } else {
-            if (index === 0) {
-              if (clampedLevel === 0) {
-                if (learningStep > 0) {
-                  isPartiallyFilled = true;
-                  partialRatio = Math.min(1, learningStep / 5);
-                  activeEndAngle =
-                    segment.start +
-                    (segment.end - segment.start) * partialRatio;
-                }
-              } else {
-                isSolidlyFilled = true;
+            if (index < clampedLevel) {
+              isSolidlyFilled = true;
+            } else if (index === clampedLevel) {
+              if (learningStep > 0) {
+                isPartiallyFilled = true;
+                partialRatio = Math.min(1, learningStep / 5);
               }
             }
           }
@@ -129,21 +125,31 @@ export function PlantMasteryRing({
                 opacity={0.35}
               />
 
-              {/* Foreground Filled Notch */}
-              {(isSolidlyFilled || isPartiallyFilled) && (
-                <path
-                  d={describeArc(24, 24, 19.5, segment.start, activeEndAngle)}
-                  fill="none"
-                  strokeWidth="4.5"
-                  strokeLinecap="round"
-                  className={
-                    isWilted && isSolidlyFilled
-                      ? 'stroke-amber-500 dark:stroke-amber-400'
-                      : 'stroke-primary'
-                  }
-                  style={{ transition: 'd 0.3s ease-out' }}
-                />
-              )}
+              {/* Foreground Animated Notch */}
+              <motion.path
+                d={describeArc(24, 24, 19.5, segment.start, segment.end)}
+                fill="none"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                className={
+                  isWilted && isSolidlyFilled
+                    ? 'stroke-amber-500 dark:stroke-amber-400'
+                    : 'stroke-primary'
+                }
+                initial={false}
+                animate={{
+                  pathLength: isSolidlyFilled
+                    ? 1
+                    : isPartiallyFilled
+                      ? partialRatio
+                      : 0,
+                  opacity: isSolidlyFilled || isPartiallyFilled ? 1 : 0,
+                }}
+                transition={{
+                  pathLength: { duration: 0.45, ease: 'easeOut' },
+                  opacity: { duration: 0.2 },
+                }}
+              />
             </React.Fragment>
           );
         })}
@@ -159,11 +165,36 @@ export function PlantMasteryRing({
           style={{ width: innerIconSize, height: innerIconSize }}
           className="relative z-10 flex items-center justify-center select-none pointer-events-none"
         >
-          <PlantGrowthIcon
-            stage={clampedLevel > 0 ? clampedLevel : Math.min(5, learningStep)}
-            isWilted={isWilted}
-            className="w-full h-full"
-          />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`${clampedLevel > 0 ? clampedLevel : Math.min(5, learningStep)}-${learningStep}-${isWilted ? 'wilted' : 'healthy'}`}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{
+                scale: 0,
+                opacity: 0,
+                transition: { duration: 0.15, ease: 'easeIn' },
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 450,
+                damping: 22,
+                mass: 0.8,
+              }}
+              className="w-full h-full flex items-center justify-center"
+            >
+              <Icons
+                name="plant-growth"
+                stage={
+                  clampedLevel > 0
+                    ? clampedLevel
+                    : Math.min(5, learningStep)
+                }
+                isWilted={isWilted}
+                className="w-full h-full"
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
       ) : null}
     </div>

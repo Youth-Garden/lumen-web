@@ -9,7 +9,7 @@ import { Toaster } from '@lumen/uikit/components';
 import { TooltipProvider } from '@lumen/uikit/components';
 import { PropsWithChildren } from 'react';
 import NextTopLoader from 'nextjs-toploader';
-import { CommandPalette } from '../command-palette';
+import { CommandPaletteShortcutListener } from '../command-palette';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -25,7 +25,7 @@ export function Providers({ children }: PropsWithChildren) {
             {children}
             <Updater />
             <PortalRenderer />
-            <CommandPalette />
+            <CommandPaletteShortcutListener />
             <Toaster position="top-right" />
           </QueryProvider>
         </TooltipProvider>

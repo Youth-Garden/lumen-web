@@ -2,26 +2,17 @@
 
 import { useTranslations } from 'next-intl';
 
-import Image from 'next/image';
+import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
+import { type VocabularyWord } from '@/services/vocabulary';
 import { Icons } from '@lumen/uikit/icons';
-import { Button } from '@lumen/uikit/components';
-import {
-  PronunciationAccent,
-  type VocabularyWord,
-} from '@/services/vocabulary';
+import { usePortal } from '@lumen/uikit/portal';
+import { WordDetailSheet } from './word-detail-sheet';
 
 export interface TopicWordsListProps {
   topicName: string;
   topicViName?: string;
   flashcards: VocabularyWord[];
   onBackToTopics: () => void;
-  onPlayAudio: (payload: {
-    term: string;
-    audioUrl?: string;
-    audioUsUrl?: string;
-    audioUkUrl?: string;
-    accent: PronunciationAccent;
-  }) => void;
 }
 
 export function TopicWordsList({
@@ -29,12 +20,12 @@ export function TopicWordsList({
   topicViName,
   flashcards,
   onBackToTopics,
-  onPlayAudio,
 }: TopicWordsListProps) {
   const t = useTranslations('Vocabulary.Folders');
+  const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
+
   return (
     <div className="space-y-6">
-      {/* Header with Back to Topics button */}
       <div className="flex flex-col gap-4 border-b border-border/60 pb-4">
         <button
           type="button"
@@ -45,7 +36,7 @@ export function TopicWordsList({
           <span>{t('backToTopics')}</span>
         </button>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
             {topicViName || topicName}
           </h1>
@@ -58,116 +49,41 @@ export function TopicWordsList({
         </div>
       </div>
 
-      {/* Word List */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {flashcards.map((flashcard) => {
-          const primaryDefinition = flashcard.definitions?.[0];
-          const meaningVi = primaryDefinition?.definition?.vi || '';
-          const explainEn = primaryDefinition?.definition?.en || '';
-          const examples = primaryDefinition?.examples || [];
+          const primaryDef = flashcard.definitions?.[0];
+          const meaningVi =
+            primaryDef?.translationVi || primaryDef?.definition?.vi || '';
+          const partOfSpeech = primaryDef?.partOfSpeech || '';
 
           return (
-            <div
+            <button
               key={flashcard.id}
-              className="rounded-2xl bg-card p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start justify-between gap-5 border border-border/40"
+              type="button"
+              onClick={() => presentWordDetail(flashcard)}
+              className="flex items-center gap-3 p-3.5 rounded-2xl text-left hover:bg-muted/50 transition-colors cursor-pointer group border border-border/40 hover:border-border/70"
             >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-base font-black uppercase tracking-wide text-foreground">
-                    {flashcard.term}
-                  </span>
-                  {primaryDefinition?.partOfSpeech && (
-                    <span className="text-sm text-muted-foreground font-medium">
-                      ({primaryDefinition.partOfSpeech})
-                    </span>
-                  )}
-                  {flashcard.phonetic && (
-                    <span className="text-sm text-muted-foreground font-mono">
-                      {flashcard.phonetic}
-                    </span>
-                  )}
-
-                  {/* US Audio Button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 gap-1 text-xs font-semibold cursor-pointer text-muted-foreground hover:text-foreground"
-                    onClick={() =>
-                      onPlayAudio({
-                        term: flashcard.term,
-                        audioUrl: flashcard.audioUrl || undefined,
-                        audioUsUrl: flashcard.audioUsUrl || undefined,
-                        accent: PronunciationAccent.US,
-                      })
-                    }
-                    title={t('listenUs')}
-                  >
-                    <Icons name="volume-2" className="h-3 w-3 text-primary" />
-                    <span>US</span>
-                  </Button>
-
-                  {/* UK Audio Button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 gap-1 text-xs font-semibold cursor-pointer text-muted-foreground hover:text-foreground"
-                    onClick={() =>
-                      onPlayAudio({
-                        term: flashcard.term,
-                        audioUkUrl: flashcard.audioUkUrl || undefined,
-                        accent: PronunciationAccent.UK,
-                      })
-                    }
-                    title={t('listenUk')}
-                  >
-                    <Icons name="volume-2" className="h-3 w-3 text-sky-500" />
-                    <span>UK</span>
-                  </Button>
-                </div>
-
-                {meaningVi && (
-                  <p className="text-sm font-semibold text-primary mt-1.5">
-                    {meaningVi}
-                  </p>
-                )}
-
-                {explainEn && (
-                  <p className="text-xs text-muted-foreground mt-0.5 italic">
-                    {explainEn}
-                  </p>
-                )}
-
-                {examples.length > 0 && (
-                  <div className="mt-3 space-y-1.5 pl-3 border-l-2 border-primary/30 text-xs">
-                    {examples.slice(0, 2).map((example, exampleIdx) => (
-                      <div key={exampleIdx} className="space-y-0.5">
-                        <p className="text-foreground font-medium">
-                          • {example.sentenceEn || example.sentence?.en}
-                        </p>
-                        {(example.translationVi || example.sentence?.vi) && (
-                          <p className="text-muted-foreground">
-                            {example.translationVi || example.sentence?.vi}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+              <div className="shrink-0">
+                <MasteryFlowerBadge
+                  level={flashcard.level ?? 0}
+                  learningStep={flashcard.learningStep ?? 0}
+                  isWilted={flashcard.isWilted ?? false}
+                  size={36}
+                />
               </div>
 
-              {flashcard.imageUrl && (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden relative shadow-inner bg-muted/40 shrink-0 border border-border/40">
-                  <Image
-                    src={flashcard.imageUrl}
-                    alt={flashcard.term}
-                    fill
-                    sizes="96px"
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-              )}
-            </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-primary truncate">
+                  {flashcard.term}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {partOfSpeech && (
+                    <span className="italic mr-1">{partOfSpeech}</span>
+                  )}
+                  {meaningVi}
+                </p>
+              </div>
+            </button>
           );
         })}
       </div>

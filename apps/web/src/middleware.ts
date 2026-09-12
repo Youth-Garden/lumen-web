@@ -1,14 +1,19 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { JWT_ACCESS_TOKEN_KEY, RouteEnum } from './shared/constants';
+import {
+  JWT_ACCESS_TOKEN_KEY,
+  NATIVE_LANGUAGE_STORAGE_KEY,
+  ONBOARDING_ROUTES,
+  PUBLIC_ROUTES,
+  RouteEnum,
+} from './shared/constants';
 import { routing } from './shared/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-const publicRoutes = [RouteEnum.LOGIN];
-
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;
+  const nativeLanguage = req.cookies.get(NATIVE_LANGUAGE_STORAGE_KEY)?.value;
   const path = req.nextUrl.pathname;
 
   let normalizedPath = path;
@@ -19,17 +24,23 @@ export default function middleware(req: NextRequest) {
     }
   }
 
-  if (normalizedPath === '/') {
-    if (!token) {
-      return NextResponse.redirect(new URL(RouteEnum.LOGIN, req.url));
-    }
+  const isOnboarding = ONBOARDING_ROUTES.some((route) =>
+    normalizedPath.startsWith(route),
+  );
+
+  if (!token && !nativeLanguage && !isOnboarding) {
+    return NextResponse.redirect(new URL(RouteEnum.WELCOME, req.url));
   }
 
-  if (token && normalizedPath.startsWith(RouteEnum.LOGIN)) {
+  if (token && (isOnboarding || normalizedPath.startsWith(RouteEnum.LOGIN))) {
     return NextResponse.redirect(new URL(RouteEnum.DASHBOARD, req.url));
   }
 
-  const isPublic = publicRoutes.some((route) =>
+  if (!token && normalizedPath === '/') {
+    return NextResponse.redirect(new URL(RouteEnum.LOGIN, req.url));
+  }
+
+  const isPublic = PUBLIC_ROUTES.some((route) =>
     normalizedPath.startsWith(route),
   );
 

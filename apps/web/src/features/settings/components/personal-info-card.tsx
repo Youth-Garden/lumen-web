@@ -2,13 +2,13 @@
 
 import {
   Button,
+  Card,
   CardContent,
   CardHeader,
   CardTitle,
   Input,
   Label,
 } from '@lumen/uikit/components';
-import { SettingsCard } from './settings-card';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -61,7 +61,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   });
 
   return (
-    <SettingsCard>
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>{t('profile.personalInfo')}</CardTitle>
         {!isEditing && (
@@ -69,9 +69,8 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
             variant="outline"
             size="sm"
             onClick={() => setIsEditing(true)}
-            className="gap-1.5"
           >
-            <Icons name="edit" className="h-3.5 w-3.5" />
+            <Icons name="edit" />
             {t('buttons.edit')}
           </Button>
         )}
@@ -113,6 +112,6 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
           </form>
         )}
       </CardContent>
-    </SettingsCard>
+    </Card>
   );
 }

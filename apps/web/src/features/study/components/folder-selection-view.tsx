@@ -192,10 +192,6 @@ export function FolderSelectionView({
       {/* Floating Bottom Action Bar for Selected Folder */}
       {selectedFolderForAction && (
         <StudyBottomActionBar
-          title={selectedFolderForAction.name}
-          subtitle={t('wordsCount', {
-            count: selectedFolderForAction.flashcardCount || 0,
-          })}
           onLearnNew={() => {
             onSelectFolder(selectedFolderForAction.id);
             onViewFolderWords(selectedFolderForAction.id);
@@ -208,8 +204,6 @@ export function FolderSelectionView({
             onSelectFolder(selectedFolderForAction.id);
             onViewFolderWords(selectedFolderForAction.id);
           }}
-          onViewDetails={() => onViewFolderWords(selectedFolderForAction.id)}
-          onClose={() => setSelectedFolderForAction(null)}
         />
       )}
     </div>

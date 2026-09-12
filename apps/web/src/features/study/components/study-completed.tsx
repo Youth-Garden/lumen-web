@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { PlantGrowthIcon, Icons } from '@lumen/uikit/icons';
+import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
 import { MissedWordStat } from '@/features/study/types/study.types';
 
@@ -24,8 +24,8 @@ export function StudyCompleted({
   const t = useTranslations('Vocabulary.Study');
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-5 animate-in zoom-in-95 duration-300 max-w-lg w-full mx-auto">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-lg">
-        <PlantGrowthIcon stage={5} className="w-14 h-14" />
+      <div className="flex items-center justify-center">
+        <Icons name="plant-growth" stage={5} className="w-16 h-16" />
       </div>
 
       <div className="space-y-1">
@@ -41,7 +41,7 @@ export function StudyCompleted({
       </div>
 
       <div className="grid grid-cols-2 gap-4 w-full pt-2">
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+        <div className="p-4 rounded-2xl bg-emerald-500/10">
           <p className="text-2xl font-black text-emerald-500">
             {masteredCount}
           </p>
@@ -49,7 +49,7 @@ export function StudyCompleted({
             {t('masteredWordsCard')}
           </p>
         </div>
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+        <div className="p-4 rounded-2xl bg-rose-500/10">
           <p className="text-2xl font-black text-rose-500">
             {missedWords.length}
           </p>
@@ -76,7 +76,7 @@ export function StudyCompleted({
               return (
                 <div
                   key={item.card.id}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl bg-muted/30 border border-border/50 text-xs"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl bg-muted/30 text-xs"
                 >
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-foreground">
@@ -106,7 +106,7 @@ export function StudyCompleted({
         </Button>
         <Button
           variant="default"
-          className="flex-1 font-bold cursor-pointer"
+          className="flex-1 cursor-pointer"
           onClick={onClose}
         >
           {t('finish')}

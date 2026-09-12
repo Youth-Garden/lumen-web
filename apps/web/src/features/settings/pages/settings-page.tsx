@@ -60,7 +60,7 @@ export const SettingsPage = () => {
   });
 
   return (
-    <div className="max-w- mx-auto space-y-6 pb-10">
+    <div className="w-full max-w-[680px] mx-auto space-y-6 pb-10">
       <div>
         <h1 className="text-3xl font-heading font-bold tracking-tight text-foreground">
           {t('title')}
@@ -73,14 +73,14 @@ export const SettingsPage = () => {
         <ProfileCard user={user} />
 
         {/* 2. Appearance & Preferences */}
-        <Card className="border border-border/60 rounded-2xl bg-card shadow-xs">
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-bold">
               {t('appearance.title')}
             </CardTitle>
             <CardDescription>{t('appearance.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="divide-y divide-border/50">
+          <CardContent className="divide-y divide-border/40">
             <div className="flex items-center justify-between gap-4 py-4 first:pt-0">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium text-foreground">
@@ -95,10 +95,10 @@ export const SettingsPage = () => {
             <div className="flex items-center justify-between gap-4 py-4 last:pb-0">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium text-foreground">
-                  {t('appearance.language')}
+                  {t('appearance.nativeLanguage')}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {t('appearance.languageDescription')}
+                  {t('appearance.nativeLanguageDescription')}
                 </p>
               </div>
               <LanguageSwitcher />
@@ -107,7 +107,7 @@ export const SettingsPage = () => {
         </Card>
 
         {/* 3. Learning Goals */}
-        <Card className="border border-border/60 rounded-2xl bg-card shadow-xs">
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-bold">
               {t('goals.title')}

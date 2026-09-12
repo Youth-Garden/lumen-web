@@ -5,7 +5,6 @@ import { NotificationDropdown } from '@/features/notification/components/notific
 import { RouteEnum } from '@/shared/constants';
 import { useRouter } from '@/shared/i18n/routing';
 import { useAuthStore } from '@/store/auth.store';
-import { useUiStore } from '@/store/ui.store';
 import {
   Avatar,
   AvatarFallback,
@@ -17,14 +16,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
+import { CommandPalette } from '@/shared/components/command-palette';
+import { usePortal } from '@lumen/uikit/portal';
 import { Icons } from '@lumen/uikit/icons';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 
 export function Header() {
   const user = useAuthStore((state) => state.user);
-  const setCommandPaletteOpen = useUiStore(
-    (state) => state.setCommandPaletteOpen,
-  );
+  const [presentCommandPalette] = usePortal(CommandPalette, {
+    key: 'command_palette',
+  });
   const { logout } = useLogout();
   const router = useRouter();
   const { data: progressData } = useProgressDashboard();
@@ -50,7 +51,7 @@ export function Header() {
       {/* Left side: Bigger search bar */}
       <button
         type="button"
-        onClick={() => setCommandPaletteOpen(true)}
+        onClick={() => presentCommandPalette()}
         className="flex items-center justify-between w-60 sm:w-72 md:w-84 h-10 px-3.5 rounded-2xl bg-background/90 dark:bg-card/90 backdrop-blur-md border border-border/70 hover:border-primary/50 shadow-xs text-muted-foreground hover:text-foreground text-xs transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-primary/30"
         title="Search (Ctrl + K)"
       >

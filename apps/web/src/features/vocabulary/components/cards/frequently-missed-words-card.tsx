@@ -137,30 +137,32 @@ export function FrequentlyMissedWordsCard({
               )}
             </div>
           );
-        })}
+        })} 
       </div>
 
-      {/* Action Buttons - Compact */}
-      <div className="flex items-center gap-2.5 pt-0.5">
+      {/* Action Buttons - Practice Missed Words via Interactive Games OR Flashcards */}
+      <div className="pt-0.5 flex items-center gap-2">
         <Button
           variant="default"
           size="sm"
           onClick={onReviewMissed}
-          className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer h-8"
+          className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer"
         >
-          <Icons name="rotate-ccw" className="h-3.5 w-3.5" />
-          <span>{t('reviewNormal')}</span>
+          <Icons name="sparkles" className="h-3.5 w-3.5" />
+          <span>{tStudy('practice')}</span>
         </Button>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onFlashcardsMissed || onReviewMissed}
-          className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer h-8"
-        >
-          <Icons name="layers" className="h-3.5 w-3.5 text-primary" />
-          <span>{t('flashcardsAction')}</span>
-        </Button>
+        {onFlashcardsMissed && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onFlashcardsMissed}
+            className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer"
+          >
+            <Icons name="layers" className="h-3.5 w-3.5" />
+            <span>{tStudy('flashcards')}</span>
+          </Button>
+        )}
       </div>
     </Card>
   );

@@ -28,6 +28,8 @@ export function StudyTyping({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const targetTerm = item.card.term.trim();
+  const maxHints = Math.floor(targetTerm.length / 2);
+  const remainingHints = Math.max(0, maxHints - hintCount);
 
   useEffect(() => {
     setValue('');
@@ -39,7 +41,7 @@ export function StudyTyping({
   }, [item.id]);
 
   const handleApplyHint = () => {
-    if (hintCount < targetTerm.length) {
+    if (hintCount < maxHints) {
       const nextCount = hintCount + 1;
       setHintCount(nextCount);
       setValue(targetTerm.slice(0, nextCount));
@@ -54,7 +56,9 @@ export function StudyTyping({
         onSubmitAnswer(value.trim());
       }
     } else if (event.key === 'Shift' && !event.repeat) {
-      handleApplyHint();
+      if (hintCount < maxHints) {
+        handleApplyHint();
+      }
     }
   };
 
@@ -116,12 +120,12 @@ export function StudyTyping({
             size="default"
             type="button"
             onClick={handleApplyHint}
-            className="gap-2 font-bold cursor-pointer"
+            disabled={remainingHints === 0}
           >
-            <Icons name="lightbulb" className="w-4 h-4 text-amber-500" />
+            <Icons name="lightbulb" className="text-amber-500" />
             <span>
               {t('hintAction', {
-                count: (targetTerm.length - hintCount).toString(),
+                count: remainingHints.toString(),
               })}
             </span>
           </Button>
@@ -132,7 +136,6 @@ export function StudyTyping({
             type="button"
             onClick={() => value.trim() && onSubmitAnswer(value.trim())}
             disabled={!value.trim()}
-            className="gap-2 font-bold cursor-pointer"
           >
             <span>{t('checkAction')}</span>
           </Button>

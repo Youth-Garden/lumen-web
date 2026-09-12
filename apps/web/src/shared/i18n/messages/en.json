@@ -216,6 +216,13 @@
       "invalidEmail": "Invalid email",
       "otpLength": "OTP must be 6 digits",
       "otpDigits": "OTP must contain only numbers"
+    },
+    "Welcome": {
+      "badge": "Lumen Onboarding",
+      "title": "Welcome to Lumen",
+      "subtitle": "Select your native language to personalize your learning experience.",
+      "selectTitle": "Your native language",
+      "continueBtn": "Next"
     }
   },
   "Vocabulary": {
@@ -287,7 +294,9 @@
       "showShortcuts": "Show shortcuts",
       "masteredBtn": "Mastered",
       "familiarBtn": "Familiar",
-      "againBtn": "Again",
+      "againBtn": "Review",
+      "flashcardAgain": "Review",
+      "flashcardKnown": "Mastered",
       "spaceToFlip": "Space to flip",
       "ok": "OK",
       "deselect": "Deselect",
@@ -396,7 +405,7 @@
       "createNewFolder": "Create new folder",
       "frequentlyMissedHeader": "You have {count} frequently missed words",
       "iUnderstand": "I understand",
-      "reviewNormal": "Review",
+      "reviewNormal": "Practice",
       "flashcardsAction": "Flashcards",
       "learnNewWords": "Learn new",
       "pinnedFolder": "Pinned folder",
@@ -428,7 +437,13 @@
       "defaultFolderDescription": "Vocabulary folder",
       "generalTopic": "General Topic",
       "folderNotFound": "Folder not found",
-      "folderNotFoundDesc": "This folder does not exist or has been deleted."
+      "folderNotFoundDesc": "This folder does not exist or has been deleted.",
+      "markKnown": "Mark as Known",
+      "markUnknown": "Mark as Unknown",
+      "wordDetail": "Word Detail",
+      "cefrLevel": "Level",
+      "definition": "Definition",
+      "examples": "Examples"
     },
     "Mastery": {
       "dialogTitle": "Knowledge Journey & Spaced Repetition",
@@ -591,12 +606,12 @@
     }
   },
   "Settings": {
-    "title": "Settings",
-    "subtitle": "Manage your account, preferences, and appearance.",
+    "title": "Account Settings",
+    "subtitle": "Manage your profile, appearance preferences, and daily learning goals",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateFailed": "Failed to update profile",
-    "goalsUpdateSuccess": "Study goals updated successfully",
-    "goalsUpdateFailed": "Failed to update study goals",
+    "goalsUpdateSuccess": "Learning goals updated successfully",
+    "goalsUpdateFailed": "Failed to update learning goals",
     "sections": {
       "profile": "My Profile",
       "goals": "Learning Goals",
@@ -605,12 +620,14 @@
       "security": "Password & Security"
     },
     "appearance": {
-      "title": "Appearance",
-      "description": "Customize how Lumen looks and reads.",
-      "theme": "Theme",
-      "themeDescription": "Choose a color scheme and light or dark mode.",
+      "title": "Appearance & Preferences",
+      "description": "Customize theme and your native language displayed in the app.",
+      "theme": "Theme Mode",
+      "themeDescription": "Switch between light, dark, or system preference",
       "language": "Language",
-      "languageDescription": "Choose the language used across the app."
+      "languageDescription": "Choose the language used across the app.",
+      "nativeLanguage": "Native Language",
+      "nativeLanguageDescription": "Language used for translations and system display"
     },
     "tabs": {
       "profile": "Profile",

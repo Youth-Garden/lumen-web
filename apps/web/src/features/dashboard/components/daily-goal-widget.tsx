@@ -87,7 +87,7 @@ export function DailyGoalWidget() {
 
   if (isLoading || !progressData) {
     return (
-      <Card className="flex flex-col items-center justify-center min-h-[300px]">
+      <Card className="rounded-3xl border-none bg-card shadow-xs flex flex-col items-center justify-center min-h-[300px]">
         <div className="animate-pulse flex flex-col items-center gap-4">
           <div className="h-[120px] w-[120px] rounded-full bg-muted/50" />
           <div className="h-4 w-32 bg-muted/50 rounded" />
@@ -106,7 +106,7 @@ export function DailyGoalWidget() {
   );
 
   return (
-    <Card className="flex flex-col min-h-[300px] overflow-hidden relative group">
+    <Card className="rounded-3xl border-none bg-card shadow-xs flex flex-col min-h-[300px] overflow-hidden relative group">
       {/* Background glow effect */}
       <div
         className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-20 transition-colors duration-1000 ${isGoalReached ? 'bg-green-500' : 'bg-primary'}`}

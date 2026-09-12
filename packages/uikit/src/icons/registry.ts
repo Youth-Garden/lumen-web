@@ -4,13 +4,23 @@ import {
   GithubIcon,
   GoogleIcon,
   PlantGrowthIcon,
+  PlantStage0Icon,
+  PlantStage1Icon,
+  PlantStage2Icon,
+  PlantStage3Icon,
+  PlantStage4Icon,
+  PlantStage5Icon,
+  PlantWiltedIcon,
   SpinnerIcon,
   TwitterIcon,
   YoutubeIcon,
+  FlagVnIcon,
+  FlagUsIcon,
+  FlagJpIcon,
 } from './svgs';
 import type { IconProps } from './types';
 
-export const customRegistry: Record<
+export const registry: Record<
   string,
   ComponentType<IconProps> | ComponentType<any>
 > = {
@@ -62,6 +72,9 @@ export const customRegistry: Record<
   zap: LucideIcons.Zap,
   sparkles: LucideIcons.Sparkles,
   flag: LucideIcons.Flag,
+  'flag-vn': FlagVnIcon,
+  'flag-us': FlagUsIcon,
+  'flag-jp': FlagJpIcon,
 
   // Media & Audio
   play: LucideIcons.Play,
@@ -114,6 +127,13 @@ export const customRegistry: Record<
   clock: LucideIcons.Clock,
   cardiology: LucideIcons.HeartPulse,
   'plant-growth': PlantGrowthIcon,
+  'plant-stage-0': PlantStage0Icon,
+  'plant-stage-1': PlantStage1Icon,
+  'plant-stage-2': PlantStage2Icon,
+  'plant-stage-3': PlantStage3Icon,
+  'plant-stage-4': PlantStage4Icon,
+  'plant-stage-5': PlantStage5Icon,
+  'plant-wilted': PlantWiltedIcon,
   spinner: SpinnerIcon,
 
   // Rich Text Editor
@@ -145,7 +165,7 @@ export const customRegistry: Record<
 };
 
 export function registerIcon(name: string, component: ComponentType<any>) {
-  customRegistry[name] = component;
+  registry[name] = component;
 }
 
-export type CustomIconName = keyof typeof customRegistry;
+export type IconRegistryName = keyof typeof registry;

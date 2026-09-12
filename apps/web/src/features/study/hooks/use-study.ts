@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { progressKeys } from '@/services/progress';
 import {
   studyService,
   studyKeys,
   type ReviewFlashcardPayload,
 } from '@/services/study';
+import { vocabularyKeys } from '@/services/vocabulary';
 
 export const useReviewFlashcard = () => {
   const queryClient = useQueryClient();
@@ -14,6 +16,12 @@ export const useReviewFlashcard = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: studyKeys.dueFlashcards(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: vocabularyKeys.folders(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: progressKeys.all,
       });
     },
   });

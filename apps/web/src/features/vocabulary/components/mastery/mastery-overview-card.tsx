@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@lumen/uikit/components';
-import { Icons, PlantGrowthIcon } from '@lumen/uikit/icons';
+import { Icons } from '@lumen/uikit/icons';
 import { SegmentedMasteryGauge } from './segmented-mastery-gauge';
 
 interface MasteryOverviewCardProps {
@@ -69,7 +69,8 @@ export function MasteryOverviewCard({
       {/* Needs Review Alert Row */}
       <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-primary/10 text-primary text-xs font-semibold">
         <div className="flex items-center gap-2">
-          <PlantGrowthIcon
+          <Icons
+            name="plant-growth"
             stage={3}
             className="h-4 w-4 shrink-0 text-primary"
           />
@@ -89,7 +90,7 @@ export function MasteryOverviewCard({
           onClick={dueCount > 0 ? onReviewDue : onReviewAll}
           className="gap-1.5 text-xs font-semibold cursor-pointer"
         >
-          <Icons name="rotate-ccw" className="h-3.5 w-3.5" />
+          <Icons name="sparkles" className="h-3.5 w-3.5" />
           <span>{t('reviewNormal')}</span>
         </Button>
 

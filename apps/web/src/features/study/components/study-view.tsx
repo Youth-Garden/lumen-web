@@ -1,12 +1,14 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+
+import { useStudySession } from '@/features/study/hooks/use-study-session';
 import { type VocabularyWord } from '@/services/vocabulary';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps, usePortal } from '@lumen/uikit/portal';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-import { useStudySession } from '@/features/study/hooks/use-study-session';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import {
   MasteryFlowerDialog,
@@ -19,12 +21,14 @@ import { StudyFeedbackDrawer } from '@/features/study/components/study-feedback-
 import { StudyFlashcard } from '@/features/study/components/study-flashcard';
 import { StudySettingsDialog } from '@/features/study/components/study-settings-dialog';
 import { StudyTyping } from '@/features/study/components/study-typing';
-import { StudyExerciseType } from '@/features/study/types/study.types';
+import { StudyExerciseType, StudySessionMode } from '@/features/study/types/study.types';
 
 export interface StudyViewData {
   cards: VocabularyWord[];
   selectedTopic?: string;
   folderName?: string;
+  isReviewMode?: boolean;
+  mode?: StudySessionMode;
 }
 
 export function StudyView({
@@ -39,9 +43,12 @@ export function StudyView({
 
   const cards = data?.cards || [];
   const selectedTopic = data?.selectedTopic || null;
+  const isReviewMode = Boolean(data?.isReviewMode);
+  const mode = data?.mode;
 
   const t = useTranslations('Vocabulary.Study');
   const {
+    mode: sessionMode,
     poolCards,
     masteredIds,
     currentItem,
@@ -59,6 +66,8 @@ export function StudyView({
     handleMastered,
     handleReview,
     handleDontKnow,
+    handleFlashcardAgain,
+    handleFlashcardKnown,
     handleSelectChoiceOption,
     handleSubmitTyping,
     handleContinueFeedback,
@@ -70,6 +79,8 @@ export function StudyView({
   } = useStudySession({
     cards,
     selectedTopic,
+    isReviewMode,
+    mode,
     isOpen: Boolean(isOpen),
     onClose: () => onDismiss?.(),
   });
@@ -129,9 +140,11 @@ export function StudyView({
           {/* Center: Long horizontal progress bar */}
           <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[240px] sm:max-w-[360px] md:max-w-[440px] px-2 pointer-events-none">
             <div className="w-full h-2 rounded-full bg-muted/90 overflow-hidden">
-              <div
-                className="h-full bg-primary rounded-full transition-all duration-300 ease-out"
-                style={{ width: progressPercent + '%' }}
+              <motion.div
+                className="h-full bg-primary rounded-full"
+                initial={false}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.45, ease: 'easeOut' }}
               />
             </div>
           </div>
@@ -160,7 +173,9 @@ export function StudyView({
                   {/* Top Bar above card */}
                   <div className="w-full flex items-center justify-between mb-3 px-1">
                     <span className="text-base sm:text-lg font-bold text-foreground">
-                      {t('newWord')}
+                      {sessionMode === StudySessionMode.FLASHCARD
+                        ? t('flashcards')
+                        : t('newWord')}
                     </span>
 
                     <MasteryFlowerBadge
@@ -188,51 +203,85 @@ export function StudyView({
                         : 'opacity-0 pointer-events-none')
                     }
                   >
-                    {/* Row 1: Mastered & Familiar */}
-                    <div className="w-full flex items-center justify-center gap-3 sm:gap-4">
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={handleMastered}
-                        className="flex-1 max-w-[210px] h-10 rounded-full font-bold border-emerald-500 text-emerald-500 hover:bg-emerald-500/10 cursor-pointer shadow-xs text-xs sm:text-sm"
-                      >
-                        <span>{t('masteredBtn')}</span>
-                        {showShortcuts && (
-                          <span className="text-xs font-normal opacity-70 ml-1">
-                            - {t('pressKey', { key: '1' })}
-                          </span>
-                        )}
-                      </Button>
+                    {sessionMode === StudySessionMode.FLASHCARD ? (
+                      <div className="w-full flex items-center justify-center gap-3 sm:gap-4 my-auto">
+                        <Button
+                          variant="destructive"
+                          size="default"
+                          onClick={handleFlashcardAgain}
+                          className="flex-1 max-w-[210px]"
+                        >
+                          <span>{t('flashcardAgain')}</span>
+                          {showShortcuts && (
+                            <span className="text-xs font-normal opacity-70 ml-1">
+                              - {t('pressKey', { key: '1' })}
+                            </span>
+                          )}
+                        </Button>
 
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={handleReview}
-                        className="flex-1 max-w-[210px] h-10 rounded-full font-bold border-[#f59e0b] text-[#f59e0b] hover:bg-[#f59e0b]/10 cursor-pointer shadow-xs text-xs sm:text-sm"
-                      >
-                        <span>{t('familiarBtn')}</span>
-                        {showShortcuts && (
-                          <span className="text-xs font-normal opacity-70 ml-1">
-                            - {t('pressKey', { key: '3' })}
-                          </span>
-                        )}
-                      </Button>
-                    </div>
+                        <Button
+                          variant="default"
+                          size="default"
+                          onClick={handleFlashcardKnown}
+                          className="flex-1 max-w-[210px]"
+                        >
+                          <span>{t('flashcardKnown')}</span>
+                          {showShortcuts && (
+                            <span className="text-xs font-normal opacity-85 ml-1">
+                              - {t('pressKey', { key: '2' })}
+                            </span>
+                          )}
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Row 1: Mastered & Familiar */}
+                        <div className="w-full flex items-center justify-center gap-3 sm:gap-4">
+                          <Button
+                            variant="outline"
+                            size="default"
+                            onClick={handleMastered}
+                            className="flex-1 max-w-[210px]"
+                          >
+                            <span>{t('masteredBtn')}</span>
+                            {showShortcuts && (
+                              <span className="text-xs font-normal opacity-70 ml-1">
+                                - {t('pressKey', { key: '1' })}
+                              </span>
+                            )}
+                          </Button>
 
-                    {/* Row 2: Unknown */}
-                    <Button
-                      variant="default"
-                      size="default"
-                      onClick={handleDontKnow}
-                      className="w-64 sm:w-72 h-10 rounded-full font-bold cursor-pointer shadow-md bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm"
-                    >
-                      <span>{t('dontKnow')}</span>
-                      {showShortcuts && (
-                        <span className="text-xs font-normal opacity-85 ml-1.5">
-                          - {t('pressEnter')}
-                        </span>
-                      )}
-                    </Button>
+                          <Button
+                            variant="secondary"
+                            size="default"
+                            onClick={handleReview}
+                            className="flex-1 max-w-[210px]"
+                          >
+                            <span>{t('familiarBtn')}</span>
+                            {showShortcuts && (
+                              <span className="text-xs font-normal opacity-70 ml-1">
+                                - {t('pressKey', { key: '3' })}
+                              </span>
+                            )}
+                          </Button>
+                        </div>
+
+                        {/* Row 2: Unknown */}
+                        <Button
+                          variant="default"
+                          size="default"
+                          onClick={handleDontKnow}
+                          className="w-64 sm:w-72"
+                        >
+                          <span>{t('dontKnow')}</span>
+                          {showShortcuts && (
+                            <span className="text-xs font-normal opacity-85 ml-1.5">
+                              - {t('pressEnter')}
+                            </span>
+                          )}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               )}

@@ -160,8 +160,13 @@ export abstract class BaseApiService {
         mapSuccessResponse,
       ];
 
+      const currentLang =
+        (typeof window !== 'undefined' &&
+          localStorage.getItem('lumen_native_language')) ||
+        'en';
+
       finalConfig.headers = {
-        'Api-Language': 'en',
+        'Api-Language': currentLang,
         ...finalConfig.headers,
       };
       const result =

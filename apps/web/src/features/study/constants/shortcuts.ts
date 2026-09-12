@@ -5,6 +5,11 @@ export enum FlashcardShortcutKey {
   REVIEW = '3',
 }
 
+export enum FlashcardReviewShortcutKey {
+  AGAIN = '1',
+  KNOWN = '2',
+}
+
 export enum ChoiceShortcutKey {
   CHOICE_1 = '1',
   CHOICE_2 = '2',
