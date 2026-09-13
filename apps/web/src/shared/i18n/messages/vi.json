@@ -162,7 +162,9 @@
       "billing": "Thanh toán",
       "myAccount": "Tài khoản của tôi",
       "profile": "Hồ sơ",
-      "logout": "Đăng xuất"
+      "logout": "Đăng xuất",
+      "expandSidebar": "Mở rộng thanh bên",
+      "collapseSidebar": "Thu gọn thanh bên"
     },
     "Header": {
       "search": "Tìm kiếm...",
@@ -434,8 +436,16 @@
       "backToTopics": "Quay lại danh sách chủ đề",
       "listenUs": "Nghe phát âm US",
       "listenUk": "Nghe phát âm UK",
-      "defaultFolderDescription": "Thư mục từ vựng",
       "generalTopic": "Chủ đề chung",
+      "viewDueWordsTitle": "Từ vựng cần ôn tập",
+      "backToOverview": "Quay lại tổng quan",
+      "tabDueOnly": "Cần ôn tập",
+      "tabLearnedAll": "Tất cả từ đã học",
+      "noDueWordsTitle": "Không có từ nào cần ôn tập hôm nay",
+      "noDueWordsDesc": "Tuyệt vời! Bạn đã hoàn thành toàn bộ mục tiêu ôn tập hoặc chưa có từ nào đến hạn.",
+      "noLearnedWordsTitle": "Bạn chưa học từ nào trong thư mục này",
+      "noLearnedWordsDesc": "Hãy bắt đầu học từ mới để theo dõi tiến độ và lịch ôn tập định kỳ.",
+      "viewDueWordsHint": "Xem danh sách từ cần ôn tập",
       "folderNotFound": "Không tìm thấy thư mục",
       "folderNotFoundDesc": "Thư mục này không tồn tại hoặc đã bị xóa.",
       "markKnown": "Đánh dấu đã thuộc",

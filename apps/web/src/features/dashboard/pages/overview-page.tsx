@@ -94,12 +94,11 @@ export function OverviewPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-5 pt-2">
-              {/* Retention Circles */}
               <div className="grid grid-cols-5 gap-2 text-center">
                 {memoryLevels.map((lvl, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col items-center gap-1.5 p-2 rounded-2xl bg-muted/30"
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-2xl bg-background"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                       {lvl.count}
@@ -111,7 +110,6 @@ export function OverviewPage() {
                 ))}
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Link href={RouteEnum.FLASHCARD_REVIEW} className="flex-1">
                   <Button className="w-full">
@@ -132,7 +130,6 @@ export function OverviewPage() {
             </CardContent>
           </Card>
 
-          {/* Frequently Missed Words */}
           <Card className="rounded-3xl border-none bg-card shadow-xs">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -153,7 +150,7 @@ export function OverviewPage() {
                 {missedWords.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col justify-between p-3.5 rounded-2xl bg-muted/30 space-y-2"
+                    className="flex flex-col justify-between p-3.5 rounded-2xl bg-background space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-sm text-foreground">

@@ -5,11 +5,11 @@ import { PronunciationAccentDialog } from '@/features/study/components/pronuncia
 import { useStudySettings } from '@/features/study/hooks/use-study-settings';
 import { PronunciationAccent } from '@/services/vocabulary';
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Switch,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps, usePortal } from '@lumen/uikit/portal';
@@ -45,27 +45,14 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
             <span className="text-sm font-semibold text-foreground">
               {t('soundEffectsTitle')}
             </span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={settings.soundEffectsEnabled}
-              onClick={() =>
+            <Switch
+              checked={settings.soundEffectsEnabled}
+              onCheckedChange={(checked) =>
                 updateSettings({
-                  soundEffectsEnabled: !settings.soundEffectsEnabled,
+                  soundEffectsEnabled: Boolean(checked),
                 })
               }
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${
-                settings.soundEffectsEnabled ? 'bg-primary' : 'bg-muted/90'
-              }`}
-            >
-              <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-background shadow-sm transition duration-200 ${
-                  settings.soundEffectsEnabled
-                    ? 'translate-x-5'
-                    : 'translate-x-0'
-                }`}
-              />
-            </button>
+            />
           </div>
 
           <div className="flex items-center justify-between py-3">
@@ -78,23 +65,12 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               </p>
             </div>
 
-            <button
-              type="button"
-              role="switch"
-              aria-checked={settings.autoPlayAudio}
-              onClick={() =>
-                updateSettings({ autoPlayAudio: !settings.autoPlayAudio })
+            <Switch
+              checked={settings.autoPlayAudio}
+              onCheckedChange={(checked) =>
+                updateSettings({ autoPlayAudio: Boolean(checked) })
               }
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${
-                settings.autoPlayAudio ? 'bg-primary' : 'bg-muted/90'
-              }`}
-            >
-              <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-background shadow-sm transition duration-200 ${
-                  settings.autoPlayAudio ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
+            />
           </div>
 
           <div
@@ -144,16 +120,6 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               name="chevron-right"
               className="w-4 h-4 text-muted-foreground"
             />
-          </div>
-
-          <div className="pt-3">
-            <Button
-              variant="default"
-              className="w-full"
-              onClick={() => onDismiss?.()}
-            >
-              {t('ok')}
-            </Button>
           </div>
         </div>
       </DialogContent>

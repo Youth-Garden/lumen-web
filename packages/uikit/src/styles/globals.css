@@ -33,7 +33,7 @@
 
 :root,
 [data-theme='light'] {
-  --background: #ffffff;
+  --background: #f0f2f5;
   --foreground: #1c3a41;
   --card: #ffffff;
   --card-foreground: #1c3a41;
@@ -43,7 +43,7 @@
   --primary-foreground: #ffffff;
   --secondary: #ffffff;
   --secondary-foreground: #000000;
-  --muted: #f2f0f0;
+  --muted: #c2ccd8;
   --muted-foreground: #404f54;
   --accent: #f8f6fc;
   --accent-foreground: #375258;
@@ -98,7 +98,7 @@
   --primary-foreground: #0b0f17;
   --secondary: #1c2436;
   --secondary-foreground: #e2e8f0;
-  --muted: #182030;
+  --muted: #1f293d;
   --muted-foreground: #94a3b8;
   --accent: #1e283d;
   --accent-foreground: #f8fafc;
@@ -248,4 +248,3 @@
 @utility glow-primary {
   box-shadow: 0 0 25px -5px color-mix(in srgb, var(--primary) 35%, transparent);
 }
-

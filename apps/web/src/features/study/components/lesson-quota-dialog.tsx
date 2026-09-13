@@ -1,6 +1,11 @@
 'use client';
 
 import {
+  LESSON_QUOTA_CONFIGS,
+  LessonQuotaPreset,
+  useStudySettings,
+} from '@/features/study/hooks/use-study-settings';
+import {
   Button,
   Dialog,
   DialogContent,
@@ -10,11 +15,6 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
-import {
-  LESSON_QUOTA_CONFIGS,
-  LessonQuotaPreset,
-  useStudySettings,
-} from '@/features/study/hooks/use-study-settings';
 
 export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Study');

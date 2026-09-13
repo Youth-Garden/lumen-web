@@ -32,7 +32,6 @@ export function SecurityCard({ user }: SecurityCardProps) {
             type="email"
             disabled
             value={user?.email ?? ''}
-            className="bg-muted/50"
           />
           <p className="text-xs text-muted-foreground">
             {t('account.emailHint')}

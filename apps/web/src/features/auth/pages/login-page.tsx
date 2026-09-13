@@ -197,7 +197,7 @@ export default function LoginPage() {
               />
               <Button
                 type="button"
-                variant="link"
+                variant="text"
                 className="h-auto p-0 text-sm"
                 disabled={resendIn > 0}
                 onClick={handleResend}

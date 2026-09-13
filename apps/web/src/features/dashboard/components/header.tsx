@@ -48,11 +48,10 @@ export function Header() {
       id="header"
       className="relative z-30 flex items-center justify-between w-full px-6 md:px-10 pt-4 pb-2.5 shrink-0"
     >
-      {/* Left side: Bigger search bar */}
       <button
         type="button"
         onClick={() => presentCommandPalette()}
-        className="flex items-center justify-between w-60 sm:w-72 md:w-84 h-10 px-3.5 rounded-2xl bg-background/90 dark:bg-card/90 backdrop-blur-md border border-border/70 hover:border-primary/50 shadow-xs text-muted-foreground hover:text-foreground text-xs transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-primary/30"
+        className="flex items-center justify-between w-60 sm:w-72 md:w-84 h-10 px-3.5 rounded-2xl bg-card/90 backdrop-blur-md border border-border/70 hover:border-primary/50 shadow-xs text-muted-foreground hover:text-foreground text-xs transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-primary/30"
         title="Search (Ctrl + K)"
       >
         <div className="flex items-center gap-2.5">
@@ -70,8 +69,7 @@ export function Header() {
         </kbd>
       </button>
 
-      {/* Right side: Streak, Notifications, User Avatar */}
-      <div className="flex items-center gap-2 bg-background/90 dark:bg-card/90 backdrop-blur-md border border-border/60 shadow-xs rounded-full p-1 pl-2">
+      <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md border border-border/60 shadow-xs rounded-full p-1 pl-2">
         {progressData && (
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-semibold text-xs">
             <span className="text-sm select-none leading-none">🔥</span>

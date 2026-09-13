@@ -43,6 +43,8 @@ export interface Folder {
   description?: string;
   category?: string;
   flashcardCount: number;
+  learnedCount?: number;
+  dueCount?: number;
   flashcards?: VocabularyWord[];
 }
 

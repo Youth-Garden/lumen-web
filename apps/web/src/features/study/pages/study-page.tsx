@@ -116,9 +116,9 @@ export function StudyPage() {
           <span className="text-sm font-medium text-muted-foreground mb-2">
             {currentIndex} / {dueFlashcards.length} {t('cards')}
           </span>
-          <div className="h-2 w-48 bg-muted rounded-full overflow-hidden">
+          <div className="h-2.5 w-48 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary transition-all duration-500 ease-out"
+              className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>

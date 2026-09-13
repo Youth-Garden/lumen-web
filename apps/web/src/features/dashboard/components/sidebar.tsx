@@ -3,7 +3,14 @@
 import { Link, usePathname } from '@/shared/i18n/routing';
 import { useTranslations } from 'next-intl';
 
-import { Button, Logo, ScrollArea } from '@lumen/uikit/components';
+import {
+  Button,
+  Logo,
+  ScrollArea,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@lumen/uikit/components';
 import { Icons, type IconName } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 
@@ -44,7 +51,7 @@ export function Sidebar() {
     <nav
       id="sidebar"
       className={cn(
-        'relative flex h-full flex-col bg-background text-card-foreground transition-all duration-300 ease-in-out z-20',
+        'relative flex h-full flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out z-20',
         sidebarCollapsed ? 'w-[88px]' : 'w-64',
       )}
     >
@@ -63,18 +70,31 @@ export function Sidebar() {
             <Logo showText iconSize={28} />
           </Link>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleSidebar}
-          className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-full"
-          title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          <Icons
-            name={sidebarCollapsed ? 'panel-left-open' : 'panel-left-close'}
-            className="h-5 w-5"
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
+                className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-full cursor-pointer"
+                aria-label={
+                  sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')
+                }
+              >
+                <Icons
+                  name={
+                    sidebarCollapsed ? 'panel-left-open' : 'panel-left-close'
+                  }
+                  className="h-5 w-5"
+                />
+              </Button>
+            }
           />
-        </Button>
+          <TooltipContent side="right" sideOffset={10}>
+            {sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')}
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Navigation List */}
@@ -103,33 +123,46 @@ export function Sidebar() {
                     (item.href !== RouteEnum.DASHBOARD &&
                       pathname.startsWith(item.href));
 
+                  const linkNode = (
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'flex items-center h-11 w-full rounded-2xl transition-colors duration-200 gap-3 px-3.5 select-none outline-none text-sm font-medium',
+                        sidebarCollapsed
+                          ? 'justify-center px-0 w-11 mx-auto'
+                          : 'justify-start',
+                        isActive
+                          ? 'bg-primary/15 text-primary font-semibold'
+                          : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
+                      )}
+                    >
+                      <Icons
+                        name={item.icon}
+                        className={cn(
+                          'h-5 w-5 shrink-0',
+                          isActive && 'text-primary',
+                        )}
+                      />
+                      {!sidebarCollapsed && (
+                        <span className="whitespace-nowrap truncate">
+                          {t(item.key)}
+                        </span>
+                      )}
+                    </Link>
+                  );
+
                   return (
                     <li key={item.key}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          'flex items-center h-11 w-full rounded-2xl transition-colors duration-200 gap-3 px-3.5 select-none outline-none text-sm font-medium',
-                          sidebarCollapsed
-                            ? 'justify-center px-0 w-11 mx-auto'
-                            : 'justify-start',
-                          isActive
-                            ? 'bg-primary/15 text-primary font-semibold'
-                            : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
-                        )}
-                      >
-                        <Icons
-                          name={item.icon}
-                          className={cn(
-                            'h-5 w-5 shrink-0',
-                            isActive && 'text-primary',
-                          )}
-                        />
-                        {!sidebarCollapsed && (
-                          <span className="whitespace-nowrap truncate">
+                      {sidebarCollapsed ? (
+                        <Tooltip>
+                          <TooltipTrigger render={linkNode} />
+                          <TooltipContent side="right" sideOffset={12}>
                             {t(item.key)}
-                          </span>
-                        )}
-                      </Link>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        linkNode
+                      )}
                     </li>
                   );
                 })}

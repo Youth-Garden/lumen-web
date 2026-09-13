@@ -10,6 +10,7 @@ import { Icons } from '@lumen/uikit/icons';
 interface CurrentLearningFolderCardProps {
   activeFolder: Folder | null;
   dueCount: number;
+  learnedCount?: number;
   onSwitchFolder: () => void;
   onStudyNow: () => void;
   onPractice?: () => void;
@@ -21,6 +22,7 @@ interface CurrentLearningFolderCardProps {
 export function CurrentLearningFolderCard({
   activeFolder,
   dueCount,
+  learnedCount = 0,
   onSwitchFolder,
   onStudyNow,
   onPractice,
@@ -36,10 +38,7 @@ export function CurrentLearningFolderCard({
 
   const wordCount = activeFolder.flashcardCount || 0;
   const displayName = activeFolder.name;
-  const learnedApprox = Math.min(
-    wordCount,
-    Math.max(dueCount * 4, Math.round(wordCount * 0.42)),
-  );
+  const learnedApprox = Math.min(wordCount, Math.max(0, learnedCount));
 
   return (
     <div className="space-y-2.5">
@@ -56,7 +55,7 @@ export function CurrentLearningFolderCard({
 
       {/* Main Card */}
       <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-4">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-start justify-between gap-3">
           <div
             role="button"
             tabIndex={0}
@@ -107,7 +106,7 @@ export function CurrentLearningFolderCard({
               onClick={onViewFolder}
               aria-label={t('viewFolder')}
             >
-              <Icons name="chevron-right" />
+              <Icons name="chevron-right" className="h-4 w-4" />
             </Button>
           )}
         </div>
@@ -140,27 +139,15 @@ export function CurrentLearningFolderCard({
               </Button>
             </>
           ) : (
-            <>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={onStudyNow}
-                disabled={wordCount === 0}
-              >
-                <Icons name="play" className="fill-current" />
-                <span>{tStudy('learnNew')}</span>
-              </Button>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={onPractice || onStudyNow}
-                disabled={wordCount === 0}
-              >
-                <Icons name="sparkles" />
-                <span>{tStudy('practice')}</span>
-              </Button>
-            </>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={onStudyNow}
+              disabled={wordCount === 0}
+            >
+              <Icons name="play" className="fill-current" />
+              <span>{tStudy('learnNew')}</span>
+            </Button>
           )}
 
           <Button

@@ -50,7 +50,6 @@ function SheetContent({
 }) {
   return (
     <SheetPortal>
-      <SheetOverlay />
       <SheetPrimitive.Popup
         data-slot="sheet-content"
         data-side={side}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useStudySettings } from '@/features/study/hooks/use-study-settings';
 import { PronunciationAccent } from '@/services/vocabulary';
 import {
   Button,
@@ -11,7 +12,6 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
-import { useStudySettings } from '@/features/study/hooks/use-study-settings';
 
 export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Study');

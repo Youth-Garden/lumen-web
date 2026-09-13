@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import Image from 'next/image';
+import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 export interface TopicStatItem {
@@ -41,14 +42,16 @@ export function FolderTopicGrid({
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <button
+        <Button
           type="button"
           onClick={onGoBack}
-          className="flex items-center gap-1.5 -ml-2.5 px-2.5 py-1 text-sm font-medium w-fit text-muted-foreground hover:text-foreground cursor-pointer rounded-lg hover:bg-muted/60 transition-colors"
+          variant="ghost"
+          size="sm"
+          className="w-fit -ml-2.5 gap-1.5 text-muted-foreground hover:text-foreground"
         >
           <Icons name="arrow-left" className="h-4 w-4" />
           <span>{t('backToFolders')}</span>
-        </button>
+        </Button>
 
         <div className="flex items-center gap-3">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">

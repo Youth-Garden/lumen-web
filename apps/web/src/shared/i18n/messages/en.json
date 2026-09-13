@@ -162,7 +162,9 @@
       "billing": "Billing",
       "myAccount": "My Account",
       "profile": "Profile",
-      "logout": "Log out"
+      "logout": "Log Out",
+      "expandSidebar": "Expand sidebar",
+      "collapseSidebar": "Collapse sidebar"
     },
     "Header": {
       "search": "Search...",
@@ -436,6 +438,15 @@
       "listenUk": "Listen to UK pronunciation",
       "defaultFolderDescription": "Vocabulary folder",
       "generalTopic": "General Topic",
+      "viewDueWordsTitle": "Words Due for Review",
+      "backToOverview": "Back to overview",
+      "tabDueOnly": "Due for review",
+      "tabLearnedAll": "All learned words",
+      "noDueWordsTitle": "No words due for review today",
+      "noDueWordsDesc": "Great! You have completed all reviews or have no due cards.",
+      "noLearnedWordsTitle": "No learned words in this folder yet",
+      "noLearnedWordsDesc": "Start learning new words to track your progress and spaced repetition schedule.",
+      "viewDueWordsHint": "View words due for review",
       "folderNotFound": "Folder not found",
       "folderNotFoundDesc": "This folder does not exist or has been deleted.",
       "markKnown": "Mark as Known",

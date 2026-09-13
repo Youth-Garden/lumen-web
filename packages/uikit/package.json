@@ -37,13 +37,16 @@
     "@storybook/addon-vitest": "^10.4.6",
     "@storybook/react": "^10.4.6",
     "@storybook/react-vite": "^10.4.6",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser-playwright": "^4.1.10",
     "@vitest/coverage-v8": "^4.1.10",
     "playwright": "^1.61.1",
     "storybook": "^10.4.6",
+    "tailwindcss": "^4",
     "typescript": "^5",
+    "vite": "^8.3.0",
     "vitest": "^4.1.10"
   },
   "scripts": {

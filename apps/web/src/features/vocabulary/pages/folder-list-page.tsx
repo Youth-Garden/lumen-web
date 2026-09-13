@@ -12,6 +12,7 @@ import { NotificationPromptCard } from '@/features/vocabulary/components/cards/n
 import { SentencePracticeCard } from '@/features/vocabulary/components/cards/sentence-practice-card';
 import { FolderCatalogSection } from '@/features/vocabulary/components/cards/folder-catalog-section';
 import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
+import { DueWordsListView } from '@/features/vocabulary/components/folder-detail/due-words-list-view';
 import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
 import { FolderSelectionView } from '@/features/study/components/folder-selection-view';
 import { StudySessionMode } from '@/features/study/types/study.types';
@@ -41,6 +42,7 @@ export function FolderListPage() {
 
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [isSelectingFolder, setIsSelectingFolder] = useState(false);
+  const [isViewingDueWords, setIsViewingDueWords] = useState(false);
 
   const allFolders = useMemo(() => data?.data || [], [data?.data]);
 
@@ -70,7 +72,6 @@ export function FolderListPage() {
   const { data: dueFlashcards } = useDueFlashcards({
     folderId: activeFolder?.id,
   });
-  const { data: globalDueFlashcards } = useDueFlashcards();
 
   const { data: activeFolderDetail } = useVocabularyFolderDetail(
     activeFolder?.id || '',
@@ -79,7 +80,15 @@ export function FolderListPage() {
     },
   );
 
-  const dueCountForActive = dueFlashcards?.data?.length || 0;
+  const dueCountForActive = useMemo(() => {
+    if (!dueFlashcards?.data) return 0;
+    return dueFlashcards.data.filter(
+      (card) =>
+        Boolean(card.nextReviewAt) ||
+        (card.level ?? 0) > 0 ||
+        (card.learningStep ?? 0) > 0,
+    ).length;
+  }, [dueFlashcards?.data]);
 
   const handleSelectFolder = (folderId: string) => {
     setSelectedFolderId(folderId);
@@ -87,6 +96,7 @@ export function FolderListPage() {
       localStorage.setItem('lumen_selected_folder_id', folderId);
     }
     setIsSelectingFolder(false);
+    setIsViewingDueWords(false);
   };
 
   const handleViewFolder = (folderId?: string) => {
@@ -99,6 +109,38 @@ export function FolderListPage() {
     () => activeFolderDetail?.flashcards || [],
     [activeFolderDetail?.flashcards],
   );
+
+  const dueIdSet = useMemo(() => {
+    const targetDueData = dueFlashcards?.data || [];
+    return new Set(
+      targetDueData
+        .filter(
+          (card) =>
+            Boolean(card.nextReviewAt) ||
+            (card.level ?? 0) > 0 ||
+            (card.learningStep ?? 0) > 0,
+        )
+        .flatMap((df) => [df.wordId, df.flashcardId]),
+    );
+  }, [dueFlashcards?.data]);
+
+  const dueCardsList: VocabularyWord[] = useMemo(() => {
+    return allFlashcards.filter(
+      (card) =>
+        dueIdSet.has(card.id) ||
+        Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
+        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)),
+    );
+  }, [allFlashcards, dueIdSet]);
+
+  const learnedCardsList: VocabularyWord[] = useMemo(() => {
+    return allFlashcards.filter(
+      (card) =>
+        (card.level ?? 0) > 0 ||
+        (card.learningStep ?? 0) > 0 ||
+        (card.masteryScore ?? 0) > 0,
+    );
+  }, [allFlashcards]);
 
   const uniqueFlashcards: VocabularyWord[] = useMemo(() => {
     const seen = new Set<string>();
@@ -115,23 +157,8 @@ export function FolderListPage() {
 
   const frequentlyMissedCards = useMemo(() => {
     if (!uniqueFlashcards.length) return [];
-    const targetDueData = globalDueFlashcards?.data || dueFlashcards?.data;
-    if (targetDueData && targetDueData.length > 0) {
-      const dueIdSet = new Set(
-        targetDueData.flatMap((df) => [df.wordId, df.flashcardId]),
-      );
-      const matched = uniqueFlashcards.filter(
-        (card) =>
-          dueIdSet.has(card.id) ||
-          Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
-          Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)),
-      );
-      if (matched.length > 0) {
-        return matched.slice(0, 3);
-      }
-    }
-    return uniqueFlashcards.slice(0, 3);
-  }, [uniqueFlashcards, globalDueFlashcards?.data, dueFlashcards?.data]);
+    return uniqueFlashcards.filter((card) => Boolean(card.isWilted)).slice(0, 3);
+  }, [uniqueFlashcards]);
 
   const handleLearnNew = () => {
     if (!allFlashcards.length || !activeFolder) return;
@@ -203,16 +230,89 @@ export function FolderListPage() {
   };
 
   const totalWordsCount = activeFolder?.flashcardCount || 0;
-  const learnedWordsCount = Math.min(
-    totalWordsCount,
-    Math.max(dueCountForActive * 4, Math.round(totalWordsCount * 0.42)),
-  );
+
+  const { learnedWordsCount, stages } = useMemo(() => {
+    if (!allFlashcards.length) {
+      return {
+        learnedWordsCount: 0,
+        stages: [
+          { level: 1, count: 0 },
+          { level: 2, count: 0 },
+          { level: 3, count: 0 },
+          { level: 4, count: 0 },
+          { level: 5, count: 0 },
+        ],
+      };
+    }
+
+    const learned = allFlashcards.filter(
+      (card) =>
+        (card.level ?? 0) > 0 ||
+        (card.learningStep ?? 0) > 0 ||
+        (card.masteryScore ?? 0) > 0,
+    );
+
+    const s1 = allFlashcards.filter((c) => (c.level ?? 0) === 1).length;
+    const s2 = allFlashcards.filter((c) => (c.level ?? 0) === 2).length;
+    const s3 = allFlashcards.filter((c) => (c.level ?? 0) === 3).length;
+    const s4 = allFlashcards.filter((c) => (c.level ?? 0) === 4).length;
+    const s5 = allFlashcards.filter((c) => (c.level ?? 0) >= 5).length;
+
+    return {
+      learnedWordsCount: learned.length,
+      stages: [
+        { level: 1, count: s1 },
+        { level: 2, count: s2 },
+        { level: 3, count: s3 },
+        { level: 4, count: s4 },
+        { level: 5, count: s5 },
+      ],
+    };
+  }, [allFlashcards]);
+
+  const enrichedFolders = useMemo(() => {
+    return allFolders.map((folder) => {
+      if (folder.id === activeFolder?.id && activeFolderDetail) {
+        return {
+          ...folder,
+          learnedCount: Math.max(folder.learnedCount ?? 0, learnedWordsCount),
+          dueCount: dueCountForActive,
+        };
+      }
+      return folder;
+    });
+  }, [allFolders, activeFolder?.id, activeFolderDetail, learnedWordsCount, dueCountForActive]);
+
+  if (isViewingDueWords && activeFolder) {
+    return (
+      <DueWordsListView
+        folderName={activeFolder.name}
+        dueCards={dueCardsList}
+        learnedCards={learnedCardsList}
+        onBackToOverview={() => setIsViewingDueWords(false)}
+        onPractice={(cards) =>
+          presentStudyView({
+            cards,
+            folderName: `${activeFolder.name} - ${tStudy('practice')}`,
+            mode: StudySessionMode.PRACTICE,
+          })
+        }
+        onFlashcards={(cards) =>
+          presentStudyView({
+            cards,
+            folderName: `${activeFolder.name} - ${tStudy('flashcards')}`,
+            mode: StudySessionMode.FLASHCARD,
+          })
+        }
+      />
+    );
+  }
 
   if (isSelectingFolder || (!isLoading && !activeFolder)) {
     return (
       <FolderSelectionView
         activeFolderId={activeFolder?.id || null}
-        allFolders={allFolders}
+        allFolders={enrichedFolders}
         isLoading={isLoading}
         onSelectFolder={handleSelectFolder}
         onBackToDashboard={
@@ -235,6 +335,8 @@ export function FolderListPage() {
             totalWords={totalWordsCount}
             learnedWords={learnedWordsCount}
             dueCount={dueCountForActive}
+            stages={stages}
+            onViewDueWords={() => setIsViewingDueWords(true)}
             onReviewDue={handlePractice}
             onReviewAll={handleLearnNew}
             onFlashcards={handleFlashcards}
@@ -244,8 +346,8 @@ export function FolderListPage() {
         <NotificationPromptCard />
 
         <SentencePracticeCard
-          usedCount={12}
-          totalWords={totalWordsCount || 608}
+          usedCount={0}
+          totalWords={totalWordsCount}
           onClick={handlePractice}
         />
 
@@ -255,6 +357,7 @@ export function FolderListPage() {
           <CurrentLearningFolderCard
             activeFolder={activeFolder}
             dueCount={dueCountForActive}
+            learnedCount={learnedWordsCount}
             onSwitchFolder={() => setIsSelectingFolder(true)}
             onStudyNow={handleLearnNew}
             onPractice={handlePractice}
@@ -275,7 +378,7 @@ export function FolderListPage() {
         />
 
         <FolderCatalogSection
-          folders={allFolders}
+          folders={enrichedFolders}
           activeFolderId={activeFolder?.id || null}
           onViewFolder={(folderId) => handleViewFolder(folderId)}
           onCreateFolder={() => presentCreateFolder()}

@@ -10,33 +10,72 @@ interface MasteryOverviewCardProps {
   totalWords: number;
   learnedWords: number;
   dueCount: number;
+  stages?: { level: number; count: number }[];
   onReviewDue: () => void;
   onReviewAll: () => void;
   onFlashcards?: () => void;
+  onViewDueWords?: () => void;
 }
 
 export function MasteryOverviewCard({
   totalWords,
   learnedWords,
   dueCount,
+  stages,
   onReviewDue,
   onReviewAll,
   onFlashcards,
+  onViewDueWords,
 }: MasteryOverviewCardProps) {
   const t = useTranslations('Vocabulary.Folders');
   const tMastery = useTranslations('Vocabulary.Mastery');
-  const stage1 = Math.max(1, Math.round(learnedWords * 0.08));
-  const stage2 = Math.max(1, Math.round(learnedWords * 0.15));
-  const stage3 = Math.max(2, Math.round(learnedWords * 0.25));
-  const stage4 = Math.max(2, Math.round(learnedWords * 0.22));
-  const stage5 = Math.max(0, learnedWords - stage1 - stage2 - stage3 - stage4);
+  const tStudy = useTranslations('Vocabulary.Study');
 
-  const stages = [
-    { level: 1, count: stage1, label: tMastery('stageLevel1') },
-    { level: 2, count: stage2, label: tMastery('stageLevel2') },
-    { level: 3, count: stage3, label: tMastery('stageLevel3') },
-    { level: 4, count: stage4, label: tMastery('stageLevel4') },
-    { level: 5, count: stage5, label: tMastery('stageLevel5') },
+  const stageList = [
+    {
+      level: 1,
+      count:
+        stages?.find((s) => s.level === 1)?.count ??
+        (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.08)),
+      label: tMastery('stageLevel1'),
+    },
+    {
+      level: 2,
+      count:
+        stages?.find((s) => s.level === 2)?.count ??
+        (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.15)),
+      label: tMastery('stageLevel2'),
+    },
+    {
+      level: 3,
+      count:
+        stages?.find((s) => s.level === 3)?.count ??
+        (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.25)),
+      label: tMastery('stageLevel3'),
+    },
+    {
+      level: 4,
+      count:
+        stages?.find((s) => s.level === 4)?.count ??
+        (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.22)),
+      label: tMastery('stageLevel4'),
+    },
+    {
+      level: 5,
+      count:
+        stages?.find((s) => s.level === 5)?.count ??
+        (learnedWords === 0
+          ? 0
+          : Math.max(
+              0,
+              learnedWords -
+                Math.round(learnedWords * 0.08) -
+                Math.round(learnedWords * 0.15) -
+                Math.round(learnedWords * 0.25) -
+                Math.round(learnedWords * 0.22),
+            )),
+      label: tMastery('stageLevel5'),
+    },
   ];
 
   return (
@@ -51,12 +90,25 @@ export function MasteryOverviewCard({
             {tMastery('learnedWordsCount', { count: '' }).trim()}
           </span>
         </div>
-        <Icons name="chevron-right" className="h-4 w-4 text-muted-foreground" />
+        {onViewDueWords ? (
+          <Button
+            type="button"
+            variant="text"
+            size="icon-sm"
+            onClick={onViewDueWords}
+            aria-label={t('viewDueWordsHint')}
+            title={t('viewDueWordsHint')}
+          >
+            <Icons name="chevron-right" className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Icons name="chevron-right" className="h-4 w-4 text-muted-foreground" />
+        )}
       </div>
 
       {/* 5 Segmented Gauges with progressive active segments */}
       <div className="grid grid-cols-5 gap-1">
-        {stages.map((stage) => (
+        {stageList.map((stage) => (
           <SegmentedMasteryGauge
             key={stage.label}
             level={stage.level}
@@ -90,8 +142,17 @@ export function MasteryOverviewCard({
           onClick={dueCount > 0 ? onReviewDue : onReviewAll}
           className="gap-1.5 text-xs font-semibold cursor-pointer"
         >
-          <Icons name="sparkles" className="h-3.5 w-3.5" />
-          <span>{t('reviewNormal')}</span>
+          {dueCount > 0 ? (
+            <>
+              <Icons name="sparkles" className="h-3.5 w-3.5" />
+              <span>{tStudy('practice')}</span>
+            </>
+          ) : (
+            <>
+              <Icons name="play" className="h-3.5 w-3.5 fill-current" />
+              <span>{tStudy('learnNew')}</span>
+            </>
+          )}
         </Button>
 
         <Button

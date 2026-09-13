@@ -19,11 +19,11 @@ export function PlantGrowthIcon({
   isWilted = false,
   ...props
 }: PlantGrowthIconProps) {
-  const clampedStage = Math.max(0, Math.min(5, Math.round(stage)));
-
-  if (clampedStage === 5 && isWilted) {
+  if (isWilted) {
     return <PlantWiltedIcon {...props} />;
   }
+
+  const clampedStage = Math.max(0, Math.min(5, Math.round(stage)));
 
   switch (clampedStage) {
     case 0:

@@ -55,4 +55,5 @@ export interface UseStudySessionReturn {
   handlePlayUkAudio: () => void;
   handlePlayAudio: () => void;
   handleVerifyAnswer: (isCorrect: boolean, userAnswer?: string) => void;
+  dismissFeedback: () => void;
 }

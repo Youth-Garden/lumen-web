@@ -121,8 +121,7 @@ export function PlantMasteryRing({
                 fill="none"
                 strokeWidth="4.5"
                 strokeLinecap="round"
-                className="stroke-border dark:stroke-muted"
-                opacity={0.35}
+                className="stroke-slate-300 dark:stroke-slate-700"
               />
 
               {/* Foreground Animated Notch */}

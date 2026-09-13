@@ -47,11 +47,9 @@ export function MasteryFlowerDialog({
           </p>
         </DialogHeader>
 
-        {/* SCROLLABLE BODY */}
         <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
-          {/* CURRENT WORD STATUS (if opened for a specific word) */}
           {data?.term && (
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/40">
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
               <PlantMasteryRing
                 level={currentLevel}
                 isWilted={isWilted}
@@ -92,15 +90,13 @@ export function MasteryFlowerDialog({
             </div>
           )}
 
-          {/* STAGE 1: NEW WORD LEARNING */}
           <div className="space-y-2.5">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               {t('stage1Title')}
             </p>
 
             <div className="space-y-2">
-              {/* Step 1: Not learned */}
-              <div className="p-3 rounded-lg bg-muted/30 flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-background flex items-center gap-3">
                 <PlantMasteryRing level={0} size={38} />
                 <div className="space-y-0.5 flex-1">
                   <p className="text-sm font-bold text-foreground">
@@ -112,8 +108,7 @@ export function MasteryFlowerDialog({
                 </div>
               </div>
 
-              {/* Step 2: In learning (5 progressive notches container) */}
-              <div className="p-4 rounded-2xl bg-muted/30 space-y-3">
+              <div className="p-4 rounded-2xl bg-background space-y-3">
                 <div className="flex items-center justify-around px-1 py-2">
                   {[1, 2, 3, 4, 5].map((stageLevel) => (
                     <div
@@ -138,8 +133,7 @@ export function MasteryFlowerDialog({
                 </div>
               </div>
 
-              {/* Step 3: Finished */}
-              <div className="p-3 rounded-lg bg-muted/30 flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-background flex items-center gap-3">
                 <PlantMasteryRing level={5} size={38} />
                 <div className="space-y-0.5 flex-1">
                   <p className="text-sm font-bold text-foreground">
@@ -153,7 +147,6 @@ export function MasteryFlowerDialog({
             </div>
           </div>
 
-          {/* STAGE 2: SPACED REPETITION */}
           <div className="space-y-2 pt-1">
             <div className="flex items-center gap-2 text-primary font-bold text-xs sm:text-sm">
               <Icons name="sparkles" className="w-4 h-4" />
@@ -164,7 +157,7 @@ export function MasteryFlowerDialog({
               {t('stage2Desc')}
             </p>
 
-            <div className="p-3 rounded-lg bg-muted/30 flex items-center gap-3">
+            <div className="p-3 rounded-lg bg-background flex items-center gap-3">
               <PlantMasteryRing level={5} isWilted size={40} />
               <div className="space-y-0.5 text-xs flex-1">
                 <p className="font-bold text-foreground">

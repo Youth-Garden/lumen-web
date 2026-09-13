@@ -75,7 +75,7 @@ export function FrequentlyMissedWordsCard({
           return (
             <div
               key={card.id}
-              className="p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all duration-200 flex items-start justify-between gap-2.5"
+              className="p-3 rounded-xl bg-background hover:bg-background/80 transition-all duration-200 flex items-start justify-between gap-2.5"
             >
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center gap-1.5 flex-wrap">

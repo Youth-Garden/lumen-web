@@ -41,6 +41,8 @@ export const folderMapper = (folder?: any): Folder => ({
   description: folder?.description || undefined,
   category: folder?.category || undefined,
   flashcardCount: folder?.flashcardCount ?? 0,
+  learnedCount: folder?.learnedCount ?? 0,
+  dueCount: folder?.dueCount ?? 0,
   flashcards: Array.isArray(folder?.flashcards)
     ? folder.flashcards.map((flashcard: any) => wordMapper(flashcard))
     : undefined,

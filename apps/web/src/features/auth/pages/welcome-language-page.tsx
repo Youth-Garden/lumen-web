@@ -81,14 +81,22 @@ export const WelcomeLanguagePage = () => {
 
   return (
     <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 bg-background selection:bg-primary/20 relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[500px] w-[500px] rounded-full bg-primary/15 opacity-60 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-blue-500/10 opacity-40 blur-[120px] pointer-events-none" />
+
       <div className="mb-6 sm:mb-8 flex items-center justify-center">
         <Logo iconSize={36} textClassName="text-2xl font-bold tracking-tight" />
       </div>
 
-      <div className="w-full max-w-[420px] rounded-3xl bg-muted/50 backdrop-blur-md p-6 sm:p-8 flex flex-col gap-6">
-        <h1 className="text-sm font-medium text-muted-foreground text-center select-none">
-          {t('selectTitle')}
-        </h1>
+      <div className="w-full max-w-[440px] rounded-3xl bg-card p-6 sm:p-8 flex flex-col gap-6 shadow-xl shadow-slate-200/50 dark:shadow-none">
+        <div className="flex flex-col items-center gap-1.5 text-center select-none">
+          <h1 className="text-xl font-bold tracking-tight text-foreground font-heading">
+            {t('title')}
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            {t('subtitle')}
+          </p>
+        </div>
 
         <div className="flex flex-col gap-1.5">
           {SUPPORTED_LANGUAGES.map((lang) => {
@@ -99,7 +107,7 @@ export const WelcomeLanguagePage = () => {
                 type="button"
                 onClick={() => handleSelect(lang.code)}
                 className={cn(
-                  'w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-colors cursor-pointer text-left',
+                  'w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 cursor-pointer text-left',
                   isSelected
                     ? 'bg-primary/15 text-foreground font-medium'
                     : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
@@ -109,7 +117,7 @@ export const WelcomeLanguagePage = () => {
                   <Icons
                     name={lang.icon}
                     size={28}
-                    className="rounded-sm overflow-hidden shrink-0"
+                    className="rounded-full shadow-2xs overflow-hidden shrink-0"
                   />
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-foreground leading-tight">

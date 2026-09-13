@@ -65,9 +65,8 @@ export function StudyFlashcard({
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
       >
-        {/* FRONT SIDE */}
         <div
-          className="absolute inset-0 w-full h-full bg-white dark:bg-card text-card-foreground shadow-xl shadow-slate-200/80 dark:shadow-black/50 rounded-xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
+          className="absolute inset-0 w-full h-full bg-card text-card-foreground shadow-xl rounded-2xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
@@ -140,9 +139,8 @@ export function StudyFlashcard({
           </div>
         </div>
 
-        {/* BACK SIDE */}
         <div
-          className="absolute inset-0 w-full h-full bg-white dark:bg-card text-card-foreground shadow-xl shadow-slate-200/80 dark:shadow-black/50 rounded-xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
+          className="absolute inset-0 w-full h-full bg-card text-card-foreground shadow-xl rounded-2xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
           style={{
             transform: 'rotateY(180deg)',
             backfaceVisibility: 'hidden',

@@ -42,7 +42,8 @@ export function FolderCard({
     FOLDER_COVERS.user_default;
 
   const totalWords = folder.flashcardCount || 0;
-  const learnedApprox = Math.round(totalWords * 0.42);
+  const learnedCount = folder.learnedCount ?? 0;
+  const dueCount = folder.dueCount ?? 0;
 
   const handleClick = () => {
     if (onSelectFolder) {
@@ -97,7 +98,7 @@ export function FolderCard({
           <div className="flex items-center gap-1 text-emerald-400">
             <Icons name="check" className="w-3 h-3 stroke-[2.5]" />
             <span className="text-white">
-              {learnedApprox}/{totalWords}
+              {learnedCount}/{totalWords}
             </span>
           </div>
 
@@ -105,7 +106,7 @@ export function FolderCard({
 
           <div className="flex items-center gap-1 text-amber-400">
             <Icons name="clock" className="w-3 h-3" />
-            <span className="text-white">{Math.min(3, totalWords)}</span>
+            <span className="text-white">{dueCount}</span>
           </div>
         </div>
       </div>

@@ -4,24 +4,36 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+import { StudyChoiceMeaning } from '@/features/study/components/study-choice-meaning';
+import { StudyChoiceTerm } from '@/features/study/components/study-choice-term';
+import { StudyCompleted } from '@/features/study/components/study-completed';
+import { StudyFlashcard } from '@/features/study/components/study-flashcard';
+import { StudyRatingButton } from '@/features/study/components/study-rating-button';
+import { StudySettingsDialog } from '@/features/study/components/study-settings-dialog';
+import { StudyTyping } from '@/features/study/components/study-typing';
 import { useStudySession } from '@/features/study/hooks/use-study-session';
-import { type VocabularyWord } from '@/services/vocabulary';
-import { Button } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
-import { PortalProps, usePortal } from '@lumen/uikit/portal';
+import {
+  StudyExerciseType,
+  StudySessionMode,
+} from '@/features/study/types/study.types';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import {
   MasteryFlowerDialog,
   MasteryFlowerDialogData,
 } from '@/features/vocabulary/components/mastery/mastery-flower-dialog';
-import { StudyChoiceMeaning } from '@/features/study/components/study-choice-meaning';
-import { StudyChoiceTerm } from '@/features/study/components/study-choice-term';
-import { StudyCompleted } from '@/features/study/components/study-completed';
-import { StudyFeedbackDrawer } from '@/features/study/components/study-feedback-drawer';
-import { StudyFlashcard } from '@/features/study/components/study-flashcard';
-import { StudySettingsDialog } from '@/features/study/components/study-settings-dialog';
-import { StudyTyping } from '@/features/study/components/study-typing';
-import { StudyExerciseType, StudySessionMode } from '@/features/study/types/study.types';
+import { type VocabularyWord } from '@/services/vocabulary';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import {
+  PortalProps,
+  usePortal,
+} from '@lumen/uikit/portal';
 
 export interface StudyViewData {
   cards: VocabularyWord[];
@@ -47,6 +59,7 @@ export function StudyView({
   const mode = data?.mode;
 
   const t = useTranslations('Vocabulary.Study');
+
   const {
     mode: sessionMode,
     poolCards,
@@ -55,7 +68,6 @@ export function StudyView({
     currentCard,
     isFlipped,
     isFinished,
-    feedback,
     selectedOptionIndex,
     progressPercent,
     currentCardMastery,
@@ -76,6 +88,7 @@ export function StudyView({
     handlePlayUkAudio,
     handlePlayAudio,
     handleSaveProgress,
+    dismissFeedback,
   } = useStudySession({
     cards,
     selectedTopic,
@@ -96,23 +109,31 @@ export function StudyView({
   };
 
   return (
-    <div
-      className={
-        'fixed inset-0 z-50 bg-background flex flex-col justify-between select-none overflow-hidden transition-opacity duration-200 ' +
-        (isOpen
-          ? 'opacity-100 pointer-events-auto'
-          : 'opacity-0 pointer-events-none')
-      }
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          dismissFeedback();
+          handleSaveProgress();
+          onDismiss?.();
+        }
+      }}
     >
-      {/* Ambient background glows */}
-      <div className="absolute top-0 left-0 -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] pointer-events-none" />
+      <DialogContent variant="fullscreen">
+        <DialogTitle className="sr-only">
+          {sessionMode === StudySessionMode.FLASHCARD
+            ? t('flashcards')
+            : t('newWord')}
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          {t('flashcards')}
+        </DialogDescription>
+
+        <div className="absolute top-0 left-0 -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 -z-10 h-[600px] w-[600px] rounded-full bg-blue-500/10 opacity-30 blur-[100px] pointer-events-none" />
 
-      {/* Main wrapper */}
-      <div className="relative flex flex-col flex-1 overflow-hidden z-10 bg-muted/50 backdrop-blur-2xl">
-        {/* 1. TOP BAR */}
+      <div className="relative flex flex-col flex-1 overflow-hidden z-10 bg-background">
         <header className="relative w-full flex items-center justify-between px-4 sm:px-8 py-3.5 shrink-0">
-          {/* Left: Save icon + Toggle shortcuts button */}
           <div className="flex items-center gap-2 z-10">
             <Button
               variant="ghost"
@@ -139,7 +160,7 @@ export function StudyView({
 
           {/* Center: Long horizontal progress bar */}
           <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[240px] sm:max-w-[360px] md:max-w-[440px] px-2 pointer-events-none">
-            <div className="w-full h-2 rounded-full bg-muted/90 overflow-hidden">
+            <div className="w-full h-2.5 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full bg-primary rounded-full"
                 initial={false}
@@ -205,81 +226,77 @@ export function StudyView({
                   >
                     {sessionMode === StudySessionMode.FLASHCARD ? (
                       <div className="w-full flex items-center justify-center gap-3 sm:gap-4 my-auto">
-                        <Button
-                          variant="destructive"
+                        <StudyRatingButton
+                          sentiment="negative"
                           size="default"
                           onClick={handleFlashcardAgain}
                           className="flex-1 max-w-[210px]"
+                          shortcut={
+                            showShortcuts
+                              ? t('pressKey', { key: '1' })
+                              : undefined
+                          }
                         >
-                          <span>{t('flashcardAgain')}</span>
-                          {showShortcuts && (
-                            <span className="text-xs font-normal opacity-70 ml-1">
-                              - {t('pressKey', { key: '1' })}
-                            </span>
-                          )}
-                        </Button>
+                          {t('flashcardAgain')}
+                        </StudyRatingButton>
 
-                        <Button
-                          variant="default"
+                        <StudyRatingButton
+                          sentiment="positive"
                           size="default"
                           onClick={handleFlashcardKnown}
                           className="flex-1 max-w-[210px]"
+                          shortcut={
+                            showShortcuts
+                              ? t('pressKey', { key: '2' })
+                              : undefined
+                          }
                         >
-                          <span>{t('flashcardKnown')}</span>
-                          {showShortcuts && (
-                            <span className="text-xs font-normal opacity-85 ml-1">
-                              - {t('pressKey', { key: '2' })}
-                            </span>
-                          )}
-                        </Button>
+                          {t('flashcardKnown')}
+                        </StudyRatingButton>
                       </div>
                     ) : (
                       <>
                         {/* Row 1: Mastered & Familiar */}
                         <div className="w-full flex items-center justify-center gap-3 sm:gap-4">
-                          <Button
-                            variant="outline"
+                          <StudyRatingButton
+                            sentiment="positive"
                             size="default"
                             onClick={handleMastered}
                             className="flex-1 max-w-[210px]"
+                            shortcut={
+                              showShortcuts
+                                ? t('pressKey', { key: '1' })
+                                : undefined
+                            }
                           >
-                            <span>{t('masteredBtn')}</span>
-                            {showShortcuts && (
-                              <span className="text-xs font-normal opacity-70 ml-1">
-                                - {t('pressKey', { key: '1' })}
-                              </span>
-                            )}
-                          </Button>
+                            {t('masteredBtn')}
+                          </StudyRatingButton>
 
-                          <Button
-                            variant="secondary"
+                          <StudyRatingButton
+                            sentiment="neutral"
                             size="default"
                             onClick={handleReview}
                             className="flex-1 max-w-[210px]"
+                            shortcut={
+                              showShortcuts
+                                ? t('pressKey', { key: '3' })
+                                : undefined
+                            }
                           >
-                            <span>{t('familiarBtn')}</span>
-                            {showShortcuts && (
-                              <span className="text-xs font-normal opacity-70 ml-1">
-                                - {t('pressKey', { key: '3' })}
-                              </span>
-                            )}
-                          </Button>
+                            {t('familiarBtn')}
+                          </StudyRatingButton>
                         </div>
 
                         {/* Row 2: Unknown */}
-                        <Button
-                          variant="default"
+                        <StudyRatingButton
+                          sentiment="negative"
                           size="default"
                           onClick={handleDontKnow}
                           className="w-64 sm:w-72"
+                          shortcut={showShortcuts ? t('pressEnter') : undefined}
                         >
-                          <span>{t('dontKnow')}</span>
-                          {showShortcuts && (
-                            <span className="text-xs font-normal opacity-85 ml-1.5">
-                              - {t('pressEnter')}
-                            </span>
-                          )}
-                        </Button>
+                          {t('dontKnow')}
+                        </StudyRatingButton>
                       </>
                     )}
                   </div>
@@ -336,13 +353,8 @@ export function StudyView({
             </div>
           )}
         </main>
-
-        {/* 3. BOTTOM FEEDBACK DRAWER */}
-        <StudyFeedbackDrawer
-          feedback={feedback}
-          onContinue={handleContinueFeedback}
-        />
       </div>
-    </div>
-  );
+    </DialogContent>
+  </Dialog>
+);
 }
