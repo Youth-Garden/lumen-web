@@ -114,8 +114,7 @@ export function FlashcardReview({
       <div className="absolute top-0 right-0 z-10 -mt-12">
         <Button
           variant="outline"
-          size="icon"
-          className="rounded-full shadow-sm"
+          size="icon-sm"
           title={t('shortcutsTitle')}
           onClick={() => {
             presentShortcuts({

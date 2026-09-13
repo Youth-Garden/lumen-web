@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card } from '@lumen/uikit/components';
+import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 export function SpacedRepetitionCard() {
@@ -17,13 +17,14 @@ export function SpacedRepetitionCard() {
         <h5 className="text-sm font-black text-foreground">
           {t('studyLessTitle')}
         </h5>
-        <button
+        <Button
+          variant="ghost"
+          size="icon-xs"
           type="button"
           onClick={() => setDismissed(true)}
-          className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
         >
           <Icons name="close" className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
       <p className="text-xs text-muted-foreground leading-relaxed">

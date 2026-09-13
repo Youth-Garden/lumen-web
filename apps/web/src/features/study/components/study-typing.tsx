@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@lumen/uikit/components';
+import { Button, Input } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
@@ -100,7 +100,7 @@ export function StudyTyping({
 
       <div className="w-full max-w-md mt-4 space-y-4">
         <div className="relative">
-          <input
+          <Input
             ref={inputRef}
             type="text"
             value={value}
@@ -110,7 +110,7 @@ export function StudyTyping({
             autoComplete="off"
             autoCorrect="off"
             spellCheck="false"
-            className="w-full h-14 px-5 rounded-2xl bg-card border border-border/70 text-foreground font-bold text-lg sm:text-xl shadow-xs focus:outline-none focus:border-primary transition-all text-center tracking-wide"
+            className="w-full h-14 text-center font-bold text-lg sm:text-xl tracking-wide"
           />
         </div>
 

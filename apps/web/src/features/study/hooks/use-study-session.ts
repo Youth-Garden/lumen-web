@@ -270,7 +270,9 @@ export function useStudySession({
     onFlashcardAgain: handleFlashcardAgain, onFlashcardKnown: handleFlashcardKnown,
     onSelectChoice: handleSelectChoiceOption,
     onContinueFeedback: handleContinueFeedback,
-    onPlayUsAudio: handlePlayUsAudio, onPlayUkAudio: handlePlayUkAudio, onClose,
+    onPlayUsAudio: handlePlayUsAudio, onPlayUkAudio: handlePlayUkAudio,
+    onReplayAudio: handlePlayAudio,
+    onClose,
   });
 
   return {

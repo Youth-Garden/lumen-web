@@ -1,3 +1,4 @@
+import { DEFAULT_ROOT_METADATA } from '@/shared/constants';
 import { Providers } from '@/shared/components/providers';
 import { type Locale, routing } from '@/shared/i18n/routing';
 import type { Metadata } from 'next';
@@ -15,10 +16,7 @@ const beVietnamPro = Be_Vietnam_Pro({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'Lumen Platform',
-  description: 'Manage your business with Lumen ecosystem.',
-};
+export const metadata: Metadata = DEFAULT_ROOT_METADATA;
 
 export default async function RootLayout({
   children,

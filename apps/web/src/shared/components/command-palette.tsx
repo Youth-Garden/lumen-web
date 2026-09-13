@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@lumen/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
@@ -18,7 +18,7 @@ import {
   CommandSeparator,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { type PortalProps, usePortal } from '@lumen/uikit/portal';
+import { type PortalProps } from '@lumen/uikit/portal';
 import { useAuthStore } from '@/store/auth.store';
 import { useLogout } from '@/features/auth/hooks';
 import { RouteEnum } from '@/shared/constants';
@@ -191,28 +191,4 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
       </CommandList>
     </CommandDialog>
   );
-}
-
-export function CommandPaletteShortcutListener() {
-  const [presentCommandPalette, dismissCommandPalette, isOpen] = usePortal(
-    CommandPalette,
-    { key: 'command_palette' },
-  );
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        if (isOpen) {
-          dismissCommandPalette();
-        } else {
-          presentCommandPalette();
-        }
-      }
-    };
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, [isOpen, presentCommandPalette, dismissCommandPalette]);
-
-  return null;
 }

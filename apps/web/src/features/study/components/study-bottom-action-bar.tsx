@@ -26,7 +26,6 @@ export function StudyBottomActionBar({
         variant="default"
         size="sm"
         onClick={onLearnNew}
-        className="gap-1.5 font-bold cursor-pointer shadow-sm text-xs sm:text-sm h-9 px-4 rounded-full"
       >
         <Icons name="sparkles" className="w-3.5 h-3.5" />
         <span>{t('learnNew')}</span>
@@ -37,7 +36,6 @@ export function StudyBottomActionBar({
         variant="outline"
         size="sm"
         onClick={onPractice}
-        className="gap-1.5 font-semibold cursor-pointer text-xs sm:text-sm h-9 px-3.5 rounded-full"
       >
         <Icons name="droplet" className="w-3.5 h-3.5 text-primary" />
         <span>{t('practice')}</span>
@@ -48,7 +46,6 @@ export function StudyBottomActionBar({
         variant="secondary"
         size="sm"
         onClick={onFlashcard}
-        className="gap-1.5 font-semibold cursor-pointer text-xs sm:text-sm h-9 px-3.5 rounded-full"
       >
         <Icons name="book-open" className="w-3.5 h-3.5" />
         <span>{t('flashcards')}</span>

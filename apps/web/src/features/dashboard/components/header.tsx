@@ -9,6 +9,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -48,10 +49,11 @@ export function Header() {
       id="header"
       className="relative z-30 flex items-center justify-between w-full px-6 md:px-10 pt-4 pb-2.5 shrink-0"
     >
-      <button
+      <Button
+        variant="outline"
         type="button"
         onClick={() => presentCommandPalette()}
-        className="flex items-center justify-between w-60 sm:w-72 md:w-84 h-10 px-3.5 rounded-2xl bg-card/90 backdrop-blur-md border border-border/70 hover:border-primary/50 shadow-xs text-muted-foreground hover:text-foreground text-xs transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-primary/30"
+        className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground hover:text-foreground text-xs bg-card/90 backdrop-blur-md"
         title="Search (Ctrl + K)"
       >
         <div className="flex items-center gap-2.5">
@@ -67,7 +69,7 @@ export function Header() {
           <span>Ctrl</span>
           <span>K</span>
         </kbd>
-      </button>
+      </Button>
 
       <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md border border-border/60 shadow-xs rounded-full p-1 pl-2">
         {progressData && (

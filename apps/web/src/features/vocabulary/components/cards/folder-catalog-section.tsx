@@ -4,13 +4,14 @@ import { useTranslations } from 'next-intl';
 
 import { useMemo } from 'react';
 import { Icons } from '@lumen/uikit/icons';
-import { Button } from '@lumen/uikit/components';
+import { Button, Skeleton } from '@lumen/uikit/components';
 import type { Folder } from '@/services/vocabulary';
 import { FolderCard } from './folder-card';
 
 interface FolderCatalogSectionProps {
   folders: Folder[];
   activeFolderId: string | null;
+  isLoading?: boolean;
   onViewFolder: (folderId: string) => void;
   onCreateFolder?: () => void;
 }
@@ -18,6 +19,7 @@ interface FolderCatalogSectionProps {
 export function FolderCatalogSection({
   folders,
   activeFolderId,
+  isLoading = false,
   onViewFolder,
   onCreateFolder,
 }: FolderCatalogSectionProps) {
@@ -69,7 +71,13 @@ export function FolderCatalogSection({
           )}
         </div>
 
-        {userFolders.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <Skeleton key={idx} className="h-36 w-full rounded-2xl" />
+            ))}
+          </div>
+        ) : userFolders.length === 0 ? (
           <div className="p-5 rounded-2xl bg-card shadow-sm text-center text-xs text-muted-foreground">
             {t('noCustomFoldersHint')}
           </div>

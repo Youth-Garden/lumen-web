@@ -112,10 +112,11 @@ export function calculateNewFlashcardProgress(
     return { newLevel: 5, newLearningStep: 5, isMastered: true };
   }
   if (rating === FlashcardRating.FAST_TRACK_TEMP) {
-    return { newLevel: 2, newLearningStep: 5, isMastered: false };
+    return { newLevel: 2, newLearningStep: 0, isMastered: false };
   }
   if (rating === FlashcardRating.WRONG) {
-    return { newLevel: currentLevel, newLearningStep: 1, isMastered: false };
+    const penalizedLevel = Math.max(0, currentLevel - 1);
+    return { newLevel: penalizedLevel, newLearningStep: penalizedLevel === 0 ? 0 : 1, isMastered: false };
   }
   return {
     newLevel: currentLevel,
@@ -135,9 +136,11 @@ export function calculateNextProgressOnAnswer(
       learningStep: Math.min(5, currentStep + 1),
     };
   }
+  // Mirror backend: WRONG_ANSWER_SCORE_PENALTY = SCORE_PER_LEVEL = 20 → drop 1 level
+  const penalizedLevel = Math.max(0, currentLevel - 1);
   return {
-    level: currentLevel,
-    learningStep: 1,
+    level: penalizedLevel,
+    learningStep: penalizedLevel === 0 ? 0 : 1,
   };
 }
 

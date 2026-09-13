@@ -6,6 +6,7 @@ import {
   CreateFlashcardPayload,
   CreateFolderPayload,
   Folder,
+  VocabularyOverview,
   VocabularyWord,
 } from './vocabulary.types';
 
@@ -62,6 +63,10 @@ export class VocabularyService extends CoreService {
       ApiEndpointEnum.VOCABULARY_FLASHCARDS,
       payload,
     );
+  }
+
+  getOverview(): Promise<BaseResponse<VocabularyOverview>> {
+    return this._get<VocabularyOverview>(ApiEndpointEnum.VOCABULARY_OVERVIEW);
   }
 }
 

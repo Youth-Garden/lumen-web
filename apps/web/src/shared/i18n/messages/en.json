@@ -105,10 +105,30 @@
   },
   "Dashboard": {
     "activityHeatmap": "Activity Heatmap",
+    "contributions": "contributions this year",
     "less": "Less",
     "more": "More",
+    "activityTooltip": "{count} activities on {date}",
+    "noActivityTooltip": "No activities on {date}",
     "Overview": {
       "title": "Overview",
+      "pageTitle": "Vocabulary Overview",
+      "pageSubtitle": "Track your learned words, spaced repetition schedule, and daily streak.",
+      "learnedWords": "learned words",
+      "activeRetention": "Active Retention",
+      "reviewPairing": "Review Pairing ({count} words)",
+      "reviewPairingNoWords": "Review Pairing (0 words)",
+      "flashcardsMode": "Flashcards Mode",
+      "frequentlyMissedWords": "Frequently Missed Words",
+      "autoTargeted": "Auto-targeted",
+      "noMissedWords": "No frequently missed words",
+      "noMissedWordsDesc": "Great job! Keep practicing to strengthen your vocabulary retention.",
+      "errorRate": "Error: {rate}%",
+      "stageLevel1": "Just learned",
+      "stageLevel2": "Temporary",
+      "stageLevel3": "Lasting",
+      "stageLevel4": "Memorized",
+      "stageLevel5": "Proficient",
       "downloadReport": "Download Report",
       "tabs": {
         "overview": "Overview",
@@ -144,7 +164,13 @@
       "goalReached": "Goal Reached! 🏆",
       "keepItUp": "Keep it up! 🔥",
       "goalReachedDesc": "You've hit your daily study goal. Great job!",
-      "minutesLeft": "{minutes} minutes left to reach your goal."
+      "minutesLeft": "{minutes} minutes left to reach your goal.",
+      "streak": "Streak",
+      "days": "days",
+      "dueToday": "Due Today",
+      "cards": "cards",
+      "reviewCards": "Review",
+      "flashcardMode": "Flashcard Mode"
     },
     "Sidebar": {
       "overview": "Overview",
@@ -337,7 +363,8 @@
       "previousMistake": "Previous mistake",
       "frequentlyMissedTag": "Frequently missed",
       "typePlaceholder": "Type the English word...",
-      "audioListenHint": "Click to listen again"
+      "audioListenHint": "Click to listen again",
+      "audioReplayShortcut": "Press Ctrl to replay"
     },
     "List": {
       "title": "Vocabulary Bank",

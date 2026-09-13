@@ -102,7 +102,7 @@ export function WordDetailSheet({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="rounded-full text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 />
               }
             >
@@ -112,8 +112,10 @@ export function WordDetailSheet({
 
           {word && (
             <div className="flex items-center justify-between gap-4 px-6 pt-2 pb-4">
-              <div className="flex flex-col gap-1.5">
-                <button
+              <div className="flex flex-col gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
                   type="button"
                   onClick={() =>
                     playPronunciation({
@@ -123,11 +125,11 @@ export function WordDetailSheet({
                       accent: PronunciationAccent.US,
                     })
                   }
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group cursor-pointer"
+                  className="justify-start gap-2 h-8 px-2 text-muted-foreground hover:text-foreground"
                 >
                   <Icons
                     name="volume-2"
-                    className="h-4 w-4 text-primary group-hover:scale-110 transition-transform shrink-0"
+                    className="h-4 w-4 text-primary shrink-0"
                   />
                   <span className="font-bold text-xs text-foreground/80">
                     US
@@ -135,8 +137,10 @@ export function WordDetailSheet({
                   <span className="font-sans text-sm">
                     {word.phoneticUs || word.phonetic || ''}
                   </span>
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   type="button"
                   onClick={() =>
                     playPronunciation({
@@ -145,11 +149,11 @@ export function WordDetailSheet({
                       accent: PronunciationAccent.UK,
                     })
                   }
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group cursor-pointer"
+                  className="justify-start gap-2 h-8 px-2 text-muted-foreground hover:text-foreground"
                 >
                   <Icons
                     name="volume-2"
-                    className="h-4 w-4 text-sky-500 group-hover:scale-110 transition-transform shrink-0"
+                    className="h-4 w-4 text-sky-500 shrink-0"
                   />
                   <span className="font-bold text-xs text-foreground/80">
                     UK
@@ -157,7 +161,7 @@ export function WordDetailSheet({
                   <span className="font-sans text-sm">
                     {word.phoneticUk || word.phonetic || ''}
                   </span>
-                </button>
+                </Button>
               </div>
 
               <div>

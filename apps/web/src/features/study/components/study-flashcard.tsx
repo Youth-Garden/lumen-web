@@ -90,7 +90,7 @@ export function StudyFlashcard({
                 type="button"
                 onClick={onPlayUsAudio}
                 size="sm"
-                className="text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
+                className="h-auto py-1 px-2.5 gap-2.5 group"
                 title={t('listenUsHint')}
               >
                 <div className="w-7 h-7 rounded-md bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
@@ -110,7 +110,7 @@ export function StudyFlashcard({
                 type="button"
                 onClick={onPlayUkAudio}
                 size="sm"
-                className="text-foreground hover:bg-muted/60 transition-colors cursor-pointer group gap-2.5"
+                className="h-auto py-1 px-2.5 gap-2.5 group"
                 title={t('listenUkHint')}
               >
                 <div className="w-7 h-7 rounded-md bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-colors">

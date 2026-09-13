@@ -29,9 +29,9 @@ export function FlashcardGradeButtons({
           className="flex flex-col sm:flex-row justify-center gap-4 w-full"
         >
           <Button
-            variant="outline"
+            variant="destructive"
             size="lg"
-            className="flex-1 h-16 text-lg font-bold border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-none flex flex-col gap-1"
+            className="flex-1 h-16 flex flex-col gap-1 text-base font-bold"
             onClick={() => onGrade(FlashcardRating.WRONG)}
             disabled={isSubmitting}
           >
@@ -43,7 +43,7 @@ export function FlashcardGradeButtons({
           <Button
             variant="outline"
             size="lg"
-            className="flex-1 h-16 text-lg font-bold border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-none flex flex-col gap-1"
+            className="flex-1 h-16 flex flex-col gap-1 text-base font-bold text-amber-600 dark:text-amber-400"
             onClick={() => onGrade(FlashcardRating.CORRECT)}
             disabled={isSubmitting}
           >
@@ -55,7 +55,7 @@ export function FlashcardGradeButtons({
           <Button
             variant="outline"
             size="lg"
-            className="flex-1 h-16 text-lg font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none flex flex-col gap-1"
+            className="flex-1 h-16 flex flex-col gap-1 text-base font-bold text-primary"
             onClick={() => onGrade(FlashcardRating.FAST_TRACK_TEMP)}
             disabled={isSubmitting}
           >
@@ -65,9 +65,9 @@ export function FlashcardGradeButtons({
             </span>
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             size="lg"
-            className="flex-1 h-16 text-lg font-bold border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground rounded-none flex flex-col gap-1"
+            className="flex-1 h-16 flex flex-col gap-1 text-base font-bold"
             onClick={() => onGrade(FlashcardRating.FAST_TRACK_KNOWN)}
             disabled={isSubmitting}
           >

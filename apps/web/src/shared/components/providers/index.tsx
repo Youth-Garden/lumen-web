@@ -1,17 +1,14 @@
 'use client';
 
-import React from 'react';
-import { QueryProvider } from './query-provider';
-import { PortalRenderer } from '@lumen/uikit/portal';
-import { Updater } from './updater';
-import { ThemeProvider } from './theme-provider';
-import { Toaster } from '@lumen/uikit/components';
-import { TooltipProvider } from '@lumen/uikit/components';
-import { PropsWithChildren } from 'react';
-import NextTopLoader from 'nextjs-toploader';
-import { CommandPaletteShortcutListener } from '../command-palette';
-
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Toaster, TooltipProvider } from '@lumen/uikit/components';
+import { PortalRenderer } from '@lumen/uikit/portal';
+import NextTopLoader from 'nextjs-toploader';
+import { PropsWithChildren } from 'react';
+
+import { QueryProvider } from './query-provider';
+import { ThemeProvider } from './theme-provider';
+import { Updater } from './updater';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
@@ -25,7 +22,6 @@ export function Providers({ children }: PropsWithChildren) {
             {children}
             <Updater />
             <PortalRenderer />
-            <CommandPaletteShortcutListener />
             <Toaster position="top-right" />
           </QueryProvider>
         </TooltipProvider>

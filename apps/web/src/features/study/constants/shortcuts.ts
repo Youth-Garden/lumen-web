@@ -20,5 +20,6 @@ export enum ChoiceShortcutKey {
 export enum StudyGlobalShortcutKey {
   AUDIO_US = 'u',
   AUDIO_UK = 'k',
+  REPLAY_AUDIO = 'Control',
   CLOSE = 'Escape',
 }

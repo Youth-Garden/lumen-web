@@ -80,7 +80,6 @@ export function VocabularyListPage() {
           <Button
             variant={cefrLevel === '' ? 'default' : 'outline'}
             size="sm"
-            className="h-8 rounded-full"
             onClick={() => setCefrLevel('')}
           >
             All
@@ -90,7 +89,6 @@ export function VocabularyListPage() {
               key={level}
               variant={cefrLevel === level ? 'default' : 'outline'}
               size="sm"
-              className="h-8 rounded-full"
               onClick={() => setCefrLevel(level)}
             >
               {level}

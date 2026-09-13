@@ -50,10 +50,9 @@ export function AudioButton({
   return (
     <Button
       variant="ghost"
-      size="icon"
+      size="icon-sm"
       className={cn(
-        'relative rounded-full transition-all duration-200 active:scale-90 hover:bg-primary/10 hover:text-primary',
-        isPlaying && 'text-primary bg-primary/15 ring-2 ring-primary/30',
+        isPlaying && 'text-primary bg-muted',
         className,
       )}
       onClick={handlePlay}

@@ -122,9 +122,9 @@ export function DailyGoalWidget() {
         </div>
         <Button
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           onClick={() => presentDailyGoalDialog()}
-          className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-full"
+          className="text-muted-foreground hover:text-foreground shrink-0"
         >
           <Icons name="settings" className="h-4 w-4" />
         </Button>

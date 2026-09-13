@@ -62,3 +62,30 @@ export enum PronunciationAccent {
   US = 'us',
   UK = 'uk',
 }
+
+export interface MemoryStageLevel {
+  level: number;
+  count: number;
+}
+
+export interface FrequentlyMissedWordItem {
+  flashcardId: string;
+  wordId: string;
+  term: string;
+  partOfSpeech: string;
+  definition: string;
+  phonetic?: string;
+  audioUrl?: string;
+  audioUsUrl?: string;
+  imageUrl?: string;
+  errorRate: number;
+  masteryScore: number;
+  isWilted: boolean;
+}
+
+export interface VocabularyOverview {
+  totalLearnedWords: number;
+  memoryLevels: MemoryStageLevel[];
+  frequentlyMissedWords: FrequentlyMissedWordItem[];
+}
+

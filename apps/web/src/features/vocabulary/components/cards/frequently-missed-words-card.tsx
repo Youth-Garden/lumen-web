@@ -83,7 +83,9 @@ export function FrequentlyMissedWordsCard({
                     {t('errorRate', { rate: errorRate })}
                   </span>
 
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
                     type="button"
                     onClick={() => {
                       playPronunciation({
@@ -93,14 +95,13 @@ export function FrequentlyMissedWordsCard({
                         audioUrl: card.audioUrl || undefined,
                       });
                     }}
-                    className="p-0.5 rounded-md text-muted-foreground hover:text-primary transition-colors cursor-pointer"
                     aria-label={tStudy('listenUsHint')}
                   >
                     <Icons
                       name="volume-2"
                       className="h-3.5 w-3.5 text-primary"
                     />
-                  </button>
+                  </Button>
                 </div>
 
                 <div>

@@ -27,6 +27,7 @@ export interface UseStudyShortcutsProps {
   onContinueFeedback?: () => void;
   onPlayUsAudio: () => void;
   onPlayUkAudio: () => void;
+  onReplayAudio: () => void;
   onClose: () => void;
 }
 
@@ -48,12 +49,27 @@ export function useStudyShortcuts({
   onContinueFeedback,
   onPlayUsAudio,
   onPlayUkAudio,
+  onReplayAudio,
   onClose,
 }: UseStudyShortcutsProps) {
   useEffect(() => {
     if (!isOpen || isFinished) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl alone replays audio regardless of feedback state
+      if (event.key === StudyGlobalShortcutKey.REPLAY_AUDIO && !event.repeat) {
+        const target = event.target as HTMLElement | null;
+        if (
+          !(target instanceof HTMLInputElement) &&
+          !(target instanceof HTMLTextAreaElement) &&
+          !target?.isContentEditable
+        ) {
+          event.preventDefault();
+          onReplayAudio();
+          return;
+        }
+      }
+
       if (isFeedbackOpen) {
         if (
           event.code === FlashcardShortcutKey.SPACE ||
@@ -174,6 +190,7 @@ export function useStudyShortcuts({
     onContinueFeedback,
     onPlayUsAudio,
     onPlayUkAudio,
+    onReplayAudio,
     onClose,
   ]);
 }

@@ -380,6 +380,7 @@ export function FolderListPage() {
         <FolderCatalogSection
           folders={enrichedFolders}
           activeFolderId={activeFolder?.id || null}
+          isLoading={isLoading}
           onViewFolder={(folderId) => handleViewFolder(folderId)}
           onCreateFolder={() => presentCreateFolder()}
         />

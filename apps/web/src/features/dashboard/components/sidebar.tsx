@@ -51,8 +51,8 @@ export function Sidebar() {
     <nav
       id="sidebar"
       className={cn(
-        'relative flex h-full flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out z-20',
-        sidebarCollapsed ? 'w-[88px]' : 'w-64',
+        'relative flex h-full flex-col bg-sidebar rounded-3xl text-sidebar-foreground transition-all duration-300 ease-in-out z-20',
+        sidebarCollapsed ? 'w-22' : 'w-64',
       )}
     >
       {/* Top Header Logo */}
@@ -75,9 +75,9 @@ export function Sidebar() {
             render={
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon-sm"
                 onClick={toggleSidebar}
-                className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-full cursor-pointer"
+                className="text-muted-foreground hover:text-foreground shrink-0"
                 aria-label={
                   sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')
                 }

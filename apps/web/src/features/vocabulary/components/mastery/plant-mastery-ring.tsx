@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Icons } from '@lumen/uikit/icons';
 
@@ -41,8 +41,8 @@ function describeArc(
     endAngle = startAngle + 0.1;
   }
 
-  const start = polarToCartesian(centerX, centerY, radius, endAngle);
-  const end = polarToCartesian(centerX, centerY, radius, startAngle);
+  const start = polarToCartesian(centerX, centerY, radius, startAngle);
+  const end = polarToCartesian(centerX, centerY, radius, endAngle);
   const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
   return [
     'M',
@@ -53,7 +53,7 @@ function describeArc(
     radius,
     0,
     largeArcFlag,
-    0,
+    1,
     end.x.toFixed(2),
     end.y.toFixed(2),
   ].join(' ');
@@ -72,6 +72,8 @@ const ARC_SEGMENTS = [
   { start: 301, end: 347 },
 ];
 
+const SEGMENT_ANIM_DURATION = 0.4;
+
 export function PlantMasteryRing({
   level = 0,
   learningStep = 0,
@@ -84,6 +86,19 @@ export function PlantMasteryRing({
   title,
 }: PlantMasteryRingProps) {
   const clampedLevel = Math.max(0, Math.min(5, Math.round(level)));
+
+  // Track previous level to compute per-segment animation delay for sequential fill.
+  // Initialized to clampedLevel so mount render (with initial={false}) has no delay.
+  const prevLevelRef = useRef(clampedLevel);
+
+  // Capture snapshot before the effect so delay math uses old value during this render.
+  const prevLevel = prevLevelRef.current;
+  const isLevelIncreasing = clampedLevel > prevLevel;
+
+  useEffect(() => {
+    prevLevelRef.current = clampedLevel;
+  }, [clampedLevel]);
+
   const innerIconSize = Math.round(size * 0.68);
 
   const content = (
@@ -112,6 +127,13 @@ export function PlantMasteryRing({
               }
             }
           }
+
+          // Sequential delay: only for newly-filled segments when level increases.
+          // Decreasing level or partial-fill changes animate immediately (delay=0).
+          const segmentDelay =
+            isLevelIncreasing && index >= prevLevel && isSolidlyFilled
+              ? (index - prevLevel) * SEGMENT_ANIM_DURATION
+              : 0;
 
           return (
             <React.Fragment key={index}>
@@ -145,8 +167,12 @@ export function PlantMasteryRing({
                   opacity: isSolidlyFilled || isPartiallyFilled ? 1 : 0,
                 }}
                 transition={{
-                  pathLength: { duration: 0.45, ease: 'easeOut' },
-                  opacity: { duration: 0.2 },
+                  pathLength: {
+                    duration: SEGMENT_ANIM_DURATION,
+                    ease: 'easeOut',
+                    delay: segmentDelay,
+                  },
+                  opacity: { duration: 0.2, delay: segmentDelay },
                 }}
               />
             </React.Fragment>
