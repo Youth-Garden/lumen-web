@@ -16,15 +16,44 @@ export const PortalRenderer = () => {
 
   if (!mounted || portals.length === 0) return null;
 
+  const openPortals = portals.filter((p) => p.isOpen);
+  if (openPortals.length === 0) return null;
+
+  const lastOpenIndex = portals.reduce(
+    (lastIdx, p, idx) => (p.isOpen ? idx : lastIdx),
+    -1,
+  );
+
+  const topBackdropPortal = [...portals]
+    .reverse()
+    .find((p) => p.isOpen && !p.disableBackdrop);
+
   return createPortal(
     <>
-      {portals.map((instance) => (
-        <PortalInstanceItem
-          key={instance.id}
-          instance={instance}
-          onDismiss={() => onDismiss(instance.id)}
+      {topBackdropPortal && (
+        <Backdrop
+          isOpen={true}
+          style={{ zIndex: 99 }}
+          onPress={() => {
+            if (!topBackdropPortal.disableCloseByBackdrop) {
+              onDismiss(topBackdropPortal.id);
+            }
+          }}
         />
-      ))}
+      )}
+      {portals.map((instance, index) => {
+        const isTopActive = index === lastOpenIndex;
+        const zIndex = isTopActive ? 100 : 98;
+
+        return (
+          <PortalInstanceItem
+            key={instance.id}
+            instance={instance}
+            zIndex={zIndex}
+            onDismiss={() => onDismiss(instance.id)}
+          />
+        );
+      })}
     </>,
     document.body,
   );
@@ -32,40 +61,25 @@ export const PortalRenderer = () => {
 
 const PortalInstanceItem = ({
   instance,
+  zIndex,
   onDismiss,
 }: {
   instance: PortalInstance;
+  zIndex: number;
   onDismiss: () => void;
 }) => {
   const Component = instance.component;
 
-  if (instance.disableBackdrop) {
-    return (
-      <Component
-        id={instance.id}
-        data={instance.data}
-        isOpen={instance.isOpen}
-        onDismiss={onDismiss}
-      />
-    );
-  }
+  if (!instance.isOpen) return null;
 
   return (
-    <>
-      <Backdrop
-        isOpen={instance.isOpen}
-        onPress={() => {
-          if (!instance.disableCloseByBackdrop) {
-            onDismiss();
-          }
-        }}
-      />
+    <div style={{ position: 'relative', zIndex }}>
       <Component
         id={instance.id}
         data={instance.data}
         isOpen={instance.isOpen}
         onDismiss={onDismiss}
       />
-    </>
+    </div>
   );
 };

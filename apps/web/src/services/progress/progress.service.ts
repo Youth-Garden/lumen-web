@@ -38,7 +38,7 @@ export class ProgressService extends CoreService {
   }): Promise<ActivityItem[]> {
     const res = await this._get<ActivityItem[]>(
       ApiEndpointEnum.PROGRESS_ACTIVITIES,
-      { params },
+      params,
     );
     return res.data;
   }
@@ -48,7 +48,7 @@ export class ProgressService extends CoreService {
   ): Promise<LeaderboardResponse> {
     const res = await this._get<LeaderboardResponse>(
       ApiEndpointEnum.PROGRESS_LEADERBOARD,
-      { params: { period } },
+      { period },
     );
     return res.data;
   }

@@ -31,6 +31,7 @@ export function filterPoolCards(
 export function createInitialStudyQueue(
   poolCards: VocabularyWord[],
   mode: StudySessionMode = StudySessionMode.LEARN_NEW,
+  fallbackPool: VocabularyWord[] = [],
 ): StudyQueueItem[] {
   return poolCards.map((card) => {
     if (mode === StudySessionMode.FLASHCARD) {
@@ -42,7 +43,13 @@ export function createInitialStudyQueue(
     }
 
     if (mode === StudySessionMode.PRACTICE) {
-      return createNextExerciseForWord(card, poolCards, undefined, false);
+      return createNextExerciseForWord(
+        card,
+        poolCards,
+        fallbackPool,
+        undefined,
+        false,
+      );
     }
 
     const cardWithProg = card as CardWithProgress;
@@ -57,7 +64,13 @@ export function createInitialStudyQueue(
       };
     }
 
-    return createNextExerciseForWord(card, poolCards, undefined, false);
+    return createNextExerciseForWord(
+      card,
+      poolCards,
+      fallbackPool,
+      undefined,
+      false,
+    );
   });
 }
 
@@ -195,12 +208,14 @@ export function getNextQueueAfterFeedback(
   exerciseType: StudyExerciseType,
   poolCards: VocabularyWord[],
   wasCorrect: boolean,
+  fallbackPool: VocabularyWord[] = [],
 ): StudyQueueItem[] {
   const remaining = activeQueue.slice(1);
   if (wasCorrect) return remaining;
   const retry = createNextExerciseForWord(
     currentCard,
     poolCards,
+    fallbackPool,
     exerciseType,
     true,
   );
@@ -280,6 +295,7 @@ export function processAdvanceFromFlashcard(
   currentCard: VocabularyWord,
   poolCards: VocabularyWord[],
   activeQueue: StudyQueueItem[],
+  fallbackPool: VocabularyWord[] = [],
 ): {
   newLevel: number;
   newLearningStep: number;
@@ -296,9 +312,41 @@ export function processAdvanceFromFlashcard(
   const nextExercise = createNextExerciseForWord(
     updatedCard,
     poolCards,
+    fallbackPool,
     StudyExerciseType.FLASHCARD,
     false,
   );
   const nextQueue = insertNextExerciseInQueue(activeQueue, nextExercise);
   return { newLevel, newLearningStep, isMastered, nextQueue };
 }
+
+export function recordMissedWordItem(
+  prevMap: Record<string, MissedWordStat>,
+  card: VocabularyWord,
+): Record<string, MissedWordStat> {
+  const key = card.term.trim().toLowerCase() || card.id;
+  return {
+    ...prevMap,
+    [key]: { card, errorCount: (prevMap[key]?.errorCount || 0) + 1 },
+  };
+}
+
+export function updateCardProgressMap(
+  prevMap: Record<string, { level: number; learningStep: number }>,
+  cardId: string,
+  level: number,
+  learningStep: number,
+): Record<string, { level: number; learningStep: number }> {
+  return {
+    ...prevMap,
+    [cardId]: { level, learningStep },
+  };
+}
+
+export function updateMasteredWordIds(
+  prevIds: string[],
+  cardId: string,
+): string[] {
+  return prevIds.includes(cardId) ? prevIds : [...prevIds, cardId];
+}
+

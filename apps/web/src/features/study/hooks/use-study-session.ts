@@ -1,7 +1,5 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   StudyFeedbackDrawer,
   type StudyFeedbackDrawerData,
@@ -25,20 +23,25 @@ import {
   getNextQueueAfterFeedback,
   processAdvanceFromFlashcard,
   processFlashcardReviewStep,
+  recordMissedWordItem,
   saveStudyProgressToStorage,
   sortMissedWords,
+  updateCardProgressMap,
+  updateMasteredWordIds,
 } from '@/features/study/utils/study-session.utils';
+import { FlashcardRating, type CardWithProgress } from '@/services/study';
+import { type VocabularyWord } from '@/services/vocabulary';
+import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
+import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useReviewFlashcard } from './use-study';
 import { useStudyAudio } from './use-study-audio';
-import { useStudySettings } from './use-study-settings';
-import { useStudyShortcuts } from './use-study-shortcuts';
 import type {
   UseStudySessionProps,
   UseStudySessionReturn,
 } from './use-study-session.types';
-import { FlashcardRating, type CardWithProgress } from '@/services/study';
-import { type VocabularyWord } from '@/services/vocabulary';
-import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
+import { useStudySettings } from './use-study-settings';
+import { useStudyShortcuts } from './use-study-shortcuts';
 
 export function useStudySession({
   cards,
@@ -59,8 +62,9 @@ export function useStudySession({
 
   const resolvedMode = useMemo(() => {
     if (mode) return mode;
-    if (isReviewMode) return StudySessionMode.PRACTICE;
-    return StudySessionMode.LEARN_NEW;
+    return isReviewMode
+      ? StudySessionMode.PRACTICE
+      : StudySessionMode.LEARN_NEW;
   }, [mode, isReviewMode]);
 
   const storageKey = useMemo(
@@ -110,17 +114,16 @@ export function useStudySession({
   );
 
   const initializeSession = useCallback(() => {
-    setActiveQueue(createInitialStudyQueue(poolCards, resolvedMode));
+    setActiveQueue(createInitialStudyQueue(poolCards, resolvedMode, cards));
     setMasteredIds([]);
     setIsFlipped(false);
     setFeedback(null);
     setSelectedOptionIndex(null);
     setWordProgressMap({});
-  }, [poolCards, resolvedMode]);
+  }, [poolCards, resolvedMode, cards]);
 
   useEffect(() => {
-    if (!isOpen || poolCards.length === 0) return;
-    initializeSession();
+    if (isOpen && poolCards.length > 0) initializeSession();
   }, [poolCards, isOpen, initializeSession]);
 
   useEffect(() => {
@@ -141,17 +144,33 @@ export function useStudySession({
   );
 
   const recordMissedWord = useCallback((card: VocabularyWord) => {
-    const key = card.term.trim().toLowerCase() || card.id;
-    setMissedWordsMap((prev) => ({
-      ...prev,
-      [key]: { card, errorCount: (prev[key]?.errorCount || 0) + 1 },
-    }));
+    setMissedWordsMap((prev) => recordMissedWordItem(prev, card));
   }, []);
 
+  const transitionQueueWithDelay = useCallback(
+    (nextQueue: StudyQueueItem[]) => {
+      canFlipRef.current = false;
+      setTimeout(() => {
+        setIsFlipped(false);
+        setActiveQueue(nextQueue);
+        canFlipRef.current = true;
+      }, 600);
+    },
+    [],
+  );
+
   const handleFlip = useCallback(() => {
-    if (!canFlipRef.current) return;
-    setIsFlipped((prev) => !prev);
+    if (canFlipRef.current) setIsFlipped((prev) => !prev);
   }, []);
+
+  const mutateReviewQuietly = useCallback(
+    (flashcardId: string, quality: FlashcardRating) => {
+      try {
+        reviewMutation.mutate({ flashcardId, quality });
+      } catch {}
+    },
+    [reviewMutation],
+  );
 
   const handleAdvanceFromFlashcard = useCallback(
     (rating: FlashcardRating) => {
@@ -165,30 +184,19 @@ export function useStudySession({
           currentCard,
           poolCards,
           activeQueue,
+          cards,
         );
 
       if (isMastered)
-        setMasteredIds((prev) =>
-          prev.includes(cardId) ? prev : [...prev, cardId],
-        );
-      setWordProgressMap((prev) => ({
-        ...prev,
-        [cardId]: { level: newLevel, learningStep: newLearningStep },
-      }));
-
-      try {
-        reviewMutation.mutate({
-          flashcardId: (currentCard as CardWithProgress).flashcardId || cardId,
-          quality: determineFlashcardQuality(rating),
-        });
-      } catch {}
-
-      canFlipRef.current = false;
-      setTimeout(() => {
-        setIsFlipped(false);
-        setActiveQueue(nextQueue);
-        canFlipRef.current = true;
-      }, 600);
+        setMasteredIds((prev) => updateMasteredWordIds(prev, cardId));
+      setWordProgressMap((prev) =>
+        updateCardProgressMap(prev, cardId, newLevel, newLearningStep),
+      );
+      mutateReviewQuietly(
+        (currentCard as CardWithProgress).flashcardId || cardId,
+        determineFlashcardQuality(rating),
+      );
+      transitionQueueWithDelay(nextQueue);
     },
     [
       currentCard,
@@ -196,7 +204,9 @@ export function useStudySession({
       currentCardLearningStep,
       poolCards,
       activeQueue,
-      reviewMutation,
+      cards,
+      mutateReviewQuietly,
+      transitionQueueWithDelay,
     ],
   );
 
@@ -213,39 +223,156 @@ export function useStudySession({
           activeQueue,
         );
 
-      setWordProgressMap((prev) => ({
-        ...prev,
-        [cardId]: { level: newLevel, learningStep: newLearningStep },
-      }));
-      try {
-        reviewMutation.mutate({
-          flashcardId: (currentCard as CardWithProgress).flashcardId || cardId,
-          quality: isKnown ? FlashcardRating.CORRECT : FlashcardRating.WRONG,
-        });
-      } catch {}
-
+      setWordProgressMap((prev) =>
+        updateCardProgressMap(prev, cardId, newLevel, newLearningStep),
+      );
       if (isMastered)
-        setMasteredIds((prev) =>
-          prev.includes(cardId) ? prev : [...prev, cardId],
-        );
+        setMasteredIds((prev) => updateMasteredWordIds(prev, cardId));
       else recordMissedWord(currentCard);
 
-      canFlipRef.current = false;
-      setTimeout(() => {
-        setIsFlipped(false);
-        setActiveQueue(nextQueue);
-        canFlipRef.current = true;
-      }, 600);
+      mutateReviewQuietly(
+        (currentCard as CardWithProgress).flashcardId || cardId,
+        isKnown ? FlashcardRating.CORRECT : FlashcardRating.WRONG,
+      );
+      transitionQueueWithDelay(nextQueue);
     },
     [
       currentCard,
       currentCardMastery,
       currentCardLearningStep,
       activeQueue,
-      reviewMutation,
+      mutateReviewQuietly,
       recordMissedWord,
+      transitionQueueWithDelay,
     ],
   );
+
+  const handleVerifyAnswer = useCallback(
+    (isCorrect: boolean, userAnswer?: string) => {
+      if (!currentCard || !currentItem) return;
+      const cardId = currentCard.id;
+      const feedbackState = buildFeedbackState(
+        currentCard,
+        isCorrect,
+        userAnswer,
+      );
+      setFeedback(feedbackState);
+      presentFeedback({
+        feedback: feedbackState,
+        onContinue: () => handleContinueFeedbackRef.current(),
+      });
+
+      const currentProg =
+        wordProgressMap[cardId] || (currentCard as CardWithProgress);
+      const nextProg = calculateNextProgressOnAnswer(
+        isCorrect,
+        currentProg.level ?? 0,
+        currentProg.learningStep ?? 0,
+      );
+      setWordProgressMap((prev) =>
+        updateCardProgressMap(
+          prev,
+          cardId,
+          nextProg.level,
+          nextProg.learningStep,
+        ),
+      );
+
+      if (isCorrect)
+        setMasteredIds((prev) => updateMasteredWordIds(prev, cardId));
+      else recordMissedWord(currentCard);
+
+      mutateReviewQuietly(
+        (currentCard as CardWithProgress).flashcardId || cardId,
+        isCorrect ? FlashcardRating.CORRECT : FlashcardRating.WRONG,
+      );
+    },
+    [
+      currentCard,
+      currentItem,
+      wordProgressMap,
+      mutateReviewQuietly,
+      recordMissedWord,
+      presentFeedback,
+    ],
+  );
+
+  const handleSelectChoiceOption = useCallback(
+    (optionIndex: number) => {
+      const option = currentItem?.options?.[optionIndex];
+      if (option) {
+        setSelectedOptionIndex(optionIndex);
+        handleVerifyAnswer(option.isCorrect, option.label);
+      }
+    },
+    [currentItem, handleVerifyAnswer],
+  );
+
+  const handleSubmitTyping = useCallback(
+    (input: string) => {
+      if (currentCard) {
+        const isCorrect =
+          input.trim().toLowerCase() === currentCard.term.trim().toLowerCase();
+        handleVerifyAnswer(isCorrect, input.trim());
+      }
+    },
+    [currentCard, handleVerifyAnswer],
+  );
+
+  const handleContinueFeedback = useCallback(() => {
+    dismissFeedback();
+    if (feedback && currentCard && currentItem) {
+      const nextQueue = getNextQueueAfterFeedback(
+        activeQueue,
+        currentCard,
+        currentItem.exerciseType,
+        poolCards,
+        feedback.isCorrect,
+        cards,
+      );
+      setFeedback(null);
+      setSelectedOptionIndex(null);
+      setActiveQueue(nextQueue);
+    }
+  }, [
+    feedback,
+    currentCard,
+    currentItem,
+    activeQueue,
+    poolCards,
+    cards,
+    dismissFeedback,
+  ]);
+
+  handleContinueFeedbackRef.current = handleContinueFeedback;
+
+  const handleRestart = useCallback(() => {
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {}
+    dismissFeedback();
+    initializeSession();
+    setMissedWordsMap({});
+    setWordProgressMap({});
+  }, [storageKey, initializeSession, dismissFeedback]);
+
+  const handleSaveProgress = useCallback(() => {
+    if (isOpen && poolCards.length > 0) {
+      saveStudyProgressToStorage(
+        storageKey,
+        activeQueue,
+        masteredIds,
+        missedWordsMap,
+      );
+    }
+  }, [
+    isOpen,
+    poolCards.length,
+    activeQueue,
+    masteredIds,
+    missedWordsMap,
+    storageKey,
+  ]);
 
   const handleFlashcardAgain = useCallback(
     () => handleFlashcardReviewAction(false),
@@ -264,140 +391,13 @@ export function useStudySession({
     [handleAdvanceFromFlashcard],
   );
   const handleDontKnow = useCallback(() => {
-    if (!currentCard) return;
-    recordMissedWord(currentCard);
-    handleAdvanceFromFlashcard(FlashcardRating.WRONG);
+    if (currentCard) {
+      recordMissedWord(currentCard);
+      handleAdvanceFromFlashcard(FlashcardRating.WRONG);
+    }
   }, [currentCard, recordMissedWord, handleAdvanceFromFlashcard]);
 
-  const handleVerifyAnswer = useCallback(
-    (isCorrect: boolean, userAnswer?: string) => {
-      if (!currentCard || !currentItem) return;
-      const feedbackState = buildFeedbackState(
-        currentCard,
-        isCorrect,
-        userAnswer,
-      );
-      setFeedback(feedbackState);
-      presentFeedback({
-        feedback: feedbackState,
-        onContinue: () => {
-          handleContinueFeedbackRef.current();
-        },
-      });
-
-      const cardId = currentCard.id;
-      const currentProg =
-        wordProgressMap[cardId] || (currentCard as CardWithProgress);
-      const nextProg = calculateNextProgressOnAnswer(
-        isCorrect,
-        currentProg.level ?? 0,
-        currentProg.learningStep ?? 0,
-      );
-
-      setWordProgressMap((prev) => ({ ...prev, [cardId]: nextProg }));
-      try {
-        reviewMutation.mutate({
-          flashcardId:
-            (currentCard as CardWithProgress).flashcardId || currentCard.id,
-          quality: isCorrect ? FlashcardRating.CORRECT : FlashcardRating.WRONG,
-        });
-      } catch {}
-
-      if (isCorrect)
-        setMasteredIds((prev) =>
-          prev.includes(cardId) ? prev : [...prev, cardId],
-        );
-      else recordMissedWord(currentCard);
-    },
-    [
-      currentCard,
-      currentItem,
-      wordProgressMap,
-      reviewMutation,
-      recordMissedWord,
-      presentFeedback,
-    ],
-  );
-
-  const handleSelectChoiceOption = useCallback(
-    (optionIndex: number) => {
-      const option = currentItem?.options?.[optionIndex];
-      if (!option) return;
-      setSelectedOptionIndex(optionIndex);
-      handleVerifyAnswer(option.isCorrect, option.label);
-    },
-    [currentItem, handleVerifyAnswer],
-  );
-
-  const handleSubmitTyping = useCallback(
-    (input: string) => {
-      if (!currentCard) return;
-      const isCorrect =
-        input.trim().toLowerCase() === currentCard.term.trim().toLowerCase();
-      handleVerifyAnswer(isCorrect, input.trim());
-    },
-    [currentCard, handleVerifyAnswer],
-  );
-
-  const handleContinueFeedback = useCallback(() => {
-    dismissFeedback();
-    if (!feedback || !currentCard || !currentItem) return;
-    const nextQueue = getNextQueueAfterFeedback(
-      activeQueue,
-      currentCard,
-      currentItem.exerciseType,
-      poolCards,
-      feedback.isCorrect,
-    );
-    setFeedback(null);
-    setSelectedOptionIndex(null);
-    setActiveQueue(nextQueue);
-  }, [
-    feedback,
-    currentCard,
-    currentItem,
-    activeQueue,
-    poolCards,
-    dismissFeedback,
-  ]);
-
-  handleContinueFeedbackRef.current = handleContinueFeedback;
-
-  const handleRestart = useCallback(() => {
-    try {
-      localStorage.removeItem(storageKey);
-    } catch {}
-    dismissFeedback();
-    initializeSession();
-    setMissedWordsMap({});
-    setWordProgressMap({});
-  }, [storageKey, initializeSession, dismissFeedback]);
-
-  const handleSaveProgress = useCallback(() => {
-    if (!isOpen || poolCards.length === 0) return;
-    saveStudyProgressToStorage(
-      storageKey,
-      activeQueue,
-      masteredIds,
-      missedWordsMap,
-    );
-  }, [
-    isOpen,
-    poolCards.length,
-    activeQueue,
-    masteredIds,
-    missedWordsMap,
-    storageKey,
-  ]);
-
-  const {
-    activePhonetic,
-    isPlaying,
-    playingAccent,
-    handlePlayUsAudio,
-    handlePlayUkAudio,
-    handlePlayAudio,
-  } = useStudyAudio({
+  const audioState = useStudyAudio({
     currentCard,
     exerciseType: currentItem?.exerciseType,
     autoPlayAudio: settings.autoPlayAudio,
@@ -422,11 +422,16 @@ export function useStudySession({
     onFlashcardKnown: handleFlashcardKnown,
     onSelectChoice: handleSelectChoiceOption,
     onContinueFeedback: handleContinueFeedback,
-    onPlayUsAudio: handlePlayUsAudio,
-    onPlayUkAudio: handlePlayUkAudio,
-    onReplayAudio: handlePlayAudio,
+    onPlayUsAudio: audioState.handlePlayUsAudio,
+    onPlayUkAudio: audioState.handlePlayUkAudio,
+    onReplayAudio: audioState.handlePlayAudio,
     onClose,
   });
+
+  const missedWordsList = useMemo(
+    () => sortMissedWords(missedWordsMap),
+    [missedWordsMap],
+  );
 
   return {
     mode: resolvedMode,
@@ -441,17 +446,14 @@ export function useStudySession({
     feedback,
     selectedOptionIndex,
     progressPercent,
-    activePhonetic,
+    activePhonetic: audioState.activePhonetic,
     currentCardMastery,
     currentCardLearningStep,
     canFlipRef,
     isSubmitting: reviewMutation.isPending,
-    playingAccent,
-    isPlaying,
-    missedWordsList: useMemo(
-      () => sortMissedWords(missedWordsMap),
-      [missedWordsMap],
-    ),
+    playingAccent: audioState.playingAccent,
+    isPlaying: audioState.isPlaying,
+    missedWordsList,
     settings,
     handleFlip,
     handleMastered,
@@ -464,9 +466,9 @@ export function useStudySession({
     handleContinueFeedback,
     handleRestart,
     handleSaveProgress,
-    handlePlayUsAudio,
-    handlePlayUkAudio,
-    handlePlayAudio,
+    handlePlayUsAudio: audioState.handlePlayUsAudio,
+    handlePlayUkAudio: audioState.handlePlayUkAudio,
+    handlePlayAudio: audioState.handlePlayAudio,
     handleVerifyAnswer,
     dismissFeedback,
   };

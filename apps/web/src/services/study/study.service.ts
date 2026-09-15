@@ -13,9 +13,10 @@ export class StudyService extends CoreService {
     folderId?: string;
     limit?: number;
   }): Promise<BaseResponse<DueFlashcard[]>> {
-    return this._get<DueFlashcard[]>(ApiEndpointEnum.STUDY_FLASHCARDS_DUE, {
+    return this._get<DueFlashcard[]>(
+      ApiEndpointEnum.STUDY_FLASHCARDS_DUE,
       params,
-    });
+    );
   }
 
   reviewFlashcard(

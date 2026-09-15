@@ -1,6 +1,5 @@
 'use client';
 
-import { useDueFlashcards } from '@/features/study/hooks';
 import { useVocabularyOverview } from '@/features/vocabulary/hooks';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -25,27 +24,18 @@ export function OverviewPage() {
   const { data: progressData, isLoading: progressLoading } =
     useProgressDashboard();
   const { data: heatmapData, isLoading: heatmapLoading } = useHeatmap();
-  const { data: dueFlashcards, isLoading: dueLoading } = useDueFlashcards();
   const { data: overviewRes, isLoading: overviewLoading } =
     useVocabularyOverview();
 
   const overview = overviewRes?.data;
-  const dueCount = useMemo(() => {
-    if (!dueFlashcards?.data) return 0;
-    return dueFlashcards.data.filter(
-      (card) =>
-        Boolean(card.nextReviewAt) ||
-        (card.level ?? 0) > 0 ||
-        (card.learningStep ?? 0) > 0,
-    ).length;
-  }, [dueFlashcards?.data]);
+  const dueCount = overview?.dueCount ?? 0;
 
   const totalLearnedWords = overview?.totalLearnedWords ?? 0;
   const streak = progressData?.streak ?? 0;
   const todayStudyMinutes = progressData?.todayStudyMinutes ?? 0;
   const dailyGoalMinutes = progressData?.dailyGoalMinutes ?? 15;
 
-  const isStatsLoading = progressLoading || overviewLoading || dueLoading;
+  const isStatsLoading = progressLoading || overviewLoading;
 
   const memoryLevels: MemoryLevelItem[] = useMemo(() => {
     const rawLevels = overview?.memoryLevels || [];

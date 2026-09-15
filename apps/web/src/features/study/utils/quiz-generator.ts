@@ -44,19 +44,66 @@ function shuffleArray<T>(items: T[]): T[] {
   return shuffled;
 }
 
+export function selectDistractorCards(
+  card: VocabularyWord,
+  pool: VocabularyWord[],
+  fallbackPool: VocabularyWord[] = [],
+  neededCount = 3,
+): VocabularyWord[] {
+  const selected: VocabularyWord[] = [];
+  const selectedIds = new Set<string>([card.id]);
+  const selectedTerms = new Set<string>([card.term.toLowerCase().trim()]);
+
+  const poolCandidates = shuffleArray(
+    pool.filter(
+      (candidateCard) =>
+        candidateCard.id !== card.id &&
+        candidateCard.term.toLowerCase().trim() !== card.term.toLowerCase().trim(),
+    ),
+  );
+
+  for (const candidate of poolCandidates) {
+    if (selected.length >= neededCount) break;
+    const termKey = candidate.term.toLowerCase().trim();
+    if (!selectedIds.has(candidate.id) && !selectedTerms.has(termKey)) {
+      selected.push(candidate);
+      selectedIds.add(candidate.id);
+      selectedTerms.add(termKey);
+    }
+  }
+
+  if (selected.length < neededCount && fallbackPool.length > 0) {
+    const fallbackCandidates = shuffleArray(
+      fallbackPool.filter(
+        (candidateCard) =>
+          candidateCard.id !== card.id &&
+          candidateCard.term.toLowerCase().trim() !== card.term.toLowerCase().trim(),
+      ),
+    );
+
+    for (const candidate of fallbackCandidates) {
+      if (selected.length >= neededCount) break;
+      const termKey = candidate.term.toLowerCase().trim();
+      if (!selectedIds.has(candidate.id) && !selectedTerms.has(termKey)) {
+        selected.push(candidate);
+        selectedIds.add(candidate.id);
+        selectedTerms.add(termKey);
+      }
+    }
+  }
+
+  return selected;
+}
+
 export function createChoiceTermQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
+  fallbackPool: VocabularyWord[] = [],
   isReviewingFailed = false,
 ): StudyQueueItem {
   const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
 
-  const otherCards = pool.filter(
-    (candidateCard) =>
-      candidateCard.id !== card.id &&
-      candidateCard.term.toLowerCase() !== card.term.toLowerCase(),
-  );
-  const distractors = shuffleArray(otherCards).slice(0, 3);
+  const distractors = selectDistractorCards(card, pool, fallbackPool, 3);
 
   const correctOption: ChoiceOption = {
     id: card.id,
@@ -94,14 +141,12 @@ export function createChoiceTermQuestion(
 export function createChoiceMeaningQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
+  fallbackPool: VocabularyWord[] = [],
   isReviewingFailed = false,
 ): StudyQueueItem {
   const primary = getCardPrimaryDefinition(card);
 
-  const otherCards = pool.filter(
-    (candidateCard) => candidateCard.id !== card.id,
-  );
-  const distractors = shuffleArray(otherCards).slice(0, 3);
+  const distractors = selectDistractorCards(card, pool, fallbackPool, 3);
 
   const correctOption: ChoiceOption = {
     id: card.id,
@@ -170,6 +215,7 @@ export function createTypingQuestion(
 export function createNextExerciseForWord(
   card: VocabularyWord,
   pool: VocabularyWord[],
+  fallbackPool: VocabularyWord[] = [],
   previousExerciseType?: StudyExerciseType,
   isReviewingFailed = false,
 ): StudyQueueItem {
@@ -189,10 +235,20 @@ export function createNextExerciseForWord(
   }
 
   if (nextExerciseType === StudyExerciseType.CHOICE_TERM) {
-    return createChoiceTermQuestion(card, pool, isReviewingFailed);
+    return createChoiceTermQuestion(
+      card,
+      pool,
+      fallbackPool,
+      isReviewingFailed,
+    );
   }
   if (nextExerciseType === StudyExerciseType.CHOICE_MEANING) {
-    return createChoiceMeaningQuestion(card, pool, isReviewingFailed);
+    return createChoiceMeaningQuestion(
+      card,
+      pool,
+      fallbackPool,
+      isReviewingFailed,
+    );
   }
   return createTypingQuestion(card, isReviewingFailed);
 }

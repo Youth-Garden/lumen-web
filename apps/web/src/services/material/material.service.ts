@@ -14,7 +14,7 @@ export class MaterialService extends CoreService {
     category?: string;
     difficultyLevel?: string;
   }): Promise<BaseResponse<MaterialDto[]>> {
-    return this._get<MaterialDto[]>(ApiEndpointEnum.MATERIALS, { params });
+    return this._get<MaterialDto[]>(ApiEndpointEnum.MATERIALS, params);
   }
 
   async getMaterialById(id: string): Promise<BaseResponse<MaterialDto>> {

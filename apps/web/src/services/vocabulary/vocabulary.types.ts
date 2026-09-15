@@ -85,6 +85,7 @@ export interface FrequentlyMissedWordItem {
 
 export interface VocabularyOverview {
   totalLearnedWords: number;
+  dueCount?: number;
   memoryLevels: MemoryStageLevel[];
   frequentlyMissedWords: FrequentlyMissedWordItem[];
 }

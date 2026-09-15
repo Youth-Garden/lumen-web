@@ -18,9 +18,10 @@ export class VocabularyService extends CoreService {
     search?: string;
     cefrLevel?: string;
   }): Promise<BaseResponse<Paging<VocabularyWord>>> {
-    return this._get<Paging<VocabularyWord>>(ApiEndpointEnum.VOCABULARY_WORDS, {
+    return this._get<Paging<VocabularyWord>>(
+      ApiEndpointEnum.VOCABULARY_WORDS,
       params,
-    });
+    );
   }
 
   getWord(id: string): Promise<BaseResponse<VocabularyWord>> {

@@ -151,3 +151,29 @@ The following anti-patterns/workarounds are strictly forbidden:
 
 - **No Browser Automation for Testing**: NEVER open a browser (no `browser_subagent`, Puppeteer, or any browser automation) to verify UI or functionality. Pages/features requiring user login cannot be accessed by an agent anyway.
 - All correctness checks MUST be done by reading and understanding the code, analyzing logic, and running `tsc --noEmit`, `eslint`, or tests directly in the terminal. Never open a browser to test.
+
+---
+
+## 13. Base UI Component Triggers (MANDATORY)
+
+- **Use `render` Prop for Base UI Triggers**: Component triggers in `@lumen/uikit` built on Base UI (`TooltipTrigger`, `PopoverTrigger`, `MenuTrigger`, etc.) MUST use the `render` prop (e.g., `<TooltipTrigger render={<button ... />} />`) instead of `asChild`. `asChild` is strictly forbidden on Base UI trigger components.
+
+---
+
+## 14. HTTP Service Query Serialization & Over-fetching Prevention (MANDATORY)
+
+- **Direct Query Parameter Passing**: When calling `BaseApiService._get(url, params)` inside a service class, pass the query parameter object directly as the 2nd argument (e.g., `this._get(url, params)` or `this._get(url, { folderId, limit })`). NEVER wrap query parameters in an extra `{ params }` object (e.g. `this._get(url, { params })`), which causes Axios to produce double-wrapped `?params[folderId]=...` URLs.
+- **No Over-fetching for UI Counter Badges**: UI components MUST NOT call full list endpoints (e.g. `/due` or `/words`) solely to compute `.length` for counter badges or summary cards. Summary and counter metrics MUST be retrieved directly from overview/summary endpoints (`GET /overview`).
+- **Explicit Parameterized Limits**: The Frontend explicitly specifies `limit` parameters when calling paginated or batched APIs according to UI requirements.
+
+---
+
+## 15. Z-Index & Portal Layering (MANDATORY)
+
+- **Minimal and Predictable Z-Index Values**: Avoid arbitrarily high, bloated z-index numbers (e.g., `1000`, `9999`, or complex dynamic offset formulas like `1000 + index * 10 + 5`). Keep z-index values minimal, clean, predictable, and simple.
+- **Portal & Overlay Scale Standard**: Standard portal stacking MUST use clear, low integers:
+  - Background/inactive stacked portals: `zIndex = 98`
+  - Overlay backdrop: `zIndex = 99`
+  - Active top portal: `zIndex = 100`
+
+
