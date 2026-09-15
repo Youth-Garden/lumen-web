@@ -1,20 +1,30 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Icons } from '@lumen/uikit/icons';
-import { Button } from '@lumen/uikit/components';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Button,
+  OpenEffect,
+} from '@lumen/uikit/components';
 import { useDueFlashcards, useReviewFlashcard } from '@/features/study/hooks';
 import { FlashcardReview } from '@/features/study/components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
-import { OpenEffect } from '@lumen/uikit/components';
 import { FlashcardRating } from '@/services/study';
 
 import { useSearchParams } from 'next/navigation';
 
 export function StudyPage() {
   const t = useTranslations('Vocabulary.Study');
+  const tVocab = useTranslations('Vocabulary.Folders');
   const router = useRouter();
   const searchParams = useSearchParams();
   const folderId = searchParams.get('folderId') || undefined;
@@ -107,10 +117,19 @@ export function StudyPage() {
   return (
     <div className="flex flex-col h-full max-w-4xl mx-auto w-full pb-10">
       <div className="flex items-center justify-between mb-8">
-        <Button variant="ghost" className="gap-2" onClick={() => router.back()}>
-          <Icons name="arrow-left" className="h-4 w-4" />
-          {t('back')}
-        </Button>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={RouteEnum.VOCABULARY}>{tVocab('title')}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{t('practice')}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
         <div className="flex flex-col items-end">
           <span className="text-sm font-medium text-muted-foreground mb-2">

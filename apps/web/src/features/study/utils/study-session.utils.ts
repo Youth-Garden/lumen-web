@@ -116,7 +116,11 @@ export function calculateNewFlashcardProgress(
   }
   if (rating === FlashcardRating.WRONG) {
     const penalizedLevel = Math.max(0, currentLevel - 1);
-    return { newLevel: penalizedLevel, newLearningStep: penalizedLevel === 0 ? 0 : 1, isMastered: false };
+    return {
+      newLevel: penalizedLevel,
+      newLearningStep: penalizedLevel === 0 ? 0 : 1,
+      isMastered: false,
+    };
   }
   return {
     newLevel: currentLevel,
@@ -298,8 +302,3 @@ export function processAdvanceFromFlashcard(
   const nextQueue = insertNextExerciseInQueue(activeQueue, nextExercise);
   return { newLevel, newLearningStep, isMastered, nextQueue };
 }
-
-
-
-
-

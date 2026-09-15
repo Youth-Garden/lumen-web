@@ -214,9 +214,7 @@ export const PlantStages: Story = {
           <div className="p-3 rounded-2xl bg-rose-500/10 text-rose-500">
             <Icons name="plant-growth" isWilted size={36} />
           </div>
-          <span className="text-xs font-semibold text-rose-500">
-            Wilted
-          </span>
+          <span className="text-xs font-semibold text-rose-500">Wilted</span>
         </div>
       </div>
     </div>
@@ -240,19 +238,27 @@ export const SocialAndFlags: Story = {
       </div>
 
       <div className="flex flex-wrap items-center gap-4 p-6 rounded-3xl bg-card border border-border/40">
-        {(['google', 'github', 'twitter', 'youtube', 'flag-vn', 'flag-us', 'flag-jp'] as const).map(
-          (name) => (
-            <div
-              key={name}
-              className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-muted/30 border border-border/30 min-w-[80px]"
-            >
-              <Icons name={name} size={32} />
-              <span className="text-xs font-mono text-muted-foreground">
-                {name}
-              </span>
-            </div>
-          ),
-        )}
+        {(
+          [
+            'google',
+            'github',
+            'twitter',
+            'youtube',
+            'flag-vn',
+            'flag-us',
+            'flag-jp',
+          ] as const
+        ).map((name) => (
+          <div
+            key={name}
+            className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-muted/30 border border-border/30 min-w-[80px]"
+          >
+            <Icons name={name} size={32} />
+            <span className="text-xs font-mono text-muted-foreground">
+              {name}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   ),

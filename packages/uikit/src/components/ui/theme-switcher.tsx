@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
@@ -27,7 +28,11 @@ export function ThemeSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="inline-flex h-9 items-center justify-center rounded-xl border border-border/60 bg-background hover:bg-accent px-3 gap-2 text-xs font-medium shadow-none transition-colors">
+      <DropdownMenuTrigger
+        render={
+          <Button variant="outline" size="sm" className="gap-2 font-medium" />
+        }
+      >
         {isDark ? (
           <Icons name="moon" className="h-4 w-4 text-primary" />
         ) : (

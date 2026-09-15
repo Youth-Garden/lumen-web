@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, type RefObject } from 'react';
-import { StudyExerciseType, StudySessionMode } from '@/features/study/types/study.types';
+import {
+  StudyExerciseType,
+  StudySessionMode,
+} from '@/features/study/types/study.types';
 import {
   ChoiceShortcutKey,
   FlashcardReviewShortcutKey,

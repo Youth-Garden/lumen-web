@@ -28,9 +28,9 @@ export function usePWA() {
         .catch(() => {});
     }
 
-    const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
-      e.preventDefault();
-      setInstallEvent(e);
+    const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
+      event.preventDefault();
+      setInstallEvent(event);
       setShowInstallPrompt(true);
     };
 

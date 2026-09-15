@@ -44,7 +44,10 @@ export const Default: Story = {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="folder-desc">Description (Optional)</Label>
-            <Input id="folder-desc" placeholder="Brief notes about this topic..." />
+            <Input
+              id="folder-desc"
+              placeholder="Brief notes about this topic..."
+            />
           </div>
         </div>
         <DialogFooter className="gap-2 sm:gap-0">
@@ -59,13 +62,15 @@ export const Default: Story = {
 export const Confirmation: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="destructive">Delete Item</Button>} />
+      <DialogTrigger
+        render={<Button variant="destructive">Delete Item</Button>}
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently remove the flashcard
-            from your personal deck.
+            This action cannot be undone. This will permanently remove the
+            flashcard from your personal deck.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">

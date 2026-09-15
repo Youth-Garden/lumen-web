@@ -12,17 +12,17 @@ export function useDragScroll<T extends HTMLElement = HTMLDivElement>() {
     let scrollLeft = 0;
     let hasMoved = false;
 
-    const onMouseDown = (e: MouseEvent) => {
-      if (e.button !== 0) return;
+    const onMouseDown = (event: MouseEvent) => {
+      if (event.button !== 0) return;
       isDown = true;
       hasMoved = false;
-      startX = e.pageX - element.offsetLeft;
+      startX = event.pageX - element.offsetLeft;
       scrollLeft = element.scrollLeft;
     };
 
-    const onMouseMove = (e: MouseEvent) => {
+    const onMouseMove = (event: MouseEvent) => {
       if (!isDown) return;
-      const x = e.pageX - element.offsetLeft;
+      const x = event.pageX - element.offsetLeft;
       const walk = (x - startX) * 1.3;
       if (Math.abs(walk) > 4) {
         hasMoved = true;
@@ -38,18 +38,18 @@ export function useDragScroll<T extends HTMLElement = HTMLDivElement>() {
       isDown = false;
     };
 
-    const onClickCapture = (e: MouseEvent) => {
+    const onClickCapture = (event: MouseEvent) => {
       if (hasMoved) {
-        e.stopPropagation();
-        e.preventDefault();
+        event.stopPropagation();
+        event.preventDefault();
         hasMoved = false;
       }
     };
 
-    const onWheel = (e: WheelEvent) => {
-      if (e.deltaY !== 0 && element.scrollWidth > element.clientWidth) {
-        element.scrollLeft += e.deltaY;
-        e.preventDefault();
+    const onWheel = (event: WheelEvent) => {
+      if (event.deltaY !== 0 && element.scrollWidth > element.clientWidth) {
+        element.scrollLeft += event.deltaY;
+        event.preventDefault();
       }
     };
 

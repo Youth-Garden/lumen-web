@@ -38,7 +38,13 @@ export const ProgressStages: Story = {
       <RadialProgress value={20} size={80} strokeWidth={8} valueSuffix="%" />
       <RadialProgress value={50} size={80} strokeWidth={8} valueSuffix="%" />
       <RadialProgress value={85} size={80} strokeWidth={8} valueSuffix="%" />
-      <RadialProgress value={100} size={80} strokeWidth={8} valueSuffix="%" colorClass="text-emerald-500" />
+      <RadialProgress
+        value={100}
+        size={80}
+        strokeWidth={8}
+        valueSuffix="%"
+        colorClass="text-emerald-500"
+      />
     </div>
   ),
 };

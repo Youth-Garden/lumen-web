@@ -45,8 +45,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
   const vocabWords = useVocabularyWords(
     { search: debouncedSearch },
     {
-      enabled:
-        Boolean(isOpen) && isAuthenticated && debouncedSearch.length > 1,
+      enabled: Boolean(isOpen) && isAuthenticated && debouncedSearch.length > 1,
     },
   );
 

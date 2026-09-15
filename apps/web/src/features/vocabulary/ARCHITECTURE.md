@@ -65,7 +65,6 @@ graph TD
   - **`[ Luyện tập ]`** (`StudySessionMode.PRACTICE`): Luyện tập 100% bài tập tương tác (trắc nghiệm, điền từ) không có flashcard.
   - **`[ Thẻ ghi nhớ ]`** (`StudySessionMode.FLASHCARD`): Ôn lướt thẻ flashcard với 2 nút [Ôn lại] (giảm hoa) và [Đã thuộc] (tăng hoa).
 
-
 ### 2.3. Switch Folder (Đổi thư mục)
 
 - Khi bấm "Đổi thư mục": Giao diện **CHỈ HIỂN THỊ CÁC FOLDER LỚN**:

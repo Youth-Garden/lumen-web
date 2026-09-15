@@ -7,7 +7,10 @@ import type {
 } from '@/features/study/types/study.types';
 import type { StudySettings } from './use-study-settings';
 import type { FlashcardRating } from '@/services/study';
-import type { PronunciationAccent, VocabularyWord } from '@/services/vocabulary';
+import type {
+  PronunciationAccent,
+  VocabularyWord,
+} from '@/services/vocabulary';
 
 export interface UseStudySessionProps {
   cards: VocabularyWord[];

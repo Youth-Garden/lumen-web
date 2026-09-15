@@ -27,7 +27,9 @@ type Story = StoryObj<typeof meta>;
 export const RightSideDrawer: Story = {
   render: () => (
     <Sheet>
-      <SheetTrigger render={<Button variant="outline">Open Right Drawer</Button>} />
+      <SheetTrigger
+        render={<Button variant="outline">Open Right Drawer</Button>}
+      />
       <SheetContent side="right">
         <SheetHeader>
           <SheetTitle>Word Quick Details</SheetTitle>
@@ -43,7 +45,13 @@ export const RightSideDrawer: Story = {
           </p>
         </div>
         <SheetFooter>
-          <SheetClose render={<Button variant="default" className="w-full">Done</Button>} />
+          <SheetClose
+            render={
+              <Button variant="default" className="w-full">
+                Done
+              </Button>
+            }
+          />
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -53,12 +61,15 @@ export const RightSideDrawer: Story = {
 export const CenteredFloatingSheet: Story = {
   render: () => (
     <Sheet>
-      <SheetTrigger render={<Button variant="default">Open Floating Sheet</Button>} />
+      <SheetTrigger
+        render={<Button variant="default">Open Floating Sheet</Button>}
+      />
       <SheetContent side="bottom" centered>
         <SheetHeader>
           <SheetTitle>Floating Card Modal</SheetTitle>
           <SheetDescription>
-            On desktop this renders centered with 4 rounded corners. On mobile it slides from bottom.
+            On desktop this renders centered with 4 rounded corners. On mobile
+            it slides from bottom.
           </SheetDescription>
         </SheetHeader>
         <div className="py-6 text-sm text-foreground/80">

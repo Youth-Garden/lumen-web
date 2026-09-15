@@ -7,8 +7,10 @@ import React from 'react';
 export type StudyRatingSentiment = 'positive' | 'neutral' | 'negative';
 export type StudyRatingFill = 'soft' | 'solid';
 
-export interface StudyRatingButtonProps
-  extends Omit<React.ComponentProps<typeof Button>, 'variant'> {
+export interface StudyRatingButtonProps extends Omit<
+  React.ComponentProps<typeof Button>,
+  'variant'
+> {
   sentiment: StudyRatingSentiment;
   fill?: StudyRatingFill;
   shortcut?: string;
@@ -46,11 +48,7 @@ export function StudyRatingButton({
   const sentimentClass = sentimentStyles[sentiment][fill];
 
   return (
-    <Button
-      variant="none"
-      className={cn(sentimentClass, className)}
-      {...props}
-    >
+    <Button variant="none" className={cn(sentimentClass, className)} {...props}>
       {typeof children === 'string' ? <span>{children}</span> : children}
       {shortcut && (
         <span className="text-xs font-normal opacity-80 ml-1">

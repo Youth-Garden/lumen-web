@@ -26,7 +26,13 @@ export const PlantStage0Icon = ({
           <stop offset="60%" stopColor="#78350F" />
           <stop offset="100%" stopColor="#451A03" />
         </linearGradient>
-        <linearGradient id="p0-seedHighlight" x1="0%" y1="0%" x2="50%" y2="100%">
+        <linearGradient
+          id="p0-seedHighlight"
+          x1="0%"
+          y1="0%"
+          x2="50%"
+          y2="100%"
+        >
           <stop offset="0%" stopColor="#FDE68A" stopOpacity="0.8" />
           <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.1" />
         </linearGradient>

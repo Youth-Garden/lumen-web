@@ -2,8 +2,17 @@
 
 import { useTranslations } from 'next-intl';
 
+import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@lumen/uikit/components';
+import { RouteEnum } from '@/shared/constants';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 export interface TopicStatItem {
@@ -22,7 +31,7 @@ export interface FolderTopicGridProps {
   selectedTopic: string | null;
   topicStats: TopicStatItem[];
   onSelectTopic: (topicName: string) => void;
-  onGoBack: () => void;
+  onGoBack?: () => void;
 }
 
 export function FolderTopicGrid({
@@ -32,7 +41,6 @@ export function FolderTopicGrid({
   selectedTopic,
   topicStats,
   onSelectTopic,
-  onGoBack,
 }: FolderTopicGridProps) {
   const t = useTranslations('Vocabulary.Folders');
   const radius = 37;
@@ -41,17 +49,20 @@ export function FolderTopicGrid({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-4">
-        <Button
-          type="button"
-          onClick={onGoBack}
-          variant="ghost"
-          size="sm"
-          className="w-fit -ml-2.5 gap-1.5 text-muted-foreground hover:text-foreground"
-        >
-          <Icons name="arrow-left" className="h-4 w-4" />
-          <span>{t('backToFolders')}</span>
-        </Button>
+      <div className="flex flex-col gap-3">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={RouteEnum.VOCABULARY}>{t('title')}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{folderName}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
         <div className="flex items-center gap-3">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
@@ -78,12 +89,11 @@ export function FolderTopicGrid({
           const learnedCount = topicItem.learnedCount ?? 0;
           const dueCount = topicItem.dueCount ?? 0;
           const progressRatio =
-            topicItem.count > 0 ? Math.min(1, learnedCount / topicItem.count) : 0;
+            topicItem.count > 0
+              ? Math.min(1, learnedCount / topicItem.count)
+              : 0;
           const strokeDashoffset = circumference * (1 - progressRatio);
-          const progressStroke =
-            progressRatio >= 1
-              ? '#10b981'
-              : '#0ea5e9';
+          const progressStroke = progressRatio >= 1 ? '#10b981' : '#0ea5e9';
 
           return (
             <div

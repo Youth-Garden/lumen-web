@@ -25,8 +25,7 @@ export function Icons({
   style,
   ...props
 }: IconsProps) {
-  let IconComponent: React.ComponentType<any> | undefined =
-    registry[name];
+  let IconComponent: React.ComponentType<any> | undefined = registry[name];
 
   if (!IconComponent) {
     const pascalName = toPascalCase(name);

@@ -11,17 +11,17 @@ export const DEFAULT_PAGE_DESCRIPTION =
   'Lumen - Vocabulary & Language Learning Platform';
 
 export const DEFAULT_ROOT_METADATA: Metadata = {
-  title: {
-    default: DEFAULT_PAGE_TITLE,
-    template: `%s | ${DEFAULT_PAGE_TITLE}`,
-  },
+  title: DEFAULT_PAGE_TITLE,
   description: DEFAULT_PAGE_DESCRIPTION,
 };
 
-export const ROUTE_METADATA_MAP: Partial<Record<RouteEnum, RouteMetadataConfig>> = {
+export const ROUTE_METADATA_MAP: Partial<
+  Record<RouteEnum, RouteMetadataConfig>
+> = {
   [RouteEnum.DASHBOARD]: {
     title: 'Overview',
-    description: 'Track your daily learning progress, reviews, and vocabulary mastery.',
+    description:
+      'Track your daily learning progress, reviews, and vocabulary mastery.',
   },
   [RouteEnum.VOCABULARY]: {
     title: 'Vocabulary',

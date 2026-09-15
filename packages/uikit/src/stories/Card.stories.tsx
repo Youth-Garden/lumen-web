@@ -28,7 +28,9 @@ export const Default: Story = {
     <Card className="w-[380px] p-6">
       <CardHeader className="p-0 pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-bold">Vocabulary Folder</CardTitle>
+          <CardTitle className="text-base font-bold">
+            Vocabulary Folder
+          </CardTitle>
           <Icons name="folder" className="w-5 h-5 text-primary" />
         </div>
         <CardDescription className="text-xs">
@@ -61,7 +63,9 @@ export const MutedVariant: Story = {
   render: () => (
     <Card variant="muted" className="w-[380px] p-6 border-dashed">
       <CardHeader className="p-0 pb-2">
-        <CardTitle className="text-sm font-semibold">Muted Background Card</CardTitle>
+        <CardTitle className="text-sm font-semibold">
+          Muted Background Card
+        </CardTitle>
         <CardDescription className="text-xs">
           Useful for sub-containers, empty slots, or secondary widgets.
         </CardDescription>

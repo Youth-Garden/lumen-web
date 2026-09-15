@@ -1,10 +1,15 @@
 'use client';
 
-import { useAuthUpdater, useCommandPaletteListener } from './hooks';
+import {
+  useAuthUpdater,
+  useCommandPaletteListener,
+  useSessionExpiredListener,
+} from './hooks';
 
 export function Updater() {
   useAuthUpdater();
   useCommandPaletteListener();
+  useSessionExpiredListener();
 
   return null;
 }

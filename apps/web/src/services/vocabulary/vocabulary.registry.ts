@@ -23,4 +23,3 @@ export const registry: MapperRegistry = {
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FLASHCARDS)]:
     idResponseMapper,
 };
-

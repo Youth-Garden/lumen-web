@@ -138,7 +138,7 @@ export function FrequentlyMissedWordsCard({
               )}
             </div>
           );
-        })} 
+        })}
       </div>
 
       {/* Action Buttons - Practice Missed Words via Interactive Games OR Flashcards */}

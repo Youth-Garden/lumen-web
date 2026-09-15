@@ -22,8 +22,10 @@ import {
 } from '@/features/study/components/study-view';
 import { useDueFlashcards } from '@/features/study/hooks';
 import {
+  useFolderStudyActions,
   useVocabularyFolderDetail,
   useVocabularyFolders,
+  useVocabularyOverview,
 } from '@/features/vocabulary/hooks';
 import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
@@ -105,137 +107,34 @@ export function FolderListPage() {
     router.push(formatUrl(RouteEnum.FOLDER_DETAIL, { id: targetId }));
   };
 
-  const allFlashcards: VocabularyWord[] = useMemo(
-    () => activeFolderDetail?.flashcards || [],
-    [activeFolderDetail?.flashcards],
-  );
+  const { data: overviewRes } = useVocabularyOverview();
+  const overviewData = overviewRes?.data;
 
-  const dueIdSet = useMemo(() => {
-    const targetDueData = dueFlashcards?.data || [];
-    return new Set(
-      targetDueData
-        .filter(
-          (card) =>
-            Boolean(card.nextReviewAt) ||
-            (card.level ?? 0) > 0 ||
-            (card.learningStep ?? 0) > 0,
-        )
-        .flatMap((df) => [df.wordId, df.flashcardId]),
-    );
-  }, [dueFlashcards?.data]);
-
-  const dueCardsList: VocabularyWord[] = useMemo(() => {
-    return allFlashcards.filter(
-      (card) =>
-        dueIdSet.has(card.id) ||
-        Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
-        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)),
-    );
-  }, [allFlashcards, dueIdSet]);
-
-  const learnedCardsList: VocabularyWord[] = useMemo(() => {
-    return allFlashcards.filter(
-      (card) =>
-        (card.level ?? 0) > 0 ||
-        (card.learningStep ?? 0) > 0 ||
-        (card.masteryScore ?? 0) > 0,
-    );
-  }, [allFlashcards]);
-
-  const uniqueFlashcards: VocabularyWord[] = useMemo(() => {
-    const seen = new Set<string>();
-    const list: VocabularyWord[] = [];
-    for (const card of allFlashcards) {
-      const termKey = card.term.toLowerCase().trim();
-      if (!seen.has(termKey)) {
-        seen.add(termKey);
-        list.push(card);
-      }
-    }
-    return list;
-  }, [allFlashcards]);
-
-  const frequentlyMissedCards = useMemo(() => {
-    if (!uniqueFlashcards.length) return [];
-    return uniqueFlashcards.filter((card) => Boolean(card.isWilted)).slice(0, 3);
-  }, [uniqueFlashcards]);
-
-  const handleLearnNew = () => {
-    if (!allFlashcards.length || !activeFolder) return;
-    presentStudyView({
-      cards: allFlashcards,
-      folderName: `${activeFolder.name} - ${tStudy('learnNew')}`,
-      mode: StudySessionMode.LEARN_NEW,
-    });
-  };
-
-  const handlePractice = () => {
-    if (!allFlashcards.length || !activeFolder) return;
-    const targetDueData = dueFlashcards?.data || [];
-    const dueIdSet = new Set(
-      targetDueData.flatMap((df) => [df.wordId, df.flashcardId]),
-    );
-    const dueCards = allFlashcards.filter(
-      (card) =>
-        dueIdSet.has(card.id) ||
-        Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
-        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)),
-    );
-    const practiceCards = dueCards.length > 0 ? dueCards : allFlashcards;
-
-    presentStudyView({
-      cards: practiceCards,
-      folderName: `${activeFolder.name} - ${tStudy('practice')}`,
-      mode: StudySessionMode.PRACTICE,
-    });
-  };
-
-  const handleFlashcards = () => {
-    if (!allFlashcards.length || !activeFolder) return;
-    const targetDueData = dueFlashcards?.data || [];
-    const dueIdSet = new Set(
-      targetDueData.flatMap((df) => [df.wordId, df.flashcardId]),
-    );
-    const dueCards = allFlashcards.filter(
-      (card) =>
-        dueIdSet.has(card.id) ||
-        Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
-        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)),
-    );
-    const flashcardsList = dueCards.length > 0 ? dueCards : allFlashcards;
-
-    presentStudyView({
-      cards: flashcardsList,
-      folderName: `${activeFolder.name} - ${tStudy('flashcards')}`,
-      mode: StudySessionMode.FLASHCARD,
-    });
-  };
-
-  const handlePracticeMissed = () => {
-    if (!frequentlyMissedCards.length) return;
-    presentStudyView({
-      cards: frequentlyMissedCards,
-      folderName: `${t('frequentlyMissedTitle')} - ${tStudy('practice')}`,
-      mode: StudySessionMode.PRACTICE,
-    });
-  };
-
-  const handleFlashcardsMissed = () => {
-    if (!frequentlyMissedCards.length) return;
-    presentStudyView({
-      cards: frequentlyMissedCards,
-      folderName: `${t('frequentlyMissedTitle')} - ${tStudy('flashcards')}`,
-      mode: StudySessionMode.FLASHCARD,
-    });
-  };
+  const {
+    allFlashcards,
+    dueCardsList,
+    learnedCardsList,
+    frequentlyMissedCards,
+    handlePractice,
+    handleLearnNew,
+    handleFlashcards,
+    handlePracticeMissed,
+    handleFlashcardsMissed,
+  } = useFolderStudyActions({
+    activeFolder,
+    activeFolderDetail,
+    dueFlashcardsData: dueFlashcards?.data,
+    presentStudyView,
+  });
 
   const totalWordsCount = activeFolder?.flashcardCount || 0;
 
   const { learnedWordsCount, stages } = useMemo(() => {
     if (!allFlashcards.length) {
       return {
-        learnedWordsCount: 0,
-        stages: [
+        learnedWordsCount:
+          activeFolder?.learnedCount ?? overviewData?.totalLearnedWords ?? 0,
+        stages: overviewData?.memoryLevels || [
           { level: 1, count: 0 },
           { level: 2, count: 0 },
           { level: 3, count: 0 },
@@ -252,23 +151,41 @@ export function FolderListPage() {
         (card.masteryScore ?? 0) > 0,
     );
 
-    const s1 = allFlashcards.filter((c) => (c.level ?? 0) === 1).length;
-    const s2 = allFlashcards.filter((c) => (c.level ?? 0) === 2).length;
-    const s3 = allFlashcards.filter((c) => (c.level ?? 0) === 3).length;
-    const s4 = allFlashcards.filter((c) => (c.level ?? 0) === 4).length;
-    const s5 = allFlashcards.filter((c) => (c.level ?? 0) >= 5).length;
+    const stage1Count = allFlashcards.filter(
+      (card) => (card.level ?? 0) === 1,
+    ).length;
+    const stage2Count = allFlashcards.filter(
+      (card) => (card.level ?? 0) === 2,
+    ).length;
+    const stage3Count = allFlashcards.filter(
+      (card) => (card.level ?? 0) === 3,
+    ).length;
+    const stage4Count = allFlashcards.filter(
+      (card) => (card.level ?? 0) === 4,
+    ).length;
+    const stage5Count = allFlashcards.filter(
+      (card) => (card.level ?? 0) >= 5,
+    ).length;
 
     return {
-      learnedWordsCount: learned.length,
+      learnedWordsCount: Math.max(
+        learned.length,
+        activeFolder?.learnedCount ?? 0,
+      ),
       stages: [
-        { level: 1, count: s1 },
-        { level: 2, count: s2 },
-        { level: 3, count: s3 },
-        { level: 4, count: s4 },
-        { level: 5, count: s5 },
+        { level: 1, count: stage1Count },
+        { level: 2, count: stage2Count },
+        { level: 3, count: stage3Count },
+        { level: 4, count: stage4Count },
+        { level: 5, count: stage5Count },
       ],
     };
-  }, [allFlashcards]);
+  }, [
+    allFlashcards,
+    activeFolder?.learnedCount,
+    overviewData?.totalLearnedWords,
+    overviewData?.memoryLevels,
+  ]);
 
   const enrichedFolders = useMemo(() => {
     return allFolders.map((folder) => {
@@ -281,7 +198,13 @@ export function FolderListPage() {
       }
       return folder;
     });
-  }, [allFolders, activeFolder?.id, activeFolderDetail, learnedWordsCount, dueCountForActive]);
+  }, [
+    allFolders,
+    activeFolder?.id,
+    activeFolderDetail,
+    learnedWordsCount,
+    dueCountForActive,
+  ]);
 
   if (isViewingDueWords && activeFolder) {
     return (

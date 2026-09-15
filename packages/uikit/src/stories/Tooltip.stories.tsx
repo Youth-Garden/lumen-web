@@ -26,12 +26,24 @@ export const Default: Story = {
     <TooltipProvider>
       <div className="flex items-center gap-4">
         <Tooltip>
-          <TooltipTrigger render={<Button variant="outline" size="icon"><Icons name="volume-2" className="w-4 h-4" /></Button>} />
+          <TooltipTrigger
+            render={
+              <Button variant="outline" size="icon">
+                <Icons name="volume-2" className="w-4 h-4" />
+              </Button>
+            }
+          />
           <TooltipContent side="top">Listen pronunciation (US)</TooltipContent>
         </Tooltip>
 
         <Tooltip>
-          <TooltipTrigger render={<Button variant="secondary" size="icon"><Icons name="bookmark" className="w-4 h-4" /></Button>} />
+          <TooltipTrigger
+            render={
+              <Button variant="secondary" size="icon">
+                <Icons name="bookmark" className="w-4 h-4" />
+              </Button>
+            }
+          />
           <TooltipContent side="bottom">Save to quick review</TooltipContent>
         </Tooltip>
       </div>

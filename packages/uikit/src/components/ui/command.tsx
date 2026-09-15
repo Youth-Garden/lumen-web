@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { Dialog, DialogOverlay, DialogPortal } from './dialog';
+import { Dialog, DialogPortal } from './dialog';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -27,18 +27,12 @@ interface CommandDialogProps extends React.ComponentPropsWithoutRef<
   typeof Dialog
 > {
   children: React.ReactNode;
-  showOverlay?: boolean;
 }
 
-const CommandDialog = ({
-  children,
-  showOverlay = false,
-  ...props
-}: CommandDialogProps) => {
+const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogPortal>
-        {showOverlay && <DialogOverlay />}
         <DialogPrimitive.Popup
           data-slot="dialog-content"
           className={cn(

@@ -1,5 +1,6 @@
 export * from './ui/avatar';
 export * from './ui/backdrop';
+export * from './ui/breadcrumb';
 export * from './ui/open-effect';
 export * from './ui/button';
 export * from './ui/command';
@@ -22,6 +23,7 @@ export * from './ui/tabs';
 export * from './ui/theme-switcher';
 export * from './ui/tooltip';
 export * from './ui/switch';
+export * from './ui/segmented-tabs';
 export * from './ui/logo';
 export {
   useFormField,

@@ -53,13 +53,13 @@ Tài liệu quy chuẩn luồng học từ vựng thông minh theo cơ chế **D
 
 Hệ thống phân định rạch ròi 3 chế độ học tập với mục đích nhận thức và giao diện chuyên biệt:
 
-| Tiêu chí | 1. Học từ mới (`LEARN_NEW`) | 2. Luyện tập (`PRACTICE`) | 3. Thẻ ghi nhớ (`FLASHCARD`) |
-| :--- | :--- | :--- | :--- |
-| **Bản chất** | Nạp từ mới từ Pinned Folder kết hợp đan xen ôn từ cũ. | Luyện phản xạ chủ động (**Active Recall**) cho từ đã học. | Ôn lướt nhanh thẻ nhớ truyền thống cho từ đã học. |
-| **Flashcard lật 2 mặt** | **Có** (chỉ xuất hiện ở lần đầu gặp từ mới để chọn xuất phát điểm). | **TUYỆT ĐỐI KHÔNG CÓ FLASHCARD**. | **100% FLASHCARD** (không có câu trắc nghiệm hay gõ từ). |
-| **Bài tập tương tác** | Có (trắc nghiệm, điền từ củng cố sau flashcard). | **100% bài tập**: Chọn từ (`CHOICE_TERM`), Chọn nghĩa (`CHOICE_MEANING`), Điền từ (`TYPING`). | **Không có bài tập tương tác**. |
-| **Giao diện đáy** | 3 nút xuất phát điểm (1: Mastered, 3: Temp, Enter: Unknown). | Các lựa chọn đáp án trắc nghiệm / bàn phím gõ từ + Drawer giải thích. | **2 nút đánh giá tiến độ chu trình hoa**:<br>- **[ Ôn lại ]** (Đỏ): Giảm progress hoa, đưa về cuối queue.<br>- **[ Đã thuộc ]** (Xanh): Tăng progress hoa, hoàn thành thẻ. |
-| **Nguồn từ** | Pinned Folder (ưu tiên từ chưa học `level === 0`). | Từ đến hạn ôn (`Due Cards`) hoặc Từ hay sai (`Missed Words`). | Từ đến hạn ôn (`Due Cards`) hoặc Từ hay sai (`Missed Words`). |
+| Tiêu chí                | 1. Học từ mới (`LEARN_NEW`)                                         | 2. Luyện tập (`PRACTICE`)                                                                     | 3. Thẻ ghi nhớ (`FLASHCARD`)                                                                                                                                               |
+| :---------------------- | :------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Bản chất**            | Nạp từ mới từ Pinned Folder kết hợp đan xen ôn từ cũ.               | Luyện phản xạ chủ động (**Active Recall**) cho từ đã học.                                     | Ôn lướt nhanh thẻ nhớ truyền thống cho từ đã học.                                                                                                                          |
+| **Flashcard lật 2 mặt** | **Có** (chỉ xuất hiện ở lần đầu gặp từ mới để chọn xuất phát điểm). | **TUYỆT ĐỐI KHÔNG CÓ FLASHCARD**.                                                             | **100% FLASHCARD** (không có câu trắc nghiệm hay gõ từ).                                                                                                                   |
+| **Bài tập tương tác**   | Có (trắc nghiệm, điền từ củng cố sau flashcard).                    | **100% bài tập**: Chọn từ (`CHOICE_TERM`), Chọn nghĩa (`CHOICE_MEANING`), Điền từ (`TYPING`). | **Không có bài tập tương tác**.                                                                                                                                            |
+| **Giao diện đáy**       | 3 nút xuất phát điểm (1: Mastered, 3: Temp, Enter: Unknown).        | Các lựa chọn đáp án trắc nghiệm / bàn phím gõ từ + Drawer giải thích.                         | **2 nút đánh giá tiến độ chu trình hoa**:<br>- **[ Ôn lại ]** (Đỏ): Giảm progress hoa, đưa về cuối queue.<br>- **[ Đã thuộc ]** (Xanh): Tăng progress hoa, hoàn thành thẻ. |
+| **Nguồn từ**            | Pinned Folder (ưu tiên từ chưa học `level === 0`).                  | Từ đến hạn ôn (`Due Cards`) hoặc Từ hay sai (`Missed Words`).                                 | Từ đến hạn ôn (`Due Cards`) hoặc Từ hay sai (`Missed Words`).                                                                                                              |
 
 ---
 
@@ -85,6 +85,7 @@ graph LR
 ## 3. Đặc Tả Chi Tiết Từng Chế Độ
 
 ### 3.1. Chế độ 1: Học từ mới (`LEARN_NEW`)
+
 - Bắt đầu bằng Flashcard lật 2 mặt cho các từ mới hoàn toàn (`level === 0, learningStep === 0`):
   - Phím `Space`: Lật thẻ.
   - Phím `1`: Đánh dấu **Thông thạo ngay** $\rightarrow$ Level 5.
@@ -93,6 +94,7 @@ graph LR
 - Các bước sau đó đan xen bài tập tương tác (trắc nghiệm, điền từ) cho từ mới và một số từ cũ để củng cố ghi nhớ dài hạn.
 
 ### 3.2. Chế độ 2: Luyện tập (`PRACTICE`)
+
 - **100% là bài tập tương tác / mini-games**:
   - `CHOICE_TERM`: Cho nghĩa tiếng Việt $\rightarrow$ Chọn từ tiếng Anh đúng trong 4 đáp án.
   - `CHOICE_MEANING`: Cho từ tiếng Anh $\rightarrow$ Chọn nghĩa tiếng Việt đúng.
@@ -101,6 +103,7 @@ graph LR
 - Trả lời sai $\rightarrow$ Mở drawer sửa sai $\rightarrow$ Đưa từ vào cuối hàng đợi để kiểm tra lại phản xạ ngay trong phiên.
 
 ### 3.3. Chế độ 3: Thẻ ghi nhớ (`FLASHCARD`)
+
 - **Giao diện chuyên biệt cho ôn lướt nhanh**:
   - Header: Tiêu đề phiên học + Biểu tượng **Sunflower / Plant Mastery Ring** (thể hiện tiến độ mầm cây/hoa hiện tại của từ).
   - Center: Thẻ Flashcard 2 mặt (Mặt trước: từ, phát âm US/UK kèm audio, gợi ý phím Space; Mặt sau: giải nghĩa tiếng Việt, nghĩa tiếng Anh, ví dụ ngữ cảnh song ngữ).
@@ -114,5 +117,3 @@ graph LR
 
 1. **Gửi kết quả đánh giá**: Gửi qua API `POST /api/vocabulary/words/flashcards/review` cập nhật Spaced Repetition mastery.
 2. **Tổng kết phiên**: Hiển thị bảng tổng kết số từ đã thuộc, số từ cần rèn luyện thêm, và cập nhật trạng thái vòng lặp về Dashboard.
-
-

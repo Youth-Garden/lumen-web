@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -56,7 +57,9 @@ export function LanguageSwitcher({ align = 'end' }: LanguageSwitcherProps) {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t('appearance.nativeLanguage')}
-        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 text-foreground transition-all hover:border-primary/40 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 shadow-sm"
+        render={
+          <Button variant="outline" size="sm" className="gap-1.5 font-medium" />
+        }
       >
         <span className="text-sm">{currentLabel.flag}</span>
         <span className="text-xs font-semibold uppercase tracking-wider">

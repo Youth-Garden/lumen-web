@@ -1,19 +1,23 @@
-import { ApiEndpointEnum, RouteEnum } from '@/shared/constants';
+import { ApiEndpointEnum } from '@/shared/constants';
 import { useAuthStore } from '@/store/auth.store';
 import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
 import axios from 'axios';
-import { toast } from 'sonner';
+
+interface PendingRequest {
+  resolve: (token: string | null) => void;
+  reject: (error: unknown) => void;
+}
 
 export abstract class CoreService extends BaseApiService {
   protected static isRefreshing = false;
-  protected static failedQueue: any[] = [];
+  protected static failedQueue: PendingRequest[] = [];
 
-  protected static processQueue(error: any, token: string | null = null) {
-    CoreService.failedQueue.forEach((prom) => {
+  protected static processQueue(error: unknown, token: string | null = null) {
+    CoreService.failedQueue.forEach((request) => {
       if (error) {
-        prom.reject(error);
+        request.reject(error);
       } else {
-        prom.resolve(token);
+        request.resolve(token);
       }
     });
     CoreService.failedQueue = [];
@@ -23,12 +27,6 @@ export abstract class CoreService extends BaseApiService {
     super({
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
       mappers,
-      onError: (errors, message) => {
-        // We will suppress toast on 401 if we handle it via refresh token
-      },
-      onNetworkError: (message) => {
-        toast.error('Lỗi mạng', { description: message });
-      },
     });
 
     this.axiosInstance.interceptors.request.use((reqConfig) => {
@@ -43,151 +41,94 @@ export abstract class CoreService extends BaseApiService {
       (response) => response,
       async (error) => {
         const originalRequest = error.config;
+        if (!originalRequest) {
+          return Promise.reject(error);
+        }
 
-        if (
-          (error.response?.status === 401 ||
-            error.response?.data?.statusCode === 401) &&
-          !originalRequest._retry
-        ) {
-          const authStore = useAuthStore.getState();
-          const isOnLoginPage =
-            typeof window !== 'undefined' &&
-            (window.location.pathname.includes('/login') ||
-              window.location.pathname.includes(RouteEnum.LOGIN));
+        const is401 =
+          error.response?.status === 401 ||
+          error.response?.data?.statusCode === 401;
 
-          if (authStore.isAuthenticated && authStore.refreshToken) {
-            if (CoreService.isRefreshing) {
-              return new Promise(function (resolve, reject) {
-                CoreService.failedQueue.push({ resolve, reject });
-              })
-                .then(() => {
-                  return this.axiosInstance(originalRequest);
-                })
-                .catch((err) => Promise.reject(err));
-            }
+        if (!is401 || originalRequest._retry) {
+          return Promise.reject(error);
+        }
 
-            originalRequest._retry = true;
-            CoreService.isRefreshing = true;
+        const requestUrl = originalRequest.url || '';
+        const isAuthEndpoint =
+          requestUrl.includes(ApiEndpointEnum.LOGIN) ||
+          requestUrl.includes(ApiEndpointEnum.GOOGLE_LOGIN) ||
+          requestUrl.includes(ApiEndpointEnum.REFRESH_TOKEN) ||
+          requestUrl.includes(ApiEndpointEnum.LOGOUT);
 
-            try {
-              // Plain axios call to avoid interceptor loops
-              const currentRefreshToken = authStore.refreshToken;
-              const { data } = await axios.post(
-                (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') +
-                  ApiEndpointEnum.REFRESH_TOKEN,
-                { refreshToken: currentRefreshToken },
-                {
-                  headers: currentRefreshToken
-                    ? { 'x-refresh-token': currentRefreshToken }
-                    : {},
-                },
-              );
+        if (isAuthEndpoint) {
+          return Promise.reject(error);
+        }
 
-              const isSuccess = data?.statusCode === 201 || data?.data;
-              const user = data?.data?.user;
-              const newAccessToken = data?.data?.accessToken;
-              const newRefreshToken = data?.data?.refreshToken;
+        const authStore = useAuthStore.getState();
 
-              if (isSuccess) {
-                authStore.setAuth(
-                  user || authStore.user,
-                  newAccessToken || authStore.accessToken,
-                  newRefreshToken || authStore.refreshToken,
-                );
-
-                CoreService.processQueue(null);
+        if (authStore.isAuthenticated && authStore.refreshToken) {
+          if (CoreService.isRefreshing) {
+            return new Promise<string | null>((resolve, reject) => {
+              CoreService.failedQueue.push({ resolve, reject });
+            })
+              .then((newToken) => {
+                if (newToken) {
+                  originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                }
                 return this.axiosInstance(originalRequest);
-              } else {
-                throw new Error('Refresh failed');
-              }
-            } catch (refreshError) {
-              CoreService.processQueue(refreshError, null);
-
-              if (!isOnLoginPage) {
-                toast.error(
-                  'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
-                  { id: 'session-expired' },
-                );
-              }
-
-              authStore.clearAuth();
-              if (typeof window !== 'undefined' && !isOnLoginPage) {
-                window.location.href = RouteEnum.LOGIN;
-              }
-              return Promise.reject(refreshError);
-            } finally {
-              CoreService.isRefreshing = false;
-            }
-          } else {
-            const hadAuth = Boolean(authStore.accessToken);
-            authStore.clearAuth();
-
-            if (
-              hadAuth &&
-              !isOnLoginPage &&
-              !originalRequest.url?.includes(ApiEndpointEnum.LOGIN) &&
-              !originalRequest.url?.includes(ApiEndpointEnum.GOOGLE_LOGIN) &&
-              !originalRequest.url?.includes(ApiEndpointEnum.REFRESH_TOKEN) &&
-              !originalRequest.url?.includes(ApiEndpointEnum.LOGOUT)
-            ) {
-              toast.error(
-                'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
-                { id: 'session-expired' },
-              );
-              if (typeof window !== 'undefined') {
-                window.location.href = RouteEnum.LOGIN;
-              }
-            } else if (
-              !hadAuth &&
-              !isOnLoginPage &&
-              !originalRequest.disabledToast &&
-              error.response &&
-              (originalRequest.url?.includes(ApiEndpointEnum.LOGIN) ||
-                originalRequest.url?.includes(ApiEndpointEnum.GOOGLE_LOGIN))
-            ) {
-              const message =
-                error.response.data?.message || error.message || 'Unauthorized';
-              const errorData = error.response.data;
-              const errors = errorData?.error ?? errorData?.errors ?? [];
-              toast.error(message, {
-                id: 'auth-error',
-                description:
-                  Array.isArray(errors) && errors.length > 0
-                    ? errors
-                        .map((e: any) =>
-                          typeof e === 'string'
-                            ? e
-                            : e.message || JSON.stringify(e),
-                        )
-                        .join('\n')
-                    : undefined,
-              });
-            }
+              })
+              .catch((queueError) => Promise.reject(queueError));
           }
-        } else {
-          if (
-            error.response &&
-            !originalRequest.disabledToast &&
-            error.response.status !== 401
-          ) {
-            const message =
-              error.response.data?.message || error.message || 'Unknown Error';
-            const errorData = error.response.data;
-            const errors = errorData?.error ?? errorData?.errors ?? [];
-            toast.error(message, {
-              description:
-                Array.isArray(errors) && errors.length > 0
-                  ? errors
-                      .map((e: any) =>
-                        typeof e === 'string'
-                          ? e
-                          : e.message || JSON.stringify(e),
-                      )
-                      .join('\n')
-                  : undefined,
-            });
+
+          originalRequest._retry = true;
+          CoreService.isRefreshing = true;
+
+          try {
+            const currentRefreshToken = authStore.refreshToken;
+            const { data } = await axios.post(
+              (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') +
+                ApiEndpointEnum.REFRESH_TOKEN,
+              { refreshToken: currentRefreshToken },
+              {
+                headers: currentRefreshToken
+                  ? { 'x-refresh-token': currentRefreshToken }
+                  : {},
+              },
+            );
+
+            const isSuccess = data?.statusCode === 201 || data?.data;
+            const user = data?.data?.user;
+            const newAccessToken = data?.data?.accessToken;
+            const newRefreshToken = data?.data?.refreshToken;
+
+            if (isSuccess && newAccessToken) {
+              authStore.setAuth(
+                user || authStore.user,
+                newAccessToken,
+                newRefreshToken || authStore.refreshToken,
+              );
+
+              CoreService.processQueue(null, newAccessToken);
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+              return this.axiosInstance(originalRequest);
+            }
+
+            throw new Error('Refresh failed');
+          } catch (refreshError) {
+            CoreService.processQueue(refreshError, null);
+            authStore.expireSession();
+            return Promise.reject(refreshError);
+          } finally {
+            CoreService.isRefreshing = false;
           }
         }
+
+        if (authStore.accessToken) {
+          authStore.expireSession();
+        } else {
+          authStore.clearAuth();
+        }
+
         return Promise.reject(error);
       },
     );

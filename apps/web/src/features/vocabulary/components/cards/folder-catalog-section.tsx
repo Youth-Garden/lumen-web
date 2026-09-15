@@ -28,13 +28,17 @@ export function FolderCatalogSection({
     const userList: Folder[] = [];
     const catMap = new Map<string, Folder[]>();
 
-    folders.forEach((f) => {
-      if (!f.category || f.category.trim() === '' || f.category === 'Cá nhân') {
-        userList.push(f);
+    folders.forEach((folderItem) => {
+      if (
+        !folderItem.category ||
+        folderItem.category.trim() === '' ||
+        folderItem.category === 'Cá nhân'
+      ) {
+        userList.push(folderItem);
       } else {
-        const cat = f.category.trim();
+        const cat = folderItem.category.trim();
         if (!catMap.has(cat)) catMap.set(cat, []);
-        catMap.get(cat)!.push(f);
+        catMap.get(cat)!.push(folderItem);
       }
     });
 

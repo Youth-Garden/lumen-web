@@ -1,9 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-import { format, startOfDay, subDays } from 'date-fns';
-import { useTranslations } from 'next-intl';
-
 import { HeatmapItem } from '@/services/progress';
 import {
   Card,
@@ -16,11 +12,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
+import { format, isSameDay, startOfDay, subDays } from 'date-fns';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useRef } from 'react';
 
 interface HeatmapCalendarProps {
   data: HeatmapItem[] | undefined;
   isLoading: boolean;
+  todayStudyMinutes?: number;
+  streak?: number;
+  dailyGoalMinutes?: number;
 }
 
 interface CalendarDay {
@@ -29,10 +32,26 @@ interface CalendarDay {
   count: number;
 }
 
-export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
+export function HeatmapCalendar({
+  data,
+  isLoading,
+  todayStudyMinutes = 0,
+  streak = 0,
+  dailyGoalMinutes = 0,
+}: HeatmapCalendarProps) {
   const t = useTranslations('Dashboard');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const today = useMemo(() => startOfDay(new Date()), []);
+  const todayStr = useMemo(() => format(today, 'yyyy-MM-dd'), [today]);
+
+  useEffect(() => {
+    if (!isLoading && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft =
+        scrollContainerRef.current.scrollWidth;
+    }
+  }, [isLoading, data]);
+
   const days = useMemo(() => {
     return Array.from({ length: 365 }, (_, dayIndex) => {
       return subDays(today, 364 - dayIndex);
@@ -42,14 +61,44 @@ export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
   const heatmapMap = useMemo(() => {
     const map = new Map<string, number>();
     data?.forEach((item) => {
-      map.set(item.date, item.count);
+      if (item?.date) {
+        const normalized = String(item.date).slice(0, 10);
+        map.set(
+          normalized,
+          (map.get(normalized) || 0) + (Number(item.count) || 0),
+        );
+      }
     });
+
+    const currentTodayCount = map.get(todayStr) || 0;
+    if (currentTodayCount === 0 && (todayStudyMinutes > 0 || streak > 0)) {
+      map.set(todayStr, Math.max(1, Math.round((todayStudyMinutes || 10) / 2)));
+    }
+
     return map;
-  }, [data]);
+  }, [data, todayStr, todayStudyMinutes, streak]);
 
   const totalActivities = useMemo(() => {
-    return data?.reduce((acc, item) => acc + (item.count || 0), 0) ?? 0;
-  }, [data]);
+    let sum = 0;
+    heatmapMap.forEach((count) => {
+      sum += count;
+    });
+    return sum;
+  }, [heatmapMap]);
+
+  const activeDaysCount = useMemo(() => {
+    let count = 0;
+    heatmapMap.forEach((c) => {
+      if (c > 0) count++;
+    });
+    return count;
+  }, [heatmapMap]);
+
+  const averagePerDay = useMemo(() => {
+    return activeDaysCount > 0
+      ? Math.round((totalActivities / activeDaysCount) * 10) / 10
+      : 0;
+  }, [totalActivities, activeDaysCount]);
 
   const { weeks, monthLabels } = useMemo(() => {
     const weeksList: (CalendarDay | null)[][] = [];
@@ -82,7 +131,9 @@ export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
     let lastMonth = -1;
 
     weeksList.forEach((week, weekIndex) => {
-      const firstValidDay = week.find((day): day is CalendarDay => day !== null);
+      const firstValidDay = week.find(
+        (day): day is CalendarDay => day !== null,
+      );
       if (firstValidDay) {
         const month = firstValidDay.date.getMonth();
         if (month !== lastMonth) {
@@ -99,143 +150,335 @@ export function HeatmapCalendar({ data, isLoading }: HeatmapCalendarProps) {
   }, [days, heatmapMap]);
 
   const getIntensityClass = (count: number) => {
-    if (count === 0) return 'bg-muted/50';
-    if (count < 3) return 'bg-emerald-200 dark:bg-emerald-900/50';
-    if (count < 7) return 'bg-emerald-300 dark:bg-emerald-700/70';
-    if (count < 15) return 'bg-emerald-400 dark:bg-emerald-600/80';
-    return 'bg-emerald-500 dark:bg-emerald-500';
+    if (count === 0) {
+      return 'bg-muted/40 dark:bg-muted/30 hover:bg-muted/60 transition-colors duration-200';
+    }
+    if (count < 3) {
+      return 'bg-indigo-200 dark:bg-indigo-900/50 hover:bg-indigo-300 dark:hover:bg-indigo-800 transition-colors duration-200';
+    }
+    if (count < 7) {
+      return 'bg-indigo-300 dark:bg-indigo-800/60 hover:bg-indigo-400 dark:hover:bg-indigo-700 transition-colors duration-200';
+    }
+    if (count < 15) {
+      return 'bg-indigo-500 dark:bg-indigo-700/70 hover:bg-indigo-600 dark:hover:bg-indigo-600 transition-colors duration-200';
+    }
+    if (count < 30) {
+      return 'bg-indigo-600 dark:bg-indigo-600/80 hover:bg-indigo-700 dark:hover:bg-indigo-700 transition-colors duration-200';
+    }
+    return 'bg-indigo-700 dark:bg-indigo-500 hover:brightness-110 transition-all duration-200 shadow-xs';
   };
 
-  return (
-    <Card className="w-full rounded-3xl border-none bg-card shadow-xs overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-base font-bold text-foreground">
-          {t('activityHeatmap')}
-        </CardTitle>
-        <span className="text-xs text-muted-foreground font-medium">
-          {totalActivities} {t('contributions')}
-        </span>
-      </CardHeader>
+  const getIntensityDotClass = (count: number) => {
+    if (count === 0) {
+      return 'bg-muted/50';
+    }
+    if (count < 3) {
+      return 'bg-indigo-200 dark:bg-indigo-900/50';
+    }
+    if (count < 7) {
+      return 'bg-indigo-300 dark:bg-indigo-800';
+    }
+    if (count < 15) {
+      return 'bg-indigo-500 dark:bg-indigo-700';
+    }
+    if (count < 30) {
+      return 'bg-indigo-600 dark:bg-indigo-600';
+    }
+    return 'bg-indigo-700 dark:bg-indigo-500';
+  };
 
-      <CardContent className="space-y-3 pt-1">
-        {isLoading ? (
-          <Skeleton className="w-full h-32 rounded-2xl" />
-        ) : (
-          <>
-            {/* Scrollable calendar container - ONLY grid and months scroll */}
-            <div className="overflow-x-auto pb-2 scrollbar-thin">
-              <div className="flex gap-2 w-max">
-                {/* Day labels column */}
-                <div className="flex flex-col gap-[3px] text-[10px] font-medium text-muted-foreground/60 select-none pt-4 shrink-0">
-                  <span className="h-[12px] leading-[12px]" />
-                  <span className="h-[12px] leading-[12px]">Mon</span>
-                  <span className="h-[12px] leading-[12px]" />
-                  <span className="h-[12px] leading-[12px]">Wed</span>
-                  <span className="h-[12px] leading-[12px]" />
-                  <span className="h-[12px] leading-[12px]">Fri</span>
-                  <span className="h-[12px] leading-[12px]" />
+  const goalProgress = useMemo(() => {
+    const safeGoal = dailyGoalMinutes > 0 ? dailyGoalMinutes : 15;
+    return Math.min(100, Math.round((todayStudyMinutes / safeGoal) * 100));
+  }, [todayStudyMinutes, dailyGoalMinutes]);
+
+  return (
+    <TooltipProvider delay={100}>
+      <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Icons name="calendar" className="h-4 w-4" />
+            </div>
+            <CardTitle className="text-base font-bold font-heading text-foreground">
+              {t('activityHeatmap')}
+            </CardTitle>
+          </div>
+          <span className="text-xs text-muted-foreground font-medium">
+            {totalActivities} {t('contributions')}
+          </span>
+        </CardHeader>
+
+        <CardContent className="pt-1">
+          {isLoading ? (
+            <Skeleton className="w-full h-36 rounded-2xl" />
+          ) : (
+            <div className="flex flex-col lg:flex-row items-stretch gap-6">
+              {/* Left: Scrollable calendar container & Legend */}
+              <div className="flex-1 min-w-0 flex flex-col justify-between gap-3">
+                <div
+                  ref={scrollContainerRef}
+                  className="overflow-x-auto pb-1 scrollbar-thin scroll-smooth"
+                >
+                  <div className="flex gap-2.5 w-max py-1">
+                    {/* Day labels column */}
+                    <div className="flex flex-col gap-1 text-[10px] font-medium text-muted-foreground/70 select-none pt-5 shrink-0">
+                      <span className="h-3 leading-3" />
+                      <span className="h-3 leading-3">T2</span>
+                      <span className="h-3 leading-3" />
+                      <span className="h-3 leading-3">T4</span>
+                      <span className="h-3 leading-3" />
+                      <span className="h-3 leading-3">T6</span>
+                      <span className="h-3 leading-3" />
+                    </div>
+
+                    {/* Main grid with month labels on top */}
+                    <div className="flex flex-col gap-1.5">
+                      {/* Month labels row */}
+                      <div className="flex gap-1 h-3.5 text-[10px] font-medium text-muted-foreground/70 select-none">
+                        {weeks.map((_, weekIndex) => {
+                          const monthItem = monthLabels.find(
+                            (item) => item.weekIndex === weekIndex,
+                          );
+                          return (
+                            <div
+                              key={weekIndex}
+                              className="w-3 shrink-0 text-left overflow-visible"
+                            >
+                              {monthItem?.label && (
+                                <span className="whitespace-nowrap">
+                                  {monthItem.label}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Heatmap circular cells */}
+                      <div className="flex gap-1">
+                        {weeks.map((week, weekIndex) => (
+                          <div
+                            key={weekIndex}
+                            className="flex flex-col gap-1 shrink-0"
+                          >
+                            {week.map((day, dayIndex) => {
+                              if (!day) {
+                                return (
+                                  <div
+                                    key={`empty-${weekIndex}-${dayIndex}`}
+                                    className="w-3 h-3 rounded-full shrink-0 bg-transparent"
+                                  />
+                                );
+                              }
+
+                              const formattedDate = format(
+                                day.date,
+                                'dd/MM/yyyy',
+                              );
+                              const isToday = isSameDay(day.date, today);
+                              const safeCount = day.count || 0;
+
+                              return (
+                                <Tooltip key={day.dateStr}>
+                                  <TooltipTrigger
+                                    render={
+                                      <div
+                                        tabIndex={0}
+                                        className={cn(
+                                          'w-3 h-3 rounded-full shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-card animate-in fade-in zoom-in-90',
+                                          getIntensityClass(safeCount),
+                                          isToday &&
+                                            'ring-2 ring-primary ring-offset-2 ring-offset-card',
+                                          safeCount > 0 &&
+                                            'hover:scale-150 hover:z-10',
+                                        )}
+                                        style={{
+                                          animationDelay: `${(weekIndex + dayIndex) % 500}ms`,
+                                        }}
+                                      />
+                                    }
+                                  />
+                                  <TooltipContent
+                                    side="top"
+                                    align="center"
+                                    className="rounded-xl bg-card border border-border shadow-lg px-3 py-2"
+                                  >
+                                    <div className="space-y-1 min-w-[120px]">
+                                      <p className="text-xs font-bold text-foreground">
+                                        {formattedDate}
+                                        {isToday && (
+                                          <span className="text-primary ml-1">
+                                            • Hôm nay
+                                          </span>
+                                        )}
+                                      </p>
+                                      <div className="flex items-center justify-between gap-3 text-[11px]">
+                                        <span className="text-muted-foreground">
+                                          Hoạt động:
+                                        </span>
+                                        <span className="font-bold text-foreground">
+                                          {safeCount > 0
+                                            ? `${safeCount} đóng góp`
+                                            : 'Chưa có'}
+                                        </span>
+                                      </div>
+                                      {safeCount > 0 && (
+                                        <div className="w-full h-1.5 rounded-full bg-muted/50 mt-1 overflow-hidden">
+                                          <div
+                                            className={cn(
+                                              'h-full rounded-full transition-all',
+                                              getIntensityDotClass(
+                                                Math.min(safeCount, 30),
+                                              ),
+                                            )}
+                                            style={{
+                                              width: `${Math.min(
+                                                (safeCount / 30) * 100,
+                                                100,
+                                              )}%`,
+                                            }}
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Main grid with month labels on top */}
-                <div className="flex flex-col gap-1">
-                  {/* Month labels row */}
-                  <div className="flex gap-[3px] h-3.5 text-[10px] font-medium text-muted-foreground/70 select-none">
-                    {weeks.map((_, weekIndex) => {
-                      const monthItem = monthLabels.find(
-                        (item) => item.weekIndex === weekIndex,
-                      );
-                      return (
-                        <div
-                          key={weekIndex}
-                          className="w-[12px] shrink-0 text-left overflow-visible"
-                        >
-                          {monthItem?.label && (
-                            <span className="whitespace-nowrap">
-                              {monthItem.label}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
+                {/* Enhanced Legend */}
+                <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-muted-foreground pt-2 border-t border-border/30">
+                  <span className="text-[10px] text-muted-foreground/80 font-medium">
+                    {activeDaysCount} ngày học tích cực · trung bình{' '}
+                    <strong className="text-foreground">{averagePerDay}</strong>{' '}
+                    hoạt động/ngày
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-muted-foreground/80">
+                      {t('less')}
+                    </span>
+                    {[
+                      { count: 0, label: '0' },
+                      { count: 1, label: '1-2' },
+                      { count: 5, label: '3-6' },
+                      { count: 12, label: '7-14' },
+                      { count: 25, label: '15+' },
+                    ].map((item) => (
+                      <Tooltip key={item.label}>
+                        <TooltipTrigger
+                          render={
+                            <div
+                              className={cn(
+                                'w-2.5 h-2.5 rounded-full cursor-help',
+                                getIntensityDotClass(item.count),
+                              )}
+                            />
+                          }
+                        />
+                        <TooltipContent side="top" align="center">
+                          <span className="text-[10px]">
+                            {item.label} hoạt động
+                          </span>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                    <span className="text-muted-foreground/80">
+                      {t('more')}
+                    </span>
                   </div>
+                </div>
+              </div>
 
-                  {/* Heatmap cells */}
-                  <TooltipProvider delay={50}>
-                    <div className="flex gap-[3px]">
-                      {weeks.map((week, weekIndex) => (
-                        <div
-                          key={weekIndex}
-                          className="flex flex-col gap-[3px] shrink-0"
-                        >
-                          {week.map((day, dayIndex) => {
-                            if (!day) {
-                              return (
-                                <div
-                                  key={`empty-${dayIndex}`}
-                                  className="w-[12px] h-[12px]"
-                                />
-                              );
-                            }
+              {/* Right: Activity Insights Sidebar */}
+              <div className="hidden lg:flex flex-col justify-between w-64 xl:w-72 border-l border-border/40 pl-6 py-0.5 shrink-0 space-y-3">
+                <div>
+                  <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
+                    <Icons
+                      name="sparkles"
+                      className="h-3.5 w-3.5 text-primary"
+                    />
+                    Thống kê chuyên cần
+                  </p>
 
-                            const formattedDate = format(
-                              day.date,
-                              'MMM d, yyyy',
-                            );
-
-                            return (
-                              <Tooltip key={day.dateStr}>
-                                <TooltipTrigger
-                                  render={
-                                    <div
-                                      tabIndex={0}
-                                      className={cn(
-                                        'w-[12px] h-[12px] rounded-full transition-all duration-150 cursor-pointer hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                                        getIntensityClass(day.count),
-                                      )}
-                                    />
-                                  }
-                                />
-                                <TooltipContent
-                                  side="top"
-                                  sideOffset={6}
-                                  className="text-xs py-1 px-2.5 shadow-md"
-                                >
-                                  <span>
-                                    {day.count > 0
-                                      ? t('activityTooltip', {
-                                          count: day.count,
-                                          date: formattedDate,
-                                        })
-                                      : t('noActivityTooltip', {
-                                          date: formattedDate,
-                                        })}
-                                  </span>
-                                </TooltipContent>
-                              </Tooltip>
-                            );
-                          })}
-                        </div>
-                      ))}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">
+                        Chuỗi học tập:
+                      </span>
+                      <span className="font-bold text-foreground flex items-center gap-1">
+                        <Icons
+                          name="flame"
+                          className="h-3.5 w-3.5 text-orange-500"
+                        />
+                        {streak} ngày
+                      </span>
                     </div>
-                  </TooltipProvider>
+
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">
+                        Thời gian hôm nay:
+                      </span>
+                      <span className="font-bold text-foreground">
+                        {todayStudyMinutes} phút
+                      </span>
+                    </div>
+
+                    {/* Goal Progress Bar */}
+                    {dailyGoalMinutes > 0 && (
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="text-muted-foreground">
+                            Mục tiêu hôm nay:
+                          </span>
+                          <span className="font-semibold text-foreground">
+                            {todayStudyMinutes}/{dailyGoalMinutes}m
+                          </span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-muted/40 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-primary transition-all duration-500"
+                            style={{ width: `${goalProgress}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">
+                        Trung bình/ngày:
+                      </span>
+                      <span className="font-bold text-primary">
+                        {averagePerDay} lượt
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">
+                        Tổng hoạt động:
+                      </span>
+                      <span className="font-bold text-foreground">
+                        {totalActivities} lượt
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-2xl bg-muted/30 border border-border/40 text-[11px] text-muted-foreground leading-relaxed">
+                  Học đều đặn mỗi ngày từ 10-15 phút kích hoạt chu kỳ lặp lại
+                  ngắt quãng tối ưu của thuật toán FSRS.
                 </div>
               </div>
             </div>
-
-            {/* Chú thích / Legend - OUTSIDE the scroll container, firmly fixed at bottom right */}
-            <div className="flex justify-end items-center gap-2 text-xs text-muted-foreground pt-1 border-t border-border/10">
-              <span>{t('less')}</span>
-              <div className="w-2.5 h-2.5 rounded-full bg-muted/50" />
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-200 dark:bg-emerald-900/50" />
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-300 dark:bg-emerald-700/70" />
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 dark:bg-emerald-600/80" />
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-emerald-500" />
-              <span>{t('more')}</span>
-            </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+          )}
+        </CardContent>
+      </Card>
+    </TooltipProvider>
   );
 }
-

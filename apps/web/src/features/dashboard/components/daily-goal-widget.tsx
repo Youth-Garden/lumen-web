@@ -3,101 +3,25 @@
 import {
   Button,
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  RadialProgress,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { PortalProps, usePortal } from '@lumen/uikit/portal';
+import { usePortal } from '@lumen/uikit/portal';
+import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
-import React from 'react';
-import {
-  useProgressDashboard,
-  useUpdateProgressSettings,
-} from '../hooks/use-progress-dashboard';
-
-export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
-  const t = useTranslations('Dashboard.Overview');
-  const { data: progressData } = useProgressDashboard();
-  const updateSettings = useUpdateProgressSettings();
-  const [selectedGoal, setSelectedGoal] = React.useState(15);
-
-  React.useEffect(() => {
-    if (progressData?.dailyGoalMinutes) {
-      setSelectedGoal(progressData.dailyGoalMinutes);
-    }
-  }, [progressData?.dailyGoalMinutes, isOpen]);
-
-  const handleSaveGoal = () => {
-    updateSettings.mutate(
-      { dailyGoalMinutes: selectedGoal },
-      {
-        onSuccess: () => {
-          onDismiss?.();
-        },
-      },
-    );
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('setDailyGoal')}</DialogTitle>
-          <DialogDescription>{t('setDailyGoalDesc')}</DialogDescription>
-        </DialogHeader>
-        <div className="grid grid-cols-2 gap-3 mt-4 mb-6">
-          {[15, 30, 45, 60].map((minutes) => (
-            <Button
-              key={minutes}
-              variant={selectedGoal === minutes ? 'default' : 'outline'}
-              onClick={() => setSelectedGoal(minutes)}
-              className="h-12 text-base"
-            >
-              {minutes} {t('mins')}
-            </Button>
-          ))}
-        </div>
-        <DialogFooter>
-          <DialogClose render={<Button variant="outline" />}>
-            {t('cancel')}
-          </DialogClose>
-          <Button onClick={handleSaveGoal} disabled={updateSettings.isPending}>
-            {updateSettings.isPending ? t('saving') : t('saveChanges')}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+import React, { useMemo } from 'react';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { useProgressDashboard } from '../hooks/use-progress-dashboard';
+import { DailyGoalDialog } from './daily-goal-dialog';
 
 export function DailyGoalWidget() {
   const t = useTranslations('Dashboard.Overview');
   const { data: progressData, isLoading } = useProgressDashboard();
   const [presentDailyGoalDialog] = usePortal(DailyGoalDialog);
 
-  if (isLoading || !progressData) {
-    return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs flex flex-col items-center justify-center min-h-[300px]">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-[120px] w-[120px] rounded-full bg-muted/50" />
-          <div className="h-4 w-32 bg-muted/50 rounded" />
-          <div className="h-3 w-48 bg-muted/50 rounded" />
-        </div>
-      </Card>
-    );
-  }
-
-  const { todayStudyMinutes, dailyGoalMinutes } = progressData;
+  const { todayStudyMinutes = 0, dailyGoalMinutes = 15 } = progressData || {};
   const safeDailyGoal = dailyGoalMinutes > 0 ? dailyGoalMinutes : 15;
   const isGoalReached = todayStudyMinutes >= safeDailyGoal;
   const progressPercent = Math.min(
@@ -105,68 +29,146 @@ export function DailyGoalWidget() {
     100,
   );
 
+  const chartData = useMemo(() => {
+    const completedVal = Math.min(todayStudyMinutes, safeDailyGoal);
+    const remainingVal = Math.max(0, safeDailyGoal - todayStudyMinutes);
+    return [
+      {
+        name: 'completed',
+        value: completedVal,
+        fill: isGoalReached ? 'var(--success)' : 'var(--primary)',
+      },
+      {
+        name: 'remaining',
+        value: remainingVal,
+        fill: 'var(--muted)',
+      },
+    ];
+  }, [todayStudyMinutes, safeDailyGoal, isGoalReached]);
+
+  if (isLoading || !progressData) {
+    return (
+      <Card className="rounded-3xl border-none bg-card shadow-xs p-5 flex flex-col items-center justify-center min-h-[220px]">
+        <div className="animate-pulse flex flex-col items-center gap-3">
+          <div className="h-28 w-28 rounded-full bg-muted/40" />
+          <div className="h-3.5 w-24 bg-muted/40 rounded" />
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs flex flex-col min-h-[300px] overflow-hidden relative group">
+    <Card className="rounded-3xl border-none bg-card shadow-xs p-5 flex flex-col justify-between overflow-hidden relative">
       {/* Background glow effect */}
       <div
-        className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-20 transition-colors duration-1000 ${isGoalReached ? 'bg-green-500' : 'bg-primary'}`}
+        className={cn(
+          'absolute -top-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-15 pointer-events-none transition-colors duration-1000',
+          isGoalReached ? 'bg-success' : 'bg-primary',
+        )}
       />
 
-      <CardHeader className="relative z-10 pb-2 flex flex-row items-start justify-between">
-        <div>
-          <CardTitle className="flex items-center gap-2">
-            <Icons name="activity" className="h-5 w-5 text-primary" />
-            {t('dailyGoal')}
-          </CardTitle>
-          <CardDescription>{t('learningProgress')}</CardDescription>
+      {/* Header */}
+      <CardHeader className="p-0 pb-1 relative z-10 flex flex-row items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+            <Icons name="target" className="h-4 w-4" />
+          </div>
+          <div>
+            <CardTitle className="text-sm font-bold text-foreground">
+              {t('dailyGoal')}
+            </CardTitle>
+            <CardDescription className="text-[11px] text-muted-foreground">
+              {t('learningProgress')}
+            </CardDescription>
+          </div>
         </div>
         <Button
           variant="ghost"
           size="icon-sm"
           onClick={() => presentDailyGoalDialog()}
-          className="text-muted-foreground hover:text-foreground shrink-0"
+          aria-label={t('setDailyGoal')}
+          title={t('setDailyGoal')}
         >
-          <Icons name="settings" className="h-4 w-4" />
+          <Icons
+            name="settings"
+            className="h-4 w-4 text-muted-foreground hover:text-foreground"
+          />
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col items-center justify-center relative z-10 pt-4">
-        <RadialProgress
-          value={todayStudyMinutes}
-          max={safeDailyGoal}
-          size={160}
-          strokeWidth={14}
-          colorClass={isGoalReached ? 'text-green-500' : 'text-primary'}
-          trackColorClass="text-primary/10 dark:text-primary/20"
-          showValue={false}
-          className="mb-6"
-        />
 
-        {/* Value overlay inside the ring */}
-        <div className="absolute top-[4.5rem] flex flex-col items-center justify-center">
-          <span className="text-3xl font-black tracking-tight flex items-baseline gap-1">
-            {todayStudyMinutes}
-            <span className="text-sm font-medium text-muted-foreground tracking-normal">
-              / {safeDailyGoal}m
-            </span>
-          </span>
-          <span className="text-xs font-semibold text-primary uppercase tracking-wider mt-1">
+      {/* Semi-Circle Arc Gauge */}
+      <div className="relative w-full h-32 flex items-center justify-center z-10 -mb-2">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="80%"
+              startAngle={180}
+              endAngle={0}
+              innerRadius="72%"
+              outerRadius="96%"
+              paddingAngle={2}
+              cornerRadius={4}
+              dataKey="value"
+              stroke="none"
+            >
+              {chartData.map((entry) => (
+                <Cell
+                  key={entry.name}
+                  fill={entry.fill}
+                  opacity={entry.name === 'remaining' ? 0.35 : 1}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+
+        {/* Center overlay label */}
+        <div className="absolute inset-x-0 bottom-2 flex flex-col items-center justify-center pointer-events-none select-none">
+          <span className="text-2xl font-black font-heading tracking-tight text-foreground">
             {progressPercent}%
           </span>
+          <span className="text-[11px] font-semibold text-muted-foreground">
+            {todayStudyMinutes}/{safeDailyGoal}m
+          </span>
         </div>
+      </div>
 
-        <div className="text-center mt-2 space-y-1">
-          <h4 className="font-semibold text-lg">
-            {isGoalReached ? t('goalReached') : t('keepItUp')}
-          </h4>
-          <p className="text-sm text-muted-foreground">
-            {isGoalReached
-              ? t('goalReachedDesc')
-              : t('minutesLeft', {
-                  minutes: safeDailyGoal - todayStudyMinutes,
-                })}
-          </p>
+      {/* Minimalist Legend Dots */}
+      <div className="flex items-center justify-center gap-4 text-xs pt-2 z-10">
+        <div className="flex items-center gap-1.5">
+          <span
+            className={cn(
+              'h-2 w-2 rounded-full',
+              isGoalReached ? 'bg-success' : 'bg-primary',
+            )}
+          />
+          <span className="text-[11px] text-muted-foreground">
+            {t('studiedMinutes')}:{' '}
+            <strong className="text-foreground font-semibold">
+              {todayStudyMinutes}m
+            </strong>
+          </span>
         </div>
-      </CardContent>
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-muted" />
+          <span className="text-[11px] text-muted-foreground">
+            {isGoalReached ? (
+              <span className="text-success font-bold">
+                {t('goalReachedDesc')}
+              </span>
+            ) : (
+              <>
+                {t('remaining')}:{' '}
+                <strong className="text-foreground font-semibold">
+                  {safeDailyGoal - todayStudyMinutes}m
+                </strong>
+              </>
+            )}
+          </span>
+        </div>
+      </div>
     </Card>
   );
 }

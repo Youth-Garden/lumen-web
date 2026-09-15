@@ -53,7 +53,9 @@ export const States: Story = {
       </div>
 
       <div className="flex items-center justify-between opacity-50">
-        <span className="text-sm font-medium text-foreground">Disabled Off</span>
+        <span className="text-sm font-medium text-foreground">
+          Disabled Off
+        </span>
         <Switch disabled checked={false} />
       </div>
 

@@ -4,7 +4,15 @@ import { useTranslations } from 'next-intl';
 
 import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary';
-import { Button, Skeleton } from '@lumen/uikit/components';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Button,
+  Skeleton,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
@@ -69,17 +77,23 @@ export function FolderSelectionView({
       {/* 1. Top Header */}
       <div className="flex flex-col space-y-3">
         {onBackToDashboard && (
-          <div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onBackToDashboard}
-              className="gap-1.5 -ml-2.5 w-fit text-muted-foreground hover:text-foreground cursor-pointer"
-            >
-              <Icons name="arrow-left" className="h-4 w-4" />
-              <span>{tStudy('backToStudy')}</span>
-            </Button>
-          </div>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <button
+                  type="button"
+                  onClick={onBackToDashboard}
+                  className="font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                >
+                  {t('title')}
+                </button>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{t('selectFolderTitle')}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         )}
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

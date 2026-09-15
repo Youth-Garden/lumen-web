@@ -9,4 +9,3 @@ export const vocabularyKeys = {
   folderDetail: (id: string) => [...vocabularyKeys.folders(), id] as const,
   overview: () => [...vocabularyKeys.all, 'overview'] as const,
 };
-

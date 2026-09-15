@@ -16,7 +16,10 @@ import type { PortalProps } from '@lumen/uikit/portal';
 import { useReviewFlashcard } from '@/features/study/hooks';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import { FlashcardRating } from '@/services/study';
-import { PronunciationAccent, type VocabularyWord } from '@/services/vocabulary';
+import {
+  PronunciationAccent,
+  type VocabularyWord,
+} from '@/services/vocabulary';
 import { usePronunciation } from '@/shared/hooks';
 
 function renderHighlightedSentence(sentence: string, term: string) {

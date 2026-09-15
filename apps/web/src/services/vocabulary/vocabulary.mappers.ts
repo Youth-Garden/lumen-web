@@ -98,4 +98,3 @@ export const vocabularyOverviewMapper = (raw?: any): VocabularyOverview => {
     frequentlyMissedWords,
   };
 };
-

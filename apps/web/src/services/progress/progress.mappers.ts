@@ -8,12 +8,12 @@ import {
   LeaderboardUser,
 } from './progress.types';
 
-export const recentActivitiesMapper = (
-  raw: Record<string, unknown>[] | unknown,
-): ActivityItem[] => {
-  if (!Array.isArray(raw)) return [];
-
-  return raw.map((item: Record<string, unknown>) => ({
+export const activityItemMapper = (raw?: unknown): ActivityItem => {
+  const item = (raw && typeof raw === 'object' ? raw : {}) as Record<
+    string,
+    unknown
+  >;
+  return {
     id: String(item.id || ''),
     type: (Object.values(ActivityType).includes(item.type as ActivityType)
       ? item.type
@@ -22,17 +22,34 @@ export const recentActivitiesMapper = (
     description: String(item.description || ''),
     xpEarned: Number(item.xpEarned || 0),
     timestamp: String(item.timestamp || ''),
-  }));
+  };
 };
 
-export const heatmapListMapper = (
-  raw: Record<string, unknown>[] | unknown,
-): HeatmapItem[] => {
-  if (!Array.isArray(raw)) return [];
-  return raw.map((item: Record<string, unknown>) => ({
-    date: String(item.date || ''),
+export const recentActivitiesMapper = (
+  raw?: unknown,
+): ActivityItem | ActivityItem[] => {
+  if (Array.isArray(raw)) {
+    return raw.map(activityItemMapper);
+  }
+  return activityItemMapper(raw);
+};
+
+export const heatmapItemMapper = (raw?: unknown): HeatmapItem => {
+  const item = (raw && typeof raw === 'object' ? raw : {}) as Record<
+    string,
+    unknown
+  >;
+  return {
+    date: String(item.date || '').slice(0, 10),
     count: Number(item.count || 0),
-  }));
+  };
+};
+
+export const heatmapMapper = (raw?: unknown): HeatmapItem | HeatmapItem[] => {
+  if (Array.isArray(raw)) {
+    return raw.map(heatmapItemMapper);
+  }
+  return heatmapItemMapper(raw);
 };
 
 export const dashboardMapper = (

@@ -74,8 +74,7 @@ export function FolderDetailPage({
 
     flashcards.forEach((card) => {
       const top = card.topic?.trim() || t('generalTopic');
-      const isLearned =
-        (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 1;
+      const isLearned = (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 1;
       const isDue =
         dueIdSet.has(card.id) ||
         Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
@@ -109,7 +108,9 @@ export function FolderDetailPage({
         learnedCount: data.learnedCount,
         dueCount: data.dueCount,
       }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((leftTopic, rightTopic) =>
+        leftTopic.name.localeCompare(rightTopic.name),
+      );
   }, [flashcards, dueFlashcards, t]);
 
   const displayedFlashcards = useMemo(() => {
@@ -137,10 +138,7 @@ export function FolderDetailPage({
     setSelectedTopic(null);
   };
 
-  const startStudy = (
-    topicName: string | null,
-    mode?: StudySessionMode,
-  ) => {
+  const startStudy = (topicName: string | null, mode?: StudySessionMode) => {
     let cardsToStudy = flashcards;
     if (topicName) {
       cardsToStudy = flashcards.filter((card) => {
@@ -208,6 +206,7 @@ export function FolderDetailPage({
         />
       ) : (
         <TopicWordsList
+          folderName={folderDetail.name}
           topicName={selectedTopic || ''}
           topicViName={selectedTopicStat?.viName}
           flashcards={displayedFlashcards}

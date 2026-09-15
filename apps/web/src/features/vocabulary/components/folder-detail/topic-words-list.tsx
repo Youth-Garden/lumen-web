@@ -2,14 +2,25 @@
 
 import { useTranslations } from 'next-intl';
 
+import Link from 'next/link';
+import { RouteEnum } from '@/shared/constants';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import { type VocabularyWord } from '@/services/vocabulary';
-import { Button, Card } from '@lumen/uikit/components';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Card,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { WordDetailSheet } from './word-detail-sheet';
 
 export interface TopicWordsListProps {
+  folderName?: string;
   topicName: string;
   topicViName?: string;
   flashcards: VocabularyWord[];
@@ -17,6 +28,7 @@ export interface TopicWordsListProps {
 }
 
 export function TopicWordsList({
+  folderName,
   topicName,
   topicViName,
   flashcards,
@@ -27,17 +39,34 @@ export function TopicWordsList({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 border-b border-border/60 pb-4">
-        <Button
-          type="button"
-          onClick={onBackToTopics}
-          variant="ghost"
-          size="sm"
-          className="w-fit -ml-2.5 gap-1.5 text-muted-foreground hover:text-foreground"
-        >
-          <Icons name="arrow-left" className="h-4 w-4" />
-          <span>{t('backToTopics')}</span>
-        </Button>
+      <div className="flex flex-col gap-3 border-b border-border/60 pb-4">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={RouteEnum.VOCABULARY}>{t('title')}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            {folderName && (
+              <>
+                <BreadcrumbItem>
+                  <button
+                    type="button"
+                    onClick={onBackToTopics}
+                    className="font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                  >
+                    {folderName}
+                  </button>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+              </>
+            )}
+            <BreadcrumbItem>
+              <BreadcrumbPage>{topicViName || topicName}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
@@ -65,13 +94,13 @@ export function TopicWordsList({
               role="button"
               tabIndex={0}
               onClick={() => presentWordDetail(flashcard)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
                   presentWordDetail(flashcard);
                 }
               }}
-              className="flex items-center gap-3 p-3.5 rounded-2xl text-left bg-card hover:bg-muted/40 transition-colors cursor-pointer group border border-border/40 hover:border-border/70 shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              className="flex items-center gap-3 p-3.5 rounded-2xl text-left bg-card hover:bg-muted/40 transition-colors cursor-pointer group border-none shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             >
               <div className="shrink-0">
                 <MasteryFlowerBadge

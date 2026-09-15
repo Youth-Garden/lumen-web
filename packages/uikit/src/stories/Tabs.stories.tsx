@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '../components/ui/tabs';
 import { Card } from '../components/ui/card';
 
 const meta = {
@@ -50,20 +55,29 @@ export const LineVariant: Story = {
   render: () => (
     <div className="w-[420px]">
       <Tabs defaultValue="overview">
-        <TabsList variant="line" className="w-full justify-start border-b border-border/40">
+        <TabsList
+          variant="line"
+          className="w-full justify-start border-b border-border/40"
+        >
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
         <div className="mt-4">
           <TabsContent value="overview">
-            <p className="text-sm text-muted-foreground">General deck performance overview.</p>
+            <p className="text-sm text-muted-foreground">
+              General deck performance overview.
+            </p>
           </TabsContent>
           <TabsContent value="analytics">
-            <p className="text-sm text-muted-foreground">Retention curve and daily streak charts.</p>
+            <p className="text-sm text-muted-foreground">
+              Retention curve and daily streak charts.
+            </p>
           </TabsContent>
           <TabsContent value="settings">
-            <p className="text-sm text-muted-foreground">Spaced repetition interval settings.</p>
+            <p className="text-sm text-muted-foreground">
+              Spaced repetition interval settings.
+            </p>
           </TabsContent>
         </div>
       </Tabs>

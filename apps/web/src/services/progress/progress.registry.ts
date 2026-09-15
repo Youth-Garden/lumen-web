@@ -3,7 +3,7 @@ import { ApiEndpointEnum } from '@/shared/constants';
 import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
 import {
   dashboardMapper,
-  heatmapListMapper,
+  heatmapMapper,
   leaderboardMapper,
   recentActivitiesMapper,
 } from './progress.mappers';
@@ -12,7 +12,7 @@ export const registry: MapperRegistry = {
   [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_DASHBOARD)]:
     dashboardMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_HEATMAP)]:
-    heatmapListMapper,
+    heatmapMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_ACTIVITIES)]:
     recentActivitiesMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.PROGRESS_LEADERBOARD)]:

@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "pnpm --filter web dev",
     "storybook": "pnpm --filter @lumen/uikit storybook",
+    "storybook:build": "pnpm --filter @lumen/uikit build-storybook",
     "build": "pnpm --filter web build",
     "start": "pnpm --filter web start",
     "lint": "pnpm --filter web lint",

@@ -51,7 +51,7 @@ export function Sidebar() {
     <nav
       id="sidebar"
       className={cn(
-        'relative flex h-full flex-col bg-sidebar rounded-3xl text-sidebar-foreground transition-all duration-300 ease-in-out z-20',
+        'relative flex h-full flex-col bg-background rounded-3xl text-sidebar-foreground transition-all duration-300 ease-in-out z-20',
         sidebarCollapsed ? 'w-22' : 'w-64',
       )}
     >

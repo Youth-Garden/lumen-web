@@ -35,35 +35,35 @@ export function MasteryOverviewCard({
     {
       level: 1,
       count:
-        stages?.find((s) => s.level === 1)?.count ??
+        stages?.find((stageItem) => stageItem.level === 1)?.count ??
         (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.08)),
       label: tMastery('stageLevel1'),
     },
     {
       level: 2,
       count:
-        stages?.find((s) => s.level === 2)?.count ??
+        stages?.find((stageItem) => stageItem.level === 2)?.count ??
         (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.15)),
       label: tMastery('stageLevel2'),
     },
     {
       level: 3,
       count:
-        stages?.find((s) => s.level === 3)?.count ??
+        stages?.find((stageItem) => stageItem.level === 3)?.count ??
         (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.25)),
       label: tMastery('stageLevel3'),
     },
     {
       level: 4,
       count:
-        stages?.find((s) => s.level === 4)?.count ??
+        stages?.find((stageItem) => stageItem.level === 4)?.count ??
         (learnedWords === 0 ? 0 : Math.round(learnedWords * 0.22)),
       label: tMastery('stageLevel4'),
     },
     {
       level: 5,
       count:
-        stages?.find((s) => s.level === 5)?.count ??
+        stages?.find((stageItem) => stageItem.level === 5)?.count ??
         (learnedWords === 0
           ? 0
           : Math.max(
@@ -102,7 +102,10 @@ export function MasteryOverviewCard({
             <Icons name="chevron-right" className="h-4 w-4" />
           </Button>
         ) : (
-          <Icons name="chevron-right" className="h-4 w-4 text-muted-foreground" />
+          <Icons
+            name="chevron-right"
+            className="h-4 w-4 text-muted-foreground"
+          />
         )}
       </div>
 

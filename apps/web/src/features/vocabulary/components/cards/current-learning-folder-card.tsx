@@ -47,7 +47,7 @@ export function CurrentLearningFolderCard({
           {t('pinnedFolder')}
         </h3>
 
-        <Button variant="secondary" size="sm" onClick={onSwitchFolder}>
+        <Button variant="outline" size="sm" onClick={onSwitchFolder}>
           <Icons name="refresh-cw" className="text-primary" />
           <span>{t('switchFolder')}</span>
         </Button>
@@ -60,9 +60,9 @@ export function CurrentLearningFolderCard({
             role="button"
             tabIndex={0}
             onClick={onViewFolder}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
                 onViewFolder?.();
               }
             }}

@@ -11,7 +11,7 @@ export interface AudioButtonProps extends Omit<
 > {
   url: string;
   iconClassName?: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export function AudioButton({
@@ -24,9 +24,9 @@ export function AudioButton({
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlay = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation();
-      onClick?.(e);
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      onClick?.(event);
 
       if (!url) return;
 
@@ -51,10 +51,7 @@ export function AudioButton({
     <Button
       variant="ghost"
       size="icon-sm"
-      className={cn(
-        isPlaying && 'text-primary bg-muted',
-        className,
-      )}
+      className={cn(isPlaying && 'text-primary bg-muted', className)}
       onClick={handlePlay}
       {...props}
     >
