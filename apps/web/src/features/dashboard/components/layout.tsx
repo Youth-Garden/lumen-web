@@ -1,9 +1,7 @@
 'use client';
 
-import React, { PropsWithChildren } from 'react';
-import Link from 'next/link';
-import { usePathname } from '@/shared/i18n/routing';
 import { BreadcrumbProvider, useBreadcrumb } from '@/shared/hooks';
+import { usePathname } from '@/shared/i18n/routing';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +10,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@lumen/uikit/components';
+import Link from 'next/link';
+import React, { PropsWithChildren } from 'react';
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
 

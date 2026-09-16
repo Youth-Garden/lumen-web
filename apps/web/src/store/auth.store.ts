@@ -9,6 +9,7 @@ export interface User {
   fullName?: string;
   avatarUrl?: string;
   phone?: string;
+  createdAt?: string | Date;
 }
 
 interface AuthState {

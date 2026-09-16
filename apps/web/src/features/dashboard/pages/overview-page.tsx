@@ -125,8 +125,6 @@ export function OverviewPage() {
       {/* Tier 3: Wide Bento Card with Integrated Activity Insights (Full Width) */}
       <div className="w-full">
         <HeatmapCalendar
-          data={heatmapData || []}
-          isLoading={heatmapLoading}
           todayStudyMinutes={todayStudyMinutes}
           streak={streak}
         />

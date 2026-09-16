@@ -12,8 +12,8 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { format, startOfDay, subDays } from 'date-fns';
-import { useTranslations } from 'next-intl';
-import React, { useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -50,6 +50,15 @@ interface ChartDayItem {
   isToday: boolean;
 }
 
+function formatDayLabel(date: Date, locale: string): string {
+  if (locale === 'vi') {
+    const day = date.getDay();
+    if (day === 0) return 'CN';
+    return `T${day + 1}`;
+  }
+  return format(date, 'EEE');
+}
+
 export function WeeklyStudyChart({
   heatmapData = [],
   dailyGoalMinutes,
@@ -57,6 +66,7 @@ export function WeeklyStudyChart({
   isLoading = false,
 }: WeeklyStudyChartProps) {
   const t = useTranslations('Dashboard.Overview');
+  const locale = useLocale();
   const [period, setPeriod] = useState<'7d' | '30d'>('7d');
 
   const safeGoal = dailyGoalMinutes > 0 ? dailyGoalMinutes : 15;
@@ -92,7 +102,7 @@ export function WeeklyStudyChart({
 
       const dayLabel =
         period === '7d'
-          ? format(date, 'EEE')
+          ? formatDayLabel(date, locale)
           : i % 5 === 0 || i === 0
             ? format(date, 'd/M')
             : '';
@@ -109,7 +119,7 @@ export function WeeklyStudyChart({
     }
 
     return list;
-  }, [period, dataMap, todayStudyMinutes, safeGoal]);
+  }, [period, dataMap, todayStudyMinutes, safeGoal, locale]);
 
   const stats = useMemo(() => {
     const totalMinutes = chartData.reduce((acc, cur) => acc + cur.minutes, 0);
@@ -166,23 +176,23 @@ export function WeeklyStudyChart({
       </CardHeader>
 
       <CardContent className="space-y-4 pt-1">
-        {/* Minimalist Typographic Stats Header (No box-in-box clutter) */}
+        {/* Minimalist Typographic Stats Header */}
         <div className="flex flex-wrap items-center gap-6 text-xs text-muted-foreground border-b border-border/40 pb-3">
-          <div>
-            <span>{t('weeklyTotal')}: </span>
-            <strong className="text-sm font-bold text-foreground font-heading ml-1">
+          <div className="flex items-center gap-1.5">
+            <span>{t('weeklyTotal')}:</span>
+            <strong className="text-sm font-bold text-foreground font-heading">
               {stats.totalMinutes}m
             </strong>
           </div>
-          <div>
-            <span>{t('dailyAverage')}: </span>
-            <strong className="text-sm font-bold text-foreground font-heading ml-1">
+          <div className="flex items-center gap-1.5">
+            <span>{t('dailyAverage')}:</span>
+            <strong className="text-sm font-bold text-foreground font-heading">
               {stats.avgMinutes}m
             </strong>
           </div>
-          <div>
-            <span>{t('goalsMet')}: </span>
-            <strong className="text-sm font-bold text-success font-heading ml-1">
+          <div className="flex items-center gap-1.5">
+            <span>{t('goalsMet')}:</span>
+            <strong className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-heading">
               {stats.metCount}/{chartData.length} {t('days')}
             </strong>
           </div>
@@ -193,20 +203,85 @@ export function WeeklyStudyChart({
           <ChartContainer width="100%" height="100%">
             <BarChart
               data={chartData}
-              margin={{ top: 20, right: 35, left: -20, bottom: 0 }}
+              margin={{ top: 20, right: 15, left: -20, bottom: 0 }}
             >
+              <defs>
+                <linearGradient id="goalMetGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#10B981" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#059669" stopOpacity={0.85} />
+                </linearGradient>
+                <linearGradient id="studiedGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="0%"
+                    stopColor="var(--primary)"
+                    stopOpacity={1}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="var(--primary)"
+                    stopOpacity={0.7}
+                  />
+                </linearGradient>
+                <linearGradient
+                  id="todayActiveGrad"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--primary)"
+                    stopOpacity={1}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="var(--primary)"
+                    stopOpacity={0.8}
+                  />
+                </linearGradient>
+              </defs>
+
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
                 stroke="var(--border)"
-                opacity={0.4}
+                opacity={0.3}
               />
+
               <XAxis
                 dataKey="dayLabel"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                interval={0}
+                tick={({ x, y, index }) => {
+                  const item = chartData[index];
+                  if (!item || !item.dayLabel) return null;
+                  const isToday = item.isToday;
+
+                  return (
+                    <g transform={`translate(${x},${y})`}>
+                      <text
+                        x={0}
+                        y={0}
+                        dy={14}
+                        textAnchor="middle"
+                        fill={
+                          isToday ? 'var(--primary)' : 'var(--muted-foreground)'
+                        }
+                        fontSize={11}
+                        fontWeight={isToday ? 700 : 500}
+                      >
+                        {item.dayLabel}
+                      </text>
+                      {isToday && period === '7d' && (
+                        <circle cx={0} cy={22} r={2} fill="var(--primary)" />
+                      )}
+                    </g>
+                  );
+                }}
               />
+
               <YAxis
                 domain={[0, yDomainMax]}
                 axisLine={false}
@@ -215,17 +290,18 @@ export function WeeklyStudyChart({
                 unit="m"
                 allowDecimals={false}
               />
+
               <ChartTooltip
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const item = payload[0].payload as ChartDayItem;
                   const barColor = item.isGoalMet
-                    ? 'var(--success)'
+                    ? '#10B981'
                     : item.isToday
                       ? 'var(--primary)'
                       : item.minutes > 0
-                        ? 'var(--chart-2)'
-                        : 'var(--muted)';
+                        ? 'var(--primary)'
+                        : 'var(--muted-foreground)';
 
                   return (
                     <ChartTooltipCard>
@@ -242,51 +318,66 @@ export function WeeklyStudyChart({
                         label={t('dailyGoalLine')}
                         value={`${item.goal}m`}
                       />
-                      {item.isGoalMet && (
-                        <div className="flex items-center gap-1 text-[10px] font-bold text-success pt-0.5">
+                      {item.isGoalMet ? (
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pt-0.5">
                           <Icons name="check" className="h-3 w-3" />
                           <span>{t('goalsMet')}</span>
                         </div>
-                      )}
+                      ) : item.minutes > 0 ? (
+                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground pt-0.5">
+                          <span>
+                            {t('minutesLeft', {
+                              minutes: Math.max(0, item.goal - item.minutes),
+                            })}
+                          </span>
+                        </div>
+                      ) : null}
                     </ChartTooltipCard>
                   );
                 }}
               />
+
               <ReferenceLine
                 y={safeGoal}
                 stroke="var(--primary)"
                 strokeDasharray="4 4"
-                strokeOpacity={0.5}
+                strokeOpacity={0.4}
                 label={{
                   value: `${safeGoal}m ${t('dailyGoalLine')}`,
                   fill: 'var(--primary)',
                   fontSize: 10,
-                  position: 'insideTopRight',
+                  fontWeight: 600,
+                  position: 'insideTopLeft',
                   offset: 8,
                 }}
               />
+
               <Bar
                 dataKey="minutes"
-                radius={[6, 6, 6, 6]}
-                maxBarSize={period === '7d' ? 32 : 12}
-                minPointSize={4}
-                background={{ fill: 'var(--muted)', opacity: 0.2, radius: 6 }}
+                radius={[8, 8, 4, 4]}
+                maxBarSize={period === '7d' ? 36 : 10}
+                minPointSize={6}
+                className="cursor-pointer"
               >
-                {chartData.map((entry) => (
-                  <Cell
-                    key={entry.dateStr}
-                    fill={
-                      entry.isGoalMet
-                        ? 'var(--success)'
-                        : entry.isToday
-                          ? 'var(--primary)'
-                          : entry.minutes > 0
-                            ? 'var(--chart-2)'
-                            : 'var(--muted)'
-                    }
-                    opacity={entry.minutes > 0 ? 1 : 0.4}
-                  />
-                ))}
+                {chartData.map((entry) => {
+                  let fill = 'var(--muted)';
+                  let opacity = 0.35;
+
+                  if (entry.isGoalMet) {
+                    fill = 'url(#goalMetGrad)';
+                    opacity = 1;
+                  } else if (entry.isToday && entry.minutes > 0) {
+                    fill = 'url(#todayActiveGrad)';
+                    opacity = 1;
+                  } else if (entry.minutes > 0) {
+                    fill = 'url(#studiedGrad)';
+                    opacity = 0.9;
+                  }
+
+                  return (
+                    <Cell key={entry.dateStr} fill={fill} opacity={opacity} />
+                  );
+                })}
               </Bar>
             </BarChart>
           </ChartContainer>

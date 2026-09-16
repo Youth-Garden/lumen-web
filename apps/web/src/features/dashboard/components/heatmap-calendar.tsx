@@ -1,7 +1,10 @@
 'use client';
 
+import { useHeatmap } from '@/features/dashboard/hooks';
 import { HeatmapItem } from '@/services/progress';
+import { useAuthStore } from '@/store/auth.store';
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -14,9 +17,15 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { format, isSameDay, startOfDay, subDays } from 'date-fns';
+import {
+  eachDayOfInterval,
+  format,
+  isAfter,
+  isSameDay,
+  startOfDay,
+} from 'date-fns';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   ChartTooltipCard,
@@ -25,22 +34,25 @@ import {
 } from '@/shared/components/chart/chart-tooltip';
 
 interface HeatmapCalendarProps {
-  data: HeatmapItem[] | undefined;
-  isLoading: boolean;
+  data?: HeatmapItem[];
+  isLoading?: boolean;
   todayStudyMinutes?: number;
   streak?: number;
   dailyGoalMinutes?: number;
+  selectedYear?: number;
+  onSelectYear?: (year: number) => void;
 }
 
 interface CalendarDay {
   date: Date;
   dateStr: string;
   count: number;
+  isFuture: boolean;
 }
 
 function getIntensityClass(count: number): string {
   if (count === 0)
-    return 'bg-muted/40 dark:bg-muted/30 hover:bg-muted/60 transition-colors duration-200';
+    return 'bg-muted/70 dark:bg-muted/50 hover:bg-muted/90 transition-colors duration-200';
   if (count < 3)
     return 'bg-indigo-200 dark:bg-indigo-900/50 hover:bg-indigo-300 dark:hover:bg-indigo-800 transition-colors duration-200';
   if (count < 7)
@@ -62,29 +74,73 @@ function getIntensityDotClass(count: number): string {
 }
 
 export function HeatmapCalendar({
-  data,
-  isLoading,
+  data: externalData,
+  isLoading: externalLoading,
   todayStudyMinutes = 0,
   streak = 0,
-  dailyGoalMinutes = 15,
+  selectedYear: controlledYear,
+  onSelectYear,
 }: HeatmapCalendarProps) {
   const t = useTranslations('Dashboard');
   const tOverview = useTranslations('Dashboard.Overview');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const user = useAuthStore((state) => state.user);
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+  const createdYear = useMemo(() => {
+    if (user?.createdAt) {
+      const year = new Date(user.createdAt).getFullYear();
+      if (!isNaN(year) && year <= currentYear && year >= 2020) return year;
+    }
+    return currentYear;
+  }, [user?.createdAt, currentYear]);
+
+  const [internalYear, setInternalYear] = useState<number>(currentYear);
+  const activeYear = controlledYear ?? internalYear;
+
+  const {
+    data: fetchedData,
+    isLoading: fetchLoading,
+    isFetching,
+  } = useHeatmap(activeYear);
+  const data = externalData ?? fetchedData;
+  const isInitialLoading = (externalLoading ?? fetchLoading) && !data;
+
+  const availableYears = useMemo(() => {
+    const years: number[] = [];
+    for (let y = currentYear; y >= createdYear; y--) {
+      years.push(y);
+    }
+    return years;
+  }, [currentYear, createdYear]);
+
+  const handleYearChange = (year: number) => {
+    if (onSelectYear) {
+      onSelectYear(year);
+    } else {
+      setInternalYear(year);
+    }
+  };
+
   const today = useMemo(() => startOfDay(new Date()), []);
   const todayStr = useMemo(() => format(today, 'yyyy-MM-dd'), [today]);
 
   useEffect(() => {
-    if (!isLoading && scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft =
-        scrollContainerRef.current.scrollWidth;
+    if (!isInitialLoading && scrollContainerRef.current) {
+      if (activeYear === currentYear) {
+        scrollContainerRef.current.scrollLeft =
+          scrollContainerRef.current.scrollWidth;
+      } else {
+        scrollContainerRef.current.scrollLeft = 0;
+      }
     }
-  }, [isLoading, data]);
+  }, [isInitialLoading, data, activeYear, currentYear]);
 
-  const days = useMemo(
-    () => Array.from({ length: 365 }, (_, idx) => subDays(today, 364 - idx)),
-    [today],
-  );
+  const days = useMemo(() => {
+    const startDate = new Date(activeYear, 0, 1);
+    const endDate = new Date(activeYear, 11, 31);
+    return eachDayOfInterval({ start: startDate, end: endDate });
+  }, [activeYear]);
 
   const heatmapMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -97,12 +153,17 @@ export function HeatmapCalendar({
         );
       }
     });
-    const currentTodayCount = map.get(todayStr) || 0;
-    if (currentTodayCount === 0 && (todayStudyMinutes > 0 || streak > 0)) {
-      map.set(todayStr, Math.max(1, Math.round((todayStudyMinutes || 10) / 2)));
+    if (activeYear === currentYear) {
+      const currentTodayCount = map.get(todayStr) || 0;
+      if (currentTodayCount === 0 && (todayStudyMinutes > 0 || streak > 0)) {
+        map.set(
+          todayStr,
+          Math.max(1, Math.round((todayStudyMinutes || 10) / 2)),
+        );
+      }
     }
     return map;
-  }, [data, todayStr, todayStudyMinutes, streak]);
+  }, [data, todayStr, todayStudyMinutes, streak, activeYear, currentYear]);
 
   const totalActivities = useMemo(() => {
     let sum = 0;
@@ -120,6 +181,26 @@ export function HeatmapCalendar({
     return count;
   }, [heatmapMap]);
 
+  const longestStreak = useMemo(() => {
+    let maxStreak = 0;
+    let currentConsecutive = 0;
+
+    days.forEach((date) => {
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const count = heatmapMap.get(dateStr) || 0;
+      if (count > 0) {
+        currentConsecutive++;
+        if (currentConsecutive > maxStreak) {
+          maxStreak = currentConsecutive;
+        }
+      } else {
+        currentConsecutive = 0;
+      }
+    });
+
+    return maxStreak;
+  }, [days, heatmapMap]);
+
   const averagePerDay = useMemo(
     () =>
       activeDaysCount > 0
@@ -136,7 +217,13 @@ export function HeatmapCalendar({
     for (let idx = 0; idx < firstDayOfWeek; idx++) currentWeek.push(null);
     days.forEach((date) => {
       const dateStr = format(date, 'yyyy-MM-dd');
-      currentWeek.push({ date, dateStr, count: heatmapMap.get(dateStr) || 0 });
+      const isFuture = isAfter(date, today);
+      currentWeek.push({
+        date,
+        dateStr,
+        count: heatmapMap.get(dateStr) || 0,
+        isFuture,
+      });
       if (currentWeek.length === 7) {
         weeksList.push(currentWeek);
         currentWeek = [];
@@ -163,7 +250,7 @@ export function HeatmapCalendar({
     });
 
     return { weeks: weeksList, monthLabels: labels };
-  }, [days, heatmapMap]);
+  }, [days, heatmapMap, today]);
 
   return (
     <TooltipProvider delay={100}>
@@ -177,17 +264,26 @@ export function HeatmapCalendar({
               {t('activityHeatmap')}
             </CardTitle>
           </div>
-          <span className="text-xs text-muted-foreground font-medium">
-            {totalActivities} {t('contributions')}
-          </span>
+          {isInitialLoading ? (
+            <Skeleton className="w-28 h-4 rounded-md" />
+          ) : (
+            <span className="text-xs text-muted-foreground font-medium">
+              {totalActivities} {t('contributionsInYear', { year: activeYear })}
+            </span>
+          )}
         </CardHeader>
 
         <CardContent className="pt-1">
-          {isLoading ? (
-            <Skeleton className="w-full h-36 rounded-2xl" />
+          {isInitialLoading ? (
+            <HeatmapSkeleton yearsCount={availableYears.length} />
           ) : (
             <div className="flex flex-col lg:flex-row items-stretch gap-6">
-              <div className="flex-1 min-w-0 flex flex-col justify-between gap-3">
+              <div
+                className={cn(
+                  'flex-1 min-w-0 flex flex-col justify-between gap-3 transition-opacity duration-200',
+                  isFetching && 'opacity-70',
+                )}
+              >
                 <div
                   ref={scrollContainerRef}
                   className="overflow-x-auto pb-1 scrollbar-thin scroll-smooth"
@@ -238,6 +334,16 @@ export function HeatmapCalendar({
                                     className="w-3 h-3 rounded-full shrink-0 bg-transparent"
                                   />
                                 );
+
+                              if (day.isFuture) {
+                                return (
+                                  <div
+                                    key={day.dateStr}
+                                    className="w-3 h-3 rounded-full shrink-0 bg-muted/40 dark:bg-muted/30"
+                                  />
+                                );
+                              }
+
                               const formattedDate = format(
                                 day.date,
                                 'dd/MM/yyyy',
@@ -326,16 +432,115 @@ export function HeatmapCalendar({
               </div>
 
               <HeatmapInsightsSidebar
+                activeYear={activeYear}
+                currentYear={currentYear}
                 streak={streak}
-                todayStudyMinutes={todayStudyMinutes}
+                longestStreak={longestStreak}
+                activeDaysCount={activeDaysCount}
+                totalDaysInYear={days.length}
                 averagePerDay={averagePerDay}
                 totalActivities={totalActivities}
               />
+
+              <div className="flex flex-row lg:flex-col gap-1.5 shrink-0 border-t lg:border-t-0 lg:border-l border-border/40 pt-3 lg:pt-0 lg:pl-5 justify-start">
+                {availableYears.map((year) => {
+                  const isSelected = activeYear === year;
+                  return (
+                    <Button
+                      key={year}
+                      variant={isSelected ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => handleYearChange(year)}
+                      className="font-semibold text-xs h-8 px-3"
+                    >
+                      {year}
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </CardContent>
       </Card>
     </TooltipProvider>
+  );
+}
+
+function HeatmapSkeleton({ yearsCount = 1 }: { yearsCount?: number }) {
+  const dummyWeeks = Array.from({ length: 53 });
+  const dummyDays = Array.from({ length: 7 });
+
+  return (
+    <div className="flex flex-col lg:flex-row items-stretch gap-6 animate-pulse">
+      {/* Grid Skeleton */}
+      <div className="flex-1 min-w-0 flex flex-col justify-between gap-3">
+        <div className="overflow-x-auto pb-1 scrollbar-thin">
+          <div className="flex gap-2.5 w-max py-1">
+            <div className="flex flex-col gap-1 pt-5 shrink-0">
+              <Skeleton className="w-4 h-3 rounded" />
+              <Skeleton className="w-4 h-3 rounded" />
+              <Skeleton className="w-4 h-3 rounded" />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <div className="flex gap-2 h-3.5">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <Skeleton key={i} className="w-8 h-3 rounded shrink-0 mr-2" />
+                ))}
+              </div>
+
+              <div className="flex gap-1">
+                {dummyWeeks.map((_, wIdx) => (
+                  <div key={wIdx} className="flex flex-col gap-1 shrink-0">
+                    {dummyDays.map((_, dIdx) => (
+                      <div
+                        key={dIdx}
+                        className="w-3 h-3 rounded-full bg-muted/40 shrink-0"
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Legend Skeleton */}
+        <div className="flex items-center justify-between pt-2 border-t border-border/30">
+          <Skeleton className="w-48 h-3 rounded" />
+          <div className="flex items-center gap-1.5">
+            <Skeleton className="w-6 h-3 rounded" />
+            <div className="flex gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="w-2.5 h-2.5 rounded-full bg-muted/40" />
+              ))}
+            </div>
+            <Skeleton className="w-6 h-3 rounded" />
+          </div>
+        </div>
+      </div>
+
+      {/* Sidebar Skeleton */}
+      <div className="hidden lg:flex flex-col justify-between w-60 xl:w-64 border-l border-border/40 pl-5 py-0.5 shrink-0 space-y-3">
+        <div className="space-y-3">
+          <Skeleton className="w-32 h-4 rounded" />
+          <div className="space-y-2.5">
+            <Skeleton className="w-full h-3 rounded" />
+            <Skeleton className="w-full h-3 rounded" />
+            <Skeleton className="w-full h-3 rounded" />
+            <Skeleton className="w-full h-3 rounded" />
+          </div>
+        </div>
+        <Skeleton className="w-full h-12 rounded-2xl" />
+      </div>
+
+      {/* Year Column Skeleton */}
+      <div className="flex flex-row lg:flex-col gap-1.5 shrink-0 border-t lg:border-t-0 lg:border-l border-border/40 pt-3 lg:pt-0 lg:pl-5 justify-start">
+        {Array.from({ length: Math.max(yearsCount, 1) }).map((_, i) => (
+          <Skeleton key={i} className="w-14 h-8 rounded-lg shrink-0" />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -400,44 +605,66 @@ function HeatmapLegend({
   );
 }
 
-function HeatmapInsightsSidebar({
-  streak,
-  todayStudyMinutes,
-  averagePerDay,
-  totalActivities,
-}: {
+interface HeatmapInsightsSidebarProps {
+  activeYear: number;
+  currentYear: number;
   streak: number;
-  todayStudyMinutes: number;
+  longestStreak: number;
+  activeDaysCount: number;
+  totalDaysInYear: number;
   averagePerDay: number;
   totalActivities: number;
-}) {
+}
+
+function HeatmapInsightsSidebar({
+  activeYear,
+  currentYear,
+  streak,
+  longestStreak,
+  activeDaysCount,
+  totalDaysInYear,
+  averagePerDay,
+  totalActivities,
+}: HeatmapInsightsSidebarProps) {
   const t = useTranslations('Dashboard');
+  const isCurrentYear = activeYear === currentYear;
 
   return (
-    <div className="hidden lg:flex flex-col justify-between w-64 xl:w-72 border-l border-border/40 pl-6 py-0.5 shrink-0 space-y-3">
+    <div className="hidden lg:flex flex-col justify-between w-60 xl:w-64 border-l border-border/40 pl-5 py-0.5 shrink-0 space-y-3">
       <div>
         <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
           <Icons name="sparkles" className="h-3.5 w-3.5 text-primary" />
-          {t('statsTitle')}
+          {t('statsTitleYear', { year: activeYear })}
         </p>
 
         <div className="space-y-2.5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{t('streakLabel')}:</span>
-            <span className="font-bold text-foreground flex items-center gap-1">
-              <Icons name="flame" className="h-3.5 w-3.5 text-orange-500" />
-              {t('daysValue', { count: streak })}
+            <span className="text-muted-foreground">{t('activeDaysLabel')}:</span>
+            <span className="font-bold text-foreground">
+              {t('daysValue', { count: activeDaysCount })}
+              <span className="text-muted-foreground font-normal ml-1 text-[11px]">
+                /{totalDaysInYear}
+              </span>
             </span>
           </div>
 
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">
-              {t('todayTimeLabel')}:
-            </span>
-            <span className="font-bold text-foreground">
-              {t('minutesValue', { count: todayStudyMinutes })}
+            <span className="text-muted-foreground">{t('longestStreakLabel')}:</span>
+            <span className="font-bold text-foreground flex items-center gap-1">
+              <Icons name="award" className="h-3.5 w-3.5 text-amber-500" />
+              {t('daysValue', { count: longestStreak })}
             </span>
           </div>
+
+          {isCurrentYear ? (
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">{t('streakLabel')}:</span>
+              <span className="font-bold text-foreground flex items-center gap-1">
+                <Icons name="flame" className="h-3.5 w-3.5 text-orange-500" />
+                {t('daysValue', { count: streak })}
+              </span>
+            </div>
+          ) : null}
 
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">{t('avgPerDay')}:</span>

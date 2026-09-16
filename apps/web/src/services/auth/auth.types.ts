@@ -5,6 +5,7 @@ export interface UserInfo {
   fullName?: string;
   avatarUrl?: string;
   phone?: string;
+  createdAt?: string | Date;
 }
 
 export interface AuthTokens {

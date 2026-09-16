@@ -25,9 +25,10 @@ export class ProgressService extends CoreService {
     return res.data;
   }
 
-  async getHeatmapData(): Promise<HeatmapItem[]> {
+  async getHeatmapData(year?: number): Promise<HeatmapItem[]> {
     const res = await this._get<HeatmapItem[]>(
       ApiEndpointEnum.PROGRESS_HEATMAP,
+      year ? { year } : undefined,
     );
     return res.data;
   }
