@@ -10,7 +10,15 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Cell, Pie, PieChart } from 'recharts';
+
+import { ChartContainer } from '@/shared/components/chart/chart-container';
+import {
+  ChartTooltip,
+  ChartTooltipCard,
+  ChartTooltipRow,
+  ChartTooltipTitle,
+} from '@/shared/components/chart/chart-tooltip';
 
 export interface MemoryLevelItem {
   level: number;
@@ -109,46 +117,29 @@ export function MemoryRetentionCard({
         ) : (
           <div className="flex flex-col items-center flex-1 justify-between">
             {/* Semicircle Gauge (180 deg) */}
-            <div className="w-full h-40 relative flex items-center justify-center -mb-4 overflow-visible pt-2">
-              <ResponsiveContainer
-                width="100%"
-                height="100%"
-                className="overflow-visible"
-              >
+            <div className="w-full h-40 relative flex items-center justify-center -mb-2 overflow-visible pt-1 z-10">
+              <ChartContainer width="100%" height="100%">
                 <PieChart className="overflow-visible">
-                  <Tooltip
-                    isAnimationActive={false}
-                    allowEscapeViewBox={{ x: true, y: true }}
-                    position={{ y: -16 }}
-                    wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
+                  <ChartTooltip
                     content={({ active, payload }) => {
                       if (!active || !payload || !payload.length) return null;
                       const item = payload[0].payload;
-                      if (totalLearnedWords === 0) {
-                        return (
-                          <div className="rounded-xl bg-foreground text-background px-3 py-1.5 shadow-lg text-xs font-medium pointer-events-none">
-                            {t('noWordsLearnedYet')}
-                          </div>
-                        );
-                      }
                       return (
-                        <div className="rounded-xl bg-foreground text-background px-3 py-2 shadow-lg text-xs space-y-0.5 pointer-events-none min-w-[125px]">
-                          <div className="flex items-center gap-1.5 font-bold">
-                            <span
-                              className="h-2 w-2 rounded-full shrink-0"
-                              style={{ backgroundColor: item.fill }}
+                        <ChartTooltipCard>
+                          <ChartTooltipTitle>{item.name}</ChartTooltipTitle>
+                          {totalLearnedWords === 0 ? (
+                            <p className="text-muted-foreground">
+                              {t('noWordsLearnedYet')}
+                            </p>
+                          ) : (
+                            <ChartTooltipRow
+                              color={item.fill}
+                              label={t('cards')}
+                              value={item.count}
+                              subValue={`(${item.percent}%)`}
                             />
-                            <span>{item.name}</span>
-                          </div>
-                          <div className="flex items-center justify-between gap-3 opacity-90 text-[11px]">
-                            <span>
-                              {t('totalWordsCount', { count: item.count })}
-                            </span>
-                            <span className="font-extrabold text-background">
-                              {item.percent}%
-                            </span>
-                          </div>
-                        </div>
+                          )}
+                        </ChartTooltipCard>
                       );
                     }}
                   />
@@ -158,8 +149,8 @@ export function MemoryRetentionCard({
                     cy="85%"
                     startAngle={180}
                     endAngle={0}
-                    innerRadius="70%"
-                    outerRadius="98%"
+                    innerRadius="68%"
+                    outerRadius="92%"
                     paddingAngle={3}
                     dataKey="value"
                     stroke="none"
@@ -173,21 +164,21 @@ export function MemoryRetentionCard({
                     ))}
                   </Pie>
                 </PieChart>
-              </ResponsiveContainer>
+              </ChartContainer>
 
               {/* Gauge Center Percentage Metric */}
-              <div className="absolute inset-0 flex flex-col items-center justify-end pb-3 pointer-events-none">
-                <span className="text-3xl font-heading font-black tracking-tight text-foreground">
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-0">
+                <span className="text-3xl font-heading font-black tracking-tight text-foreground select-none">
                   {retentionPercent}%
                 </span>
-                <span className="text-[11px] font-medium text-muted-foreground">
+                <span className="text-[11px] font-medium text-muted-foreground select-none">
                   {t('masteredWordsRate')}
                 </span>
               </div>
             </div>
 
             {/* Clean, Non-Boxy Level Breakdown List (Anti-box-in-box) */}
-            <div className="w-full pt-3 border-t border-border/40 space-y-2">
+            <div className="w-full pt-3 border-t border-border/40 space-y-2 relative z-0">
               {levels.slice(0, 5).map((lvl, index) => {
                 const token = LEVEL_TOKENS[index % LEVEL_TOKENS.length];
                 const count = lvl.count;

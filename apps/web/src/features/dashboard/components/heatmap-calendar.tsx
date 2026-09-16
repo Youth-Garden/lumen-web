@@ -18,6 +18,12 @@ import { format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef } from 'react';
 
+import {
+  ChartTooltipCard,
+  ChartTooltipRow,
+  ChartTooltipTitle,
+} from '@/shared/components/chart/chart-tooltip';
+
 interface HeatmapCalendarProps {
   data: HeatmapItem[] | undefined;
   isLoading: boolean;
@@ -55,9 +61,10 @@ export function HeatmapCalendar({
   isLoading,
   todayStudyMinutes = 0,
   streak = 0,
-  dailyGoalMinutes = 0,
+  dailyGoalMinutes = 15,
 }: HeatmapCalendarProps) {
   const t = useTranslations('Dashboard');
+  const tOverview = useTranslations('Dashboard.Overview');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const today = useMemo(() => startOfDay(new Date()), []);
   const todayStr = useMemo(() => format(today, 'yyyy-MM-dd'), [today]);
@@ -68,7 +75,10 @@ export function HeatmapCalendar({
     }
   }, [isLoading, data]);
 
-  const days = useMemo(() => Array.from({ length: 365 }, (_, idx) => subDays(today, 364 - idx)), [today]);
+  const days = useMemo(
+    () => Array.from({ length: 365 }, (_, idx) => subDays(today, 364 - idx)),
+    [today],
+  );
 
   const heatmapMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -87,19 +97,24 @@ export function HeatmapCalendar({
 
   const totalActivities = useMemo(() => {
     let sum = 0;
-    heatmapMap.forEach((count) => { sum += count; });
+    heatmapMap.forEach((count) => {
+      sum += count;
+    });
     return sum;
   }, [heatmapMap]);
 
   const activeDaysCount = useMemo(() => {
     let count = 0;
-    heatmapMap.forEach((c) => { if (c > 0) count++; });
+    heatmapMap.forEach((c) => {
+      if (c > 0) count++;
+    });
     return count;
   }, [heatmapMap]);
 
-  const averagePerDay = useMemo(() => (
-    activeDaysCount > 0 ? Math.round((totalActivities / activeDaysCount) * 10) / 10 : 0
-  ), [totalActivities, activeDaysCount]);
+  const averagePerDay = useMemo(
+    () => (activeDaysCount > 0 ? Math.round((totalActivities / activeDaysCount) * 10) / 10 : 0),
+    [totalActivities, activeDaysCount],
+  );
 
   const { weeks, monthLabels } = useMemo(() => {
     const weeksList: (CalendarDay | null)[][] = [];
@@ -110,7 +125,10 @@ export function HeatmapCalendar({
     days.forEach((date) => {
       const dateStr = format(date, 'yyyy-MM-dd');
       currentWeek.push({ date, dateStr, count: heatmapMap.get(dateStr) || 0 });
-      if (currentWeek.length === 7) { weeksList.push(currentWeek); currentWeek = []; }
+      if (currentWeek.length === 7) {
+        weeksList.push(currentWeek);
+        currentWeek = [];
+      }
     });
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) currentWeek.push(null);
@@ -123,7 +141,10 @@ export function HeatmapCalendar({
       const firstValidDay = week.find((day): day is CalendarDay => day !== null);
       if (firstValidDay) {
         const month = firstValidDay.date.getMonth();
-        if (month !== lastMonth) { labels.push({ weekIndex, label: format(firstValidDay.date, 'MMM') }); lastMonth = month; }
+        if (month !== lastMonth) {
+          labels.push({ weekIndex, label: format(firstValidDay.date, 'MMM') });
+          lastMonth = month;
+        }
       }
     });
 
@@ -156,9 +177,12 @@ export function HeatmapCalendar({
                 <div ref={scrollContainerRef} className="overflow-x-auto pb-1 scrollbar-thin scroll-smooth">
                   <div className="flex gap-2.5 w-max py-1">
                     <div className="flex flex-col gap-1 text-[10px] font-medium text-muted-foreground/70 select-none pt-5 shrink-0">
-                      <span className="h-3 leading-3" /><span className="h-3 leading-3">T2</span>
-                      <span className="h-3 leading-3" /><span className="h-3 leading-3">T4</span>
-                      <span className="h-3 leading-3" /><span className="h-3 leading-3">T6</span>
+                      <span className="h-3 leading-3" />
+                      <span className="h-3 leading-3">{t('dayMon')}</span>
+                      <span className="h-3 leading-3" />
+                      <span className="h-3 leading-3">{t('dayWed')}</span>
+                      <span className="h-3 leading-3" />
+                      <span className="h-3 leading-3">{t('dayFri')}</span>
                       <span className="h-3 leading-3" />
                     </div>
 
@@ -199,24 +223,25 @@ export function HeatmapCalendar({
                                       />
                                     }
                                   />
-                                  <TooltipContent side="top" align="center" className="rounded-xl bg-card border border-border shadow-lg px-3 py-2">
-                                    <div className="space-y-1 min-w-[120px]">
-                                      <p className="text-xs font-bold text-foreground">
-                                        {formattedDate}{isToday && <span className="text-primary ml-1">• Hôm nay</span>}
-                                      </p>
-                                      <div className="flex items-center justify-between gap-3 text-[11px]">
-                                        <span className="text-muted-foreground">Hoạt động:</span>
-                                        <span className="font-bold text-foreground">{safeCount > 0 ? `${safeCount} đóng góp` : 'Chưa có'}</span>
-                                      </div>
+                                  <TooltipContent side="top" align="center" className="p-0 border-none bg-transparent shadow-none">
+                                    <ChartTooltipCard>
+                                      <ChartTooltipTitle>
+                                        {formattedDate} {isToday && `• ${tOverview('today')}`}
+                                      </ChartTooltipTitle>
+                                      <ChartTooltipRow
+                                        color={safeCount > 0 ? 'var(--primary)' : 'var(--muted)'}
+                                        label={t('totalActivities')}
+                                        value={safeCount > 0 ? t('activitiesValue', { count: safeCount }) : 0}
+                                      />
                                       {safeCount > 0 && (
-                                        <div className="w-full h-1.5 rounded-full bg-muted/50 mt-1 overflow-hidden">
+                                        <div className="w-full h-1.5 rounded-full bg-muted/50 mt-0.5 overflow-hidden">
                                           <div
                                             className={cn('h-full rounded-full transition-all', getIntensityDotClass(Math.min(safeCount, 30)))}
                                             style={{ width: `${Math.min((safeCount / 30) * 100, 100)}%` }}
                                           />
                                         </div>
                                       )}
-                                    </div>
+                                    </ChartTooltipCard>
                                   </TooltipContent>
                                 </Tooltip>
                               );
@@ -228,10 +253,21 @@ export function HeatmapCalendar({
                   </div>
                 </div>
 
-                <HeatmapLegend activeDaysCount={activeDaysCount} averagePerDay={averagePerDay} lessText={t('less')} moreText={t('more')} />
+                <HeatmapLegend
+                  activeDaysCount={activeDaysCount}
+                  averagePerDay={averagePerDay}
+                  lessText={t('less')}
+                  moreText={t('more')}
+                />
               </div>
 
-              <HeatmapInsightsSidebar streak={streak} todayStudyMinutes={todayStudyMinutes} dailyGoalMinutes={dailyGoalMinutes} averagePerDay={averagePerDay} totalActivities={totalActivities} />
+              <HeatmapInsightsSidebar
+                streak={streak}
+                todayStudyMinutes={todayStudyMinutes}
+                dailyGoalMinutes={dailyGoalMinutes}
+                averagePerDay={averagePerDay}
+                totalActivities={totalActivities}
+              />
             </div>
           )}
         </CardContent>
@@ -240,7 +276,18 @@ export function HeatmapCalendar({
   );
 }
 
-function HeatmapLegend({ activeDaysCount, averagePerDay, lessText, moreText }: { activeDaysCount: number; averagePerDay: number; lessText: string; moreText: string }) {
+function HeatmapLegend({
+  activeDaysCount,
+  averagePerDay,
+  lessText,
+  moreText,
+}: {
+  activeDaysCount: number;
+  averagePerDay: number;
+  lessText: string;
+  moreText: string;
+}) {
+  const t = useTranslations('Dashboard');
   const legendItems = [
     { count: 0, label: '0' },
     { count: 1, label: '1-2' },
@@ -252,15 +299,32 @@ function HeatmapLegend({ activeDaysCount, averagePerDay, lessText, moreText }: {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-muted-foreground pt-2 border-t border-border/30">
       <span className="text-[10px] text-muted-foreground/80 font-medium">
-        {activeDaysCount} ngày học tích cực · trung bình <strong className="text-foreground">{averagePerDay}</strong> hoạt động/ngày
+        {t('activeDaysSummary', { activeDays: activeDaysCount, avg: averagePerDay })}
       </span>
       <div className="flex items-center gap-1.5">
         <span className="text-muted-foreground/80">{lessText}</span>
         {legendItems.map((item) => (
           <Tooltip key={item.label}>
-            <TooltipTrigger render={<div className={cn('w-2.5 h-2.5 rounded-full cursor-help', getIntensityDotClass(item.count))} />} />
-            <TooltipContent side="top" align="center">
-              <span className="text-[10px]">{item.label} hoạt động</span>
+            <TooltipTrigger
+              render={
+                <div
+                  className={cn(
+                    'w-2.5 h-2.5 rounded-full cursor-help',
+                    getIntensityDotClass(item.count),
+                  )}
+                />
+              }
+            />
+            <TooltipContent
+              side="top"
+              align="center"
+              className="p-0 border-none bg-transparent shadow-none"
+            >
+              <ChartTooltipCard className="p-2 min-w-[80px]">
+                <span className="text-[10px] font-semibold text-foreground">
+                  {item.label} {t('totalActivities').toLowerCase()}
+                </span>
+              </ChartTooltipCard>
             </TooltipContent>
           </Tooltip>
         ))}
@@ -270,60 +334,88 @@ function HeatmapLegend({ activeDaysCount, averagePerDay, lessText, moreText }: {
   );
 }
 
-function HeatmapInsightsSidebar({ streak, todayStudyMinutes, dailyGoalMinutes, averagePerDay, totalActivities }: { streak: number; todayStudyMinutes: number; dailyGoalMinutes: number; averagePerDay: number; totalActivities: number }) {
-  const goalProgress = useMemo(() => {
-    const safeGoal = dailyGoalMinutes > 0 ? dailyGoalMinutes : 15;
-    return Math.min(100, Math.round((todayStudyMinutes / safeGoal) * 100));
-  }, [todayStudyMinutes, dailyGoalMinutes]);
+function HeatmapInsightsSidebar({
+  streak,
+  todayStudyMinutes,
+  dailyGoalMinutes,
+  averagePerDay,
+  totalActivities,
+}: {
+  streak: number;
+  todayStudyMinutes: number;
+  dailyGoalMinutes: number;
+  averagePerDay: number;
+  totalActivities: number;
+}) {
+  const t = useTranslations('Dashboard');
+  const tOverview = useTranslations('Dashboard.Overview');
+  const safeGoal = dailyGoalMinutes > 0 ? dailyGoalMinutes : 15;
+  const goalProgress = Math.min(
+    100,
+    Math.round((todayStudyMinutes / safeGoal) * 100),
+  );
 
   return (
     <div className="hidden lg:flex flex-col justify-between w-64 xl:w-72 border-l border-border/40 pl-6 py-0.5 shrink-0 space-y-3">
       <div>
         <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
           <Icons name="sparkles" className="h-3.5 w-3.5 text-primary" />
-          Thống kê chuyên cần
+          {t('statsTitle')}
         </p>
 
         <div className="space-y-2.5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Chuỗi học tập:</span>
+            <span className="text-muted-foreground">{t('streakLabel')}:</span>
             <span className="font-bold text-foreground flex items-center gap-1">
               <Icons name="flame" className="h-3.5 w-3.5 text-orange-500" />
-              {streak} ngày
+              {t('daysValue', { count: streak })}
             </span>
           </div>
 
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Thời gian hôm nay:</span>
-            <span className="font-bold text-foreground">{todayStudyMinutes} phút</span>
+            <span className="text-muted-foreground">{t('todayTimeLabel')}:</span>
+            <span className="font-bold text-foreground">
+              {t('minutesValue', { count: todayStudyMinutes })}
+            </span>
           </div>
 
           {dailyGoalMinutes > 0 && (
             <div className="space-y-1">
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-muted-foreground">Mục tiêu hôm nay:</span>
-                <span className="font-semibold text-foreground">{todayStudyMinutes}/{dailyGoalMinutes}m</span>
+                <span className="text-muted-foreground">
+                  {tOverview('goalConsistencyTitle')}:
+                </span>
+                <span className="font-semibold text-foreground">
+                  {todayStudyMinutes}/{dailyGoalMinutes}m
+                </span>
               </div>
               <div className="w-full h-2 rounded-full bg-muted/40 overflow-hidden">
-                <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${goalProgress}%` }} />
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-500"
+                  style={{ width: `${goalProgress}%` }}
+                />
               </div>
             </div>
           )}
 
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Trung bình/ngày:</span>
-            <span className="font-bold text-primary">{averagePerDay} lượt</span>
+            <span className="text-muted-foreground">{t('avgPerDay')}:</span>
+            <span className="font-bold text-primary">
+              {t('activitiesValue', { count: averagePerDay })}
+            </span>
           </div>
 
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Tổng hoạt động:</span>
-            <span className="font-bold text-foreground">{totalActivities} lượt</span>
+            <span className="text-muted-foreground">{t('totalActivities')}:</span>
+            <span className="font-bold text-foreground">
+              {t('activitiesValue', { count: totalActivities })}
+            </span>
           </div>
         </div>
       </div>
 
       <div className="p-2.5 rounded-2xl bg-muted/30 border border-border/40 text-[11px] text-muted-foreground leading-relaxed">
-        Học đều đặn mỗi ngày từ 10-15 phút kích hoạt chu kỳ lặp lại ngắt quãng tối ưu của thuật toán FSRS.
+        {t('fsrsTip')}
       </div>
     </div>
   );

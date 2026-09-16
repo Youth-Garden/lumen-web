@@ -11,13 +11,15 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import React, { useMemo } from 'react';
+import { Cell, Pie, PieChart } from 'recharts';
+
+import { ChartContainer } from '@/shared/components/chart/chart-container';
 import {
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
+  ChartTooltip,
+  ChartTooltipCard,
+  ChartTooltipRow,
+  ChartTooltipTitle,
+} from '@/shared/components/chart/chart-tooltip';
 
 interface ReviewReadinessChartProps {
   dueCount: number;
@@ -112,19 +114,22 @@ export function ReviewReadinessChart({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Donut Chart */}
           <div className="w-36 h-36 relative flex items-center justify-center shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ChartContainer width="100%" height="100%">
               <PieChart>
-                <Tooltip
+                <ChartTooltip
                   content={({ active, payload }) => {
                     if (!active || !payload || !payload.length) return null;
                     const item = payload[0].payload;
                     return (
-                      <div className="rounded-2xl bg-card p-2.5 shadow-md text-xs space-y-1 text-card-foreground">
-                        <p className="font-bold">{item.name}</p>
-                        <p className="text-muted-foreground">
-                          {item.count} {t('cards')} ({item.percent}%)
-                        </p>
-                      </div>
+                      <ChartTooltipCard>
+                        <ChartTooltipTitle>{item.name}</ChartTooltipTitle>
+                        <ChartTooltipRow
+                          color={item.fill}
+                          label={t('cards')}
+                          value={item.count}
+                          subValue={`(${item.percent}%)`}
+                        />
+                      </ChartTooltipCard>
                     );
                   }}
                 />
@@ -147,7 +152,7 @@ export function ReviewReadinessChart({
                   ))}
                 </Pie>
               </PieChart>
-            </ResponsiveContainer>
+            </ChartContainer>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className="text-xl font-heading font-black text-foreground">

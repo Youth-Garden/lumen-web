@@ -18,11 +18,18 @@ import {
   Area,
   AreaChart,
   ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
+
+import { ChartContainer } from '@/shared/components/chart/chart-container';
+import {
+  ChartTooltip,
+  ChartTooltipCard,
+  ChartTooltipRow,
+  ChartTooltipSeparator,
+  ChartTooltipTitle,
+} from '@/shared/components/chart/chart-tooltip';
 
 interface StudyGoalConsistencyChartProps {
   heatmapData: HeatmapItem[] | undefined;
@@ -40,6 +47,7 @@ export function StudyGoalConsistencyChart({
   isLoading = false,
 }: StudyGoalConsistencyChartProps) {
   const t = useTranslations('Dashboard.Overview');
+  const tDashboard = useTranslations('Dashboard');
   const locale = useLocale();
   const dateLocale = locale === 'vi' ? vi : undefined;
 
@@ -114,7 +122,7 @@ export function StudyGoalConsistencyChart({
 
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary flex items-center gap-1">
             <Icons name="check" className="h-3 w-3" />
-            {completedDays}/7 {locale === 'vi' ? 'ngày' : 'days'}
+            {completedDays}/7 {t('days')}
           </span>
         </div>
       </CardHeader>
@@ -123,12 +131,12 @@ export function StudyGoalConsistencyChart({
         {/* Sub-kpis */}
         <div className="flex items-center justify-between text-xs text-muted-foreground px-1 pb-1">
           <span>
-            {locale === 'vi' ? 'Chuỗi ngày học: ' : 'Streak: '}
+            {tDashboard('streakLabel')}:{' '}
             <strong className="text-foreground font-semibold">{streak}</strong>{' '}
-            {locale === 'vi' ? 'ngày' : 'days'}
+            {t('days')}
           </span>
           <span>
-            {locale === 'vi' ? 'Mục tiêu hằng ngày: ' : 'Daily goal: '}
+            {t('dailyGoalLine')}:{' '}
             <strong className="text-foreground font-semibold">
               {dailyGoalMinutes}m
             </strong>
@@ -137,7 +145,7 @@ export function StudyGoalConsistencyChart({
 
         {/* Area Chart */}
         <div className="h-36 w-full -ml-2">
-          <ResponsiveContainer width="100%" height="100%">
+          <ChartContainer width="100%" height="100%">
             <AreaChart
               data={chartData}
               margin={{ top: 10, right: 15, left: -20, bottom: 0 }}
@@ -164,19 +172,27 @@ export function StudyGoalConsistencyChart({
                 tickLine={false}
                 axisLine={false}
               />
-              <Tooltip
+              <ChartTooltip
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const item = payload[0].payload;
                   return (
-                    <div className="rounded-2xl bg-card p-2.5 shadow-md text-xs space-y-1 text-card-foreground">
-                      <p className="font-bold text-foreground">
-                        {item.dateStr} {item.isToday && `(${locale === 'vi' ? 'Hôm nay' : 'Today'})`}
-                      </p>
-                      <p className="text-muted-foreground">
-                        {item.minutes}m / {dailyGoalMinutes}m ({item.percentage}%)
-                      </p>
-                    </div>
+                    <ChartTooltipCard>
+                      <ChartTooltipTitle>
+                        {item.dateStr} {item.isToday && `(${t('today')})`}
+                      </ChartTooltipTitle>
+                      <ChartTooltipRow
+                        color="var(--primary)"
+                        label={t('studiedMinutes')}
+                        value={`${item.minutes}m`}
+                        subValue={`/ ${dailyGoalMinutes}m`}
+                      />
+                      <ChartTooltipSeparator />
+                      <ChartTooltipRow
+                        label={t('goalConsistencyTitle')}
+                        value={`${item.percentage}%`}
+                      />
+                    </ChartTooltipCard>
                   );
                 }}
               />
@@ -201,7 +217,7 @@ export function StudyGoalConsistencyChart({
                 }}
               />
             </AreaChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </CardContent>
     </Card>

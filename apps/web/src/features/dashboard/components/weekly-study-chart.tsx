@@ -20,11 +20,18 @@ import {
   CartesianGrid,
   Cell,
   ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
+
+import { ChartContainer } from '@/shared/components/chart/chart-container';
+import {
+  ChartTooltip,
+  ChartTooltipCard,
+  ChartTooltipRow,
+  ChartTooltipSeparator,
+  ChartTooltipTitle,
+} from '@/shared/components/chart/chart-tooltip';
 
 interface WeeklyStudyChartProps {
   heatmapData?: HeatmapItem[];
@@ -109,11 +116,7 @@ export function WeeklyStudyChart({
     const avgMinutes = Math.round(totalMinutes / chartData.length);
     const metCount = chartData.filter((cur) => cur.isGoalMet).length;
 
-    return {
-      totalMinutes,
-      avgMinutes,
-      metCount,
-    };
+    return { totalMinutes, avgMinutes, metCount };
   }, [chartData]);
 
   if (isLoading) {
@@ -187,7 +190,7 @@ export function WeeklyStudyChart({
 
         {/* Recharts Bar Chart */}
         <div className="h-64 w-full pt-2">
-          <ResponsiveContainer width="100%" height="100%">
+          <ChartContainer width="100%" height="100%">
             <BarChart
               data={chartData}
               margin={{ top: 20, right: 35, left: -20, bottom: 0 }}
@@ -212,37 +215,40 @@ export function WeeklyStudyChart({
                 unit="m"
                 allowDecimals={false}
               />
-              <Tooltip
-                cursor={{ fill: 'var(--muted)', opacity: 0.15 }}
+              <ChartTooltip
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const item = payload[0].payload as ChartDayItem;
+                  const barColor = item.isGoalMet
+                    ? 'var(--success)'
+                    : item.isToday
+                      ? 'var(--primary)'
+                      : item.minutes > 0
+                        ? 'var(--chart-2)'
+                        : 'var(--muted)';
+
                   return (
-                    <div className="rounded-2xl border-none bg-card p-3 shadow-md text-card-foreground space-y-1.5 min-w-[130px]">
-                      <p className="text-[11px] font-bold text-muted-foreground">
+                    <ChartTooltipCard>
+                      <ChartTooltipTitle>
                         {item.fullDate} {item.isToday && `• ${t('today')}`}
-                      </p>
-                      <div className="flex items-center justify-between gap-3 text-xs">
-                        <span className="font-medium text-muted-foreground">
-                          {t('studiedMinutes')}:
-                        </span>
-                        <span className="font-black font-heading text-foreground">
-                          {item.minutes}m
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between gap-3 text-[11px] pt-1 border-t border-border/40 text-muted-foreground">
-                        <span>{t('dailyGoalLine')}:</span>
-                        <span className="font-semibold text-foreground">
-                          {item.goal}m
-                        </span>
-                      </div>
+                      </ChartTooltipTitle>
+                      <ChartTooltipRow
+                        color={barColor}
+                        label={t('studiedMinutes')}
+                        value={`${item.minutes}m`}
+                      />
+                      <ChartTooltipSeparator />
+                      <ChartTooltipRow
+                        label={t('dailyGoalLine')}
+                        value={`${item.goal}m`}
+                      />
                       {item.isGoalMet && (
                         <div className="flex items-center gap-1 text-[10px] font-bold text-success pt-0.5">
                           <Icons name="check" className="h-3 w-3" />
                           <span>{t('goalsMet')}</span>
                         </div>
                       )}
-                    </div>
+                    </ChartTooltipCard>
                   );
                 }}
               />
@@ -283,7 +289,7 @@ export function WeeklyStudyChart({
                 ))}
               </Bar>
             </BarChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </CardContent>
     </Card>
