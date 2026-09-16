@@ -34,6 +34,7 @@ import { type VocabularyWord } from '@/services/vocabulary';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { useReviewFlashcard } from './use-study';
 import { useStudyAudio } from './use-study-audio';
 import type {
@@ -90,6 +91,16 @@ export function useStudySession({
     ],
   );
 
+  const { data: globalWordsRes } = useVocabularyWords(
+    { limit: 100 },
+    { enabled: isOpen },
+  );
+
+  const globalCards = useMemo(
+    () => (globalWordsRes as any)?.items || (globalWordsRes as any)?.data || [],
+    [globalWordsRes],
+  );
+
   const [activeQueue, setActiveQueue] = useState<StudyQueueItem[]>([]);
   const [masteredIds, setMasteredIds] = useState<string[]>([]);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -114,13 +125,15 @@ export function useStudySession({
   );
 
   const initializeSession = useCallback(() => {
-    setActiveQueue(createInitialStudyQueue(poolCards, resolvedMode, cards));
+    setActiveQueue(
+      createInitialStudyQueue(poolCards, resolvedMode, cards, globalCards),
+    );
     setMasteredIds([]);
     setIsFlipped(false);
     setFeedback(null);
     setSelectedOptionIndex(null);
     setWordProgressMap({});
-  }, [poolCards, resolvedMode, cards]);
+  }, [poolCards, resolvedMode, cards, globalCards]);
 
   useEffect(() => {
     if (isOpen && poolCards.length > 0) initializeSession();
@@ -185,6 +198,7 @@ export function useStudySession({
           poolCards,
           activeQueue,
           cards,
+          globalCards,
         );
 
       if (isMastered)
@@ -205,6 +219,7 @@ export function useStudySession({
       poolCards,
       activeQueue,
       cards,
+      globalCards,
       mutateReviewQuietly,
       transitionQueueWithDelay,
     ],
@@ -329,6 +344,7 @@ export function useStudySession({
         poolCards,
         feedback.isCorrect,
         cards,
+        globalCards,
       );
       setFeedback(null);
       setSelectedOptionIndex(null);
@@ -341,6 +357,7 @@ export function useStudySession({
     activeQueue,
     poolCards,
     cards,
+    globalCards,
     dismissFeedback,
   ]);
 

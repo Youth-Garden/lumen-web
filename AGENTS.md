@@ -175,5 +175,3 @@ The following anti-patterns/workarounds are strictly forbidden:
   - Background/inactive stacked portals: `zIndex = 98`
   - Overlay backdrop: `zIndex = 99`
   - Active top portal: `zIndex = 100`
-
-

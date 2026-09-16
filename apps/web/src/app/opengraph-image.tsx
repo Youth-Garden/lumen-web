@@ -24,6 +24,7 @@ export default async function Image() {
         background: 'linear-gradient(to bottom right, #ffffff, #f8fafc)',
       }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         // @ts-expect-error - NextJS img
         src={logoData.buffer as ArrayBuffer}

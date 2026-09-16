@@ -42,10 +42,24 @@ export interface Folder {
   name: string;
   description?: string;
   category?: string;
+  isSystem: boolean;
   flashcardCount: number;
-  learnedCount?: number;
-  dueCount?: number;
-  flashcards?: VocabularyWord[];
+  learnedCount: number;
+  dueCount: number;
+}
+
+export interface FolderTopic {
+  topic: string;
+  topicVi: string | null;
+  topicImageUrl: string | null;
+  count: number;
+  learnedCount: number;
+  dueCount: number;
+}
+
+export interface FolderFlashcardsPage {
+  data: VocabularyWord[];
+  total: number;
 }
 
 export interface CreateFolderPayload {

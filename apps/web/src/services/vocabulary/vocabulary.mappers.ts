@@ -1,6 +1,8 @@
 import {
   VocabularyWord,
   Folder,
+  FolderTopic,
+  FolderFlashcardsPage,
   VocabularyOverview,
   MemoryStageLevel,
   FrequentlyMissedWordItem,
@@ -29,10 +31,8 @@ export const wordMapper = (
     cefrLevel: typeof raw?.cefrLevel === 'string' ? raw.cefrLevel : undefined,
     imageUrl: typeof raw?.imageUrl === 'string' ? raw.imageUrl : undefined,
     level: typeof raw?.level === 'number' ? raw.level : 0,
-    learningStep:
-      typeof raw?.learningStep === 'number' ? raw.learningStep : 0,
-    masteryScore:
-      typeof raw?.masteryScore === 'number' ? raw.masteryScore : 0,
+    learningStep: typeof raw?.learningStep === 'number' ? raw.learningStep : 0,
+    masteryScore: typeof raw?.masteryScore === 'number' ? raw.masteryScore : 0,
     isWilted: Boolean(raw?.isWilted),
     flashcardId:
       typeof raw?.flashcardId === 'string'
@@ -82,22 +82,44 @@ export const folderMapper = (
   description:
     typeof folder?.description === 'string' ? folder.description : undefined,
   category: typeof folder?.category === 'string' ? folder.category : undefined,
+  isSystem: typeof folder?.isSystem === 'boolean' ? folder.isSystem : true,
   flashcardCount:
     typeof folder?.flashcardCount === 'number' ? folder.flashcardCount : 0,
   learnedCount:
     typeof folder?.learnedCount === 'number' ? folder.learnedCount : 0,
   dueCount: typeof folder?.dueCount === 'number' ? folder.dueCount : 0,
-  flashcards: Array.isArray(folder?.flashcards)
-    ? folder.flashcards.map((flashcard: Record<string, unknown>) =>
-        wordMapper(flashcard),
-      )
-    : undefined,
 });
 
 export const folderListMapper = (raw?: unknown): Folder[] => {
   if (!Array.isArray(raw)) return [];
   return raw.map((item) => folderMapper(item as Record<string, unknown>));
 };
+
+export const folderTopicMapper = (
+  raw?: Record<string, unknown> | null,
+): FolderTopic => ({
+  topic: typeof raw?.topic === 'string' ? raw.topic : '',
+  topicVi: typeof raw?.topicVi === 'string' ? raw.topicVi : null,
+  topicImageUrl:
+    typeof raw?.topicImageUrl === 'string' ? raw.topicImageUrl : null,
+  count: typeof raw?.count === 'number' ? raw.count : 0,
+  learnedCount: typeof raw?.learnedCount === 'number' ? raw.learnedCount : 0,
+  dueCount: typeof raw?.dueCount === 'number' ? raw.dueCount : 0,
+});
+
+export const folderTopicListMapper = (raw?: unknown): FolderTopic[] => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((item) => folderTopicMapper(item as Record<string, unknown>));
+};
+
+export const folderFlashcardsPageMapper = (
+  raw?: Record<string, unknown> | null,
+): FolderFlashcardsPage => ({
+  data: Array.isArray(raw?.data)
+    ? raw.data.map((item: Record<string, unknown>) => wordMapper(item))
+    : [],
+  total: typeof raw?.total === 'number' ? raw.total : 0,
+});
 
 export const vocabularyOverviewMapper = (
   raw?: Record<string, unknown> | null,

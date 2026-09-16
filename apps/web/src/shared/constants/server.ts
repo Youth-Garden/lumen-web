@@ -19,6 +19,8 @@ export enum ApiEndpointEnum {
   VOCABULARY_WORD_DETAIL = '/api/vocabulary/words/:id',
   VOCABULARY_FOLDERS = '/api/vocabulary/words/folders',
   VOCABULARY_FOLDER_DETAIL = '/api/vocabulary/words/folders/:id',
+  VOCABULARY_FOLDER_TOPICS = '/api/vocabulary/words/folders/:id/topics',
+  VOCABULARY_FOLDER_FLASHCARDS = '/api/vocabulary/words/folders/:id/flashcards',
   VOCABULARY_FLASHCARDS = '/api/vocabulary/words/flashcards',
   VOCABULARY_OVERVIEW = '/api/vocabulary/words/overview',
 

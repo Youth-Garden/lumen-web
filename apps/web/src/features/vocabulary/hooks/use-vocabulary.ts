@@ -19,6 +19,18 @@ export const useCreateFolder = () => {
   });
 };
 
+export const useDeleteFolder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => vocabularyService.deleteFolder(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
+      queryClient.invalidateQueries({ queryKey: studyKeys.dueFlashcards() });
+    },
+  });
+};
+
 export const useCreateFlashcard = () => {
   const queryClient = useQueryClient();
 
@@ -79,5 +91,36 @@ export const useVocabularyFolderDetail = (
     queryFn: () => vocabularyService.getFolder(id).then((res) => res?.data),
     retry: false,
     ...options,
+  });
+};
+
+export const useFolderTopics = (
+  folderId: string,
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: vocabularyKeys.folderTopics(folderId),
+    queryFn: () =>
+      vocabularyService
+        .getFolderTopics(folderId)
+        .then((res) => res?.data ?? []),
+    enabled: Boolean(folderId) && (options?.enabled ?? true),
+    retry: false,
+  });
+};
+
+export const useFolderFlashcards = (
+  folderId: string,
+  topic?: string,
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: vocabularyKeys.folderFlashcards(folderId, topic),
+    queryFn: () =>
+      vocabularyService
+        .getFolderFlashcards(folderId, topic)
+        .then((res) => res?.data ?? { data: [], total: 0 }),
+    enabled: Boolean(folderId) && Boolean(topic) && (options?.enabled ?? true),
+    retry: false,
   });
 };

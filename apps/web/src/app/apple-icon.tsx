@@ -21,6 +21,7 @@ export default async function AppleIcon() {
         borderRadius: '20px',
       }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         // @ts-expect-error - NextJS img
         src={logoData.buffer as ArrayBuffer}

@@ -26,7 +26,6 @@ export const Backdrop = ({
       }}
       onPointerDown={(e) => {
         e.stopPropagation();
-        onPress?.();
       }}
       style={style}
       className={cn(

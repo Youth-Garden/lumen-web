@@ -32,6 +32,7 @@ export function createInitialStudyQueue(
   poolCards: VocabularyWord[],
   mode: StudySessionMode = StudySessionMode.LEARN_NEW,
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
 ): StudyQueueItem[] {
   return poolCards.map((card) => {
     if (mode === StudySessionMode.FLASHCARD) {
@@ -47,6 +48,7 @@ export function createInitialStudyQueue(
         card,
         poolCards,
         fallbackPool,
+        globalPool,
         undefined,
         false,
       );
@@ -68,6 +70,7 @@ export function createInitialStudyQueue(
       card,
       poolCards,
       fallbackPool,
+      globalPool,
       undefined,
       false,
     );
@@ -209,6 +212,7 @@ export function getNextQueueAfterFeedback(
   poolCards: VocabularyWord[],
   wasCorrect: boolean,
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
 ): StudyQueueItem[] {
   const remaining = activeQueue.slice(1);
   if (wasCorrect) return remaining;
@@ -216,6 +220,7 @@ export function getNextQueueAfterFeedback(
     currentCard,
     poolCards,
     fallbackPool,
+    globalPool,
     exerciseType,
     true,
   );
@@ -296,6 +301,7 @@ export function processAdvanceFromFlashcard(
   poolCards: VocabularyWord[],
   activeQueue: StudyQueueItem[],
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
 ): {
   newLevel: number;
   newLearningStep: number;
@@ -313,6 +319,7 @@ export function processAdvanceFromFlashcard(
     updatedCard,
     poolCards,
     fallbackPool,
+    globalPool,
     StudyExerciseType.FLASHCARD,
     false,
   );
@@ -349,4 +356,3 @@ export function updateMasteredWordIds(
 ): string[] {
   return prevIds.includes(cardId) ? prevIds : [...prevIds, cardId];
 }
-

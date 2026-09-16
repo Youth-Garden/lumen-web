@@ -1,18 +1,13 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { RouteEnum } from '@/shared/constants';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@lumen/uikit/components';
+import { useSetBreadcrumb } from '@/shared/hooks';
+import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 export interface TopicStatItem {
@@ -32,6 +27,7 @@ export interface FolderTopicGridProps {
   topicStats: TopicStatItem[];
   onSelectTopic: (topicName: string) => void;
   onGoBack?: () => void;
+  onDeleteFolder?: () => void;
 }
 
 export function FolderTopicGrid({
@@ -41,37 +37,48 @@ export function FolderTopicGrid({
   selectedTopic,
   topicStats,
   onSelectTopic,
+  onDeleteFolder,
 }: FolderTopicGridProps) {
   const t = useTranslations('Vocabulary.Folders');
   const radius = 37;
   const circumference = 2 * Math.PI * radius;
 
+  useSetBreadcrumb(
+    useMemo(
+      () => [
+        { label: t('title'), href: RouteEnum.VOCABULARY },
+        { label: folderName },
+      ],
+      [t, folderName],
+    ),
+  );
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col gap-3">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={RouteEnum.VOCABULARY}>{t('title')}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{folderName}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+              {folderName}
+            </h1>
+            {category && (
+              <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary">
+                {category}
+              </span>
+            )}
+          </div>
 
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-            {folderName}
-          </h1>
-          {category && (
-            <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary">
-              {category}
-            </span>
+          {onDeleteFolder && (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={onDeleteFolder}
+              title={t('deleteFolder')}
+              className="text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
+            >
+              <Icons name="trash-2" className="h-4 w-4" />
+            </Button>
           )}
         </div>
 

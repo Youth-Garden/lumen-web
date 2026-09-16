@@ -48,40 +48,26 @@ export function selectDistractorCards(
   card: VocabularyWord,
   pool: VocabularyWord[],
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
   neededCount = 3,
 ): VocabularyWord[] {
   const selected: VocabularyWord[] = [];
   const selectedIds = new Set<string>([card.id]);
   const selectedTerms = new Set<string>([card.term.toLowerCase().trim()]);
 
-  const poolCandidates = shuffleArray(
-    pool.filter(
-      (candidateCard) =>
-        candidateCard.id !== card.id &&
-        candidateCard.term.toLowerCase().trim() !== card.term.toLowerCase().trim(),
-    ),
-  );
+  const drainFromPool = (candidatePool: VocabularyWord[]) => {
+    if (selected.length >= neededCount || !candidatePool.length) return;
 
-  for (const candidate of poolCandidates) {
-    if (selected.length >= neededCount) break;
-    const termKey = candidate.term.toLowerCase().trim();
-    if (!selectedIds.has(candidate.id) && !selectedTerms.has(termKey)) {
-      selected.push(candidate);
-      selectedIds.add(candidate.id);
-      selectedTerms.add(termKey);
-    }
-  }
-
-  if (selected.length < neededCount && fallbackPool.length > 0) {
-    const fallbackCandidates = shuffleArray(
-      fallbackPool.filter(
+    const candidates = shuffleArray(
+      candidatePool.filter(
         (candidateCard) =>
           candidateCard.id !== card.id &&
-          candidateCard.term.toLowerCase().trim() !== card.term.toLowerCase().trim(),
+          candidateCard.term.toLowerCase().trim() !==
+            card.term.toLowerCase().trim(),
       ),
     );
 
-    for (const candidate of fallbackCandidates) {
+    for (const candidate of candidates) {
       if (selected.length >= neededCount) break;
       const termKey = candidate.term.toLowerCase().trim();
       if (!selectedIds.has(candidate.id) && !selectedTerms.has(termKey)) {
@@ -90,7 +76,16 @@ export function selectDistractorCards(
         selectedTerms.add(termKey);
       }
     }
-  }
+  };
+
+  // Priority 1: Pick from same Topic / Batch pool
+  drainFromPool(pool);
+
+  // Priority 2: Pick from same Folder fallback pool if needed
+  drainFromPool(fallbackPool);
+
+  // Priority 3: Pick from system-wide global vocabulary pool if needed
+  drainFromPool(globalPool);
 
   return selected;
 }
@@ -99,11 +94,18 @@ export function createChoiceTermQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
   isReviewingFailed = false,
 ): StudyQueueItem {
   const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
 
-  const distractors = selectDistractorCards(card, pool, fallbackPool, 3);
+  const distractors = selectDistractorCards(
+    card,
+    pool,
+    fallbackPool,
+    globalPool,
+    3,
+  );
 
   const correctOption: ChoiceOption = {
     id: card.id,
@@ -142,11 +144,18 @@ export function createChoiceMeaningQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
   isReviewingFailed = false,
 ): StudyQueueItem {
   const primary = getCardPrimaryDefinition(card);
 
-  const distractors = selectDistractorCards(card, pool, fallbackPool, 3);
+  const distractors = selectDistractorCards(
+    card,
+    pool,
+    fallbackPool,
+    globalPool,
+    3,
+  );
 
   const correctOption: ChoiceOption = {
     id: card.id,
@@ -216,6 +225,7 @@ export function createNextExerciseForWord(
   card: VocabularyWord,
   pool: VocabularyWord[],
   fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
   previousExerciseType?: StudyExerciseType,
   isReviewingFailed = false,
 ): StudyQueueItem {
@@ -239,6 +249,7 @@ export function createNextExerciseForWord(
       card,
       pool,
       fallbackPool,
+      globalPool,
       isReviewingFailed,
     );
   }
@@ -247,6 +258,7 @@ export function createNextExerciseForWord(
       card,
       pool,
       fallbackPool,
+      globalPool,
       isReviewingFailed,
     );
   }

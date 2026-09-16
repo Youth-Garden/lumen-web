@@ -9,14 +9,14 @@ import type { DueFlashcard } from '@/services/study';
 
 interface UseFolderStudyActionsProps {
   activeFolder: Folder | null;
-  activeFolderDetail?: Folder | null;
+  flashcards?: VocabularyWord[];
   dueFlashcardsData?: DueFlashcard[];
   presentStudyView: (data: StudyViewData) => void;
 }
 
 export function useFolderStudyActions({
   activeFolder,
-  activeFolderDetail,
+  flashcards = [],
   dueFlashcardsData = [],
   presentStudyView,
 }: UseFolderStudyActionsProps) {
@@ -24,8 +24,8 @@ export function useFolderStudyActions({
   const tStudy = useTranslations('Vocabulary.Study');
 
   const allFlashcards: VocabularyWord[] = useMemo(
-    () => activeFolderDetail?.flashcards || [],
-    [activeFolderDetail?.flashcards],
+    () => flashcards,
+    [flashcards],
   );
 
   const dueIdSet = useMemo(() => {

@@ -147,7 +147,9 @@ export function ReviewReadinessChart({
                     <Cell
                       key={`readiness-${index}`}
                       fill={entry.fill}
-                      opacity={totalLearnedWords === 0 && dueCount === 0 ? 0.3 : 1}
+                      opacity={
+                        totalLearnedWords === 0 && dueCount === 0 ? 0.3 : 1
+                      }
                     />
                   ))}
                 </Pie>
@@ -179,7 +181,10 @@ export function ReviewReadinessChart({
                     </span>
                   </div>
                   <span className="font-bold text-foreground text-[11px]">
-                    {item.count} <span className="font-normal text-muted-foreground">({item.percent}%)</span>
+                    {item.count}{' '}
+                    <span className="font-normal text-muted-foreground">
+                      ({item.percent}%)
+                    </span>
                   </span>
                 </div>
                 <div className="w-full h-1.5 bg-muted/30 rounded-full overflow-hidden">

@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { usePortalStore } from '../../store/portal.store';
-import { Backdrop } from '../ui/backdrop';
 import { PortalInstance } from '../../types/portal.types';
+import { Backdrop } from '../ui/backdrop';
 
 export const PortalRenderer = () => {
   const { portals, onDismiss } = usePortalStore();
@@ -14,9 +14,22 @@ export const PortalRenderer = () => {
     setMounted(true);
   }, []);
 
-  if (!mounted || portals.length === 0) return null;
-
   const openPortals = portals.filter((p) => p.isOpen);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && openPortals.length > 0) {
+        const topPortal = openPortals[openPortals.length - 1];
+        if (!topPortal.disableCloseByBackdrop) {
+          onDismiss(topPortal.id);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [openPortals, onDismiss]);
+
+  if (!mounted || portals.length === 0) return null;
   if (openPortals.length === 0) return null;
 
   const lastOpenIndex = portals.reduce(

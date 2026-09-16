@@ -1,21 +1,12 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 
-import Link from 'next/link';
 import { RouteEnum } from '@/shared/constants';
+import { useSetBreadcrumb, type BreadcrumbConfigItem } from '@/shared/hooks';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import { type VocabularyWord } from '@/services/vocabulary';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  Card,
-} from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { WordDetailSheet } from './word-detail-sheet';
 
@@ -37,37 +28,22 @@ export function TopicWordsList({
   const t = useTranslations('Vocabulary.Folders');
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
 
+  useSetBreadcrumb(
+    useMemo(() => {
+      const items: BreadcrumbConfigItem[] = [
+        { label: t('title'), href: RouteEnum.VOCABULARY },
+      ];
+      if (folderName) {
+        items.push({ label: folderName, onClick: onBackToTopics });
+      }
+      items.push({ label: topicViName || topicName });
+      return items;
+    }, [t, folderName, topicViName, topicName, onBackToTopics]),
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 border-b border-border/60 pb-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={RouteEnum.VOCABULARY}>{t('title')}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            {folderName && (
-              <>
-                <BreadcrumbItem>
-                  <button
-                    type="button"
-                    onClick={onBackToTopics}
-                    className="font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-                  >
-                    {folderName}
-                  </button>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-              </>
-            )}
-            <BreadcrumbItem>
-              <BreadcrumbPage>{topicViName || topicName}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
             {topicViName || topicName}
@@ -81,7 +57,7 @@ export function TopicWordsList({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
         {flashcards.map((flashcard) => {
           const primaryDef = flashcard.definitions?.[0];
           const meaningVi =
@@ -89,7 +65,7 @@ export function TopicWordsList({
           const partOfSpeech = primaryDef?.partOfSpeech || '';
 
           return (
-            <Card
+            <div
               key={flashcard.id}
               role="button"
               tabIndex={0}
@@ -100,34 +76,29 @@ export function TopicWordsList({
                   presentWordDetail(flashcard);
                 }
               }}
-              className="flex items-center gap-3 p-3.5 rounded-2xl text-left bg-card hover:bg-muted/40 transition-colors cursor-pointer group border-none shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              className="group flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-2xl hover:bg-muted/40 active:bg-muted/60 hover:scale-[1.02] transition-all cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-primary/40 gap-2.5"
             >
-              <div className="shrink-0">
-                <MasteryFlowerBadge
-                  level={flashcard.level ?? 0}
-                  learningStep={flashcard.learningStep ?? 0}
-                  isWilted={flashcard.isWilted ?? false}
-                  size={36}
-                />
-              </div>
+              <MasteryFlowerBadge
+                level={flashcard.level ?? 0}
+                learningStep={flashcard.learningStep ?? 0}
+                isWilted={flashcard.isWilted ?? false}
+                size={50}
+              />
 
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-primary truncate group-hover:underline">
+              <div className="w-full min-w-0 px-1">
+                <p className="text-sm sm:text-base font-bold text-primary truncate group-hover:underline">
                   {flashcard.term}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-xs text-muted-foreground truncate mt-0.5">
                   {partOfSpeech && (
-                    <span className="italic mr-1">{partOfSpeech}</span>
+                    <span className="italic mr-1 font-medium">
+                      {partOfSpeech}
+                    </span>
                   )}
                   {meaningVi}
                 </p>
               </div>
-
-              <Icons
-                name="chevron-right"
-                className="h-4 w-4 text-muted-foreground/50 group-hover:text-foreground shrink-0 transition-colors"
-              />
-            </Card>
+            </div>
           );
         })}
       </div>

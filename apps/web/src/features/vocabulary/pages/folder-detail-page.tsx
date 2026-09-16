@@ -1,26 +1,30 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-import { useParams } from 'next/navigation';
-import { useState, useMemo } from 'react';
-
-import { useVocabularyFolderDetail } from '@/features/vocabulary/hooks';
+import {
+  useFolderFlashcards,
+  useFolderTopics,
+  useVocabularyFolderDetail,
+} from '@/features/vocabulary/hooks';
 import { useDueFlashcards } from '@/features/study/hooks';
 import { RouteEnum } from '@/shared/constants';
 import { useGoBack } from '@/shared/hooks';
 import { Skeleton } from '@lumen/uikit/components';
-import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
+import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
+import {
+  ConfirmDeleteFolderDialog,
+  type ConfirmDeleteFolderData,
+} from '@/features/vocabulary/components/dialogs/confirm-delete-folder-dialog';
 import {
   StudyView,
   type StudyViewData,
 } from '@/features/study/components/study-view';
 import { StudySessionMode } from '@/features/study/types/study.types';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
-import {
-  FolderTopicGrid,
-  type TopicStatItem,
-} from '../components/folder-detail/folder-topic-grid';
+import { FolderTopicGrid } from '../components/folder-detail/folder-topic-grid';
 import { TopicWordsList } from '../components/folder-detail/topic-words-list';
 
 interface FolderDetailPageProps {
@@ -31,102 +35,61 @@ export function FolderDetailPage({
   folderId: propFolderId,
 }: FolderDetailPageProps = {}) {
   const t = useTranslations('Vocabulary.Folders');
+  const router = useRouter();
   const params = useParams();
   const routeId = typeof params?.id === 'string' ? params.id : '';
   const folderId = propFolderId || routeId;
 
   const goBack = useGoBack(RouteEnum.VOCABULARY);
   const { data: folderDetail, isLoading } = useVocabularyFolderDetail(folderId);
+  const { data: topics = [], isLoading: isLoadingTopics } =
+    useFolderTopics(folderId);
   const { data: dueFlashcardsResponse } = useDueFlashcards(
     { folderId },
     { enabled: Boolean(folderId) },
   );
+
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [isViewingWords, setIsViewingWords] = useState(false);
+
+  const { data: flashcardsPage, isLoading: isLoadingFlashcards } =
+    useFolderFlashcards(folderId, selectedTopic ?? undefined, {
+      enabled: isViewingWords && Boolean(selectedTopic),
+    });
+
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
-
-  const flashcards = useMemo(
-    () => folderDetail?.flashcards || [],
-    [folderDetail?.flashcards],
+  const [presentDeleteConfirm] = usePortal<ConfirmDeleteFolderData>(
+    ConfirmDeleteFolderDialog,
   );
 
-  const dueFlashcards = useMemo(
-    () => dueFlashcardsResponse?.data || [],
-    [dueFlashcardsResponse?.data],
+  const isCustomFolder = folderDetail ? !folderDetail.isSystem : false;
+
+  const handleDeleteFolder = () => {
+    if (!folderDetail) return;
+    presentDeleteConfirm({
+      folderId: folderDetail.id,
+      folderName: folderDetail.name,
+      onSuccess: () => {
+        router.push(RouteEnum.VOCABULARY);
+      },
+    });
+  };
+
+  const dueIdSet = new Set(
+    (dueFlashcardsResponse?.data ?? []).flatMap((df) => [
+      df.flashcardId,
+      df.wordId,
+    ]),
   );
 
-  const topicStats: TopicStatItem[] = useMemo(() => {
-    if (!flashcards.length) return [];
-    const dueIdSet = new Set(
-      dueFlashcards.flatMap((df) => [df.flashcardId, df.wordId]),
-    );
-
-    const topicMap = new Map<
-      string,
-      {
-        count: number;
-        learnedCount: number;
-        dueCount: number;
-        viName: string;
-        imageUrl: string;
-      }
-    >();
-
-    flashcards.forEach((card) => {
-      const top = card.topic?.trim() || t('generalTopic');
-      const isLearned = (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 1;
-      const isDue =
-        dueIdSet.has(card.id) ||
-        Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
-        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId));
-
-      const existing = topicMap.get(top);
-      if (existing) {
-        existing.count += 1;
-        if (isLearned) existing.learnedCount += 1;
-        if (isDue) existing.dueCount += 1;
-        if (!existing.viName && card.topicVi) existing.viName = card.topicVi;
-        if (!existing.imageUrl && card.topicImageUrl)
-          existing.imageUrl = card.topicImageUrl;
-      } else {
-        topicMap.set(top, {
-          count: 1,
-          learnedCount: isLearned ? 1 : 0,
-          dueCount: isDue ? 1 : 0,
-          viName: card.topicVi || top,
-          imageUrl: card.topicImageUrl || '',
-        });
-      }
-    });
-
-    return Array.from(topicMap.entries())
-      .map(([name, data]) => ({
-        name,
-        viName: data.viName,
-        imageUrl: data.imageUrl,
-        count: data.count,
-        learnedCount: data.learnedCount,
-        dueCount: data.dueCount,
-      }))
-      .sort((leftTopic, rightTopic) =>
-        leftTopic.name.localeCompare(rightTopic.name),
-      );
-  }, [flashcards, dueFlashcards, t]);
-
-  const displayedFlashcards = useMemo(() => {
-    if (!selectedTopic) return [];
-    return flashcards.filter((card) => {
-      const top = card.topic?.trim() || t('generalTopic');
-      return top === selectedTopic;
-    });
-  }, [flashcards, selectedTopic, t]);
-
-  const selectedTopicStat = useMemo(() => {
-    if (!selectedTopic) return null;
-    return (
-      topicStats.find((topicItem) => topicItem.name === selectedTopic) || null
-    );
-  }, [topicStats, selectedTopic]);
+  const topicStats = topics.map((topicItem) => ({
+    name: topicItem.topic,
+    viName: topicItem.topicVi ?? topicItem.topic,
+    imageUrl: topicItem.topicImageUrl ?? undefined,
+    count: topicItem.count,
+    learnedCount: topicItem.learnedCount,
+    dueCount: topicItem.dueCount,
+  }));
 
   const handleTopicClick = (topicName: string) => {
     setSelectedTopic(topicName);
@@ -139,15 +102,13 @@ export function FolderDetailPage({
   };
 
   const startStudy = (topicName: string | null, mode?: StudySessionMode) => {
-    let cardsToStudy = flashcards;
-    if (topicName) {
-      cardsToStudy = flashcards.filter((card) => {
-        const top = card.topic?.trim() || t('generalTopic');
-        return top === topicName;
-      });
-    } else {
-      cardsToStudy = [...flashcards].sort(() => Math.random() - 0.5);
-    }
+    const flashcards = flashcardsPage?.data ?? [];
+    const cardsToStudy =
+      topicName && flashcards.length > 0
+        ? flashcards
+        : [...(flashcardsPage?.data ?? [])].sort(() => Math.random() - 0.5);
+
+    const selectedTopicStat = topicStats.find((ts) => ts.name === topicName);
 
     presentStudyView({
       cards: cardsToStudy,
@@ -197,24 +158,26 @@ export function FolderDetailPage({
       {!isViewingWords ? (
         <FolderTopicGrid
           folderName={folderDetail.name}
-          category={folderDetail.category}
-          description={folderDetail.description}
+          category={folderDetail.category || undefined}
+          description={folderDetail.description || undefined}
           selectedTopic={selectedTopic}
           topicStats={topicStats}
           onSelectTopic={handleTopicClick}
           onGoBack={goBack}
+          onDeleteFolder={isCustomFolder ? handleDeleteFolder : undefined}
         />
       ) : (
         <TopicWordsList
           folderName={folderDetail.name}
           topicName={selectedTopic || ''}
-          topicViName={selectedTopicStat?.viName}
-          flashcards={displayedFlashcards}
+          topicViName={
+            topicStats.find((ts) => ts.name === selectedTopic)?.viName
+          }
+          flashcards={flashcardsPage?.data ?? []}
           onBackToTopics={handleBackToTopics}
         />
       )}
 
-      {/* Floating Bottom Sticky Action Bar */}
       <StudyBottomActionBar
         onLearnNew={() =>
           startStudy(

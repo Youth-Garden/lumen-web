@@ -2,28 +2,27 @@
 
 import { useTranslations } from 'next-intl';
 
-import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
-import { CurrentLearningFolderCard } from '@/features/vocabulary/components/cards/current-learning-folder-card';
-import { FrequentlyMissedWordsCard } from '@/features/vocabulary/components/cards/frequently-missed-words-card';
-import { SpacedRepetitionCard } from '@/features/vocabulary/components/cards/spaced-repetition-card';
-import { NotificationPromptCard } from '@/features/vocabulary/components/cards/notification-prompt-card';
-import { SentencePracticeCard } from '@/features/vocabulary/components/cards/sentence-practice-card';
-import { FolderCatalogSection } from '@/features/vocabulary/components/cards/folder-catalog-section';
-import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
-import { DueWordsListView } from '@/features/vocabulary/components/folder-detail/due-words-list-view';
-import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
 import { FolderSelectionView } from '@/features/study/components/folder-selection-view';
-import { StudySessionMode } from '@/features/study/types/study.types';
 import {
   StudyView,
   type StudyViewData,
 } from '@/features/study/components/study-view';
 import { useDueFlashcards } from '@/features/study/hooks';
+import { StudySessionMode } from '@/features/study/types/study.types';
+import { CurrentLearningFolderCard } from '@/features/vocabulary/components/cards/current-learning-folder-card';
+import { FolderCatalogSection } from '@/features/vocabulary/components/cards/folder-catalog-section';
+import { FrequentlyMissedWordsCard } from '@/features/vocabulary/components/cards/frequently-missed-words-card';
+import { NotificationPromptCard } from '@/features/vocabulary/components/cards/notification-prompt-card';
+import { SentencePracticeCard } from '@/features/vocabulary/components/cards/sentence-practice-card';
+import { SpacedRepetitionCard } from '@/features/vocabulary/components/cards/spaced-repetition-card';
+import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
+import { DueWordsListView } from '@/features/vocabulary/components/folder-detail/due-words-list-view';
+import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
 import {
   useFolderStudyActions,
-  useVocabularyFolderDetail,
   useVocabularyFolders,
   useVocabularyOverview,
 } from '@/features/vocabulary/hooks';
@@ -31,10 +30,8 @@ import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
-import type { VocabularyWord } from '@/services/vocabulary';
 
 export function FolderListPage() {
-  const t = useTranslations('Vocabulary.Folders');
   const tStudy = useTranslations('Vocabulary.Study');
   const router = useRouter();
 
@@ -75,21 +72,13 @@ export function FolderListPage() {
     folderId: activeFolder?.id,
   });
 
-  const { data: activeFolderDetail } = useVocabularyFolderDetail(
-    activeFolder?.id || '',
-    {
-      enabled: Boolean(activeFolder?.id),
-    },
-  );
-
   const dueCountForActive = useMemo(() => {
     if (!dueFlashcards?.data) return 0;
-    return dueFlashcards.data.filter(
-      (card) =>
-        Boolean(card.nextReviewAt) ||
-        (card.level ?? 0) > 0 ||
-        (card.learningStep ?? 0) > 0,
-    ).length;
+    const now = Date.now();
+    return dueFlashcards.data.filter((card) => {
+      if (!card.nextReviewAt) return true;
+      return new Date(card.nextReviewAt).getTime() <= now;
+    }).length;
   }, [dueFlashcards?.data]);
 
   const handleSelectFolder = (folderId: string) => {
@@ -122,7 +111,6 @@ export function FolderListPage() {
     handleFlashcardsMissed,
   } = useFolderStudyActions({
     activeFolder,
-    activeFolderDetail,
     dueFlashcardsData: dueFlashcards?.data,
     presentStudyView,
   });
@@ -189,7 +177,7 @@ export function FolderListPage() {
 
   const enrichedFolders = useMemo(() => {
     return allFolders.map((folder) => {
-      if (folder.id === activeFolder?.id && activeFolderDetail) {
+      if (folder.id === activeFolder?.id) {
         return {
           ...folder,
           learnedCount: Math.max(folder.learnedCount ?? 0, learnedWordsCount),
@@ -198,13 +186,7 @@ export function FolderListPage() {
       }
       return folder;
     });
-  }, [
-    allFolders,
-    activeFolder?.id,
-    activeFolderDetail,
-    learnedWordsCount,
-    dueCountForActive,
-  ]);
+  }, [allFolders, activeFolder?.id, learnedWordsCount, dueCountForActive]);
 
   if (isViewingDueWords && activeFolder) {
     return (

@@ -16,7 +16,7 @@ export function ChartTooltipCard({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-border/50 bg-card p-3 shadow-md text-card-foreground text-xs min-w-[130px] space-y-1.5',
+        'rounded-2xl border border-border/50 bg-popover/95 backdrop-blur-md p-3 shadow-xl text-popover-foreground text-xs min-w-[130px] space-y-1.5 transition-all duration-150 ease-out origin-bottom pointer-events-none',
         className,
       )}
       {...props}
@@ -145,9 +145,7 @@ export function ChartTooltipContent({
     return null;
   }
 
-  const titleNode = labelFormatter
-    ? labelFormatter(label, payload)
-    : label;
+  const titleNode = labelFormatter ? labelFormatter(label, payload) : label;
 
   return (
     <ChartTooltipCard className={className}>
@@ -210,17 +208,27 @@ export type ChartTooltipProps = React.ComponentProps<typeof Tooltip>;
 export function ChartTooltip({
   cursor = { fill: 'var(--muted)', opacity: 0.15 },
   allowEscapeViewBox = { x: true, y: true },
+  isAnimationActive = true,
+  animationDuration = 150,
+  animationEasing = 'ease-out',
+  offset = 12,
   wrapperStyle,
   ...props
 }: ChartTooltipProps) {
   return (
     <Tooltip
       cursor={cursor}
+      offset={offset}
       allowEscapeViewBox={allowEscapeViewBox}
+      isAnimationActive={isAnimationActive}
+      animationDuration={animationDuration}
+      animationEasing={animationEasing}
       wrapperStyle={{
         zIndex: 100,
         pointerEvents: 'none',
         outline: 'none',
+        transform: 'translate(-50%, -100%)',
+        transformOrigin: 'bottom center',
         ...wrapperStyle,
       }}
       {...props}

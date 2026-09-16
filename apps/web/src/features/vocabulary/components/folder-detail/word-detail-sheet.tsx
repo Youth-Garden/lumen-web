@@ -80,16 +80,15 @@ export function WordDetailSheet({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        centered
-        className="rounded-t-3xl sm:rounded-3xl max-h-[92dvh] sm:max-h-[85vh] gap-0 p-0 sm:max-w-[490px] border border-border/50 shadow-2xl"
+        className="w-full max-w-lg mx-auto rounded-t-3xl max-h-[88dvh] sm:max-h-[85vh] gap-0 p-0 border-t border-border/60 shadow-2xl"
       >
-        <ScrollArea className="overflow-y-auto max-h-[92dvh] sm:max-h-[85vh]">
-          <div className="flex items-center gap-3 px-6 pt-6 pb-2">
+        <ScrollArea className="overflow-y-auto max-h-[88dvh] sm:max-h-[85vh]">
+          <div className="flex items-center gap-3.5 px-6 pt-6 pb-2">
             <MasteryFlowerBadge
               level={word?.level ?? 0}
               learningStep={word?.learningStep ?? 0}
               isWilted={word?.isWilted ?? false}
-              size={40}
+              size={48}
             />
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground font-heading">
               {word?.term ?? ''}

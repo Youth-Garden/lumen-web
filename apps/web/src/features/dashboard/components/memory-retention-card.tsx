@@ -151,9 +151,10 @@ export function MemoryRetentionCard({
                     endAngle={0}
                     innerRadius="68%"
                     outerRadius="92%"
-                    paddingAngle={3}
+                    paddingAngle={1.5}
                     dataKey="value"
-                    stroke="none"
+                    stroke="var(--card)"
+                    strokeWidth={2}
                   >
                     {chartData.map((entry, index) => (
                       <Cell

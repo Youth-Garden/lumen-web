@@ -30,7 +30,10 @@ export function StudySessionActionCard({
 }: StudySessionActionCardProps) {
   const router = useRouter();
   const safeGoal = Math.max(dailyGoalMinutes, 1);
-  const goalPercent = Math.min(100, Math.round((todayStudyMinutes / safeGoal) * 100));
+  const goalPercent = Math.min(
+    100,
+    Math.round((todayStudyMinutes / safeGoal) * 100),
+  );
 
   if (isLoading) {
     return (

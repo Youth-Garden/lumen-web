@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   JWT_ACCESS_TOKEN_KEY,
   NATIVE_LANGUAGE_STORAGE_KEY,
-  ONBOARDING_ROUTES,
   PUBLIC_ROUTES,
   RouteEnum,
 } from './shared/constants';
@@ -24,9 +23,7 @@ export default function middleware(req: NextRequest) {
     }
   }
 
-  const isOnboarding = ONBOARDING_ROUTES.some((route) =>
-    normalizedPath.startsWith(route),
-  );
+  const isOnboarding = normalizedPath === RouteEnum.WELCOME;
 
   if (!token && !nativeLanguage && !isOnboarding) {
     return NextResponse.redirect(new URL(RouteEnum.WELCOME, req.url));

@@ -14,13 +14,7 @@ import { format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useLocale, useTranslations } from 'next-intl';
 import React, { useMemo } from 'react';
-import {
-  Area,
-  AreaChart,
-  ReferenceLine,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Area, AreaChart, ReferenceLine, XAxis, YAxis } from 'recharts';
 
 import { ChartContainer } from '@/shared/components/chart/chart-container';
 import {
@@ -59,7 +53,10 @@ export function StudyGoalConsistencyChart({
     heatmapData?.forEach((item) => {
       if (item?.date) {
         const dStr = String(item.date).slice(0, 10);
-        historyMap.set(dStr, (historyMap.get(dStr) || 0) + (Number(item.count) || 0));
+        historyMap.set(
+          dStr,
+          (historyMap.get(dStr) || 0) + (Number(item.count) || 0),
+        );
       }
     });
 
@@ -151,9 +148,23 @@ export function StudyGoalConsistencyChart({
               margin={{ top: 10, right: 15, left: -20, bottom: 0 }}
             >
               <defs>
-                <linearGradient id="goalAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.0} />
+                <linearGradient
+                  id="goalAreaGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor="var(--primary)"
+                    stopOpacity={0.35}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--primary)"
+                    stopOpacity={0.0}
+                  />
                 </linearGradient>
               </defs>
               <XAxis

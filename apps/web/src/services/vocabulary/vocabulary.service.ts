@@ -6,6 +6,8 @@ import {
   CreateFlashcardPayload,
   CreateFolderPayload,
   Folder,
+  FolderFlashcardsPage,
+  FolderTopic,
   VocabularyOverview,
   VocabularyWord,
 } from './vocabulary.types';
@@ -42,9 +44,28 @@ export class VocabularyService extends CoreService {
     return this._get<Folder>(
       ApiEndpointEnum.VOCABULARY_FOLDER_DETAIL,
       undefined,
-      {
-        pathParams: { id },
-      },
+      { pathParams: { id } },
+    );
+  }
+
+  getFolderTopics(folderId: string): Promise<BaseResponse<FolderTopic[]>> {
+    return this._get<FolderTopic[]>(
+      ApiEndpointEnum.VOCABULARY_FOLDER_TOPICS,
+      undefined,
+      { pathParams: { id: folderId } },
+    );
+  }
+
+  getFolderFlashcards(
+    folderId: string,
+    topic?: string,
+    page = 1,
+    limit = 50,
+  ): Promise<BaseResponse<FolderFlashcardsPage>> {
+    return this._get<FolderFlashcardsPage>(
+      ApiEndpointEnum.VOCABULARY_FOLDER_FLASHCARDS,
+      { topic, page, limit },
+      { pathParams: { id: folderId } },
     );
   }
 
@@ -54,6 +75,16 @@ export class VocabularyService extends CoreService {
     return this._post<{ id: string }>(
       ApiEndpointEnum.VOCABULARY_FOLDERS,
       payload,
+    );
+  }
+
+  deleteFolder(id: string): Promise<BaseResponse<void>> {
+    return this._delete<void>(
+      ApiEndpointEnum.VOCABULARY_FOLDER_DETAIL,
+      undefined,
+      {
+        pathParams: { id },
+      },
     );
   }
 

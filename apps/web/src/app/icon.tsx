@@ -19,6 +19,7 @@ export default async function Icon() {
         justifyContent: 'center',
       }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         // @ts-expect-error - NextJS img
         src={logoData.buffer as ArrayBuffer}

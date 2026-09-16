@@ -132,7 +132,7 @@ export function Sidebar() {
                           ? 'justify-center px-0 w-11 mx-auto'
                           : 'justify-start',
                         isActive
-                          ? 'bg-primary/15 text-primary font-semibold'
+                          ? 'bg-primary/15 text-primary font-bold'
                           : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
                       )}
                     >
