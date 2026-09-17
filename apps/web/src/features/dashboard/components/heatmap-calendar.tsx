@@ -639,7 +639,9 @@ function HeatmapInsightsSidebar({
 
         <div className="space-y-2.5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{t('activeDaysLabel')}:</span>
+            <span className="text-muted-foreground">
+              {t('activeDaysLabel')}:
+            </span>
             <span className="font-bold text-foreground">
               {t('daysValue', { count: activeDaysCount })}
               <span className="text-muted-foreground font-normal ml-1 text-[11px]">
@@ -649,7 +651,9 @@ function HeatmapInsightsSidebar({
           </div>
 
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{t('longestStreakLabel')}:</span>
+            <span className="text-muted-foreground">
+              {t('longestStreakLabel')}:
+            </span>
             <span className="font-bold text-foreground flex items-center gap-1">
               <Icons name="award" className="h-3.5 w-3.5 text-amber-500" />
               {t('daysValue', { count: longestStreak })}

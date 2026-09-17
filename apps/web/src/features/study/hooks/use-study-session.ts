@@ -136,7 +136,7 @@ export function useStudySession({
     setFeedback(null);
     setSelectedOptionIndex(null);
     setWordProgressMap({});
-  }, [poolCards, resolvedMode, cards, globalCards, setActiveQueue, setIsFlipped]);
+  }, [poolCards, resolvedMode, cards, globalCards]);
 
   useEffect(() => {
     if (isOpen && poolCards.length > 0) initializeSession();
@@ -172,7 +172,7 @@ export function useStudySession({
         canFlipRef.current = true;
       }, 600);
     },
-    [setActiveQueue, setIsFlipped],
+    [],
   );
 
   const handleFlip = useCallback(() => {

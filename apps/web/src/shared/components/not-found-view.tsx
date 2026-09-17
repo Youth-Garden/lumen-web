@@ -35,7 +35,11 @@ export function NotFoundView() {
         </div>
 
         {/* Button */}
-        <Button onClick={() => router.push(RouteEnum.DASHBOARD)} size="lg" className="mt-4">
+        <Button
+          onClick={() => router.push(RouteEnum.DASHBOARD)}
+          size="lg"
+          className="mt-4"
+        >
           <Icons name="home" />
           {t('backHome')}
         </Button>

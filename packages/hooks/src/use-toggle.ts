@@ -4,7 +4,11 @@ import { useCallback, useState } from 'react';
 
 export function useToggle(
   initialState: boolean = false,
-): [boolean, (nextValue?: boolean | unknown) => void, (nextValue: boolean) => void] {
+): [
+  boolean,
+  (nextValue?: boolean | unknown) => void,
+  (nextValue: boolean) => void,
+] {
   const [state, setState] = useState<boolean>(initialState);
 
   const toggle = useCallback((nextValue?: boolean | unknown) => {

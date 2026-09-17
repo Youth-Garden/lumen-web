@@ -17,7 +17,9 @@ export function useQueue<T>(initialValue: T[] = []): UseQueueReturn<T> {
   const [queue, setQueue] = useState<T[]>(initialValue);
 
   const add = useCallback((element: T | T[]) => {
-    setQueue((q) => (Array.isArray(element) ? [...q, ...element] : [...q, element]));
+    setQueue((q) =>
+      Array.isArray(element) ? [...q, ...element] : [...q, element],
+    );
   }, []);
 
   const remove = useCallback(() => {

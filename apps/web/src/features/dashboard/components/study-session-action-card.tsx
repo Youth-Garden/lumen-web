@@ -102,9 +102,7 @@ export function StudySessionActionCard({
                 : t('reminderDescAllDone')}
             </p>
             <p className="text-[11px] text-muted-foreground">
-              {dueCount > 0
-                ? t('needReviewPrompt')
-                : t('allDonePrompt')}
+              {dueCount > 0 ? t('needReviewPrompt') : t('allDonePrompt')}
             </p>
           </div>
 

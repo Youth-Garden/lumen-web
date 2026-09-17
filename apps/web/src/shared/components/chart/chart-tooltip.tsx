@@ -104,12 +104,7 @@ export function ChartTooltipSeparator({
   className,
   ...props
 }: ChartTooltipSeparatorProps) {
-  return (
-    <div
-      className={cn('h-px bg-muted/40 my-1', className)}
-      {...props}
-    />
-  );
+  return <div className={cn('h-px bg-muted/40 my-1', className)} {...props} />;
 }
 
 export interface ChartTooltipContentProps {

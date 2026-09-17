@@ -72,6 +72,5 @@ export function useSetBreadcrumb(items: BreadcrumbConfigItem[]) {
     return () => {
       clearBreadcrumbs();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsKey]);
 }

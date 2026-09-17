@@ -170,7 +170,6 @@ export function Silk({
       uLightMode: { value: lightMode ? 1 : 0 },
       uTime: { value: 0 },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 

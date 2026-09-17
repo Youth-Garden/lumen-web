@@ -42,5 +42,5 @@ export function useAuthUpdater() {
     };
 
     loadProfile();
-  }, [isAuthenticated, clearAuth, setLoading, isMounted]);
+  }, [isAuthenticated]);
 }

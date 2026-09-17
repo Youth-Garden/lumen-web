@@ -5,8 +5,11 @@ import { Notification, CreateNotificationPayload } from './notification.types';
 import { registry } from './notification.registry';
 
 export class NotificationService extends CoreService {
-  getNotifications(): Promise<BaseResponse<Notification[]>> {
-    return this._get<Notification[]>(ApiEndpointEnum.NOTIFICATIONS);
+  getNotifications(params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<BaseResponse<Notification[]>> {
+    return this._get<Notification[]>(ApiEndpointEnum.NOTIFICATIONS, params);
   }
 
   markAsRead(id: string): Promise<BaseResponse<void>> {

@@ -45,11 +45,15 @@ export class ProgressService extends CoreService {
   }
 
   async getLeaderboard(
-    period?: LeaderboardPeriodEnum,
+    params?:
+      | { period?: LeaderboardPeriodEnum; limit?: number; page?: number }
+      | LeaderboardPeriodEnum,
   ): Promise<LeaderboardResponse> {
+    const queryParams =
+      typeof params === 'string' ? { period: params } : params;
     const res = await this._get<LeaderboardResponse>(
       ApiEndpointEnum.PROGRESS_LEADERBOARD,
-      { period },
+      queryParams,
     );
     return res.data;
   }
