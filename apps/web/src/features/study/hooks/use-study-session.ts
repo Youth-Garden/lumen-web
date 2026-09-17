@@ -31,6 +31,7 @@ import {
 } from '@/features/study/utils/study-session.utils';
 import { FlashcardRating, type CardWithProgress } from '@/services/study';
 import { type VocabularyWord } from '@/services/vocabulary';
+import { useQueue, useToggle } from '@lumen/hooks';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -101,9 +102,11 @@ export function useStudySession({
     [globalWordsRes],
   );
 
-  const [activeQueue, setActiveQueue] = useState<StudyQueueItem[]>([]);
+  const studyQueue = useQueue<StudyQueueItem>([]);
+  const activeQueue = studyQueue.queue;
+  const setActiveQueue = studyQueue.set;
   const [masteredIds, setMasteredIds] = useState<string[]>([]);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, toggleFlipped, setIsFlipped] = useToggle(false);
   const [feedback, setFeedback] = useState<StudyFeedbackState | null>(null);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(
     null,
@@ -116,9 +119,9 @@ export function useStudySession({
   >({});
   const canFlipRef = useRef(true);
 
-  const currentItem = activeQueue[0] || null;
+  const currentItem = studyQueue.first || null;
   const currentCard = currentItem?.card || null;
-  const isFinished = poolCards.length > 0 && activeQueue.length === 0;
+  const isFinished = poolCards.length > 0 && studyQueue.size === 0;
   const progressPercent = calculateProgressPercent(
     masteredIds.length,
     poolCards.length,
@@ -133,7 +136,7 @@ export function useStudySession({
     setFeedback(null);
     setSelectedOptionIndex(null);
     setWordProgressMap({});
-  }, [poolCards, resolvedMode, cards, globalCards]);
+  }, [poolCards, resolvedMode, cards, globalCards, setActiveQueue, setIsFlipped]);
 
   useEffect(() => {
     if (isOpen && poolCards.length > 0) initializeSession();
@@ -169,12 +172,12 @@ export function useStudySession({
         canFlipRef.current = true;
       }, 600);
     },
-    [],
+    [setActiveQueue, setIsFlipped],
   );
 
   const handleFlip = useCallback(() => {
-    if (canFlipRef.current) setIsFlipped((prev) => !prev);
-  }, []);
+    if (canFlipRef.current) toggleFlipped();
+  }, [toggleFlipped]);
 
   const mutateReviewQuietly = useCallback(
     (flashcardId: string, quality: FlashcardRating) => {

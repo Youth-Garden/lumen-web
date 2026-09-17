@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useToggle } from '@lumen/hooks';
 import { useTranslations } from 'next-intl';
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 export function SpacedRepetitionCard() {
   const t = useTranslations('Vocabulary.Folders');
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, , setDismissed] = useToggle(false);
 
   if (dismissed) return null;
 

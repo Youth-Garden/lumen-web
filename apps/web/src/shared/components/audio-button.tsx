@@ -1,9 +1,10 @@
 'use client';
 
+import { useToggle } from '@lumen/hooks';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { ComponentProps, useCallback, useState } from 'react';
+import { ComponentProps, useCallback } from 'react';
 
 export interface AudioButtonProps extends Omit<
   ComponentProps<typeof Button>,
@@ -21,7 +22,7 @@ export function AudioButton({
   onClick,
   ...props
 }: AudioButtonProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, , setIsPlaying] = useToggle(false);
 
   const handlePlay = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {

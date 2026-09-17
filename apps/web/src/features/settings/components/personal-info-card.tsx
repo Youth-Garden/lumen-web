@@ -11,7 +11,7 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useToggle } from '@lumen/hooks';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -38,7 +38,7 @@ function InfoRow({ label, value }: InfoRowProps) {
 
 export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   const t = useTranslations('Settings');
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, , setIsEditing] = useToggle(false);
   const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const form = useForm({

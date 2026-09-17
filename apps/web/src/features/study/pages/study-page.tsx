@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Icons } from '@lumen/uikit/icons';
@@ -15,6 +14,7 @@ import {
   Button,
   OpenEffect,
 } from '@lumen/uikit/components';
+import { useCounter } from '@lumen/hooks';
 import { useDueFlashcards, useReviewFlashcard } from '@/features/study/hooks';
 import { FlashcardReview } from '@/features/study/components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
@@ -32,7 +32,7 @@ export function StudyPage() {
     ? parseInt(searchParams.get('limit')!, 10)
     : undefined;
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, { increment: nextIndex }] = useCounter(0);
 
   const {
     data: dueFlashcardsResponse,
@@ -55,7 +55,7 @@ export function StudyPage() {
         flashcardId: currentFlashcard.flashcardId,
         quality: grade,
       });
-      setCurrentIndex((prev) => prev + 1);
+      nextIndex();
     } catch (error) {
       console.error('Failed to review flashcard:', error);
     }

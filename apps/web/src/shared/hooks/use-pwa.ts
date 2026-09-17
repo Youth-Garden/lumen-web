@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useToggle } from '@lumen/hooks';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -12,11 +13,11 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function usePWA() {
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [isInstalled, , setIsInstalled] = useToggle(false);
+  const [showInstallPrompt, , setShowInstallPrompt] = useToggle(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isOnline, setIsOnline] = useState(
+  const [isOnline, , setIsOnline] = useToggle(
     typeof navigator !== 'undefined' ? navigator.onLine : true,
   );
 

@@ -1,12 +1,7 @@
 'use client';
 
-import React, {
-  CSSProperties,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
+import { useMeasure } from '@lumen/hooks';
 import { cn } from '@lumen/uikit/utils';
 
 interface NeonColorsProps {
@@ -33,31 +28,9 @@ export const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
   },
   ...props
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const { offsetWidth, offsetHeight } = containerRef.current;
-        setDimensions({ width: offsetWidth, height: offsetHeight });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-
-    return () => {
-      window.removeEventListener('resize', updateDimensions);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      const { offsetWidth, offsetHeight } = containerRef.current;
-      setDimensions({ width: offsetWidth, height: offsetHeight });
-    }
-  }, [children]);
+  const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
+  const width = dimensions.width || 0;
+  const height = dimensions.height || 0;
 
   return (
     <div
@@ -68,13 +41,13 @@ export const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
           '--border-radius': `${borderRadius}px`,
           '--neon-first-color': neonColors.firstColor,
           '--neon-second-color': neonColors.secondColor,
-          '--card-width': `${dimensions.width}px`,
-          '--card-height': `${dimensions.height}px`,
+          '--card-width': `${width}px`,
+          '--card-height': `${height}px`,
           '--card-content-radius': `${borderRadius - borderSize}px`,
           '--pseudo-element-background-image': `linear-gradient(0deg, ${neonColors.firstColor}, ${neonColors.secondColor})`,
-          '--pseudo-element-width': `${dimensions.width + borderSize * 2}px`,
-          '--pseudo-element-height': `${dimensions.height + borderSize * 2}px`,
-          '--after-blur': `${dimensions.width / 3}px`,
+          '--pseudo-element-width': `${width + borderSize * 2}px`,
+          '--pseudo-element-height': `${height + borderSize * 2}px`,
+          '--after-blur': `${width / 3}px`,
         } as CSSProperties
       }
       className={cn(

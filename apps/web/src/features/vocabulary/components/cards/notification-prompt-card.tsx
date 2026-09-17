@@ -4,12 +4,12 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useState } from 'react';
+import { useToggle } from '@lumen/hooks';
 
 export function NotificationPromptCard() {
   const t = useTranslations('Vocabulary.Folders');
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [isEnabled, toggleEnabled] = useToggle(false);
+  const [isDismissed, , setIsDismissed] = useToggle(false);
 
   if (isDismissed) return null;
 
@@ -29,7 +29,7 @@ export function NotificationPromptCard() {
       <Button
         size="sm"
         variant={isEnabled ? 'ghost' : 'default'}
-        onClick={() => setIsEnabled(!isEnabled)}
+        onClick={toggleEnabled}
         className="w-full text-xs font-bold h-9 cursor-pointer"
       >
         {isEnabled ? t('notificationEnabled') : t('notificationEnableAction')}

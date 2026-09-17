@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useToggle } from '@lumen/hooks';
 
 import {
   useFolderFlashcards,
@@ -50,7 +51,7 @@ export function FolderDetailPage({
   );
 
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [isViewingWords, setIsViewingWords] = useState(false);
+  const [isViewingWords, , setIsViewingWords] = useToggle(false);
 
   const { data: flashcardsPage, isLoading: isLoadingFlashcards } =
     useFolderFlashcards(folderId, selectedTopic ?? undefined, {

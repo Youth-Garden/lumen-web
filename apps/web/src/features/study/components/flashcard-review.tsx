@@ -1,5 +1,6 @@
 'use client';
 
+import { useToggle } from '@lumen/hooks';
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
 import { DueFlashcard, FlashcardRating } from '@/services/study';
 import { AudioButton } from '@/shared/components/audio-button';
@@ -10,7 +11,7 @@ import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { FlashcardGradeButtons } from '@/features/study/components/flashcard-grade-buttons';
 import { KeyboardShortcutsDialog } from '@/features/study/components/keyboard-shortcuts-dialog';
 
@@ -36,7 +37,7 @@ export function FlashcardReview({
   isSubmitting = false,
 }: FlashcardReviewProps) {
   const t = useTranslations('Vocabulary.Study');
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, , setIsFlipped] = useToggle(false);
   const [presentShortcuts] = usePortal(KeyboardShortcutsDialog);
 
   const { data: wordDetailResponse, isLoading } = useVocabularyWordDetail(

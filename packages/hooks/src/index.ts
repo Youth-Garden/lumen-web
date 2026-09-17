@@ -4,6 +4,7 @@ export * from './use-copy-to-clipboard';
 export * from './use-debounce';
 export * from './use-idle';
 export * from './use-intersection-observer';
+export * from './use-is-mounted';
 export * from './use-list';
 export * from './use-local-storage';
 export * from './use-lock-body-scroll';

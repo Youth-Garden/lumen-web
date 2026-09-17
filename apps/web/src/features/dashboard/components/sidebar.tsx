@@ -149,7 +149,7 @@ export function Sidebar() {
                           : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
                       )}
                     >
-                      {/* Vùng chứa Icon cố định 44x44, luôn đứng yên tại X = 40px */}
+                      {/* Fixed 44x44 icon container */}
                       <div className="w-11 h-11 shrink-0 flex items-center justify-center">
                         <Icons
                           name={item.icon}

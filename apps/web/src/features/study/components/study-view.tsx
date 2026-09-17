@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 
+import { useToggle } from '@lumen/hooks';
 import { StudyChoiceMeaning } from '@/features/study/components/study-choice-meaning';
 import { StudyChoiceTerm } from '@/features/study/components/study-choice-term';
 import { StudyCompleted } from '@/features/study/components/study-completed';
@@ -48,7 +48,7 @@ export function StudyView({
   const [presentSettings] = usePortal(StudySettingsDialog);
   const [presentMastery] =
     usePortal<MasteryFlowerDialogData>(MasteryFlowerDialog);
-  const [showShortcuts, setShowShortcuts] = useState(true);
+  const [showShortcuts, toggleShortcuts] = useToggle(true);
 
   const cards = data?.cards || [];
   const selectedTopic = data?.selectedTopic || null;
@@ -133,7 +133,7 @@ export function StudyView({
           <StudyHeader
             progressPercent={progressPercent}
             showShortcuts={showShortcuts}
-            onToggleShortcuts={() => setShowShortcuts((prev) => !prev)}
+            onToggleShortcuts={toggleShortcuts}
             onSaveAndClose={() => {
               handleSaveProgress();
               onDismiss?.();

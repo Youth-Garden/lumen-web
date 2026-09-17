@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useCounter } from '@lumen/hooks';
 import { Button, Input } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
@@ -24,26 +25,27 @@ export function StudyTyping({
 }: StudyTypingProps) {
   const t = useTranslations('Vocabulary.Study');
   const [value, setValue] = useState('');
-  const [hintCount, setHintCount] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const targetTerm = item.card.term.trim();
   const maxHints = Math.floor(targetTerm.length / 2);
+  const [hintCount, { increment: incrementHint, reset: resetHint }] =
+    useCounter(0, { max: maxHints });
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const remainingHints = Math.max(0, maxHints - hintCount);
 
   useEffect(() => {
     setValue('');
-    setHintCount(0);
+    resetHint();
     const timer = setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
     return () => clearTimeout(timer);
-  }, [item.id]);
+  }, [item.id, resetHint]);
 
   const handleApplyHint = () => {
     if (hintCount < maxHints) {
       const nextCount = hintCount + 1;
-      setHintCount(nextCount);
+      incrementHint();
       setValue(targetTerm.slice(0, nextCount));
       inputRef.current?.focus();
     }

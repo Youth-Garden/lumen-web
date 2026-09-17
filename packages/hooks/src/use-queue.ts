@@ -1,9 +1,12 @@
+'use client';
+
 import { useCallback, useState } from 'react';
 
 export interface UseQueueReturn<T> {
-  add: (element: T) => void;
+  add: (element: T | T[]) => void;
   remove: () => T | undefined;
   clear: () => void;
+  set: (newQueue: T[] | ((prev: T[]) => T[])) => void;
   first: T | undefined;
   last: T | undefined;
   size: number;
@@ -13,8 +16,8 @@ export interface UseQueueReturn<T> {
 export function useQueue<T>(initialValue: T[] = []): UseQueueReturn<T> {
   const [queue, setQueue] = useState<T[]>(initialValue);
 
-  const add = useCallback((element: T) => {
-    setQueue((q) => [...q, element]);
+  const add = useCallback((element: T | T[]) => {
+    setQueue((q) => (Array.isArray(element) ? [...q, ...element] : [...q, element]));
   }, []);
 
   const remove = useCallback(() => {
@@ -36,6 +39,7 @@ export function useQueue<T>(initialValue: T[] = []): UseQueueReturn<T> {
     add,
     remove,
     clear,
+    set: setQueue,
     first: queue[0],
     last: queue[queue.length - 1],
     size: queue.length,

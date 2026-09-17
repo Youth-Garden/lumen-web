@@ -11,16 +11,16 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { formatDistanceToNow } from 'date-fns';
+import { useToggle } from '@lumen/hooks';
 import {
   useMarkAllAsRead,
   useMarkAsRead,
   useNotifications,
 } from '../hooks/use-notification';
-import { useState } from 'react';
 
 export const NotificationDropdown = () => {
   const t = useTranslations('Common');
-  const [open, setOpen] = useState(false);
+  const [open, , setOpen] = useToggle(false);
 
   const { data: notifications = [] } = useNotifications();
   const { mutate: markAsRead } = useMarkAsRead();

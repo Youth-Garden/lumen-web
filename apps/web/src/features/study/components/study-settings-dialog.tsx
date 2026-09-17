@@ -40,7 +40,6 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
         </DialogHeader>
 
         <div className="flex flex-col gap-1">
-          {/* Row 1: Bật hiệu ứng âm thanh */}
           <div className="flex items-center justify-between py-3">
             <span className="text-sm font-semibold text-foreground">
               {t('soundEffectsTitle')}

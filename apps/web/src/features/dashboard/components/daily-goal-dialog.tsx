@@ -16,6 +16,7 @@ import { PortalProps } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 import React from 'react';
+import { useToggle } from '@lumen/hooks';
 import {
   useProgressDashboard,
   useUpdateProgressSettings,
@@ -77,7 +78,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
   const updateSettings = useUpdateProgressSettings();
 
   const [selectedGoal, setSelectedGoal] = React.useState(15);
-  const [isCustom, setIsCustom] = React.useState(false);
+  const [isCustom, , setIsCustom] = useToggle(false);
   const [customMinutes, setCustomMinutes] = React.useState('20');
 
   React.useEffect(() => {

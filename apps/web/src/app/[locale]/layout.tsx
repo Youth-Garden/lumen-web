@@ -1,11 +1,9 @@
-import { DEFAULT_ROOT_METADATA } from '@/shared/constants';
 import { Providers } from '@/shared/components/providers';
-import { type Locale, routing } from '@/shared/i18n/routing';
+import { DEFAULT_ROOT_METADATA } from '@/shared/constants';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Be_Vietnam_Pro } from 'next/font/google';
-import { notFound } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 import '../globals.css';
 
@@ -25,11 +23,6 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-
-  if (!routing.locales.includes(locale as Locale)) {
-    notFound();
-  }
-
   const messages = await getMessages();
 
   return (

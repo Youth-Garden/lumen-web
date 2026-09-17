@@ -11,7 +11,9 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import React from 'react';
+import { RouteEnum } from '@/shared/constants';
 
 interface StudySessionActionCardProps {
   dueCount: number;
@@ -28,6 +30,7 @@ export function StudySessionActionCard({
   streak,
   isLoading = false,
 }: StudySessionActionCardProps) {
+  const t = useTranslations('Dashboard.Overview');
   const router = useRouter();
   const safeGoal = Math.max(dailyGoalMinutes, 1);
   const goalPercent = Math.min(
@@ -55,17 +58,17 @@ export function StudySessionActionCard({
                 <Icons name="sparkles" className="h-4 w-4" />
               </div>
               <CardTitle className="text-base font-bold font-heading text-foreground">
-                Kế hoạch hôm nay
+                {t('dailyGoal')}
               </CardTitle>
             </div>
             <CardDescription className="text-xs text-muted-foreground">
-              Duy trì chuỗi và hoàn thành mục tiêu
+              {t('learningProgress')}
             </CardDescription>
           </div>
 
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary flex items-center gap-1">
             <Icons name="flame" className="h-3 w-3 text-orange-500" />
-            {streak} ngày
+            {streak} {t('days')}
           </span>
         </div>
       </CardHeader>
@@ -74,7 +77,7 @@ export function StudySessionActionCard({
         {/* Daily Goal Progress Bar */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Mục tiêu hàng ngày</span>
+            <span className="text-muted-foreground">{t('dailyGoal')}</span>
             <span className="font-bold text-foreground">
               {todayStudyMinutes}/{dailyGoalMinutes}m{' '}
               <span className="text-muted-foreground font-normal">
@@ -94,12 +97,14 @@ export function StudySessionActionCard({
         <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border/40">
           <div className="space-y-0.5">
             <p className="text-xs font-bold text-foreground">
-              {dueCount > 0 ? `${dueCount} thẻ đến hạn` : 'Tất cả thẻ đã xong'}
+              {dueCount > 0
+                ? t('reminderDescDue', { count: dueCount })
+                : t('reminderDescAllDone')}
             </p>
             <p className="text-[11px] text-muted-foreground">
               {dueCount > 0
-                ? 'Cần củng cố trí nhớ ngắt quãng'
-                : 'Bạn đã hoàn thành tốt mục tiêu'}
+                ? t('needReviewPrompt')
+                : t('allDonePrompt')}
             </p>
           </div>
 
@@ -121,20 +126,20 @@ export function StudySessionActionCard({
         {dueCount > 0 ? (
           <Button
             variant="default"
-            onClick={() => router.push('/study')}
+            onClick={() => router.push(RouteEnum.STUDY)}
             className="w-full"
           >
             <Icons name="play" className="h-4 w-4 mr-1.5" />
-            Ôn tập ngay ({dueCount} thẻ)
+            {t('startReview', { count: dueCount })}
           </Button>
         ) : (
           <Button
             variant="outline"
-            onClick={() => router.push('/vocabulary')}
+            onClick={() => router.push(RouteEnum.VOCABULARY)}
             className="w-full"
           >
             <Icons name="book-open" className="h-4 w-4 mr-1.5" />
-            Khám phá từ mới
+            {t('exploreNewWords')}
           </Button>
         )}
       </CardContent>

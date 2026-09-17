@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { useToggle } from '@lumen/hooks';
 
 import { FolderSelectionView } from '@/features/study/components/folder-selection-view';
 import {
@@ -40,8 +41,8 @@ export function FolderListPage() {
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
-  const [isSelectingFolder, setIsSelectingFolder] = useState(false);
-  const [isViewingDueWords, setIsViewingDueWords] = useState(false);
+  const [isSelectingFolder, , setIsSelectingFolder] = useToggle(false);
+  const [isViewingDueWords, , setIsViewingDueWords] = useToggle(false);
 
   const allFolders = useMemo(() => data?.data || [], [data?.data]);
 

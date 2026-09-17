@@ -1,5 +1,5 @@
 import { NotFoundView } from '@/shared/components/not-found-view';
 
-export default function LocaleNotFound() {
+export default function DashboardNotFound() {
   return <NotFoundView />;
 }
