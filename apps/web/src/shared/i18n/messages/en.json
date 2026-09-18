@@ -770,13 +770,20 @@
     },
     "appearance": {
       "title": "Appearance & Preferences",
-      "description": "Customize theme and your native language displayed in the app.",
+      "description": "Customize application appearance and native language preferences.",
       "theme": "Theme Mode",
-      "themeDescription": "Switch between light, dark, or system preference",
+      "themeDescription": "Toggle between light, dark, or system mode",
       "language": "Language",
-      "languageDescription": "Choose the language used across the app.",
+      "languageDescription": "Choose language used across the application.",
       "nativeLanguage": "Native Language",
-      "nativeLanguageDescription": "Language used for translations and system display"
+      "nativeLanguageDescription": "Language for translations and definitions"
+    },
+    "streakFreeze": {
+      "title": "Streak Freeze Protection",
+      "description": "Protect your study streak from breaking when you miss a study day.",
+      "available": "available",
+      "dailyRewardHint": "Completing study activities each day rewards 1 streak freeze (up to 5 max).",
+      "autoProtectHint": "Automatically consumes 1 freeze to protect your streak if you miss a day."
     },
     "tabs": {
       "profile": "Profile",

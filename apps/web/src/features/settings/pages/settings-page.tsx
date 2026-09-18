@@ -22,6 +22,7 @@ import { useAuthStore } from '@/store/auth.store';
 
 import { LanguageSwitcher } from '@/shared/components/language-switcher';
 import { ProfileCard } from '../components/profile-card';
+import { StreakFreezeCard } from '../components/streak-freeze-card';
 
 export const SettingsPage = () => {
   const t = useTranslations('Settings');
@@ -106,7 +107,10 @@ export const SettingsPage = () => {
           </CardContent>
         </Card>
 
-        {/* 3. Learning Goals */}
+        {/* 3. Streak Freeze Protection */}
+        <StreakFreezeCard dashboardData={dashboardData} />
+
+        {/* 4. Learning Goals */}
         <Card>
           <CardHeader>
             <CardTitle className="text-lg font-bold">

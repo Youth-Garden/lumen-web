@@ -778,6 +778,13 @@
       "nativeLanguage": "Ngôn ngữ mẹ đẻ",
       "nativeLanguageDescription": "Ngôn ngữ dịch nghĩa và hiển thị mặc định trong ứng dụng"
     },
+    "streakFreeze": {
+      "title": "Đóng băng chuỗi (Streak Freeze)",
+      "description": "Bảo vệ chuỗi ngày học của bạn không bị mất khi lỡ quên hoặc không kịp học.",
+      "available": "lượt khả dụng",
+      "dailyRewardHint": "Mỗi ngày hoàn thành bài học, bạn sẽ nhận được 1 lượt đóng băng (tối đa 5 lượt).",
+      "autoProtectHint": "Tự động kích hoạt để bảo toàn chuỗi ngày học (Streak) nếu bạn bỏ lỡ một ngày."
+    },
     "tabs": {
       "profile": "Hồ sơ",
       "studyGoals": "Mục tiêu học tập",
