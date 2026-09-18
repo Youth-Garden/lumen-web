@@ -21,6 +21,12 @@ export const useReviewFlashcard = () => {
         queryKey: vocabularyKeys.folders(),
       });
       queryClient.invalidateQueries({
+        queryKey: vocabularyKeys.words(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: vocabularyKeys.overview(),
+      });
+      queryClient.invalidateQueries({
         queryKey: progressKeys.all,
       });
     },

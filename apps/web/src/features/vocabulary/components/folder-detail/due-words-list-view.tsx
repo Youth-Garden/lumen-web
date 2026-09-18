@@ -3,9 +3,6 @@
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
-import Link from 'next/link';
-import { RouteEnum } from '@/shared/constants';
-import { useSetBreadcrumb } from '@/shared/hooks';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import { type VocabularyWord } from '@/services/vocabulary';
 import { Button } from '@lumen/uikit/components';
@@ -14,7 +11,8 @@ import { usePortal } from '@lumen/uikit/portal';
 import { WordDetailSheet } from './word-detail-sheet';
 
 export interface DueWordsListViewProps {
-  folderName: string;
+  folderId?: string;
+  folderName?: string;
   dueCards: VocabularyWord[];
   learnedCards: VocabularyWord[];
   onBackToOverview: () => void;
@@ -25,27 +23,14 @@ export interface DueWordsListViewProps {
 type TabType = 'due' | 'learned';
 
 export function DueWordsListView({
-  folderName,
   dueCards,
   learnedCards,
-  onBackToOverview,
   onPractice,
   onFlashcards,
 }: DueWordsListViewProps) {
   const t = useTranslations('Vocabulary.Folders');
   const [activeTab, setActiveTab] = useState<TabType>('due');
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
-
-  useSetBreadcrumb(
-    useMemo(
-      () => [
-        { label: t('title'), href: RouteEnum.VOCABULARY },
-        { label: folderName, onClick: onBackToOverview },
-        { label: t('viewDueWordsTitle') },
-      ],
-      [t, folderName, onBackToOverview],
-    ),
-  );
 
   const displayedCards = useMemo(() => {
     return activeTab === 'due' ? dueCards : learnedCards;
@@ -54,20 +39,14 @@ export function DueWordsListView({
   return (
     <div className="w-full space-y-6 pb-20 animate-in fade-in-50 duration-200">
       {/* Top Navigation & Header */}
-      <div className="flex flex-col gap-3 border-b border-border/60 pb-5">
+      <div className="flex flex-col gap-3 pb-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
                 {t('viewDueWordsTitle')}
               </h1>
-              <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary">
-                {t('wordsCount', { count: displayedCards.length })}
-              </span>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              {folderName}
-            </p>
           </div>
 
           {/* Tab Filter using UIKit Button variants */}
@@ -157,16 +136,6 @@ export function DueWordsListView({
               ? t('noDueWordsDesc')
               : t('noLearnedWordsDesc')}
           </p>
-          {activeTab === 'due' && learnedCards.length > 0 && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setActiveTab('learned')}
-              className="mt-2"
-            >
-              <span>{t('tabLearnedAll')}</span>
-            </Button>
-          )}
         </div>
       )}
 

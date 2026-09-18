@@ -9,6 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  Skeleton,
 } from '@lumen/uikit/components';
 import Link from 'next/link';
 import React, { PropsWithChildren } from 'react';
@@ -28,8 +29,7 @@ function DashboardContent({ children }: PropsWithChildren) {
   const { breadcrumbs } = useBreadcrumb();
   const isVocabDashboard = pathname === '/vocabulary';
   const isLevel1Page = LEVEL_1_PATHS.has(pathname);
-
-  const showBreadcrumbs = breadcrumbs.length > 0 && !isLevel1Page;
+  const showBreadcrumbs = !isLevel1Page;
 
   return (
     <div
@@ -58,43 +58,57 @@ function DashboardContent({ children }: PropsWithChildren) {
         >
           <div className="mx-auto w-full max-w-[1600px] h-full flex flex-col flex-1 min-h-0">
             {showBreadcrumbs && (
-              <div className="pt-2 pb-6 mb-2">
+              <div className="pt-2 pb-5 mb-2 min-h-[2.25rem]">
                 <Breadcrumb>
-                  <BreadcrumbList className="gap-1 sm:gap-1.5">
-                    {breadcrumbs.map((item, index) => {
-                      const isLast = index === breadcrumbs.length - 1;
-                      return (
-                        <React.Fragment key={index}>
-                          <BreadcrumbItem>
-                            {isLast ? (
-                              <BreadcrumbPage className="px-2.5 py-1 rounded-lg text-xs font-bold text-primary bg-primary/10 select-none">
-                                {item.label}
-                              </BreadcrumbPage>
-                            ) : item.href ? (
-                              <BreadcrumbLink asChild>
-                                <Link
-                                  href={item.href}
-                                  className="px-2.5 py-1 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+                  <BreadcrumbList className="gap-0.5 sm:gap-1">
+                    {breadcrumbs.length > 0 ? (
+                      breadcrumbs.map((item, index) => {
+                        const isLast = index === breadcrumbs.length - 1;
+                        return (
+                          <React.Fragment key={index}>
+                            <BreadcrumbItem>
+                              {item.isLoading ? (
+                                <Skeleton className="h-4 w-16 sm:w-20 rounded-md" />
+                              ) : isLast ? (
+                                <BreadcrumbPage className="text-xs font-bold text-foreground select-none">
+                                  {item.label}
+                                </BreadcrumbPage>
+                              ) : item.href ? (
+                                <BreadcrumbLink asChild>
+                                  <Link
+                                    href={item.href}
+                                    className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </BreadcrumbLink>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={item.onClick}
+                                  className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                                 >
                                   {item.label}
-                                </Link>
-                              </BreadcrumbLink>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={item.onClick}
-                                className="px-2.5 py-1 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
-                              >
-                                {item.label}
-                              </button>
+                                </button>
+                              )}
+                            </BreadcrumbItem>
+                            {!isLast && (
+                              <BreadcrumbSeparator className="text-muted-foreground/40 [&>svg]:size-3 mx-0 px-0" />
                             )}
-                          </BreadcrumbItem>
-                          {!isLast && (
-                            <BreadcrumbSeparator className="text-muted-foreground/40" />
-                          )}
-                        </React.Fragment>
-                      );
-                    })}
+                          </React.Fragment>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <BreadcrumbItem>
+                          <Skeleton className="h-4 w-14 rounded-md" />
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator className="text-muted-foreground/40 [&>svg]:size-3 mx-0 px-0" />
+                        <BreadcrumbItem>
+                          <Skeleton className="h-4 w-24 rounded-md" />
+                        </BreadcrumbItem>
+                      </>
+                    )}
                   </BreadcrumbList>
                 </Breadcrumb>
               </div>

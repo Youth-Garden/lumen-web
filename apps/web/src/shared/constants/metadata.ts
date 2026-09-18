@@ -27,9 +27,21 @@ export const ROUTE_METADATA_MAP: Partial<
     title: 'Vocabulary',
     description: 'Explore folders, organize words, and master language terms.',
   },
+  [RouteEnum.VOCABULARY_DUE]: {
+    title: 'Review Due Words',
+    description: 'Review and practice words scheduled for review.',
+  },
+  [RouteEnum.FOLDER_SELECTION]: {
+    title: 'Select Folder',
+    description: 'Explore system folders or create your own.',
+  },
   [RouteEnum.FOLDER_DETAIL]: {
     title: 'Folder Details',
     description: 'Manage flashcards and practice vocabulary in this folder.',
+  },
+  [RouteEnum.FOLDER_TOPIC_DETAIL]: {
+    title: 'Topic Words',
+    description: 'Learn and review vocabulary terms in this topic.',
   },
   [RouteEnum.STUDY]: {
     title: 'Study Session',

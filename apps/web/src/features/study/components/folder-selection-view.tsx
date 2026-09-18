@@ -5,11 +5,6 @@ import { useTranslations } from 'next-intl';
 import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
   Button,
   Skeleton,
 } from '@lumen/uikit/components';
@@ -76,26 +71,6 @@ export function FolderSelectionView({
     <div className="h-full overflow-y-auto overscroll-contain pb-28 p-1 sm:p-2 max-w-[1600px] mx-auto w-full space-y-6">
       {/* 1. Top Header */}
       <div className="flex flex-col space-y-3">
-        {onBackToDashboard && (
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <button
-                  type="button"
-                  onClick={onBackToDashboard}
-                  className="font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-                >
-                  {t('title')}
-                </button>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{t('selectFolderTitle')}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        )}
-
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -125,9 +100,6 @@ export function FolderSelectionView({
             <h2 className="text-lg font-bold tracking-tight text-foreground">
               {t('myFolders')}
             </h2>
-            <span className="text-xs font-medium text-muted-foreground">
-              ({userFolders.length})
-            </span>
           </div>
         </div>
 
@@ -181,9 +153,6 @@ export function FolderSelectionView({
             <h2 className="text-lg font-bold tracking-tight text-foreground">
               {categoryName}
             </h2>
-            <span className="text-xs font-medium text-muted-foreground">
-              ({tStudy('foldersCount', { count: folderList.length })})
-            </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">

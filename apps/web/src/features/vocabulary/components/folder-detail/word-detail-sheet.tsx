@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -49,25 +50,46 @@ export function WordDetailSheet({
   const { playPronunciation } = usePronunciation();
   const { mutate: reviewFlashcard, isPending } = useReviewFlashcard();
 
+  const [localLevel, setLocalLevel] = useState<number | null>(null);
+  const [localStep, setLocalStep] = useState<number | null>(null);
+  const [localIsWilted, setLocalIsWilted] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setLocalLevel(null);
+    setLocalStep(null);
+    setLocalIsWilted(null);
+  }, [word?.id, word?.flashcardId]);
+
+  const currentLevel = localLevel !== null ? localLevel : (word?.level ?? 0);
+  const currentStep = localStep !== null ? localStep : (word?.learningStep ?? 0);
+  const currentIsWilted =
+    localIsWilted !== null ? localIsWilted : (word?.isWilted ?? false);
+
   const flashcardId = word?.flashcardId ?? word?.id ?? '';
-  const hasPassedFirstLevel = (word?.level ?? 0) >= 1;
+  const hasPassedFirstLevel = currentLevel >= 1;
 
   const handleMarkKnown = () => {
-    reviewFlashcard(
-      {
-        flashcardId,
-        quality: FlashcardRating.FAST_TRACK_KNOWN,
-        isFastTrackKnown: true,
-      },
-      { onSuccess: () => onDismiss?.() },
-    );
+    setLocalLevel(6);
+    setLocalStep(6);
+    setLocalIsWilted(false);
+
+    reviewFlashcard({
+      flashcardId,
+      quality: FlashcardRating.FAST_TRACK_KNOWN,
+      isFastTrackKnown: true,
+    });
   };
 
   const handleMarkUnknown = () => {
-    reviewFlashcard(
-      { flashcardId, quality: FlashcardRating.WRONG, isCorrect: false },
-      { onSuccess: () => onDismiss?.() },
-    );
+    setLocalLevel(0);
+    setLocalStep(0);
+    setLocalIsWilted(false);
+
+    reviewFlashcard({
+      flashcardId,
+      quality: FlashcardRating.WRONG,
+      isCorrect: false,
+    });
   };
 
   return (
@@ -85,9 +107,9 @@ export function WordDetailSheet({
         <ScrollArea className="overflow-y-auto max-h-[88dvh] sm:max-h-[85vh]">
           <div className="flex items-center gap-3.5 px-6 pt-6 pb-2">
             <MasteryFlowerBadge
-              level={word?.level ?? 0}
-              learningStep={word?.learningStep ?? 0}
-              isWilted={word?.isWilted ?? false}
+              level={currentLevel}
+              learningStep={currentStep}
+              isWilted={currentIsWilted}
               size={48}
             />
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground font-heading">

@@ -10,10 +10,10 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 interface LanguageOption {
-  code: 'vi' | 'en' | 'ja';
+  code: 'vi' | 'en';
   name: string;
   nativeName: string;
-  icon: 'flag-vn' | 'flag-us' | 'flag-jp';
+  icon: 'flag-vn' | 'flag-us';
 }
 
 const SUPPORTED_LANGUAGES: LanguageOption[] = [
@@ -29,20 +29,14 @@ const SUPPORTED_LANGUAGES: LanguageOption[] = [
     nativeName: 'English',
     icon: 'flag-us',
   },
-  {
-    code: 'ja',
-    name: 'Japanese',
-    nativeName: '日本語',
-    icon: 'flag-jp',
-  },
 ];
 
 export const WelcomeLanguagePage = () => {
-  const currentLocale = useLocale() as 'vi' | 'en' | 'ja';
+  const currentLocale = useLocale() as 'vi' | 'en';
   const t = useTranslations('Auth.Welcome');
   const router = useRouter();
 
-  const [selectedLanguage, setSelectedLanguage] = useState<'vi' | 'en' | 'ja'>(
+  const [selectedLanguage, setSelectedLanguage] = useState<'vi' | 'en'>(
     SUPPORTED_LANGUAGES.some((lang) => lang.code === currentLocale)
       ? currentLocale
       : 'vi',
@@ -52,14 +46,14 @@ export const WelcomeLanguagePage = () => {
     if (typeof window !== 'undefined') {
       const stored = (localStorage.getItem(NATIVE_LANGUAGE_STORAGE_KEY) ||
         cookieHelper.get(NATIVE_LANGUAGE_STORAGE_KEY)) as
-        'vi' | 'en' | 'ja' | null;
+        'vi' | 'en' | null;
       if (stored && SUPPORTED_LANGUAGES.some((lang) => lang.code === stored)) {
         setSelectedLanguage(stored);
       }
     }
   }, []);
 
-  const handleSelect = (code: 'vi' | 'en' | 'ja') => {
+  const handleSelect = (code: 'vi' | 'en') => {
     setSelectedLanguage(code);
   };
 

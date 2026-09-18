@@ -192,7 +192,7 @@ export function PlantMasteryRing({
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={`${clampedLevel > 0 ? clampedLevel : Math.min(5, learningStep)}-${learningStep}-${isWilted ? 'wilted' : 'healthy'}`}
+              key={`${clampedLevel}-${learningStep}-${isWilted ? 'wilted' : 'healthy'}`}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{
@@ -211,7 +211,7 @@ export function PlantMasteryRing({
               <Icons
                 name="plant-growth"
                 stage={
-                  clampedLevel > 0 ? clampedLevel : Math.min(5, learningStep)
+                  clampedLevel >= 1 ? 5 : Math.min(5, learningStep)
                 }
                 isWilted={isWilted}
                 className="w-full h-full"

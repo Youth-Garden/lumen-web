@@ -1,9 +1,8 @@
-'use client';
-
 import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { cn } from '@lumen/uikit/utils';
 import { SegmentedMasteryGauge } from './segmented-mastery-gauge';
 
 interface MasteryOverviewCardProps {
@@ -81,7 +80,26 @@ export function MasteryOverviewCard({
   return (
     <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-3">
       {/* Header using Lumen primary */}
-      <div className="flex items-center justify-between">
+      <div
+        role={onViewDueWords ? 'button' : undefined}
+        tabIndex={onViewDueWords ? 0 : undefined}
+        onClick={onViewDueWords}
+        onKeyDown={
+          onViewDueWords
+            ? (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onViewDueWords();
+                }
+              }
+            : undefined
+        }
+        className={cn(
+          'flex items-center justify-between',
+          onViewDueWords &&
+            'cursor-pointer group hover:opacity-80 transition-opacity select-none'
+        )}
+      >
         <div className="flex items-center gap-2">
           <span className="text-2xl font-black text-primary">
             {learnedWords}
@@ -91,16 +109,13 @@ export function MasteryOverviewCard({
           </span>
         </div>
         {onViewDueWords ? (
-          <Button
-            type="button"
-            variant="text"
-            size="icon-sm"
-            onClick={onViewDueWords}
+          <div
+            className="p-1 rounded-full text-muted-foreground group-hover:text-foreground transition-colors"
             aria-label={t('viewDueWordsHint')}
             title={t('viewDueWordsHint')}
           >
             <Icons name="chevron-right" className="h-4 w-4" />
-          </Button>
+          </div>
         ) : (
           <Icons
             name="chevron-right"
@@ -117,6 +132,7 @@ export function MasteryOverviewCard({
             level={stage.level}
             count={stage.count}
             label={stage.label}
+            onClick={onViewDueWords}
           />
         ))}
       </div>

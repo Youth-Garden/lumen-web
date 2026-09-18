@@ -29,19 +29,65 @@ export const wordMapper = (raw: any): VocabularyWord => ({
   flashcardId: raw.flashcardId || raw.id,
   wordId: raw.wordId,
   definitions: Array.isArray(raw.definitions)
-    ? raw.definitions.map((def: any) => ({
-        id: def.id || '',
-        partOfSpeech: def.partOfSpeech || '',
-        definitionEn: def.definitionEn || '',
-        translationVi: def.translationVi || '',
-        examples: Array.isArray(def.examples)
-          ? def.examples.map((ex: any) => ({
-              id: ex.id || '',
-              sentenceEn: ex.sentenceEn || '',
-              translationVi: ex.translationVi || '',
-            }))
-          : [],
-      }))
+    ? raw.definitions.map((def: any) => {
+        const defEn =
+          (typeof def.definition === 'object' && def.definition !== null
+            ? def.definition.en
+            : typeof def.definition === 'string'
+              ? def.definition
+              : '') ||
+          def.definitionEn ||
+          '';
+
+        const transVi =
+          (typeof def.definition === 'object' && def.definition !== null
+            ? def.definition.vi
+            : typeof def.translation === 'object' && def.translation !== null
+              ? def.translation.vi
+              : typeof def.translation === 'string'
+                ? def.translation
+                : '') ||
+          def.translationVi ||
+          '';
+
+        const examples = Array.isArray(def.examples)
+          ? def.examples.map((ex: any) => {
+              const sentEn =
+                (typeof ex.sentence === 'object' && ex.sentence !== null
+                  ? ex.sentence.en
+                  : typeof ex.sentence === 'string'
+                    ? ex.sentence
+                    : '') ||
+                ex.sentenceEn ||
+                '';
+
+              const sentVi =
+                (typeof ex.sentence === 'object' && ex.sentence !== null
+                  ? ex.sentence.vi
+                  : typeof ex.translation === 'object' && ex.translation !== null
+                    ? ex.translation.vi
+                    : typeof ex.translation === 'string'
+                      ? ex.translation
+                      : '') ||
+                ex.translationVi ||
+                '';
+
+              return {
+                id: ex.id || '',
+                sentenceEn: sentEn,
+                translationVi: sentVi,
+              };
+            })
+          : [];
+
+        return {
+          id: def.id || '',
+          partOfSpeech: def.partOfSpeech || '',
+          definitionEn: defEn,
+          translationVi: transVi,
+          examples,
+        };
+      })
     : [],
 });
 
@@ -50,15 +96,16 @@ export const folderMapper = (folder: any): Folder => ({
   name: folder.name || '',
   description: folder.description,
   category: folder.category,
-  isSystem: folder.isSystem !== false,
+  isSystem: Boolean(folder.isSystem),
   flashcardCount: folder.flashcardCount || 0,
   learnedCount: folder.learnedCount || 0,
   dueCount: folder.dueCount || 0,
 });
 
 export const folderListMapper = (raw: any): Folder[] => {
-  if (!Array.isArray(raw)) return [];
-  return raw.map(folderMapper);
+  if (Array.isArray(raw)) return raw.map(folderMapper);
+  if (raw && typeof raw === 'object') return [folderMapper(raw)];
+  return [];
 };
 
 export const folderTopicMapper = (raw: any): FolderTopic => ({

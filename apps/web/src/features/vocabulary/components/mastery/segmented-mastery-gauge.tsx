@@ -1,21 +1,40 @@
-'use client';
-
 import React from 'react';
+import { cn } from '@lumen/uikit/utils';
 import { PlantMasteryRing } from './plant-mastery-ring';
 
 interface SegmentedMasteryGaugeProps {
   level: number; // 1 to 5
   count: number;
   label: string;
+  onClick?: () => void;
 }
 
 export function SegmentedMasteryGauge({
   level,
   count,
   label,
+  onClick,
 }: SegmentedMasteryGaugeProps) {
   return (
-    <div className="flex flex-col items-center space-y-1">
+    <div
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      className={cn(
+        'flex flex-col items-center space-y-1',
+        onClick && 'cursor-pointer hover:opacity-80 transition-all active:scale-95'
+      )}
+    >
       <PlantMasteryRing level={level} size={44} showInnerIcon={false}>
         <span className="font-black text-sm text-foreground select-none">
           {count}
@@ -28,3 +47,4 @@ export function SegmentedMasteryGauge({
     </div>
   );
 }
+

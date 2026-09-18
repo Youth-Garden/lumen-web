@@ -3,57 +3,37 @@
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
-import { RouteEnum } from '@/shared/constants';
-import { useSetBreadcrumb, type BreadcrumbConfigItem } from '@/shared/hooks';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import { type VocabularyWord } from '@/services/vocabulary';
 import { usePortal } from '@lumen/uikit/portal';
 import { WordDetailSheet } from './word-detail-sheet';
 
 export interface TopicWordsListProps {
+  folderId?: string;
   folderName?: string;
   topicName: string;
   topicViName?: string;
   flashcards: VocabularyWord[];
-  onBackToTopics: () => void;
+  onBackToTopics?: () => void;
 }
 
 export function TopicWordsList({
+  folderId,
   folderName,
   topicName,
   topicViName,
   flashcards,
   onBackToTopics,
 }: TopicWordsListProps) {
-  const t = useTranslations('Vocabulary.Folders');
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
-
-  useSetBreadcrumb(
-    useMemo(() => {
-      const items: BreadcrumbConfigItem[] = [
-        { label: t('title'), href: RouteEnum.VOCABULARY },
-      ];
-      if (folderName) {
-        items.push({ label: folderName, onClick: onBackToTopics });
-      }
-      items.push({ label: topicViName || topicName });
-      return items;
-    }, [t, folderName, topicViName, topicName, onBackToTopics]),
-  );
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 border-b border-border/60 pb-4">
+      <div className="flex flex-col gap-3 pb-2">
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
             {topicViName || topicName}
           </h1>
-          <span className="text-sm font-semibold text-muted-foreground">
-            ({topicName})
-          </span>
-          <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary">
-            {t('wordsCount', { count: flashcards.length })}
-          </span>
         </div>
       </div>
 

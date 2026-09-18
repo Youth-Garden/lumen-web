@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 
-import Image from 'next/image';
 import type { Folder } from '@/services/vocabulary';
 import { Icons } from '@lumen/uikit/icons';
+import Image from 'next/image';
 
 export const FOLDER_COVERS: Record<string, string> = {
   '84f92475-bee4-41ff-8372-c50593e46920':

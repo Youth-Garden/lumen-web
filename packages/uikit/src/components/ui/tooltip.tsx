@@ -26,7 +26,8 @@ function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
 }
 
 export interface TooltipContentProps
-  extends TooltipPrimitive.Popup.Props,
+  extends
+    TooltipPrimitive.Popup.Props,
     Pick<
       TooltipPrimitive.Positioner.Props,
       'align' | 'alignOffset' | 'side' | 'sideOffset'
@@ -38,7 +39,7 @@ export interface TooltipContentProps
 function TooltipContent({
   className,
   side = 'top',
-  sideOffset = 4,
+  sideOffset = 8,
   align = 'center',
   alignOffset = 0,
   variant = 'default',
@@ -60,7 +61,7 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            'z-50 origin-(--transform-origin) transition-all duration-150 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
+            'relative z-50 origin-(--transform-origin) transition-all duration-150 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
             !isCard &&
               'inline-flex w-fit max-w-xs items-center gap-1.5 rounded-lg bg-foreground px-2.5 py-1.5 text-xs text-background drop-shadow-md has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm',
             isCard &&
@@ -72,13 +73,14 @@ function TooltipContent({
           {children}
           <TooltipPrimitive.Arrow
             className={cn(
-              'z-50 size-2 rotate-45 rounded-[0.5px] pointer-events-none',
-              'data-[side=top]:bottom-0 data-[side=top]:translate-y-1/2',
-              'data-[side=bottom]:top-0 data-[side=bottom]:-translate-y-1/2',
-              'data-[side=left]:right-0 data-[side=left]:translate-x-1/2',
-              'data-[side=right]:left-0 data-[side=right]:-translate-x-1/2',
-              !isCard && 'bg-foreground fill-foreground',
-              isCard && 'size-2.5 bg-popover fill-popover',
+              'pointer-events-none relative block h-1.5 w-3 overflow-clip',
+              'data-[side=bottom]:top-[-6px]',
+              'data-[side=left]:right-[-9px] data-[side=left]:rotate-90',
+              'data-[side=right]:left-[-9px] data-[side=right]:-rotate-90',
+              'data-[side=top]:bottom-[-6px] data-[side=top]:rotate-180',
+              "before:absolute before:bottom-0 before:left-1/2 before:h-[calc(6px*1.4142)] before:w-[calc(6px*1.4142)] before:content-[''] before:[transform:translate(-50%,50%)_rotate(45deg)]",
+              !isCard && 'before:bg-foreground',
+              isCard && 'before:bg-popover',
               arrowClassName,
             )}
           />
@@ -89,3 +91,4 @@ function TooltipContent({
 }
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+

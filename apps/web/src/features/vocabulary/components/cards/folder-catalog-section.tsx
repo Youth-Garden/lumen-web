@@ -2,10 +2,10 @@
 
 import { useTranslations } from 'next-intl';
 
-import { useMemo } from 'react';
-import { Icons } from '@lumen/uikit/icons';
-import { Button, Skeleton } from '@lumen/uikit/components';
 import type { Folder } from '@/services/vocabulary';
+import { Button, Skeleton } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { useMemo } from 'react';
 import { FolderCard } from './folder-card';
 
 interface FolderCatalogSectionProps {

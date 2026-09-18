@@ -10,15 +10,21 @@ export interface ChartTooltipCardProps extends React.HTMLAttributes<HTMLDivEleme
 
 export function ChartTooltipCard({
   className,
+  style,
   children,
   ...props
 }: ChartTooltipCardProps) {
   return (
     <div
       className={cn(
-        'rounded-2xl border-none bg-popover/95 backdrop-blur-md p-3 shadow-xl shadow-black/10 dark:shadow-black/40 text-popover-foreground text-xs min-w-[130px] space-y-1.5 transition-all duration-150 ease-out origin-bottom pointer-events-none',
+        'rounded-2xl border-none bg-popover/95 backdrop-blur-xl p-3 text-popover-foreground text-xs min-w-[130px] space-y-1.5 transition-all duration-150 ease-out origin-bottom pointer-events-none',
         className,
       )}
+      style={{
+        boxShadow:
+          '0 14px 36px -4px rgba(0, 0, 0, 0.16), 0 6px 16px -2px rgba(0, 0, 0, 0.08)',
+        ...style,
+      }}
       {...props}
     >
       {children}

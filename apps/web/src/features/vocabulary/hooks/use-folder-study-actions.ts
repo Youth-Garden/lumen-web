@@ -29,14 +29,18 @@ export function useFolderStudyActions({
   );
 
   const dueIdSet = useMemo(() => {
+    const now = Date.now();
     return new Set(
       dueFlashcardsData
-        .filter(
-          (card) =>
-            Boolean(card.nextReviewAt) ||
-            (card.level ?? 0) > 0 ||
-            (card.learningStep ?? 0) > 0,
-        )
+        .filter((card) => {
+          const isPastDue =
+            Boolean(card.nextReviewAt) &&
+            new Date(card.nextReviewAt as string).getTime() <= now;
+          return (
+            (isPastDue || Boolean(card.isWilted)) &&
+            ((card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5)
+          );
+        })
         .flatMap((dueFlashcard) => [
           dueFlashcard.wordId,
           dueFlashcard.flashcardId,
@@ -44,23 +48,32 @@ export function useFolderStudyActions({
     );
   }, [dueFlashcardsData]);
 
-  const dueCardsList: VocabularyWord[] = useMemo(() => {
-    return allFlashcards.filter(
-      (card) =>
+  const enrichedFlashcards = useMemo(() => {
+    return allFlashcards.map((card) => {
+      const isDue =
         dueIdSet.has(card.id) ||
         Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
-        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)),
-    );
+        Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)) ||
+        Boolean(card.isWilted);
+
+      return isDue ? { ...card, isWilted: true } : card;
+    });
   }, [allFlashcards, dueIdSet]);
 
-  const learnedCardsList: VocabularyWord[] = useMemo(() => {
-    return allFlashcards.filter(
+  const dueCardsList: VocabularyWord[] = useMemo(() => {
+    return enrichedFlashcards.filter(
       (card) =>
-        (card.level ?? 0) > 0 ||
-        (card.learningStep ?? 0) > 0 ||
-        (card.masteryScore ?? 0) > 0,
+        ((card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5) &&
+        Boolean(card.isWilted),
     );
-  }, [allFlashcards]);
+  }, [enrichedFlashcards]);
+
+  const learnedCardsList: VocabularyWord[] = useMemo(() => {
+    return enrichedFlashcards.filter(
+      (card) =>
+        (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5,
+    );
+  }, [enrichedFlashcards]);
 
   const uniqueFlashcards: VocabularyWord[] = useMemo(() => {
     const seen = new Set<string>();
@@ -83,39 +96,44 @@ export function useFolderStudyActions({
   }, [uniqueFlashcards]);
 
   const handlePractice = () => {
-    if (!activeFolder) return;
     const cardsToStudy = dueCardsList.length > 0 ? dueCardsList : allFlashcards;
     if (!cardsToStudy.length) return;
     presentStudyView({
       cards: cardsToStudy,
-      folderName: `${activeFolder.name} - ${tStudy('practice')}`,
+      folderName: activeFolder
+        ? `${activeFolder.name} - ${tStudy('practice')}`
+        : tStudy('practice'),
       isReviewMode: dueCardsList.length > 0,
       mode: StudySessionMode.PRACTICE,
     });
   };
 
   const handleLearnNew = () => {
-    if (!activeFolder) return;
-    const cardsToStudy =
-      allFlashcards.filter(
-        (card) =>
-          (card.level ?? 0) === 0 &&
-          (card.learningStep ?? 0) === 0 &&
-          (card.masteryScore ?? 0) === 0,
-      ) || allFlashcards;
+    const unlearned = allFlashcards.filter(
+      (card) =>
+        (card.level ?? 0) === 0 &&
+        (card.learningStep ?? 0) === 0 &&
+        (card.masteryScore ?? 0) === 0,
+    );
+    const cardsToStudy = unlearned.length > 0 ? unlearned : allFlashcards;
+    if (!cardsToStudy.length) return;
 
     presentStudyView({
-      cards: cardsToStudy.length > 0 ? cardsToStudy : allFlashcards,
-      folderName: `${activeFolder.name} - ${tStudy('learnNew')}`,
+      cards: cardsToStudy,
+      folderName: activeFolder
+        ? `${activeFolder.name} - ${tStudy('learnNew')}`
+        : tStudy('learnNew'),
       mode: StudySessionMode.PRACTICE,
     });
   };
 
   const handleFlashcards = () => {
-    if (!activeFolder || !allFlashcards.length) return;
+    if (!allFlashcards.length) return;
     presentStudyView({
       cards: allFlashcards,
-      folderName: `${activeFolder.name} - ${tStudy('flashcards')}`,
+      folderName: activeFolder
+        ? `${activeFolder.name} - ${tStudy('flashcards')}`
+        : tStudy('flashcards'),
       mode: StudySessionMode.FLASHCARD,
     });
   };

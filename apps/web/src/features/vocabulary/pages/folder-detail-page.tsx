@@ -2,17 +2,17 @@
 
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useToggle } from '@lumen/hooks';
+
+import { useMemo } from 'react';
 
 import {
   useFolderFlashcards,
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
-import { useDueFlashcards } from '@/features/study/hooks';
 import { RouteEnum } from '@/shared/constants';
-import { useGoBack } from '@/shared/hooks';
+import { useGoBack, useSetBreadcrumb } from '@/shared/hooks';
+import { formatUrl } from '@lumen/shared-api';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import {
@@ -26,7 +26,6 @@ import {
 import { StudySessionMode } from '@/features/study/types/study.types';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
 import { FolderTopicGrid } from '../components/folder-detail/folder-topic-grid';
-import { TopicWordsList } from '../components/folder-detail/topic-words-list';
 
 interface FolderDetailPageProps {
   folderId?: string;
@@ -45,18 +44,23 @@ export function FolderDetailPage({
   const { data: folderDetail, isLoading } = useVocabularyFolderDetail(folderId);
   const { data: topics = [], isLoading: isLoadingTopics } =
     useFolderTopics(folderId);
-  const { data: dueFlashcardsResponse } = useDueFlashcards(
-    { folderId },
-    { enabled: Boolean(folderId) },
+
+  useSetBreadcrumb(
+    useMemo(
+      () => [
+        { label: t('title'), href: RouteEnum.VOCABULARY },
+        {
+          label: folderDetail?.name || '',
+          isLoading: isLoading && !folderDetail,
+        },
+      ],
+      [t, folderDetail, isLoading],
+    ),
   );
 
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [isViewingWords, , setIsViewingWords] = useToggle(false);
-
-  const { data: flashcardsPage, isLoading: isLoadingFlashcards } =
-    useFolderFlashcards(folderId, selectedTopic ?? undefined, {
-      enabled: isViewingWords && Boolean(selectedTopic),
-    });
+  const { data: allFlashcardsPage } = useFolderFlashcards(folderId, undefined, {
+    enabled: Boolean(folderId),
+  });
 
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
   const [presentDeleteConfirm] = usePortal<ConfirmDeleteFolderData>(
@@ -76,13 +80,6 @@ export function FolderDetailPage({
     });
   };
 
-  const dueIdSet = new Set(
-    (dueFlashcardsResponse?.data ?? []).flatMap((df) => [
-      df.flashcardId,
-      df.wordId,
-    ]),
-  );
-
   const topicStats = topics.map((topicItem) => ({
     name: topicItem.topic,
     viName: topicItem.topicVi ?? topicItem.topic,
@@ -93,35 +90,26 @@ export function FolderDetailPage({
   }));
 
   const handleTopicClick = (topicName: string) => {
-    setSelectedTopic(topicName);
-    setIsViewingWords(true);
+    router.push(
+      formatUrl(RouteEnum.FOLDER_TOPIC_DETAIL, {
+        id: folderId,
+        topic: encodeURIComponent(topicName),
+      }),
+    );
   };
 
-  const handleBackToTopics = () => {
-    setIsViewingWords(false);
-    setSelectedTopic(null);
-  };
-
-  const startStudy = (topicName: string | null, mode?: StudySessionMode) => {
-    const flashcards = flashcardsPage?.data ?? [];
-    const cardsToStudy =
-      topicName && flashcards.length > 0
-        ? flashcards
-        : [...(flashcardsPage?.data ?? [])].sort(() => Math.random() - 0.5);
-
-    const selectedTopicStat = topicStats.find((ts) => ts.name === topicName);
+  const startStudy = (mode?: StudySessionMode) => {
+    const flashcards = allFlashcardsPage?.data ?? [];
+    if (!flashcards.length) return;
 
     presentStudyView({
-      cards: cardsToStudy,
-      selectedTopic: topicName,
+      cards: [...flashcards].sort(() => Math.random() - 0.5),
       mode,
-      folderName: topicName
-        ? `${selectedTopicStat?.viName || topicName} (${topicName})`
-        : folderDetail?.name || t('defaultFolderDescription'),
+      folderName: folderDetail?.name || t('defaultFolderDescription'),
     });
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingTopics) {
     return (
       <div className="container max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8">
         <Skeleton className="h-6 w-36 rounded-lg" />
@@ -156,49 +144,24 @@ export function FolderDetailPage({
 
   return (
     <div className="w-full py-2 pb-36">
-      {!isViewingWords ? (
-        <FolderTopicGrid
-          folderName={folderDetail.name}
-          category={folderDetail.category || undefined}
-          description={folderDetail.description || undefined}
-          selectedTopic={selectedTopic}
-          topicStats={topicStats}
-          onSelectTopic={handleTopicClick}
-          onGoBack={goBack}
-          onDeleteFolder={isCustomFolder ? handleDeleteFolder : undefined}
-        />
-      ) : (
-        <TopicWordsList
-          folderName={folderDetail.name}
-          topicName={selectedTopic || ''}
-          topicViName={
-            topicStats.find((ts) => ts.name === selectedTopic)?.viName
-          }
-          flashcards={flashcardsPage?.data ?? []}
-          onBackToTopics={handleBackToTopics}
+      <FolderTopicGrid
+        folderName={folderDetail.name}
+        category={folderDetail.category || undefined}
+        description={folderDetail.description || undefined}
+        selectedTopic={null}
+        topicStats={topicStats}
+        onSelectTopic={handleTopicClick}
+        onGoBack={goBack}
+        onDeleteFolder={isCustomFolder ? handleDeleteFolder : undefined}
+      />
+
+      {Boolean(allFlashcardsPage?.data?.length) && (
+        <StudyBottomActionBar
+          onLearnNew={() => startStudy(StudySessionMode.LEARN_NEW)}
+          onPractice={() => startStudy(StudySessionMode.PRACTICE)}
+          onFlashcard={() => startStudy(StudySessionMode.FLASHCARD)}
         />
       )}
-
-      <StudyBottomActionBar
-        onLearnNew={() =>
-          startStudy(
-            isViewingWords ? selectedTopic : null,
-            StudySessionMode.LEARN_NEW,
-          )
-        }
-        onPractice={() =>
-          startStudy(
-            isViewingWords ? selectedTopic : null,
-            StudySessionMode.PRACTICE,
-          )
-        }
-        onFlashcard={() =>
-          startStudy(
-            isViewingWords ? selectedTopic : null,
-            StudySessionMode.FLASHCARD,
-          )
-        }
-      />
     </div>
   );
 }

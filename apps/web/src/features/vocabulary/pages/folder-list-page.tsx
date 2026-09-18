@@ -4,15 +4,12 @@ import { useTranslations } from 'next-intl';
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { useToggle } from '@lumen/hooks';
 
-import { FolderSelectionView } from '@/features/study/components/folder-selection-view';
 import {
   StudyView,
   type StudyViewData,
 } from '@/features/study/components/study-view';
 import { useDueFlashcards } from '@/features/study/hooks';
-import { StudySessionMode } from '@/features/study/types/study.types';
 import { CurrentLearningFolderCard } from '@/features/vocabulary/components/cards/current-learning-folder-card';
 import { FolderCatalogSection } from '@/features/vocabulary/components/cards/folder-catalog-section';
 import { FrequentlyMissedWordsCard } from '@/features/vocabulary/components/cards/frequently-missed-words-card';
@@ -20,17 +17,22 @@ import { NotificationPromptCard } from '@/features/vocabulary/components/cards/n
 import { SentencePracticeCard } from '@/features/vocabulary/components/cards/sentence-practice-card';
 import { SpacedRepetitionCard } from '@/features/vocabulary/components/cards/spaced-repetition-card';
 import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
-import { DueWordsListView } from '@/features/vocabulary/components/folder-detail/due-words-list-view';
 import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
 import {
   useFolderStudyActions,
   useVocabularyFolders,
   useVocabularyOverview,
 } from '@/features/vocabulary/hooks';
+import {
+  vocabularyKeys,
+  vocabularyService,
+  type VocabularyWord,
+} from '@/services/vocabulary';
 import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
+import { useQueries } from '@tanstack/react-query';
 
 export function FolderListPage() {
   const tStudy = useTranslations('Vocabulary.Study');
@@ -41,8 +43,6 @@ export function FolderListPage() {
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
-  const [isSelectingFolder, , setIsSelectingFolder] = useToggle(false);
-  const [isViewingDueWords, , setIsViewingDueWords] = useToggle(false);
 
   const allFolders = useMemo(() => data?.data || [], [data?.data]);
 
@@ -70,25 +70,40 @@ export function FolderListPage() {
   );
 
   const { data: dueFlashcards } = useDueFlashcards({
-    folderId: activeFolder?.id,
+    limit: 500,
   });
 
-  const dueCountForActive = useMemo(() => {
-    if (!dueFlashcards?.data) return 0;
-    const now = Date.now();
-    return dueFlashcards.data.filter((card) => {
-      if (!card.nextReviewAt) return true;
-      return new Date(card.nextReviewAt).getTime() <= now;
-    }).length;
-  }, [dueFlashcards?.data]);
+  const folderQueries = useQueries({
+    queries: allFolders.map((folder) => ({
+      queryKey: vocabularyKeys.folderFlashcards(folder.id),
+      queryFn: () =>
+        vocabularyService
+          .getFolderFlashcards(folder.id, undefined, 1, 500)
+          .then((res) => res.data),
+      enabled: Boolean(folder.id),
+    })),
+  });
+
+  const allFlashcards = useMemo(() => {
+    const list: VocabularyWord[] = [];
+    const seen = new Set<string>();
+    for (const q of folderQueries) {
+      const cards = q.data?.data || [];
+      for (const card of cards) {
+        if (!seen.has(card.id)) {
+          seen.add(card.id);
+          list.push(card);
+        }
+      }
+    }
+    return list;
+  }, [folderQueries]);
 
   const handleSelectFolder = (folderId: string) => {
     setSelectedFolderId(folderId);
     if (typeof window !== 'undefined') {
       localStorage.setItem('lumen_selected_folder_id', folderId);
     }
-    setIsSelectingFolder(false);
-    setIsViewingDueWords(false);
   };
 
   const handleViewFolder = (folderId?: string) => {
@@ -101,7 +116,6 @@ export function FolderListPage() {
   const overviewData = overviewRes?.data;
 
   const {
-    allFlashcards,
     dueCardsList,
     learnedCardsList,
     frequentlyMissedCards,
@@ -112,34 +126,15 @@ export function FolderListPage() {
     handleFlashcardsMissed,
   } = useFolderStudyActions({
     activeFolder,
+    flashcards: allFlashcards,
     dueFlashcardsData: dueFlashcards?.data,
     presentStudyView,
   });
 
+  const dueCountForActive = dueCardsList.length;
   const totalWordsCount = activeFolder?.flashcardCount || 0;
 
   const { learnedWordsCount, stages } = useMemo(() => {
-    if (!allFlashcards.length) {
-      return {
-        learnedWordsCount:
-          activeFolder?.learnedCount ?? overviewData?.totalLearnedWords ?? 0,
-        stages: overviewData?.memoryLevels || [
-          { level: 1, count: 0 },
-          { level: 2, count: 0 },
-          { level: 3, count: 0 },
-          { level: 4, count: 0 },
-          { level: 5, count: 0 },
-        ],
-      };
-    }
-
-    const learned = allFlashcards.filter(
-      (card) =>
-        (card.level ?? 0) > 0 ||
-        (card.learningStep ?? 0) > 0 ||
-        (card.masteryScore ?? 0) > 0,
-    );
-
     const stage1Count = allFlashcards.filter(
       (card) => (card.level ?? 0) === 1,
     ).length;
@@ -157,10 +152,7 @@ export function FolderListPage() {
     ).length;
 
     return {
-      learnedWordsCount: Math.max(
-        learned.length,
-        activeFolder?.learnedCount ?? 0,
-      ),
+      learnedWordsCount: learnedCardsList.length,
       stages: [
         { level: 1, count: stage1Count },
         { level: 2, count: stage2Count },
@@ -169,12 +161,7 @@ export function FolderListPage() {
         { level: 5, count: stage5Count },
       ],
     };
-  }, [
-    allFlashcards,
-    activeFolder?.learnedCount,
-    overviewData?.totalLearnedWords,
-    overviewData?.memoryLevels,
-  ]);
+  }, [allFlashcards, learnedCardsList.length]);
 
   const enrichedFolders = useMemo(() => {
     return allFolders.map((folder) => {
@@ -189,47 +176,6 @@ export function FolderListPage() {
     });
   }, [allFolders, activeFolder?.id, learnedWordsCount, dueCountForActive]);
 
-  if (isViewingDueWords && activeFolder) {
-    return (
-      <DueWordsListView
-        folderName={activeFolder.name}
-        dueCards={dueCardsList}
-        learnedCards={learnedCardsList}
-        onBackToOverview={() => setIsViewingDueWords(false)}
-        onPractice={(cards) =>
-          presentStudyView({
-            cards,
-            folderName: `${activeFolder.name} - ${tStudy('practice')}`,
-            mode: StudySessionMode.PRACTICE,
-          })
-        }
-        onFlashcards={(cards) =>
-          presentStudyView({
-            cards,
-            folderName: `${activeFolder.name} - ${tStudy('flashcards')}`,
-            mode: StudySessionMode.FLASHCARD,
-          })
-        }
-      />
-    );
-  }
-
-  if (isSelectingFolder || (!isLoading && !activeFolder)) {
-    return (
-      <FolderSelectionView
-        activeFolderId={activeFolder?.id || null}
-        allFolders={enrichedFolders}
-        isLoading={isLoading}
-        onSelectFolder={handleSelectFolder}
-        onBackToDashboard={
-          activeFolder ? () => setIsSelectingFolder(false) : undefined
-        }
-        onCreateFolder={() => presentCreateFolder()}
-        onViewFolderWords={(folderId) => handleViewFolder(folderId)}
-      />
-    );
-  }
-
   return (
     <div className="h-full max-h-full flex flex-col lg:flex-row items-stretch gap-7 lg:gap-8 w-full min-h-0">
       {/* LEFT COLUMN: Independent scroll, Mastery Overview, Notifications, Sentence Practice, Pinned Folder */}
@@ -242,7 +188,7 @@ export function FolderListPage() {
             learnedWords={learnedWordsCount}
             dueCount={dueCountForActive}
             stages={stages}
-            onViewDueWords={() => setIsViewingDueWords(true)}
+            onViewDueWords={() => router.push(RouteEnum.VOCABULARY_DUE)}
             onReviewDue={handlePractice}
             onReviewAll={handleLearnNew}
             onFlashcards={handleFlashcards}
@@ -264,7 +210,7 @@ export function FolderListPage() {
             activeFolder={activeFolder}
             dueCount={dueCountForActive}
             learnedCount={learnedWordsCount}
-            onSwitchFolder={() => setIsSelectingFolder(true)}
+            onSwitchFolder={() => router.push(RouteEnum.FOLDER_SELECTION)}
             onStudyNow={handleLearnNew}
             onPractice={handlePractice}
             onFlashcards={handleFlashcards}

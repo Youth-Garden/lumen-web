@@ -5,8 +5,6 @@ import { useMemo } from 'react';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { RouteEnum } from '@/shared/constants';
-import { useSetBreadcrumb } from '@/shared/hooks';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -42,16 +40,6 @@ export function FolderTopicGrid({
   const t = useTranslations('Vocabulary.Folders');
   const radius = 37;
   const circumference = 2 * Math.PI * radius;
-
-  useSetBreadcrumb(
-    useMemo(
-      () => [
-        { label: t('title'), href: RouteEnum.VOCABULARY },
-        { label: folderName },
-      ],
-      [t, folderName],
-    ),
-  );
 
   return (
     <div className="space-y-8">

@@ -12,6 +12,7 @@ export interface BreadcrumbConfigItem {
   label: string;
   href?: string;
   onClick?: () => void;
+  isLoading?: boolean;
 }
 
 interface BreadcrumbContextType {
@@ -64,7 +65,11 @@ export function useBreadcrumb() {
 export function useSetBreadcrumb(items: BreadcrumbConfigItem[]) {
   const { setBreadcrumbs, clearBreadcrumbs } = useBreadcrumb();
   const itemsKey = JSON.stringify(
-    items.map((i) => ({ label: i.label, href: i.href })),
+    items.map((i) => ({
+      label: i.label,
+      href: i.href,
+      isLoading: i.isLoading,
+    })),
   );
 
   useEffect(() => {
