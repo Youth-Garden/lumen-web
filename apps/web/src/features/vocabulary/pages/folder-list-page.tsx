@@ -17,6 +17,10 @@ import { NotificationPromptCard } from '@/features/vocabulary/components/cards/n
 import { SentencePracticeCard } from '@/features/vocabulary/components/cards/sentence-practice-card';
 import { SpacedRepetitionCard } from '@/features/vocabulary/components/cards/spaced-repetition-card';
 import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/create-folder-dialog';
+import {
+  SwitchFolderDialog,
+  type SwitchFolderDialogData,
+} from '@/features/vocabulary/components/dialogs/switch-folder-dialog';
 import { MasteryOverviewCard } from '@/features/vocabulary/components/mastery/mastery-overview-card';
 import {
   useFolderStudyActions,
@@ -40,6 +44,8 @@ export function FolderListPage() {
 
   const { data, isLoading } = useVocabularyFolders();
   const [presentCreateFolder] = usePortal(CreateFolderDialog);
+  const [presentSwitchFolder] =
+    usePortal<SwitchFolderDialogData>(SwitchFolderDialog);
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
@@ -210,7 +216,13 @@ export function FolderListPage() {
             activeFolder={activeFolder}
             dueCount={dueCountForActive}
             learnedCount={learnedWordsCount}
-            onSwitchFolder={() => router.push(RouteEnum.FOLDER_SELECTION)}
+            onSwitchFolder={() =>
+              presentSwitchFolder({
+                activeFolderId: activeFolder?.id || null,
+                onSelectFolder: (id) => setSelectedFolderId(id),
+                onViewFolderWords: (id) => handleViewFolder(id),
+              })
+            }
             onStudyNow={handleLearnNew}
             onPractice={handlePractice}
             onFlashcards={handleFlashcards}

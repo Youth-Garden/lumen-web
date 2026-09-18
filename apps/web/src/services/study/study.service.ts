@@ -3,6 +3,7 @@ import { ApiEndpointEnum } from '@/shared/constants';
 import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './study.registry';
 import {
+  BatchReviewFlashcardsPayload,
   DueFlashcard,
   FlashcardRating,
   ReviewFlashcardPayload,
@@ -48,6 +49,43 @@ export class StudyService extends CoreService {
     }
 
     return this._post<void>(ApiEndpointEnum.STUDY_FLASHCARDS_REVIEW, body);
+  }
+
+  batchReviewFlashcards(
+    payload: BatchReviewFlashcardsPayload,
+  ): Promise<BaseResponse<void>> {
+    const reviews = payload.reviews.map((item) => {
+      const isCorrect =
+        item.isCorrect !== undefined
+          ? item.isCorrect
+          : item.quality !== FlashcardRating.WRONG;
+
+      const isFastTrackKnown =
+        item.isFastTrackKnown ??
+        item.quality === FlashcardRating.FAST_TRACK_KNOWN;
+
+      const isFastTrackTempMemory =
+        item.isFastTrackTempMemory ??
+        item.quality === FlashcardRating.FAST_TRACK_TEMP;
+
+      const row: Record<string, unknown> = {
+        flashcardId: item.flashcardId,
+        isCorrect,
+      };
+
+      if (isFastTrackKnown) {
+        row.isFastTrackKnown = true;
+      }
+      if (isFastTrackTempMemory) {
+        row.isFastTrackTempMemory = true;
+      }
+
+      return row;
+    });
+
+    return this._post<void>(ApiEndpointEnum.STUDY_FLASHCARDS_REVIEW_BATCH, {
+      reviews,
+    });
   }
 }
 

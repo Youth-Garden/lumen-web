@@ -41,7 +41,7 @@ function DashboardContent({
   return (
     <div
       id="main-layout"
-      className="relative flex h-screen overflow-hidden bg-sidebar gap-2"
+      className="relative flex h-screen overflow-hidden bg-layout gap-2"
     >
       <div className="absolute top-0 left-0 -z-10 h-125 w-125 rounded-full bg-primary/20 opacity-40 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 -z-10 h-150 w-150 rounded-full bg-blue-500/10 opacity-30 blur-[100px] pointer-events-none" />

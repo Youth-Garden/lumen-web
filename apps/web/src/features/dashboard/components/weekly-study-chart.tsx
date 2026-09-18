@@ -95,7 +95,9 @@ export function WeeklyStudyChart({
       let minutes = 0;
 
       if (isToday) {
-        minutes = todayStudyMinutes;
+        const estimatedFromActivity =
+          activityCount > 0 ? Math.max(5, Math.round(activityCount * 2)) : 0;
+        minutes = Math.max(todayStudyMinutes, estimatedFromActivity);
       } else if (activityCount > 0) {
         minutes = Math.max(5, Math.round(activityCount * 2));
       }
@@ -356,22 +358,24 @@ export function WeeklyStudyChart({
                 dataKey="minutes"
                 radius={[8, 8, 4, 4]}
                 maxBarSize={period === '7d' ? 36 : 10}
-                minPointSize={6}
                 className="cursor-pointer"
               >
                 {chartData.map((entry) => {
-                  let fill = 'var(--muted)';
-                  let opacity = 0.35;
+                  if (entry.minutes === 0) {
+                    return (
+                      <Cell key={entry.dateStr} fill="transparent" opacity={0} />
+                    );
+                  }
+
+                  let fill = 'url(#studiedGrad)';
+                  let opacity = 0.9;
 
                   if (entry.isGoalMet) {
                     fill = 'url(#goalMetGrad)';
                     opacity = 1;
-                  } else if (entry.isToday && entry.minutes > 0) {
+                  } else if (entry.isToday) {
                     fill = 'url(#todayActiveGrad)';
                     opacity = 1;
-                  } else if (entry.minutes > 0) {
-                    fill = 'url(#studiedGrad)';
-                    opacity = 0.9;
                   }
 
                   return (

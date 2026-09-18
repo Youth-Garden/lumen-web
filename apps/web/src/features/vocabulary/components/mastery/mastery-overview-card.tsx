@@ -95,7 +95,7 @@ export function MasteryOverviewCard({
             : undefined
         }
         className={cn(
-          'flex items-center justify-between',
+          'flex items-center justify-between outline-none focus:outline-none focus-visible:outline-none',
           onViewDueWords &&
             'cursor-pointer group hover:opacity-80 transition-opacity select-none'
         )}

@@ -65,7 +65,7 @@ export function Sidebar({ defaultCollapsed }: SidebarProps) {
     <nav
       id="sidebar"
       className={cn(
-        'relative flex h-full flex-col bg-background rounded-3xl text-sidebar-foreground transition-[width] duration-300 ease-in-out z-20 overflow-hidden select-none',
+        'relative flex h-full flex-col bg-background rounded-3xl text-foreground transition-[width] duration-300 ease-in-out z-20 overflow-hidden select-none',
         sidebarCollapsed ? 'w-20' : 'w-64',
       )}
     >

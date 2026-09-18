@@ -11,6 +11,7 @@ interface StudyChoiceMeaningProps {
   learningStep?: number;
   selectedIndex: number | null;
   isPlayingAudio: boolean;
+  showShortcuts?: boolean;
   onPlayAudio: () => void;
   onSelectOption: (index: number) => void;
   onOpenMastery: () => void;
@@ -22,6 +23,7 @@ export function StudyChoiceMeaning({
   learningStep = 0,
   selectedIndex,
   isPlayingAudio,
+  showShortcuts = true,
   onPlayAudio,
   onSelectOption,
   onOpenMastery,
@@ -61,13 +63,13 @@ export function StudyChoiceMeaning({
               ? 'bg-primary text-primary-foreground scale-105 ring-4 ring-primary/30'
               : 'bg-primary text-primary-foreground hover:bg-primary/90')
           }
-          title={t('audioListenHint')}
+          title={showShortcuts ? t('audioListenHintShortcut') : t('audioListenHint')}
         >
           <Icons name="volume-2" className="w-10 h-10" />
         </button>
 
         <span className="text-xs text-muted-foreground font-medium">
-          {t('audioListenHint')}
+          {showShortcuts ? t('audioListenHintShortcut') : t('audioListenHint')}
         </span>
       </div>
 

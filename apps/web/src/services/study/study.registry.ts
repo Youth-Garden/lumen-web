@@ -8,4 +8,6 @@ export const registry: MapperRegistry = {
     dueFlashcardMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.STUDY_FLASHCARDS_REVIEW)]:
     idResponseMapper,
+  [registryKey(HttpMethod.POST, ApiEndpointEnum.STUDY_FLASHCARDS_REVIEW_BATCH)]:
+    idResponseMapper,
 };

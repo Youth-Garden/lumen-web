@@ -36,7 +36,7 @@ import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
-import { useReviewFlashcard } from './use-study';
+import { useBatchReviewFlashcards } from './use-study';
 import { useStudyAudio } from './use-study-audio';
 import type {
   UseStudySessionProps,
@@ -60,7 +60,7 @@ export function useStudySession({
   const handleContinueFeedbackRef = useRef<() => void>(() => {});
   const tFolders = useTranslations('Vocabulary.Folders');
   const { settings, currentQuotaConfig } = useStudySettings();
-  const reviewMutation = useReviewFlashcard();
+  const batchReviewMutation = useBatchReviewFlashcards();
 
   const resolvedMode = useMemo(() => {
     if (mode) return mode;
@@ -183,18 +183,55 @@ export function useStudySession({
     [],
   );
 
+  const pendingReviewsRef = useRef<
+    Map<
+      string,
+      {
+        flashcardId: string;
+        isCorrect: boolean;
+        isFastTrackKnown?: boolean;
+        isFastTrackTempMemory?: boolean;
+      }
+    >
+  >(new Map());
+
   const handleFlip = useCallback(() => {
     if (canFlipRef.current) toggleFlipped();
   }, [toggleFlipped]);
 
-  const mutateReviewQuietly = useCallback(
-    (flashcardId: string, quality: FlashcardRating) => {
-      try {
-        reviewMutation.mutate({ flashcardId, quality });
-      } catch {}
+  const recordReviewPending = useCallback(
+    (
+      flashcardId: string,
+      data: {
+        isCorrect: boolean;
+        isFastTrackKnown?: boolean;
+        isFastTrackTempMemory?: boolean;
+      },
+    ) => {
+      pendingReviewsRef.current.set(flashcardId, {
+        flashcardId,
+        isCorrect: data.isCorrect,
+        isFastTrackKnown: data.isFastTrackKnown,
+        isFastTrackTempMemory: data.isFastTrackTempMemory,
+      });
     },
-    [reviewMutation],
+    [],
   );
+
+  const flushPendingReviews = useCallback(() => {
+    if (pendingReviewsRef.current.size === 0) return;
+    const reviews = Array.from(pendingReviewsRef.current.values());
+    pendingReviewsRef.current.clear();
+    try {
+      batchReviewMutation.mutate({ reviews });
+    } catch {}
+  }, [batchReviewMutation]);
+
+  useEffect(() => {
+    if (isFinished) {
+      flushPendingReviews();
+    }
+  }, [isFinished, flushPendingReviews]);
 
   const handleAdvanceFromFlashcard = useCallback(
     (rating: FlashcardRating) => {
@@ -217,9 +254,13 @@ export function useStudySession({
       setWordProgressMap((prev) =>
         updateCardProgressMap(prev, cardId, newLevel, newLearningStep),
       );
-      mutateReviewQuietly(
+      recordReviewPending(
         (currentCard as CardWithProgress).flashcardId || cardId,
-        determineFlashcardQuality(rating),
+        {
+          isCorrect: rating !== FlashcardRating.WRONG,
+          isFastTrackKnown: rating === FlashcardRating.FAST_TRACK_KNOWN,
+          isFastTrackTempMemory: rating === FlashcardRating.FAST_TRACK_TEMP,
+        },
       );
       transitionQueueWithDelay(nextQueue);
     },
@@ -231,7 +272,7 @@ export function useStudySession({
       activeQueue,
       cards,
       globalCards,
-      mutateReviewQuietly,
+      recordReviewPending,
       transitionQueueWithDelay,
     ],
   );
@@ -256,9 +297,11 @@ export function useStudySession({
         setMasteredIds((prev) => updateMasteredWordIds(prev, cardId));
       else recordMissedWord(currentCard);
 
-      mutateReviewQuietly(
+      recordReviewPending(
         (currentCard as CardWithProgress).flashcardId || cardId,
-        isKnown ? FlashcardRating.CORRECT : FlashcardRating.WRONG,
+        {
+          isCorrect: isKnown,
+        },
       );
       transitionQueueWithDelay(nextQueue);
     },
@@ -267,7 +310,7 @@ export function useStudySession({
       currentCardMastery,
       currentCardLearningStep,
       activeQueue,
-      mutateReviewQuietly,
+      recordReviewPending,
       recordMissedWord,
       transitionQueueWithDelay,
     ],
@@ -308,16 +351,18 @@ export function useStudySession({
         setMasteredIds((prev) => updateMasteredWordIds(prev, cardId));
       else recordMissedWord(currentCard);
 
-      mutateReviewQuietly(
+      recordReviewPending(
         (currentCard as CardWithProgress).flashcardId || cardId,
-        isCorrect ? FlashcardRating.CORRECT : FlashcardRating.WRONG,
+        {
+          isCorrect,
+        },
       );
     },
     [
       currentCard,
       currentItem,
       wordProgressMap,
-      mutateReviewQuietly,
+      recordReviewPending,
       recordMissedWord,
       presentFeedback,
     ],
@@ -379,6 +424,7 @@ export function useStudySession({
     try {
       localStorage.removeItem(storageKey);
     } catch {}
+    pendingReviewsRef.current.clear();
     dismissFeedback();
     initializeSession();
     setMissedWordsMap({});
@@ -386,6 +432,7 @@ export function useStudySession({
   }, [storageKey, initializeSession, dismissFeedback]);
 
   const handleSaveProgress = useCallback(() => {
+    flushPendingReviews();
     if (isOpen && poolCards.length > 0) {
       saveStudyProgressToStorage(
         storageKey,
@@ -395,6 +442,7 @@ export function useStudySession({
       );
     }
   }, [
+    flushPendingReviews,
     isOpen,
     poolCards.length,
     activeQueue,
@@ -479,7 +527,7 @@ export function useStudySession({
     currentCardMastery,
     currentCardLearningStep,
     canFlipRef,
-    isSubmitting: reviewMutation.isPending,
+    isSubmitting: batchReviewMutation.isPending,
     playingAccent: audioState.playingAccent,
     isPlaying: audioState.isPlaying,
     missedWordsList,

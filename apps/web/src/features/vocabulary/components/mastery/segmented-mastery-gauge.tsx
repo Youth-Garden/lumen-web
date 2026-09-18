@@ -31,8 +31,8 @@ export function SegmentedMasteryGauge({
           : undefined
       }
       className={cn(
-        'flex flex-col items-center space-y-1',
-        onClick && 'cursor-pointer hover:opacity-80 transition-all active:scale-95'
+        'flex flex-col items-center space-y-1 outline-none focus:outline-none focus-visible:outline-none',
+        onClick && 'cursor-pointer hover:opacity-80 transition-opacity'
       )}
     >
       <PlantMasteryRing level={level} size={44} showInnerIcon={false}>

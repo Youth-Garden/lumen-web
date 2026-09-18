@@ -26,6 +26,7 @@ export enum ApiEndpointEnum {
 
   STUDY_FLASHCARDS_DUE = '/api/vocabulary/words/flashcards/due',
   STUDY_FLASHCARDS_REVIEW = '/api/vocabulary/words/flashcards/review',
+  STUDY_FLASHCARDS_REVIEW_BATCH = '/api/vocabulary/words/flashcards/review-batch',
 
   MATERIALS = '/api/materials',
   MATERIAL_DETAIL = '/api/materials/:id',

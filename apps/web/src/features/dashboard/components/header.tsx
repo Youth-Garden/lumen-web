@@ -53,7 +53,7 @@ export function Header() {
         variant="outline"
         type="button"
         onClick={() => presentCommandPalette()}
-        className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground hover:text-foreground text-xs bg-card/90 backdrop-blur-md"
+        className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground hover:text-foreground text-xs bg-card/90 backdrop-blur-md active:scale-100 active:not-aria-[haspopup]:scale-100"
         title="Search (Ctrl + K)"
       >
         <div className="flex items-center gap-2.5">

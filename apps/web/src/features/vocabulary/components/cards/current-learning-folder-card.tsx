@@ -68,8 +68,8 @@ export function CurrentLearningFolderCard({
             }}
             className="flex items-center gap-3.5 min-w-0 flex-1 text-left cursor-pointer group outline-none"
           >
-            <div className="w-12 h-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0 shadow-xs group-hover:bg-primary/25 transition-colors">
-              <Icons name="folder" className="h-6 w-6" />
+            <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs shadow-primary/20 group-hover:brightness-105 transition-all">
+              <Icons name="folder" className="h-6 w-6 text-white" />
             </div>
 
             <div className="space-y-0.5 min-w-0 flex-1">

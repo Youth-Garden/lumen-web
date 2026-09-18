@@ -83,7 +83,7 @@ function DialogContent({
       data-state="open"
       className={cn(
         isFullscreen
-          ? 'fixed inset-0 flex h-screen w-screen max-w-none flex-col justify-between overflow-hidden bg-background p-0 select-none outline-none duration-200 pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0'
+          ? 'fixed inset-0 flex h-screen w-screen max-w-none flex-col justify-between overflow-hidden bg-card p-0 select-none outline-none duration-200 pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0'
           : 'fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover/95 backdrop-blur-2xl p-6 text-sm text-popover-foreground shadow-2xl transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
         className,
       )}

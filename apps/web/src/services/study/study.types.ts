@@ -40,3 +40,7 @@ export interface ReviewFlashcardPayload {
   isFastTrackKnown?: boolean;
   isFastTrackTempMemory?: boolean;
 }
+
+export interface BatchReviewFlashcardsPayload {
+  reviews: ReviewFlashcardPayload[];
+}

@@ -290,6 +290,7 @@ export function StudyView({
                     learningStep={currentCardLearningStep}
                     selectedIndex={selectedOptionIndex}
                     isPlayingAudio={isPlaying}
+                    showShortcuts={showShortcuts}
                     onPlayAudio={handlePlayAudio}
                     onSelectOption={handleSelectChoiceOption}
                     onOpenMastery={handleOpenMastery}
