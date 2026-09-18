@@ -28,7 +28,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
-  ChartTooltipCard,
   ChartTooltipRow,
   ChartTooltipTitle,
 } from '@/shared/components/chart/chart-tooltip';
@@ -372,46 +371,46 @@ export function HeatmapCalendar({
                                     }
                                   />
                                   <TooltipContent
+                                    variant="card"
                                     side="top"
                                     align="center"
-                                    className="p-0 border-none bg-transparent shadow-none"
+                                    sideOffset={6}
+                                    className="p-3 min-w-[140px] space-y-1.5 pointer-events-none"
                                   >
-                                    <ChartTooltipCard>
-                                      <ChartTooltipTitle>
-                                        {formattedDate}{' '}
-                                        {isToday && `• ${tOverview('today')}`}
-                                      </ChartTooltipTitle>
-                                      <ChartTooltipRow
-                                        color={
-                                          safeCount > 0
-                                            ? 'var(--primary)'
-                                            : 'var(--muted)'
-                                        }
-                                        label={t('totalActivities')}
-                                        value={
-                                          safeCount > 0
-                                            ? t('activitiesValue', {
-                                                count: safeCount,
-                                              })
-                                            : 0
-                                        }
-                                      />
-                                      {safeCount > 0 && (
-                                        <div className="w-full h-1.5 rounded-full bg-muted/50 mt-0.5 overflow-hidden">
-                                          <div
-                                            className={cn(
-                                              'h-full rounded-full transition-all',
-                                              getIntensityDotClass(
-                                                Math.min(safeCount, 30),
-                                              ),
-                                            )}
-                                            style={{
-                                              width: `${Math.min((safeCount / 30) * 100, 100)}%`,
-                                            }}
-                                          />
-                                        </div>
-                                      )}
-                                    </ChartTooltipCard>
+                                    <ChartTooltipTitle>
+                                      {formattedDate}{' '}
+                                      {isToday && `• ${tOverview('today')}`}
+                                    </ChartTooltipTitle>
+                                    <ChartTooltipRow
+                                      color={
+                                        safeCount > 0
+                                          ? 'var(--primary)'
+                                          : 'var(--muted)'
+                                      }
+                                      label={t('totalActivities')}
+                                      value={
+                                        safeCount > 0
+                                          ? t('activitiesValue', {
+                                              count: safeCount,
+                                            })
+                                          : 0
+                                      }
+                                    />
+                                    {safeCount > 0 && (
+                                      <div className="w-full h-1.5 rounded-full bg-muted/50 mt-0.5 overflow-hidden">
+                                        <div
+                                          className={cn(
+                                            'h-full rounded-full transition-all',
+                                            getIntensityDotClass(
+                                              Math.min(safeCount, 30),
+                                            ),
+                                          )}
+                                          style={{
+                                            width: `${Math.min((safeCount / 30) * 100, 100)}%`,
+                                          }}
+                                        />
+                                      </div>
+                                    )}
                                   </TooltipContent>
                                 </Tooltip>
                               );
@@ -587,15 +586,15 @@ function HeatmapLegend({
               }
             />
             <TooltipContent
+              variant="card"
               side="top"
               align="center"
-              className="p-0 border-none bg-transparent shadow-none"
+              sideOffset={6}
+              className="p-2 min-w-[85px] pointer-events-none"
             >
-              <ChartTooltipCard className="p-2 min-w-[80px]">
-                <span className="text-[10px] font-semibold text-foreground">
-                  {item.label} {t('totalActivities').toLowerCase()}
-                </span>
-              </ChartTooltipCard>
+              <span className="text-[10px] font-semibold text-foreground">
+                {item.label} {t('totalActivities').toLowerCase()}
+              </span>
             </TooltipContent>
           </Tooltip>
         ))}

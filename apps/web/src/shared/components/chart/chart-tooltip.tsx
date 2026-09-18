@@ -16,7 +16,7 @@ export function ChartTooltipCard({
   return (
     <div
       className={cn(
-        'rounded-2xl border-none bg-popover/95 backdrop-blur-md p-3 shadow-lg shadow-black/5 dark:shadow-black/30 text-popover-foreground text-xs min-w-[130px] space-y-1.5 transition-all duration-150 ease-out origin-bottom pointer-events-none',
+        'rounded-2xl border-none bg-popover/95 backdrop-blur-md p-3 shadow-xl shadow-black/10 dark:shadow-black/40 text-popover-foreground text-xs min-w-[130px] space-y-1.5 transition-all duration-150 ease-out origin-bottom pointer-events-none',
         className,
       )}
       {...props}

@@ -101,7 +101,7 @@ export function Sidebar() {
                 </Button>
               }
             />
-            <TooltipContent side="right" sideOffset={12}>
+            <TooltipContent side="right" sideOffset={8}>
               {sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')}
             </TooltipContent>
           </Tooltip>
@@ -179,7 +179,7 @@ export function Sidebar() {
                       {sidebarCollapsed ? (
                         <Tooltip>
                           <TooltipTrigger render={linkNode} />
-                          <TooltipContent side="right" sideOffset={14}>
+                          <TooltipContent side="right" sideOffset={8}>
                             {t(item.key)}
                           </TooltipContent>
                         </Tooltip>
