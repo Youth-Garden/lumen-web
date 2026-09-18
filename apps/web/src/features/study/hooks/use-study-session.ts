@@ -127,6 +127,8 @@ export function useStudySession({
     poolCards.length,
   );
 
+  const isInitializedRef = useRef(false);
+
   const initializeSession = useCallback(() => {
     setActiveQueue(
       createInitialStudyQueue(poolCards, resolvedMode, cards, globalCards),
@@ -139,8 +141,14 @@ export function useStudySession({
   }, [poolCards, resolvedMode, cards, globalCards]);
 
   useEffect(() => {
-    if (isOpen && poolCards.length > 0) initializeSession();
-  }, [poolCards, isOpen, initializeSession]);
+    if (isOpen && poolCards.length > 0 && !isInitializedRef.current) {
+      isInitializedRef.current = true;
+      initializeSession();
+    }
+    if (!isOpen) {
+      isInitializedRef.current = false;
+    }
+  }, [isOpen, poolCards, initializeSession]);
 
   useEffect(() => {
     canFlipRef.current = false;
@@ -317,13 +325,14 @@ export function useStudySession({
 
   const handleSelectChoiceOption = useCallback(
     (optionIndex: number) => {
+      if (feedback || selectedOptionIndex !== null) return;
       const option = currentItem?.options?.[optionIndex];
       if (option) {
         setSelectedOptionIndex(optionIndex);
         handleVerifyAnswer(option.isCorrect, option.label);
       }
     },
-    [currentItem, handleVerifyAnswer],
+    [feedback, selectedOptionIndex, currentItem, handleVerifyAnswer],
   );
 
   const handleSubmitTyping = useCallback(

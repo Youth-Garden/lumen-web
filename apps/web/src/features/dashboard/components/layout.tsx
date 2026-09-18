@@ -24,7 +24,14 @@ const LEVEL_1_PATHS = new Set([
   '/settings',
 ]);
 
-function DashboardContent({ children }: PropsWithChildren) {
+interface DashboardLayoutProps extends PropsWithChildren {
+  defaultCollapsed?: boolean;
+}
+
+function DashboardContent({
+  children,
+  defaultCollapsed,
+}: DashboardLayoutProps) {
   const pathname = usePathname();
   const { breadcrumbs } = useBreadcrumb();
   const isVocabDashboard = pathname === '/vocabulary';
@@ -40,7 +47,7 @@ function DashboardContent({ children }: PropsWithChildren) {
       <div className="absolute bottom-0 right-0 -z-10 h-150 w-150 rounded-full bg-blue-500/10 opacity-30 blur-[100px] pointer-events-none" />
 
       <div id="sidebar-wrapper" className="my-2 ml-2 flex h-[calc(100vh-1rem)]">
-        <Sidebar />
+        <Sidebar defaultCollapsed={defaultCollapsed} />
       </div>
 
       <div
@@ -62,7 +69,7 @@ function DashboardContent({ children }: PropsWithChildren) {
                 <Breadcrumb>
                   <BreadcrumbList className="gap-0.5 sm:gap-1">
                     {breadcrumbs.length > 0 ? (
-                      breadcrumbs.map((item, index) => {
+                       breadcrumbs.map((item, index) => {
                         const isLast = index === breadcrumbs.length - 1;
                         return (
                           <React.Fragment key={index}>
@@ -121,10 +128,15 @@ function DashboardContent({ children }: PropsWithChildren) {
   );
 }
 
-export function DashboardLayout({ children }: PropsWithChildren) {
+export function DashboardLayout({
+  children,
+  defaultCollapsed,
+}: DashboardLayoutProps) {
   return (
     <BreadcrumbProvider>
-      <DashboardContent>{children}</DashboardContent>
+      <DashboardContent defaultCollapsed={defaultCollapsed}>
+        {children}
+      </DashboardContent>
     </BreadcrumbProvider>
   );
 }

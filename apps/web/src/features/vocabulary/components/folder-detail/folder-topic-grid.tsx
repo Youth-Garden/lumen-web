@@ -1,12 +1,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
 
-import Link from 'next/link';
-import Image from 'next/image';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import Image from 'next/image';
 
 export interface TopicStatItem {
   name: string;

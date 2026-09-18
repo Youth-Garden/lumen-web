@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 
-import { useToggle } from '@lumen/hooks';
 import { StudyChoiceMeaning } from '@/features/study/components/study-choice-meaning';
 import { StudyChoiceTerm } from '@/features/study/components/study-choice-term';
 import { StudyCompleted } from '@/features/study/components/study-completed';
@@ -22,15 +21,18 @@ import {
   MasteryFlowerDialogData,
 } from '@/features/vocabulary/components/mastery/mastery-flower-dialog';
 import { type VocabularyWord } from '@/services/vocabulary';
+import { useToggle, useUnmount } from '@lumen/hooks';
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
-import { PortalProps, usePortal } from '@lumen/uikit/portal';
+import {
+  PortalProps,
+  useCloseAllPortals,
+  usePortal,
+} from '@lumen/uikit/portal';
 
 export interface StudyViewData {
   cards: VocabularyWord[];
@@ -45,10 +47,15 @@ export function StudyView({
   onDismiss,
   data,
 }: PortalProps<StudyViewData>) {
+  const closeAllPortals = useCloseAllPortals();
   const [presentSettings] = usePortal(StudySettingsDialog);
   const [presentMastery] =
     usePortal<MasteryFlowerDialogData>(MasteryFlowerDialog);
   const [showShortcuts, toggleShortcuts] = useToggle(true);
+
+  useUnmount(() => {
+    closeAllPortals();
+  });
 
   const cards = data?.cards || [];
   const selectedTopic = data?.selectedTopic || null;

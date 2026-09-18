@@ -10,7 +10,7 @@ import { routing } from './shared/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   const token = req.cookies.get(JWT_ACCESS_TOKEN_KEY)?.value;
   const nativeLanguage = req.cookies.get(NATIVE_LANGUAGE_STORAGE_KEY)?.value;
   const path = req.nextUrl.pathname;

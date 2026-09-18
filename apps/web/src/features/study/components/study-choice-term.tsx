@@ -61,17 +61,21 @@ export function StudyChoiceTerm({
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4">
         {options.map((option, index) => {
           const isSelected = selectedIndex === index;
+          const isAnswered = selectedIndex !== null;
 
           return (
             <button
               key={option.id + '_' + index}
               type="button"
+              disabled={isAnswered}
               onClick={() => onSelectOption(index)}
               className={
-                'relative flex flex-col justify-between p-5 rounded-2xl text-left transition-colors cursor-pointer min-h-[100px] sm:min-h-[110px] select-none ' +
+                'relative flex flex-col justify-between p-5 rounded-2xl text-left transition-colors select-none ' +
                 (isSelected
-                  ? 'bg-primary/15 text-primary'
-                  : 'bg-card hover:bg-muted/70 active:scale-[0.99]')
+                  ? 'bg-primary/15 text-primary cursor-default'
+                  : isAnswered
+                    ? 'bg-card opacity-50 cursor-default'
+                    : 'bg-card hover:bg-muted/70 active:scale-[0.99] cursor-pointer')
               }
             >
               <span className="text-base sm:text-lg font-bold text-foreground">

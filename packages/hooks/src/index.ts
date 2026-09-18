@@ -16,5 +16,6 @@ export * from './use-queue';
 export * from './use-text-selection';
 export * from './use-throttle';
 export * from './use-toggle';
+export * from './use-unmount';
 export * from './use-visibility-change';
 export * from './use-window-size';

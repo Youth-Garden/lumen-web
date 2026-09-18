@@ -48,10 +48,18 @@ const navigationGroups: NavGroup[] = [
 // -> icon luôn nằm đúng tâm 80px ở mọi kích thước màn hình.
 const SIDEBAR_PADDING_X = 'px-[1.125rem]';
 
-export function Sidebar() {
+interface SidebarProps {
+  defaultCollapsed?: boolean;
+}
+
+export function Sidebar({ defaultCollapsed }: SidebarProps) {
   const t = useTranslations('Dashboard.Sidebar');
   const pathname = usePathname();
-  const { sidebarCollapsed, toggleSidebar } = useUiStore();
+  const { sidebarCollapsed: storeCollapsed, toggleSidebar } = useUiStore();
+  const sidebarCollapsed =
+    typeof window === 'undefined'
+      ? (defaultCollapsed ?? storeCollapsed)
+      : storeCollapsed;
 
   return (
     <nav
@@ -124,7 +132,7 @@ export function Sidebar() {
       >
         <div
           className={cn(
-            'flex flex-col w-full',
+            'flex flex-col w-full transition-[gap] duration-300 ease-in-out',
             // Collapsed: gap giữa các group PHẢI bằng gap giữa item trong group (gap-2)
             // để dàn icon đều nhau xuyên suốt. Expanded: group title hiện ra nên có thể
             // giữ khoảng cách rộng hơn (gap-3) để phân tách nhóm rõ ràng.
