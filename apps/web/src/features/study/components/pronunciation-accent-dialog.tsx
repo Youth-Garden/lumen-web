@@ -31,7 +31,7 @@ export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="max-w-[360px] sm:max-w-[360px] bg-card">
-        <DialogHeader className="pb-1">
+        <DialogHeader align="center" className="pb-1">
           <DialogTitle className="text-base font-bold text-foreground">
             {t('vocabularyAccentTitle')}
           </DialogTitle>

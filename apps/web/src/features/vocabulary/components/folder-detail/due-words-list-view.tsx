@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
-import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
+import { VocabularyWordCard } from '@/features/vocabulary/components/cards/vocabulary-word-card';
 import { type VocabularyWord } from '@/services/vocabulary';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -76,49 +76,13 @@ export function DueWordsListView({
       {/* Word Grid */}
       {displayedCards.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-          {displayedCards.map((flashcard) => {
-            const primaryDef = flashcard.definitions?.[0];
-            const meaningVi =
-              primaryDef?.translationVi || primaryDef?.definition?.vi || '';
-            const partOfSpeech = primaryDef?.partOfSpeech || '';
-
-            return (
-              <div
-                key={flashcard.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => presentWordDetail(flashcard)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    presentWordDetail(flashcard);
-                  }
-                }}
-                className="group flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-2xl hover:bg-muted/40 active:bg-muted/60 hover:scale-[1.02] transition-all cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-primary/40 gap-2.5"
-              >
-                <MasteryFlowerBadge
-                  level={flashcard.level ?? 0}
-                  learningStep={flashcard.learningStep ?? 0}
-                  isWilted={flashcard.isWilted ?? false}
-                  size={50}
-                />
-
-                <div className="w-full min-w-0 px-1">
-                  <p className="text-sm sm:text-base font-bold text-primary truncate group-hover:underline">
-                    {flashcard.term}
-                  </p>
-                  <p className="text-xs text-muted-foreground truncate mt-0.5">
-                    {partOfSpeech && (
-                      <span className="italic mr-1 font-medium">
-                        {partOfSpeech}
-                      </span>
-                    )}
-                    {meaningVi}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+          {displayedCards.map((flashcard) => (
+            <VocabularyWordCard
+              key={flashcard.id}
+              word={flashcard}
+              onClick={presentWordDetail}
+            />
+          ))}
         </div>
       ) : (
         /* Empty State */
@@ -136,34 +100,6 @@ export function DueWordsListView({
               ? t('noDueWordsDesc')
               : t('noLearnedWordsDesc')}
           </p>
-        </div>
-      )}
-
-      {/* Floating Action Buttons */}
-      {displayedCards.length > 0 && (
-        <div className="fixed bottom-6 right-8 flex items-center gap-3 z-30">
-          {onFlashcards && (
-            <Button
-              variant="secondary"
-              size="default"
-              onClick={() => onFlashcards(displayedCards)}
-              className="gap-2 shadow-md cursor-pointer"
-            >
-              <Icons name="layers" className="h-4 w-4" />
-              <span>{t('flashcardsAction')}</span>
-            </Button>
-          )}
-          {onPractice && (
-            <Button
-              variant="default"
-              size="default"
-              onClick={() => onPractice(displayedCards)}
-              className="gap-2 shadow-md cursor-pointer"
-            >
-              <Icons name="sparkles" className="h-4 w-4" />
-              <span>{t('reviewNormal')}</span>
-            </Button>
-          )}
         </div>
       )}
     </div>

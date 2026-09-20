@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import {
@@ -61,7 +61,8 @@ export function WordDetailSheet({
   }, [word?.id, word?.flashcardId]);
 
   const currentLevel = localLevel !== null ? localLevel : (word?.level ?? 0);
-  const currentStep = localStep !== null ? localStep : (word?.learningStep ?? 0);
+  const currentStep =
+    localStep !== null ? localStep : (word?.learningStep ?? 0);
   const currentIsWilted =
     localIsWilted !== null ? localIsWilted : (word?.isWilted ?? false);
 
@@ -136,7 +137,7 @@ export function WordDetailSheet({
           </div>
 
           {word && (
-            <div className="flex items-center justify-between gap-4 px-6 pt-2 pb-4">
+            <div className="flex justify-between gap-4 px-6 pt-2 pb-4">
               <div className="flex flex-col gap-1">
                 <Button
                   variant="ghost"

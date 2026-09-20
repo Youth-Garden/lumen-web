@@ -46,15 +46,7 @@ export function ConfirmDeleteFolderDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex justify-end pt-4 space-x-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onDismiss?.()}
-            disabled={isPending}
-          >
-            {t('cancel')}
-          </Button>
+        <div className="flex justify-end pt-4">
           <Button
             type="button"
             variant="destructive"

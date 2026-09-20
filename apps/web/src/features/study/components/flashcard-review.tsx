@@ -139,7 +139,7 @@ export function FlashcardReview({
       >
         <motion.div
           className="relative w-full min-h-[500px]"
-          animate={{ rotateY: isFlipped ? 180 : 0 }}
+          animate={{ rotateY: isFlipped ? -180 : 0 }}
           transition={{
             duration: 0.6,
             type: 'spring',
@@ -171,7 +171,7 @@ export function FlashcardReview({
             className="absolute inset-0 w-full min-h-[500px] border-2 border-primary shadow-xl"
             style={{
               backfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)',
+              transform: 'rotateY(-180deg)',
             }}
           >
             <CardContent className="flex flex-col items-center min-h-[500px] h-full p-12 text-center relative">

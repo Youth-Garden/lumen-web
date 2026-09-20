@@ -23,20 +23,20 @@ interface NavItem {
 }
 
 interface NavGroup {
-  group: string;
+  groupKey: 'groupMain' | 'groupSystem';
   items: NavItem[];
 }
 
 const navigationGroups: NavGroup[] = [
   {
-    group: 'Main',
+    groupKey: 'groupMain',
     items: [
       { key: 'overview', href: RouteEnum.DASHBOARD, icon: 'overview' },
       { key: 'vocabulary', href: RouteEnum.VOCABULARY, icon: 'vocabulary' },
     ],
   },
   {
-    group: 'System',
+    groupKey: 'groupSystem',
     items: [{ key: 'settings', href: RouteEnum.SETTINGS, icon: 'settings' }],
   },
 ];
@@ -156,7 +156,7 @@ export function Sidebar({ defaultCollapsed }: SidebarProps) {
               >
                 <div className="overflow-hidden min-w-0 whitespace-nowrap">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/60 block">
-                    {group.group}
+                    {t(group.groupKey)}
                   </span>
                 </div>
               </div>
@@ -177,32 +177,29 @@ export function Sidebar({ defaultCollapsed }: SidebarProps) {
                     <Link
                       href={item.href}
                       className={cn(
-                        // Luôn w-full + items-center, KHÔNG bao giờ đổi thành w-11/justify-center.
-                        // Icon giữ nguyên vị trí neo trái tuyệt đối trong suốt animation.
-                        'flex items-center h-11 w-full rounded-2xl transition-colors duration-200 outline-none text-sm font-medium overflow-hidden',
+                        'flex items-center h-11 w-full rounded-xl transition-colors duration-200 outline-none text-sm font-medium overflow-hidden',
                         isActive
-                          ? 'bg-primary/15 text-primary font-bold'
+                          ? 'bg-primary text-white font-semibold shadow-xs'
                           : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
                       )}
                     >
-                      {/* Icon: ô cố định 44x44 (w-11 h-11), shrink-0 -> không bao giờ bị co/nhảy */}
                       <div className="w-11 h-11 shrink-0 flex items-center justify-center">
                         <Icons
                           name={item.icon}
                           className={cn(
                             'h-5 w-5 shrink-0 transition-colors',
-                            isActive && 'text-primary',
+                            isActive ? 'text-white' : 'text-muted-foreground',
                           )}
                         />
                       </div>
 
-                      {/* Label: chỉ phần này co giãn, không ảnh hưởng vị trí icon */}
                       <span
                         className={cn(
                           'whitespace-nowrap truncate font-medium text-sm min-w-0 transition-[max-width,opacity,padding] duration-300 ease-in-out',
                           sidebarCollapsed
                             ? 'max-w-0 opacity-0 pointer-events-none px-0'
                             : 'max-w-[150px] opacity-100 pr-3 pl-1',
+                          isActive && 'text-white font-semibold',
                         )}
                       >
                         {t(item.key)}

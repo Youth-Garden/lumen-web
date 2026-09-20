@@ -10,6 +10,7 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 
+import { StreakFreezeIcon } from '@/shared/components/streak-icon';
 import type { DashboardProgressResponse } from '@/services/progress';
 
 interface StreakFreezeCardProps {
@@ -27,8 +28,8 @@ export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
       <CardHeader>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-500 shrink-0">
-              <span className="text-lg leading-none select-none">🧊</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-500/10 shrink-0 p-1">
+              <StreakFreezeIcon size={28} />
             </div>
             <div>
               <CardTitle className="text-lg font-bold">

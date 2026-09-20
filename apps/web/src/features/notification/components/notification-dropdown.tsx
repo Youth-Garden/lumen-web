@@ -4,7 +4,6 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   ScrollArea,
 } from '@lumen/uikit/components';
@@ -77,7 +76,7 @@ export const NotificationDropdown = () => {
                 {t('noNotifications')}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                You&apos;re all caught up!
+                {t('allCaughtUp')}
               </p>
             </div>
           ) : (

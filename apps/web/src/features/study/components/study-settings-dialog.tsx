@@ -3,6 +3,10 @@
 import { LessonQuotaDialog } from '@/features/study/components/lesson-quota-dialog';
 import { PronunciationAccentDialog } from '@/features/study/components/pronunciation-accent-dialog';
 import { useStudySettings } from '@/features/study/hooks/use-study-settings';
+import {
+  LESSON_QUOTA_CONFIGS,
+  LessonQuotaPreset,
+} from '@/services/study';
 import { PronunciationAccent } from '@/services/vocabulary';
 import {
   Dialog,
@@ -30,10 +34,28 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
       ? t('accentUkLabel')
       : t('accentUsLabel');
 
+  const currentConfig =
+    LESSON_QUOTA_CONFIGS[settings.lessonQuotaPreset] ||
+    LESSON_QUOTA_CONFIGS[LessonQuotaPreset.A_LOT];
+
+  const quotaPresetName =
+    settings.lessonQuotaPreset === LessonQuotaPreset.FEW
+      ? t('quotaFew')
+      : settings.lessonQuotaPreset === LessonQuotaPreset.MODERATE
+        ? t('quotaModerate')
+        : settings.lessonQuotaPreset === LessonQuotaPreset.MANY
+          ? t('quotaMany')
+          : t('quotaALot');
+
+  const quotaRangeText = t('quotaQuestionsRange', {
+    min: currentConfig.minCount,
+    max: currentConfig.maxCount,
+  });
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="bg-card">
-        <DialogHeader className="pb-1">
+        <DialogHeader align="center" className="pb-1">
           <DialogTitle className="text-lg font-bold text-foreground">
             {t('settingsTitle')}
           </DialogTitle>
@@ -84,14 +106,7 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
                 {t('maxQuestionsPerSession')}
               </p>
               <p className="text-xs font-semibold text-primary">
-                {settings.lessonQuotaPreset === 'FEW' &&
-                  `${t('quotaFew')} (${t('quotaFewDesc')})`}
-                {settings.lessonQuotaPreset === 'MODERATE' &&
-                  `${t('quotaModerate')} (${t('quotaModerateDesc')})`}
-                {settings.lessonQuotaPreset === 'MANY' &&
-                  `${t('quotaMany')} (${t('quotaManyDesc')})`}
-                {settings.lessonQuotaPreset === 'A_LOT' &&
-                  `${t('quotaALot')} (${t('quotaALotDesc')})`}
+                {quotaPresetName} ({quotaRangeText})
               </p>
             </div>
             <Icons

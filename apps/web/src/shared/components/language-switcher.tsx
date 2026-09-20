@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 
+import { useLocalStorage } from '@lumen/hooks';
 import {
   Button,
   DropdownMenu,
@@ -30,11 +31,15 @@ export function LanguageSwitcher({ align = 'end' }: LanguageSwitcherProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const [, setStoredLanguage] = useLocalStorage<string | null>(
+    NATIVE_LANGUAGE_STORAGE_KEY,
+    null,
+  );
 
   const change = (next: string) => {
     if (next !== locale) {
+      setStoredLanguage(next);
       if (typeof window !== 'undefined') {
-        localStorage.setItem(NATIVE_LANGUAGE_STORAGE_KEY, next);
         cookieHelper.set(NATIVE_LANGUAGE_STORAGE_KEY, next, {
           expires: 365,
           path: '/',

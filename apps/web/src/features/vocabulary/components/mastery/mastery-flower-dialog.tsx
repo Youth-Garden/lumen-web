@@ -4,6 +4,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
@@ -38,13 +39,13 @@ export function MasteryFlowerDialog({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="max-w-md max-h-[88vh] p-6 rounded-xl border-none shadow-2xl bg-card flex flex-col overflow-hidden transition-all duration-200">
-        <DialogHeader className="pb-2 shrink-0 text-left">
+        <DialogHeader align="center" className="pb-2 shrink-0">
           <DialogTitle className="text-lg font-bold text-foreground">
             {t('dialogTitle')}
           </DialogTitle>
-          <p className="text-xs text-muted-foreground pt-0.5">
+          <DialogDescription className="text-xs text-muted-foreground pt-0.5 text-center">
             {t('dialogDescription')}
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-left">

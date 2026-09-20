@@ -2,7 +2,25 @@
   "Common": {
     "notifications": "Notifications",
     "noNotifications": "No notifications",
+    "allCaughtUp": "You're all caught up!",
     "markAllAsRead": "Mark all as read"
+  },
+  "CommandPalette": {
+    "placeholder": "Search folders, words, or commands... (Ctrl + K)",
+    "empty": "No results found.",
+    "noResults": "No results found.",
+    "searching": "Searching...",
+    "suggestions": "Suggestions",
+    "folders": "Folders",
+    "vocabulary": "Vocabulary Words",
+    "vocabularyWords": "Vocabulary Words",
+    "quickActions": "Quick Actions",
+    "overview": "Overview Dashboard",
+    "overviewDashboard": "Overview Dashboard",
+    "vocabFolders": "Vocabulary Folders",
+    "vocabularyFolders": "Vocabulary Folders",
+    "profileSettings": "Profile Settings",
+    "logout": "Log out"
   },
   "Error": {
     "title": "Something went wrong",
@@ -260,6 +278,8 @@
       "studiedMinutes": "Study time"
     },
     "Sidebar": {
+      "groupMain": "Main",
+      "groupSystem": "System",
       "overview": "Overview",
       "study": "Study Mode",
       "grammar": "Grammar",
@@ -281,6 +301,10 @@
     },
     "Header": {
       "search": "Search...",
+      "searchPlaceholder": "Search folders, words...",
+      "searchTooltip": "Search (Ctrl + K)",
+      "profile": "Profile",
+      "logout": "Log out",
       "language": "Language"
     }
   },
@@ -397,6 +421,7 @@
       "quotaModerate": "Moderate",
       "quotaMany": "Many",
       "quotaALot": "A lot",
+      "quotaQuestionsRange": "{min}–{max} questions",
       "quotaFewDesc": "7–10 questions",
       "quotaModerateDesc": "10–15 questions",
       "quotaManyDesc": "15–20 questions",
@@ -482,6 +507,7 @@
       "createSuccess": "Folder created successfully.",
       "createError": "Failed to create folder.",
       "deleteFolder": "Delete Folder",
+      "folderActions": "Folder options",
       "confirmDeleteFolderTitle": "Delete Folder",
       "confirmDeleteFolderDesc": "Are you sure you want to delete \"{name}\"? All words in this folder will be deleted.",
       "deleteSuccess": "Folder deleted successfully.",
@@ -771,11 +797,14 @@
     },
     "appearance": {
       "title": "Appearance & Preferences",
-      "description": "Customize application appearance and native language preferences.",
+      "description": "Customize your interface appearance and native language display across the app.",
       "theme": "Theme Mode",
-      "themeDescription": "Toggle between light, dark, or system mode",
+      "themeDescription": "Switch between light, dark, or system theme mode",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "themeSystem": "System",
       "language": "Language",
-      "languageDescription": "Choose language used across the application.",
+      "languageDescription": "Select your preferred application language.",
       "nativeLanguage": "Native Language",
       "nativeLanguageDescription": "Language for translations and definitions"
     },
@@ -797,7 +826,9 @@
       "personalInfo": "Personal Information",
       "fullName": "Full Name",
       "phone": "Phone Number",
-      "avatarUrl": "Avatar URL"
+      "avatarUrl": "Avatar URL",
+      "roleUser": "User",
+      "roleAdmin": "Administrator"
     },
     "goals": {
       "title": "Study Goals",

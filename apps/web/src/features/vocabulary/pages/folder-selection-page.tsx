@@ -9,6 +9,7 @@ import { CreateFolderDialog } from '@/features/vocabulary/components/dialogs/cre
 import { useVocabularyFolders } from '@/features/vocabulary/hooks';
 import { RouteEnum } from '@/shared/constants';
 import { useSetBreadcrumb } from '@/shared/hooks';
+import { useLocalStorage } from '@lumen/hooks';
 import { formatUrl } from '@lumen/shared-api';
 import { usePortal } from '@lumen/uikit/portal';
 
@@ -17,6 +18,10 @@ export function FolderSelectionPage() {
   const router = useRouter();
   const { data, isLoading } = useVocabularyFolders();
   const [presentCreateFolder] = usePortal(CreateFolderDialog);
+  const [activeFolderId, setActiveFolderId] = useLocalStorage<string | null>(
+    'lumen_selected_folder_id',
+    null,
+  );
 
   useSetBreadcrumb(
     useMemo(
@@ -30,17 +35,8 @@ export function FolderSelectionPage() {
 
   const allFolders = useMemo(() => data?.data || [], [data?.data]);
 
-  const activeFolderId = useMemo(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('lumen_selected_folder_id');
-    }
-    return null;
-  }, []);
-
   const handleSelectFolder = (folderId: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lumen_selected_folder_id', folderId);
-    }
+    setActiveFolderId(folderId);
     router.push(RouteEnum.VOCABULARY);
   };
 

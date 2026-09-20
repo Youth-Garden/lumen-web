@@ -10,6 +10,7 @@ import {
 } from '@lumen/uikit/components';
 import { PortalProps } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
+import { useLocalStorage } from '@lumen/hooks';
 import { useMemo } from 'react';
 import { FolderCatalogSection } from '../cards/folder-catalog-section';
 
@@ -26,14 +27,16 @@ export function SwitchFolderDialog({
 }: PortalProps<SwitchFolderDialogData>) {
   const t = useTranslations('Vocabulary.Folders');
   const { data: foldersRes, isLoading } = useVocabularyFolders();
+  const [, setSelectedFolderId] = useLocalStorage<string | null>(
+    'lumen_selected_folder_id',
+    null,
+  );
 
   const allFolders = useMemo(() => foldersRes?.data || [], [foldersRes?.data]);
   const activeFolderId = data?.activeFolderId || null;
 
   const handleSelectFolder = (folderId: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lumen_selected_folder_id', folderId);
-    }
+    setSelectedFolderId(folderId);
     data?.onSelectFolder?.(folderId);
     onDismiss?.();
   };

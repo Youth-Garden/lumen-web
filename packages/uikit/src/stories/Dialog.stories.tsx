@@ -81,3 +81,26 @@ export const Confirmation: Story = {
     </Dialog>
   ),
 };
+
+export const CenteredHeader: Story = {
+  render: () => (
+    <Dialog>
+      <DialogTrigger render={<Button variant="default">Centered Modal</Button>} />
+      <DialogContent>
+        <DialogHeader align="center">
+          <DialogTitle>Centered Dialog Header</DialogTitle>
+          <DialogDescription>
+            This dialog header is centered using align=&quot;center&quot;.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="py-4 text-center text-sm text-muted-foreground">
+          Modal body content with centered layout.
+        </div>
+        <DialogFooter className="justify-center sm:justify-center">
+          <Button variant="default">Got it</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  ),
+};
+

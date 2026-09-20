@@ -27,8 +27,8 @@ export function StudyBottomActionBar({
       </Button>
 
       {/* Button 2: Practice */}
-      <Button variant="outline" size="sm" onClick={onPractice}>
-        <Icons name="droplet" className="w-3.5 h-3.5 text-primary" />
+      <Button variant="secondary" size="sm" onClick={onPractice}>
+        <Icons name="droplet" className="w-3.5 h-3.5" />
         <span>{t('practice')}</span>
       </Button>
 

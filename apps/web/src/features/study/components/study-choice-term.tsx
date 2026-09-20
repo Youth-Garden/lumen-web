@@ -62,6 +62,17 @@ export function StudyChoiceTerm({
         {options.map((option, index) => {
           const isSelected = selectedIndex === index;
           const isAnswered = selectedIndex !== null;
+          const isCorrect = option.isCorrect;
+
+          let bgClass =
+            'bg-card hover:bg-muted/70 active:scale-[0.99] cursor-pointer';
+          if (isSelected) {
+            bgClass = isCorrect
+              ? 'bg-emerald-500/10 dark:bg-emerald-500/20 cursor-default'
+              : 'bg-rose-500/10 dark:bg-rose-500/20 cursor-default';
+          } else if (isAnswered) {
+            bgClass = 'bg-card opacity-50 cursor-default';
+          }
 
           return (
             <button
@@ -69,20 +80,13 @@ export function StudyChoiceTerm({
               type="button"
               disabled={isAnswered}
               onClick={() => onSelectOption(index)}
-              className={
-                'relative flex flex-col justify-between p-5 rounded-2xl text-left transition-colors select-none ' +
-                (isSelected
-                  ? 'bg-muted text-foreground cursor-default'
-                  : isAnswered
-                    ? 'bg-card opacity-50 cursor-default'
-                    : 'bg-card hover:bg-muted/70 active:scale-[0.99] cursor-pointer')
-              }
+              className={`relative flex flex-col justify-between p-5 rounded-2xl text-left transition-colors select-none ${bgClass}`}
             >
               <span className="text-base sm:text-lg font-bold text-foreground">
                 {option.label}
               </span>
 
-              <span className="text-[11px] font-semibold text-muted-foreground mt-3">
+              <span className="text-[11px] font-semibold mt-3 text-muted-foreground">
                 {t('pressKeyHint', { key: (index + 1).toString() })}
               </span>
             </button>

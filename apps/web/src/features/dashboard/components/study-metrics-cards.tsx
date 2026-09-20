@@ -1,11 +1,13 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+
+import { StreakIcon } from '@/shared/components/streak-icon';
 import { RouteEnum } from '@/shared/constants';
 import { Card, CardContent, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 
 interface StudyMetricsCardsProps {
   streak: number;
@@ -42,9 +44,12 @@ export function StudyMetricsCards({
       >
         <CardContent className="p-5 flex flex-col justify-between h-full space-y-4 relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-primary-foreground/80 tracking-wide">
-              {t('studyStreak')}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <StreakIcon size={18} />
+              <span className="text-xs font-semibold text-primary-foreground/80 tracking-wide">
+                {t('studyStreak')}
+              </span>
+            </div>
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground/15 text-primary-foreground shrink-0 transition-transform group-hover:scale-105">
               <Icons name="arrow-up-right" className="h-4 w-4" />
             </div>

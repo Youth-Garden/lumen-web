@@ -80,7 +80,12 @@ function DialogClose({ children, onClick, render, ...props }: TriggerProps) {
   }
 
   return (
-    <button type="button" data-slot="dialog-close" onClick={handleClick} {...props}>
+    <button
+      type="button"
+      data-slot="dialog-close"
+      onClick={handleClick}
+      {...props}
+    >
       {children}
     </button>
   );
@@ -135,11 +140,25 @@ function DialogContent({
   );
 }
 
-function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
+export interface DialogHeaderProps extends React.ComponentProps<'div'> {
+  align?: 'left' | 'center';
+}
+
+function DialogHeader({
+  className,
+  align = 'left',
+  ...props
+}: DialogHeaderProps) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn('flex flex-col gap-1.5 text-left', className)}
+      className={cn(
+        'flex flex-col gap-1.5',
+        align === 'center'
+          ? 'text-center items-center justify-center'
+          : 'text-left items-start',
+        className,
+      )}
       {...props}
     />
   );

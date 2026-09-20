@@ -111,19 +111,43 @@ export function FolderDetailPage({
 
   if (isLoading || isLoadingTopics) {
     return (
-      <div className="container max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8">
-        <Skeleton className="h-6 w-36 rounded-lg" />
-        <div className="space-y-3">
-          <Skeleton className="h-10 w-72 rounded-xl" />
-          <Skeleton className="h-5 w-96 rounded-lg" />
+      <div className="w-full py-2 pb-36 space-y-8">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-8 sm:h-9 w-48 sm:w-64 rounded-xl" />
+            <Skeleton className="h-5 w-20 rounded-full" />
+          </div>
+          <Skeleton className="h-4 w-72 sm:w-96 rounded-md mt-1" />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 justify-items-center">
-          {Array.from({ length: 15 }).map((_, index) => (
-            <div key={index} className="flex flex-col items-center gap-3 w-32">
-              <Skeleton className="w-20 h-20 rounded-full" />
-              <Skeleton className="h-4 w-24 rounded-md" />
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 justify-items-center">
+          {Array.from({ length: 18 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-between text-center p-2.5 rounded-2xl w-36 sm:w-40 select-none"
+            >
+              <div className="relative w-22 h-22 sm:w-24 sm:h-24 flex items-center justify-center">
+                <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-full border-2 border-muted/30 absolute inset-0" />
+                <Skeleton className="w-16 h-16 sm:w-17 sm:h-17 rounded-full" />
+              </div>
+
+              <div className="mt-2.5 w-full flex flex-col items-center gap-1.5 px-1">
+                <Skeleton className="h-4 w-20 sm:w-24 rounded-md" />
+                <Skeleton className="h-3 w-14 sm:w-16 rounded-md" />
+              </div>
+
+              <div className="flex items-center justify-center gap-2.5 mt-2.5">
+                <Skeleton className="h-3.5 w-10 rounded-full" />
+                <Skeleton className="h-3.5 w-6 rounded-full" />
+              </div>
             </div>
           ))}
+        </div>
+
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-card/90 backdrop-blur-md rounded-full shadow-lg p-1.5 px-3 border border-border/40">
+          <Skeleton className="h-8 w-24 rounded-full" />
+          <Skeleton className="h-8 w-24 rounded-full" />
+          <Skeleton className="h-8 w-24 rounded-full" />
         </div>
       </div>
     );

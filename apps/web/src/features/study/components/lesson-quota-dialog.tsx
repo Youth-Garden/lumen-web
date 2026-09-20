@@ -1,10 +1,7 @@
 'use client';
 
-import {
-  LESSON_QUOTA_CONFIGS,
-  LessonQuotaPreset,
-  useStudySettings,
-} from '@/features/study/hooks/use-study-settings';
+import { LESSON_QUOTA_CONFIGS, LessonQuotaPreset } from '@/services/study';
+import { useStudySettings } from '@/features/study/hooks/use-study-settings';
 import {
   Button,
   Dialog,
@@ -19,25 +16,25 @@ import { useTranslations } from 'next-intl';
 export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Study');
   const { settings, updateSettings } = useStudySettings();
-  const presets: LessonQuotaPreset[] = ['FEW', 'MODERATE', 'MANY', 'A_LOT'];
+  const presets: LessonQuotaPreset[] = Object.values(LessonQuotaPreset);
 
   const getPresetLabel = (presetKey: LessonQuotaPreset) => {
     switch (presetKey) {
-      case 'FEW':
-        return { label: t('quotaFew'), range: t('quotaFewDesc') };
-      case 'MODERATE':
-        return { label: t('quotaModerate'), range: t('quotaModerateDesc') };
-      case 'MANY':
-        return { label: t('quotaMany'), range: t('quotaManyDesc') };
-      case 'A_LOT':
-        return { label: t('quotaALot'), range: t('quotaALotDesc') };
+      case LessonQuotaPreset.FEW:
+        return t('quotaFew');
+      case LessonQuotaPreset.MODERATE:
+        return t('quotaModerate');
+      case LessonQuotaPreset.MANY:
+        return t('quotaMany');
+      case LessonQuotaPreset.A_LOT:
+        return t('quotaALot');
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="max-w-[360px] sm:max-w-[360px] bg-card">
-        <DialogHeader className="pb-1">
+        <DialogHeader align="center" className="pb-1">
           <DialogTitle className="text-base font-bold text-foreground">
             {t('maxQuestionsPerSession')}
           </DialogTitle>
@@ -49,7 +46,11 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
         <div className="flex flex-col gap-1">
           {presets.map((presetKey) => {
             const config = LESSON_QUOTA_CONFIGS[presetKey];
-            const localized = getPresetLabel(presetKey);
+            const label = getPresetLabel(presetKey);
+            const rangeText = t('quotaQuestionsRange', {
+              min: config.minCount,
+              max: config.maxCount,
+            });
             const isSelected = settings.lessonQuotaPreset === presetKey;
 
             return (
@@ -76,7 +77,7 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
                         : 'text-foreground font-medium'
                     }`}
                   >
-                    {localized.label}
+                    {label}
                   </span>
                   <span
                     className={`text-xs ml-2 ${
@@ -85,7 +86,7 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
                         : 'text-muted-foreground'
                     }`}
                   >
-                    ({localized.range})
+                    ({rangeText})
                   </span>
                 </div>
 

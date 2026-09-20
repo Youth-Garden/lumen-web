@@ -28,7 +28,6 @@ export interface UseStudySessionReturn {
   masteredIds: string[];
   currentItem: StudyQueueItem | null;
   currentCard: VocabularyWord | null;
-  quotaRangeText: string;
   isFlipped: boolean;
   isFinished: boolean;
   feedback: StudyFeedbackState | null;

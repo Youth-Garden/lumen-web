@@ -2,7 +2,12 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@lumen/uikit/components';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import Image from 'next/image';
 
@@ -56,15 +61,24 @@ export function FolderTopicGrid({
           </div>
 
           {onDeleteFolder && (
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={onDeleteFolder}
-              title={t('deleteFolder')}
-              className="text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
-            >
-              <Icons name="trash-2" className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className="flex items-center justify-center size-9 rounded-2xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                aria-label={t('folderActions')}
+              >
+                <Icons name="more-horizontal" className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-40">
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={onDeleteFolder}
+                  className="cursor-pointer"
+                >
+                  <Icons name="trash-2" className="mr-2 h-4 w-4" />
+                  <span>{t('deleteFolder')}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
 

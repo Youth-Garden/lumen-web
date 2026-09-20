@@ -16,3 +16,4 @@ export * from './flag-us-icon';
 export * from './flag-jp-icon';
 export * from './chevron-down-icon';
 export * from './study-graduate-icon';
+export * from './sidebar-toggle-icon';

@@ -91,7 +91,13 @@ export const SettingsPage = () => {
                   {t('appearance.themeDescription')}
                 </p>
               </div>
-              <ThemeSwitcher />
+              <ThemeSwitcher
+                labels={{
+                  light: t('appearance.themeLight'),
+                  dark: t('appearance.themeDark'),
+                  system: t('appearance.themeSystem'),
+                }}
+              />
             </div>
             <div className="flex items-center justify-between gap-4 py-4 last:pb-0">
               <div className="space-y-0.5">

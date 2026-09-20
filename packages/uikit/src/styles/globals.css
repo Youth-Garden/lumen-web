@@ -178,6 +178,11 @@
     @apply border-border outline-ring/50;
   }
 
+  ::selection {
+    background-color: color-mix(in srgb, var(--primary) 30%, transparent);
+    color: inherit;
+  }
+
   /* Thicken stroke-based icons */
   /* svg[stroke="currentColor"] {
     stroke-width: 2.5px;

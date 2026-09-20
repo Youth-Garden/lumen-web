@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useDebounce } from '@lumen/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
 import {
@@ -25,6 +26,7 @@ import { RouteEnum } from '@/shared/constants';
 import { formatUrl } from '@lumen/shared-api';
 
 export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
+  const t = useTranslations('CommandPalette');
   const router = useRouter();
   const { logout } = useLogout();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -71,28 +73,28 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
       }}
     >
       <CommandInput
-        placeholder="Search folders, words, or commands... (Ctrl + K)"
+        placeholder={t('placeholder')}
         value={search}
         onValueChange={setSearch}
       />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>{t('empty')}</CommandEmpty>
 
         {isSearching && (
           <div className="p-4 text-center text-sm text-muted-foreground">
-            Searching...
+            {t('searching')}
           </div>
         )}
 
         {!debouncedSearch && (
-          <CommandGroup heading="Suggestions">
+          <CommandGroup heading={t('suggestions')}>
             <CommandItem
               onSelect={() =>
                 runCommand(() => router.push(RouteEnum.DASHBOARD))
               }
             >
               <Icons name="home" className="mr-2 h-4 w-4" />
-              <span>Overview Dashboard</span>
+              <span>{t('overview')}</span>
             </CommandItem>
             <CommandItem
               onSelect={() =>
@@ -100,7 +102,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
               }
             >
               <Icons name="book-open" className="mr-2 h-4 w-4" />
-              <span>Vocabulary Folders</span>
+              <span>{t('vocabFolders')}</span>
             </CommandItem>
           </CommandGroup>
         )}
@@ -108,7 +110,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
         {debouncedSearch && (
           <>
             {filteredFolders.length > 0 && (
-              <CommandGroup heading="Folders">
+              <CommandGroup heading={t('folders')}>
                 {filteredFolders.slice(0, 5).map((folder) => (
                   <CommandItem
                     key={folder.id}
@@ -141,7 +143,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
             )}
 
             {vocabWords?.data?.items && vocabWords.data.items.length > 0 && (
-              <CommandGroup heading="Vocabulary Words">
+              <CommandGroup heading={t('vocabulary')}>
                 {vocabWords.data.items.slice(0, 5).map((word) => (
                   <CommandItem
                     key={word.id}
@@ -169,12 +171,12 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
 
         <CommandSeparator />
 
-        <CommandGroup heading="Quick Actions">
+        <CommandGroup heading={t('quickActions')}>
           <CommandItem
             onSelect={() => runCommand(() => router.push(RouteEnum.SETTINGS))}
           >
             <Icons name="user" className="mr-2 h-4 w-4" />
-            <span>Profile Settings</span>
+            <span>{t('profileSettings')}</span>
           </CommandItem>
           <CommandItem
             onSelect={() => {
@@ -184,10 +186,11 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
             }}
           >
             <Icons name="log-out" className="mr-2 h-4 w-4" />
-            <span>Log out</span>
+            <span>{t('logout')}</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>
   );
 }
+

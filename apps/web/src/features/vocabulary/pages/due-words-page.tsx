@@ -125,12 +125,35 @@ export function DueWordsPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full py-4 pb-20 space-y-6">
-        <Skeleton className="h-9 w-64 rounded-xl" />
+      <div className="w-full space-y-6 pb-20">
+        <div className="flex flex-col gap-3 pb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <Skeleton className="h-8 sm:h-9 w-56 sm:w-64 rounded-xl" />
+            <div className="flex items-center gap-1.5 self-start sm:self-auto">
+              <Skeleton className="h-8 w-24 rounded-lg" />
+              <Skeleton className="h-8 w-28 rounded-lg" />
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Skeleton key={index} className="h-28 w-full rounded-2xl" />
+          {Array.from({ length: 15 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-2xl gap-2.5"
+            >
+              <Skeleton className="w-[50px] h-[50px] rounded-full shrink-0" />
+              <div className="w-full flex flex-col items-center gap-1.5 px-1">
+                <Skeleton className="h-4 w-20 sm:w-24 rounded-md" />
+                <Skeleton className="h-3.5 w-24 sm:w-28 rounded-md" />
+              </div>
+            </div>
           ))}
+        </div>
+
+        <div className="fixed bottom-6 right-8 flex items-center gap-3 z-30">
+          <Skeleton className="h-10 w-28 rounded-xl" />
+          <Skeleton className="h-10 w-28 rounded-xl" />
         </div>
       </div>
     );

@@ -90,8 +90,10 @@ export function ProfileCard({ user }: ProfileCardProps) {
               {user?.fullName ?? '—'}
             </p>
             <p className="text-sm text-muted-foreground">{user?.email}</p>
-            <p className="text-xs text-muted-foreground capitalize">
-              {user?.role?.toLowerCase()}
+            <p className="text-xs text-muted-foreground">
+              {user?.role?.toUpperCase() === 'ADMIN'
+                ? t('profile.roleAdmin')
+                : t('profile.roleUser')}
             </p>
           </div>
         </div>

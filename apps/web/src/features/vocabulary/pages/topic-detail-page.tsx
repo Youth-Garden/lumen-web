@@ -104,12 +104,26 @@ export function TopicDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full py-4 pb-36 space-y-6">
-        <Skeleton className="h-9 w-60 rounded-xl" />
+      <div className="w-full py-2 pb-36">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Skeleton key={index} className="h-28 w-full rounded-2xl" />
+          {Array.from({ length: 15 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-2xl gap-2.5"
+            >
+              <Skeleton className="w-[50px] h-[50px] rounded-full shrink-0" />
+              <div className="w-full flex flex-col items-center gap-1.5 px-1">
+                <Skeleton className="h-4 w-20 sm:w-24 rounded-md" />
+                <Skeleton className="h-3.5 w-24 sm:w-28 rounded-md" />
+              </div>
+            </div>
           ))}
+        </div>
+
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-card/90 backdrop-blur-md rounded-full shadow-lg p-1.5 px-3 border border-border/40">
+          <Skeleton className="h-8 w-24 rounded-full" />
+          <Skeleton className="h-8 w-24 rounded-full" />
+          <Skeleton className="h-8 w-24 rounded-full" />
         </div>
       </div>
     );

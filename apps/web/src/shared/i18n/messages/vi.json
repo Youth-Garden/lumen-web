@@ -2,7 +2,25 @@
   "Common": {
     "notifications": "Thông báo",
     "noNotifications": "Không có thông báo",
+    "allCaughtUp": "Bạn đã đọc hết thông báo!",
     "markAllAsRead": "Đánh dấu tất cả đã đọc"
+  },
+  "CommandPalette": {
+    "placeholder": "Tìm kiếm thư mục, từ vựng hoặc lệnh... (Ctrl + K)",
+    "empty": "Không tìm thấy kết quả phù hợp.",
+    "noResults": "Không tìm thấy kết quả phù hợp.",
+    "searching": "Đang tìm kiếm...",
+    "suggestions": "Gợi ý nhanh",
+    "folders": "Thư mục từ vựng",
+    "vocabulary": "Từ vựng",
+    "vocabularyWords": "Từ vựng",
+    "quickActions": "Hành động nhanh",
+    "overview": "Tổng quan",
+    "overviewDashboard": "Tổng quan",
+    "vocabFolders": "Thư mục từ vựng",
+    "vocabularyFolders": "Thư mục từ vựng",
+    "profileSettings": "Cài đặt tài khoản",
+    "logout": "Đăng xuất"
   },
   "Error": {
     "title": "Đã có lỗi xảy ra",
@@ -260,6 +278,8 @@
       "studiedMinutes": "Thời gian học"
     },
     "Sidebar": {
+      "groupMain": "Chính",
+      "groupSystem": "Hệ thống",
       "overview": "Tổng quan",
       "study": "Chế độ học",
       "grammar": "Ngữ pháp",
@@ -281,6 +301,10 @@
     },
     "Header": {
       "search": "Tìm kiếm...",
+      "searchPlaceholder": "Tìm kiếm thư mục, từ vựng...",
+      "searchTooltip": "Tìm kiếm (Ctrl + K)",
+      "profile": "Hồ sơ cá nhân",
+      "logout": "Đăng xuất",
       "language": "Ngôn ngữ"
     }
   },
@@ -397,6 +421,7 @@
       "quotaModerate": "Trung bình",
       "quotaMany": "Nhiều",
       "quotaALot": "Rất nhiều",
+      "quotaQuestionsRange": "{min}–{max} câu hỏi",
       "quotaFewDesc": "7–10 câu hỏi",
       "quotaModerateDesc": "10–15 câu hỏi",
       "quotaManyDesc": "15–20 câu hỏi",
@@ -482,6 +507,7 @@
       "createSuccess": "Đã tạo thư mục thành công.",
       "createError": "Không thể tạo thư mục.",
       "deleteFolder": "Xóa thư mục",
+      "folderActions": "Tùy chọn thư mục",
       "confirmDeleteFolderTitle": "Xác nhận xóa thư mục",
       "confirmDeleteFolderDesc": "Bạn có chắc chắn muốn xóa thư mục \"{name}\"? Toàn bộ từ vựng trong thư mục này sẽ bị xóa.",
       "deleteSuccess": "Đã xóa thư mục thành công.",
@@ -774,13 +800,16 @@
       "description": "Tùy chỉnh giao diện và ngôn ngữ mẹ đẻ hiển thị trong ứng dụng.",
       "theme": "Chế độ giao diện",
       "themeDescription": "Chuyển đổi giữa chế độ sáng, tối hoặc theo hệ thống",
+      "themeLight": "Sáng",
+      "themeDark": "Tối",
+      "themeSystem": "Hệ thống",
       "language": "Ngôn ngữ",
       "languageDescription": "Chọn ngôn ngữ sử dụng trong toàn ứng dụng.",
       "nativeLanguage": "Ngôn ngữ mẹ đẻ",
       "nativeLanguageDescription": "Ngôn ngữ dịch nghĩa và hiển thị mặc định trong ứng dụng"
     },
     "streakFreeze": {
-      "title": "Đóng băng chuỗi (Streak Freeze)",
+      "title": "Đóng băng chuỗi",
       "description": "Bảo vệ chuỗi ngày học của bạn không bị mất khi lỡ quên hoặc không kịp học.",
       "available": "lượt khả dụng",
       "dailyRewardHint": "Mỗi ngày hoàn thành bài học, bạn sẽ nhận được 1 lượt đóng băng (tối đa 5 lượt).",
@@ -797,7 +826,9 @@
       "personalInfo": "Thông tin cá nhân",
       "fullName": "Họ và tên",
       "phone": "Số điện thoại",
-      "avatarUrl": "URL ảnh đại diện"
+      "avatarUrl": "URL ảnh đại diện",
+      "roleUser": "Người dùng",
+      "roleAdmin": "Quản trị viên"
     },
     "goals": {
       "title": "Mục tiêu học tập",

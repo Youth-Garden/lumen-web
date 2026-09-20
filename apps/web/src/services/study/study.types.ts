@@ -45,3 +45,18 @@ export interface ReviewFlashcardPayload {
 export interface BatchReviewFlashcardsPayload {
   reviews: ReviewFlashcardPayload[];
 }
+
+export enum LessonQuotaPreset {
+  FEW = 'FEW',
+  MODERATE = 'MODERATE',
+  MANY = 'MANY',
+  A_LOT = 'A_LOT',
+}
+
+export interface LessonQuotaConfig {
+  preset: LessonQuotaPreset;
+  targetCount: number;
+  minCount: number;
+  maxCount: number;
+}
+

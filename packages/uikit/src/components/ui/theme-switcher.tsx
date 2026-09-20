@@ -12,7 +12,17 @@ import { Icons } from '@lumen/uikit/icons';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
-export function ThemeSwitcher() {
+export interface ThemeSwitcherLabels {
+  light?: string;
+  dark?: string;
+  system?: string;
+}
+
+export interface ThemeSwitcherProps {
+  labels?: ThemeSwitcherLabels;
+}
+
+export function ThemeSwitcher({ labels }: ThemeSwitcherProps = {}) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -26,6 +36,10 @@ export function ThemeSwitcher() {
 
   const currentTheme = theme || 'system';
 
+  const lightText = labels?.light ?? 'Light';
+  const darkText = labels?.dark ?? 'Dark';
+  const systemText = labels?.system ?? 'System';
+
   const renderTriggerIcon = () => {
     if (currentTheme === 'light') {
       return <Icons name="sun" />;
@@ -37,9 +51,9 @@ export function ThemeSwitcher() {
   };
 
   const renderTriggerLabel = () => {
-    if (currentTheme === 'light') return 'Light';
-    if (currentTheme === 'dark') return 'Dark';
-    return 'System';
+    if (currentTheme === 'light') return lightText;
+    if (currentTheme === 'dark') return darkText;
+    return systemText;
   };
 
   return (
@@ -57,18 +71,18 @@ export function ThemeSwitcher() {
         <DropdownMenuRadioGroup value={currentTheme} onValueChange={setTheme}>
           <DropdownMenuRadioItem value="light" className="gap-2 text-xs py-2">
             <Icons name="sun" className="h-3.5 w-3.5 shrink-0 " />
-            Light
+            {lightText}
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark" className="gap-2 text-xs py-2">
             <Icons name="moon" className="h-3.5 w-3.5 shrink-0" />
-            Dark
+            {darkText}
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="system" className="gap-2 text-xs py-2">
             <Icons
               name="monitor"
               className="h-3.5 w-3.5 shrink-0 text-foreground"
             />
-            System
+            {systemText}
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

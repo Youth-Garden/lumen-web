@@ -62,7 +62,7 @@ export function StudyFlashcard({
     >
       <motion.div
         className="w-full h-full relative [transform-style:preserve-3d]"
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        animate={{ rotateY: isFlipped ? -180 : 0 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
       >
         <div
@@ -142,7 +142,7 @@ export function StudyFlashcard({
         <div
           className="absolute inset-0 w-full h-full bg-card text-card-foreground shadow-xl rounded-2xl p-6 sm:p-8 flex flex-col justify-center items-center text-center overflow-hidden"
           style={{
-            transform: 'rotateY(180deg)',
+            transform: 'rotateY(-180deg)',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             pointerEvents: !isFlipped ? 'none' : 'auto',

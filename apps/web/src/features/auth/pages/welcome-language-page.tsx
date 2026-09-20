@@ -2,6 +2,7 @@
 
 import { NATIVE_LANGUAGE_STORAGE_KEY, RouteEnum } from '@/shared/constants';
 import { useRouter } from '@/shared/i18n/routing';
+import { useLocalStorage } from '@lumen/hooks';
 import { Button, Logo } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
@@ -36,6 +37,11 @@ export const WelcomeLanguagePage = () => {
   const t = useTranslations('Auth.Welcome');
   const router = useRouter();
 
+  const [storedLanguage, setStoredLanguage] = useLocalStorage<string | null>(
+    NATIVE_LANGUAGE_STORAGE_KEY,
+    null,
+  );
+
   const [selectedLanguage, setSelectedLanguage] = useState<'vi' | 'en'>(
     SUPPORTED_LANGUAGES.some((lang) => lang.code === currentLocale)
       ? currentLocale
@@ -43,23 +49,26 @@ export const WelcomeLanguagePage = () => {
   );
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = (localStorage.getItem(NATIVE_LANGUAGE_STORAGE_KEY) ||
-        cookieHelper.get(NATIVE_LANGUAGE_STORAGE_KEY)) as
-        'vi' | 'en' | null;
-      if (stored && SUPPORTED_LANGUAGES.some((lang) => lang.code === stored)) {
-        setSelectedLanguage(stored);
-      }
+    const candidate =
+      storedLanguage ||
+      (typeof window !== 'undefined'
+        ? cookieHelper.get(NATIVE_LANGUAGE_STORAGE_KEY)
+        : null);
+    if (
+      candidate &&
+      SUPPORTED_LANGUAGES.some((lang) => lang.code === candidate)
+    ) {
+      setSelectedLanguage(candidate as 'vi' | 'en');
     }
-  }, []);
+  }, [storedLanguage]);
 
   const handleSelect = (code: 'vi' | 'en') => {
     setSelectedLanguage(code);
   };
 
   const handleContinue = () => {
+    setStoredLanguage(selectedLanguage);
     if (typeof window !== 'undefined') {
-      localStorage.setItem(NATIVE_LANGUAGE_STORAGE_KEY, selectedLanguage);
       cookieHelper.set(NATIVE_LANGUAGE_STORAGE_KEY, selectedLanguage, {
         expires: 365,
         path: '/',

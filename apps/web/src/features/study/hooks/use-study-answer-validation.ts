@@ -17,6 +17,8 @@ import {
   updateCardProgressMap,
   updateMasteredWordIds,
 } from '@/features/study/utils/study-session.utils';
+import { SoundEffectEnum } from '@/shared/types';
+import { soundHelper } from '@/shared/utils';
 import type { VocabularyWord } from '@/services/vocabulary';
 import type { CardWithProgress } from '@/services/study';
 
@@ -28,6 +30,7 @@ export interface UseStudyAnswerValidationProps {
   cards: VocabularyWord[];
   globalCards: VocabularyWord[];
   wordProgressMap: Record<string, { level: number; learningStep: number }>;
+  soundEffectsEnabled?: boolean;
   setActiveQueue: (items: StudyQueueItem[]) => void;
   setWordProgressMap: Dispatch<
     SetStateAction<Record<string, { level: number; learningStep: number }>>
@@ -46,6 +49,7 @@ export function useStudyAnswerValidation({
   cards,
   globalCards,
   wordProgressMap,
+  soundEffectsEnabled = true,
   setActiveQueue,
   setWordProgressMap,
   setMasteredIds,
@@ -64,6 +68,13 @@ export function useStudyAnswerValidation({
   const handleVerifyAnswer = useCallback(
     (isCorrect: boolean, userAnswer?: string) => {
       if (!currentCard || !currentItem) return;
+      if (soundEffectsEnabled) {
+        soundHelper.play(
+          isCorrect
+            ? SoundEffectEnum.STUDY_CORRECT
+            : SoundEffectEnum.STUDY_INCORRECT,
+        );
+      }
       const cardId = currentCard.id;
       const feedbackState = buildFeedbackState(currentCard, isCorrect, userAnswer);
       setFeedback(feedbackState);

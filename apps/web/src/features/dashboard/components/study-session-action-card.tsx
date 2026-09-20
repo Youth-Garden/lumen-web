@@ -1,5 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import React from 'react';
+
+import { StreakIcon } from '@/shared/components/streak-icon';
 import {
   Button,
   Card,
@@ -10,9 +15,6 @@ import {
   Skeleton,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import React from 'react';
 import { RouteEnum } from '@/shared/constants';
 
 interface StudySessionActionCardProps {
@@ -66,8 +68,8 @@ export function StudySessionActionCard({
             </CardDescription>
           </div>
 
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary flex items-center gap-1">
-            <Icons name="flame" className="h-3 w-3 text-orange-500" />
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center gap-1.5 shrink-0">
+            <StreakIcon size={14} />
             {streak} {t('days')}
           </span>
         </div>

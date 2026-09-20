@@ -1,5 +1,6 @@
 'use client';
 
+import { StreakIcon } from '@/shared/components/streak-icon';
 import { HeatmapItem } from '@/services/progress';
 import {
   Card,
@@ -122,10 +123,13 @@ export function StudyGoalConsistencyChart({
       <CardContent className="space-y-2 pt-1">
         {/* Sub-kpis */}
         <div className="flex items-center justify-between text-xs text-muted-foreground px-1 pb-1">
-          <span>
-            {tDashboard('streakLabel')}:{' '}
-            <strong className="text-foreground font-semibold">{streak}</strong>{' '}
-            {t('days')}
+          <span className="flex items-center gap-1.5">
+            <StreakIcon size={14} />
+            <span>
+              {tDashboard('streakLabel')}:{' '}
+              <strong className="text-foreground font-semibold">{streak}</strong>{' '}
+              {t('days')}
+            </span>
           </span>
           <span>
             {t('dailyGoalLine')}:{' '}

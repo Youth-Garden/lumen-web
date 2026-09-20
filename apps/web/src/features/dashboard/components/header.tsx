@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+import { StreakIcon } from '@/shared/components/streak-icon';
 import { useLogout } from '@/features/auth/hooks';
 import { NotificationDropdown } from '@/features/notification/components/notification-dropdown';
 import { CommandPalette } from '@/shared/components/command-palette';
@@ -23,6 +25,7 @@ import { usePortal } from '@lumen/uikit/portal';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 
 export function Header() {
+  const t = useTranslations('Dashboard.Header');
   const user = useAuthStore((state) => state.user);
   const [presentCommandPalette] = usePortal(CommandPalette, {
     key: 'command_palette',
@@ -54,7 +57,7 @@ export function Header() {
         type="button"
         onClick={() => presentCommandPalette()}
         className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground text-xs bg-card/90 hover:bg-card active:bg-card dark:bg-card/90 dark:hover:bg-card/90 backdrop-blur-md active:scale-100 active:not-aria-[haspopup]:scale-100"
-        title="Search (Ctrl + K)"
+        title={t('searchTooltip')}
       >
         <div className="flex items-center gap-2.5">
           <Icons
@@ -62,7 +65,7 @@ export function Header() {
             className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0"
           />
           <span className="font-medium text-xs text-muted-foreground/80 group-hover:text-foreground transition-colors">
-            Search folders, words...
+            {t('searchPlaceholder')}
           </span>
         </div>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-0.5 rounded-md bg-muted/60 px-1.5 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs">
@@ -74,7 +77,7 @@ export function Header() {
       <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md shadow-xs rounded-full p-1 pl-2">
         {progressData && (
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-semibold text-xs">
-            <span className="text-sm select-none leading-none">🔥</span>
+            <StreakIcon size={16} />
             <span>{progressData.streak}</span>
           </div>
         )}
@@ -112,7 +115,7 @@ export function Header() {
               onClick={() => router.push(RouteEnum.SETTINGS)}
             >
               <Icons name="user" className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span>{t('profile')}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -121,7 +124,7 @@ export function Header() {
               className="cursor-pointer"
             >
               <Icons name="log-out" className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+              <span>{t('logout')}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
