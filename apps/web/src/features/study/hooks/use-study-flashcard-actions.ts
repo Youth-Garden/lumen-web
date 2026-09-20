@@ -1,6 +1,11 @@
 'use client';
 
-import { useCallback, type RefObject, type Dispatch, type SetStateAction } from 'react';
+import {
+  useCallback,
+  type RefObject,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { FlashcardRating, type CardWithProgress } from '@/services/study';
 import type { VocabularyWord } from '@/services/vocabulary';
 import type { StudyQueueItem } from '@/features/study/types/study.types';

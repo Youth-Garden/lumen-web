@@ -59,4 +59,3 @@ export interface LessonQuotaConfig {
   minCount: number;
   maxCount: number;
 }
-

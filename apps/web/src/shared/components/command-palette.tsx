@@ -193,4 +193,3 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
     </CommandDialog>
   );
 }
-

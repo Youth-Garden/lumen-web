@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { cn } from '@lumen/uikit/utils';
+import Image from 'next/image';
 
 export interface StreakIconProps {
   size?: number;
@@ -18,6 +18,7 @@ export function StreakIcon({
       alt={alt}
       width={size}
       height={size}
+      unoptimized
       className={cn('object-contain select-none shrink-0', className)}
       style={{ width: size, height: size }}
     />
@@ -35,6 +36,7 @@ export function StreakFreezeIcon({
       alt={alt}
       width={size}
       height={size}
+      unoptimized
       className={cn('object-contain select-none shrink-0', className)}
       style={{ width: size, height: size }}
     />
@@ -52,6 +54,7 @@ export function LongestStreakIcon({
       alt={alt}
       width={size}
       height={size}
+      unoptimized
       className={cn('object-contain select-none shrink-0', className)}
       style={{ width: size, height: size }}
     />

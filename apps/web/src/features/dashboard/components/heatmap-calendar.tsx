@@ -1,13 +1,15 @@
 'use client';
 
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  Skeleton,
   TooltipProvider,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { usePortal } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { eachDayOfInterval, format, startOfDay } from 'date-fns';
 import { useTranslations } from 'next-intl';
@@ -21,6 +23,7 @@ import {
   buildHeatmapWeeksAndMonthLabels,
   calculateHeatmapStats,
 } from '../utils/heatmap.utils';
+import { ActivityInfoDialog } from './activity-info-dialog';
 import { HeatmapGrid } from './heatmap/heatmap-grid';
 import { HeatmapInsightsSidebar } from './heatmap/heatmap-insights-sidebar';
 import { HeatmapLegend } from './heatmap/heatmap-legend';
@@ -37,6 +40,7 @@ export function HeatmapCalendar({
 }: HeatmapCalendarProps) {
   const t = useTranslations('Dashboard');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [presentActivityInfoDialog] = usePortal(ActivityInfoDialog);
 
   const user = useAuthStore((state) => state.user);
   const currentYear = useMemo(() => new Date().getFullYear(), []);
@@ -120,9 +124,21 @@ export function HeatmapCalendar({
     <TooltipProvider delay={100}>
       <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-base font-bold font-heading text-foreground">
-            {t('activityHeatmap')}
-          </CardTitle>
+          <div className="flex items-center gap-1">
+            <CardTitle className="text-base font-bold font-heading text-foreground">
+              {t('activityHeatmap')}
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => presentActivityInfoDialog()}
+              className="h-6 w-6 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              aria-label={t('ActivityInfo.infoButtonAria')}
+              title={t('ActivityInfo.infoButtonAria')}
+            >
+              <Icons name="info" className="size-3.5" />
+            </Button>
+          </div>
           {!isInitialLoading && (
             <span className="text-xs text-muted-foreground font-medium">
               {totalActivities} {t('contributionsInYear', { year: activeYear })}

@@ -110,34 +110,25 @@ export const WelcomeLanguagePage = () => {
                 type="button"
                 onClick={() => handleSelect(lang.code)}
                 className={cn(
-                  'w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 cursor-pointer text-left',
+                  'w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-200 cursor-pointer text-left',
                   isSelected
                     ? 'bg-primary/15 text-foreground font-medium'
                     : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
                 )}
               >
-                <div className="flex items-center gap-3.5">
-                  <Icons
-                    name={lang.icon}
-                    size={28}
-                    className="rounded-full shadow-2xs overflow-hidden shrink-0"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-foreground leading-tight">
-                      {lang.nativeName}
-                    </span>
-                    <span className="text-xs text-muted-foreground leading-tight">
-                      {lang.name}
-                    </span>
-                  </div>
+                <Icons
+                  name={lang.icon}
+                  size={28}
+                  className="rounded-full shadow-2xs overflow-hidden shrink-0"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-foreground leading-tight">
+                    {lang.nativeName}
+                  </span>
+                  <span className="text-xs text-muted-foreground leading-tight">
+                    {lang.name}
+                  </span>
                 </div>
-
-                {isSelected && (
-                  <Icons
-                    name="check"
-                    className="w-4 h-4 text-primary shrink-0"
-                  />
-                )}
               </button>
             );
           })}

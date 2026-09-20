@@ -47,10 +47,7 @@ export function buildHeatmapMap(
   if (activeYear === currentYear) {
     const currentTodayCount = map.get(todayStr) || 0;
     if (currentTodayCount === 0 && (todayStudyMinutes > 0 || streak > 0)) {
-      map.set(
-        todayStr,
-        Math.max(1, Math.round((todayStudyMinutes || 10) / 2)),
-      );
+      map.set(todayStr, Math.max(1, Math.round((todayStudyMinutes || 10) / 2)));
     }
   }
 

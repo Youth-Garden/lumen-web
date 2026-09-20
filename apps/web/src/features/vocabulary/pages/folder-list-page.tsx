@@ -151,7 +151,11 @@ export function FolderListPage() {
       dueFlashcards?.data?.length ??
       overviewData?.dueCount ??
       globalDueCards.length,
-    [dueFlashcards?.data?.length, overviewData?.dueCount, globalDueCards.length],
+    [
+      dueFlashcards?.data?.length,
+      overviewData?.dueCount,
+      globalDueCards.length,
+    ],
   );
 
   const { globalLearnedCount, stages } = useMemo(

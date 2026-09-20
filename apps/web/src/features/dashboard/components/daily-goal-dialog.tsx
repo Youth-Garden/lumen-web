@@ -18,6 +18,7 @@ import { PortalProps } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 import React from 'react';
+import { toast } from 'sonner';
 import {
   useProgressDashboard,
   useUpdateProgressSettings,
@@ -99,7 +100,11 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
       { dailyGoalMinutes: finalMinutes },
       {
         onSuccess: () => {
+          toast.success(t('goalUpdatedSuccess') || 'Goal updated successfully');
           onDismiss?.();
+        },
+        onError: () => {
+          toast.error(t('goalUpdatedError') || 'Failed to update daily goal');
         },
       },
     );
@@ -124,11 +129,11 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="sm:max-w-[480px]">
-        <DialogHeader className="space-y-1">
-          <DialogTitle className="text-xl font-bold font-heading">
+        <DialogHeader align="center" className="space-y-1 text-center">
+          <DialogTitle className="text-xl font-bold font-heading text-center">
             {t('setDailyGoal')}
           </DialogTitle>
-          <DialogDescription className="text-xs sm:text-sm text-muted-foreground pt-0.5">
+          <DialogDescription className="text-xs sm:text-sm text-muted-foreground pt-0.5 text-center">
             {t('setDailyGoalDesc')}
           </DialogDescription>
         </DialogHeader>

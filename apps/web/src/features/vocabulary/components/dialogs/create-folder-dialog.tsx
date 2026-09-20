@@ -61,9 +61,13 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{t('createFolder')}</DialogTitle>
-          <DialogDescription>{t('createFolderDescription')}</DialogDescription>
+        <DialogHeader align="center" className="text-center space-y-1">
+          <DialogTitle className="text-xl font-bold font-heading text-center">
+            {t('createFolder')}
+          </DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm text-muted-foreground pt-0.5 text-center">
+            {t('createFolderDescription')}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

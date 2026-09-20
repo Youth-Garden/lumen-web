@@ -1,7 +1,6 @@
 'use client';
 
 import { HeatmapItem } from '@/services/progress';
-import { StreakIcon } from '@/shared/components/streak-icon';
 import {
   Card,
   CardContent,
@@ -44,27 +43,35 @@ export function WeeklyGoalTrackerCard({
   }, [heatmapData, todayStudyMinutes, dailyGoalMinutes, locale]);
 
   const completedDaysCount = useMemo(() => {
-    return days.filter((d) => d.status === 'completed' || (d.isToday && d.isGoalMet))
-      .length;
+    return days.filter(
+      (d) => d.status === 'completed' || (d.isToday && d.isGoalMet),
+    ).length;
   }, [days]);
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-5 space-y-4">
+      <Card className="rounded-3xl border-none bg-card shadow-xs p-4 sm:p-5 space-y-3">
         <Skeleton className="h-6 w-36 rounded-lg" />
-        <Skeleton className="h-28 w-full rounded-2xl" />
+        <Skeleton className="h-24 w-full rounded-2xl" />
       </Card>
     );
   }
 
+  const safeGoal = Math.max(dailyGoalMinutes, 1);
+  const todayProgressPercent = Math.min(
+    100,
+    Math.round((todayStudyMinutes / safeGoal) * 100),
+  );
+
   return (
     <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
-      <CardHeader className="p-5 pb-2">
+      <CardHeader className="px-5 pt-3.5 pb-0">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary shrink-0">
-              <Icons name="target" className="h-5 w-5" />
-            </div>
+          <div className="flex items-center gap-2">
+            <Icons
+              name="target"
+              className="h-4.5 w-4.5 text-primary shrink-0"
+            />
             <div>
               <CardTitle className="text-sm font-bold font-heading text-foreground">
                 {t('weeklyGoalTitle')}
@@ -75,29 +82,94 @@ export function WeeklyGoalTrackerCard({
             </div>
           </div>
 
-          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shrink-0 flex items-center gap-1 shadow-2xs">
+          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 flex items-center gap-1">
             <Icons name="check" className="h-3.5 w-3.5 stroke-[2.5]" />
             {completedDaysCount}/7 {t('days')}
           </span>
         </div>
       </CardHeader>
 
-      <CardContent className="p-5 pt-2 flex-1 flex flex-col justify-between gap-4">
-        {/* 7 Days Row */}
-        <div className="grid grid-cols-7 gap-1.5 sm:gap-2 pt-1">
+      <CardContent className="px-5 pb-3 pt-1 flex-1 flex flex-col justify-center">
+        {/* 7 Day Capsule Cards with soft background and NO border */}
+        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
           {days.map((item) => {
             const isTodayMet = item.isToday && item.isGoalMet;
-            const isTodayInProgress = item.isToday && !item.isGoalMet;
+            const isCompleted = item.status === 'completed' || isTodayMet;
+            const isTodayActive = item.isToday && !item.isGoalMet;
+
+            // Radial arc for today in-progress
+            const ringRadius = 10;
+            const ringCircumference = 2 * Math.PI * ringRadius;
+            const ringOffset =
+              ringCircumference -
+              (todayProgressPercent / 100) * ringCircumference;
 
             return (
               <div
                 key={item.dateStr}
-                className="flex flex-col items-center gap-1.5 text-center group"
+                className={cn(
+                  'w-full flex flex-col items-center justify-between py-1.5 px-0.5 rounded-2xl transition-colors min-h-[52px]',
+                  item.isToday
+                    ? 'bg-primary/10 dark:bg-primary/15'
+                    : 'bg-muted/40 dark:bg-muted/20',
+                )}
               >
+                {/* Status Indicator Icon */}
+                <div className="h-6 w-6 flex items-center justify-center">
+                  {isCompleted ? (
+                    <div className="h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                      <Icons name="check" className="h-3.5 w-3.5 stroke-[3]" />
+                    </div>
+                  ) : isTodayActive ? (
+                    <div className="relative flex items-center justify-center h-6 w-6">
+                      <svg
+                        width="24"
+                        height="24"
+                        className="transform -rotate-90 origin-center"
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r={ringRadius}
+                          fill="none"
+                          stroke="var(--muted)"
+                          strokeWidth="2.5"
+                          opacity={0.35}
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r={ringRadius}
+                          fill="none"
+                          stroke="var(--primary)"
+                          strokeWidth="2.5"
+                          strokeDasharray={ringCircumference}
+                          strokeDashoffset={ringOffset}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      {item.minutes > 0 && (
+                        <span className="absolute text-[8px] font-black text-primary font-heading">
+                          {todayProgressPercent}%
+                        </span>
+                      )}
+                    </div>
+                  ) : item.status === 'missed' ? (
+                    <span className="text-sm font-black text-amber-500 font-heading select-none leading-none">
+                      !
+                    </span>
+                  ) : (
+                    /* Upcoming days: clean subtle concentric ring */
+                    <div className="h-5 w-5 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center opacity-50">
+                      <div className="h-2 w-2 rounded-full border border-muted-foreground/40" />
+                    </div>
+                  )}
+                </div>
+
                 {/* Day Label */}
                 <span
                   className={cn(
-                    'text-[11px] font-semibold transition-colors',
+                    'text-xs font-semibold tracking-tight transition-colors mt-0.5',
                     item.isToday
                       ? 'text-primary font-bold'
                       : 'text-muted-foreground',
@@ -105,71 +177,9 @@ export function WeeklyGoalTrackerCard({
                 >
                   {item.dayLabel}
                 </span>
-
-                {/* Day Circle */}
-                <div
-                  className={cn(
-                    'h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center transition-all duration-200',
-                    item.status === 'completed' || isTodayMet
-                      ? 'bg-emerald-500 text-white shadow-xs'
-                      : isTodayInProgress
-                        ? 'border-2 border-primary bg-primary/10 text-primary shadow-xs ring-2 ring-primary/20 animate-pulse'
-                        : item.status === 'missed'
-                          ? 'bg-muted/40 text-muted-foreground/60'
-                          : 'border border-dashed border-border/70 bg-transparent text-muted-foreground/40',
-                  )}
-                >
-                  {item.status === 'completed' || isTodayMet ? (
-                    <Icons name="check" className="h-4 w-4 stroke-[2.5]" />
-                  ) : isTodayInProgress ? (
-                    <span className="text-[11px] font-black font-heading">
-                      {item.minutes}m
-                    </span>
-                  ) : item.status === 'missed' ? (
-                    <span className="text-[10px] font-bold text-muted-foreground/50">
-                      —
-                    </span>
-                  ) : (
-                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                  )}
-                </div>
-
-                {/* Bottom Mini Indicator */}
-                <span
-                  className={cn(
-                    'text-[10px] font-medium transition-colors',
-                    item.isToday
-                      ? 'text-primary font-bold'
-                      : item.minutes > 0
-                        ? 'text-muted-foreground'
-                        : 'text-muted-foreground/40',
-                  )}
-                >
-                  {item.minutes > 0 ? `${item.minutes}m` : '0m'}
-                </span>
               </div>
             );
           })}
-        </div>
-
-        {/* Motivational Footer Pill */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/25 rounded-2xl p-2.5 px-3">
-          <div className="flex items-center gap-1.5">
-            <StreakIcon size={14} />
-            <span className="text-[11px] font-medium text-foreground">
-              {todayStudyMinutes > 0
-                ? t('streakActive')
-                : t('streakInactive')}
-            </span>
-          </div>
-
-          <span className="text-[10px] font-semibold text-primary">
-            {todayStudyMinutes >= dailyGoalMinutes
-              ? t('dailyGoalReached')
-              : t('keepGoingToReachGoal', {
-                  minutes: Math.max(0, dailyGoalMinutes - todayStudyMinutes),
-                })}
-          </span>
         </div>
       </CardContent>
     </Card>

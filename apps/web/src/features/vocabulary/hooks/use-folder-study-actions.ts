@@ -75,8 +75,7 @@ export function useFolderStudyActions({
 
   const learnedCardsList: VocabularyWord[] = useMemo(() => {
     return enrichedFlashcards.filter(
-      (card) =>
-        (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5,
+      (card) => (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5,
     );
   }, [enrichedFlashcards]);
 

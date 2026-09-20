@@ -35,31 +35,32 @@ export function TodayGoalProgressCard({
   );
   const isTimeMet = todayStudyMinutes >= safeGoal;
 
-  // Single cleanly scaled SVG ring
-  const size = 96;
+  // Cleanly scaled SVG ring
+  const size = 76;
   const center = size / 2;
-  const strokeWidth = 7;
-  const radius = 40;
+  const strokeWidth = 6;
+  const radius = 32;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (timePercent / 100) * circumference;
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-5 space-y-4">
+      <Card className="rounded-3xl border-none bg-card shadow-xs p-4 sm:p-5 space-y-3">
         <Skeleton className="h-6 w-36 rounded-lg" />
-        <Skeleton className="h-28 w-full rounded-2xl" />
+        <Skeleton className="h-24 w-full rounded-2xl" />
       </Card>
     );
   }
 
   return (
     <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
-      <CardHeader className="p-5 pb-2">
+      <CardHeader className="px-5 pt-3.5 pb-0">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
-              <Icons name="target" className="h-4 w-4" />
-            </div>
+          <div className="flex items-center gap-2">
+            <Icons
+              name="target"
+              className="h-4.5 w-4.5 text-primary shrink-0"
+            />
             <div>
               <CardTitle className="text-sm font-bold font-heading text-foreground">
                 {t('todayGoalTitle')}
@@ -76,14 +77,18 @@ export function TodayGoalProgressCard({
             onClick={() => presentDailyGoalDialog()}
             title={t('setDailyGoal')}
             aria-label={t('setDailyGoal')}
+            className="h-7 w-7 rounded-full"
           >
-            <Icons name="settings" className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+            <Icons
+              name="settings"
+              className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground"
+            />
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="p-5 pt-2 flex-1 flex flex-col justify-between gap-3">
-        <div className="flex items-center justify-between gap-4">
+      <CardContent className="px-5 pb-3.5 pt-1.5 flex-1 flex flex-col justify-between gap-2">
+        <div className="flex items-center justify-between gap-3.5">
           {/* Radial Ring */}
           <div className="relative flex items-center justify-center shrink-0">
             <svg
@@ -115,19 +120,19 @@ export function TodayGoalProgressCard({
             </svg>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
-              <span className="text-base font-black font-heading tracking-tight text-foreground">
+              <span className="text-sm font-black font-heading tracking-tight text-foreground">
                 {timePercent}%
               </span>
             </div>
           </div>
 
           {/* Time and Goal Numbers */}
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-1">
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-heading font-black tracking-tight text-foreground">
                 {todayStudyMinutes}
               </span>
-              <span className="text-sm font-semibold text-muted-foreground">
+              <span className="text-xs font-semibold text-muted-foreground">
                 /{dailyGoalMinutes}m
               </span>
             </div>
@@ -139,14 +144,14 @@ export function TodayGoalProgressCard({
               />
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center gap-1.5 text-[10.5px] font-semibold text-emerald-600 dark:text-emerald-400">
               <span>{t('goalProgress', { percent: timePercent })}</span>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="text-[11px] text-muted-foreground bg-muted/25 rounded-2xl p-2.5 px-3 flex items-center justify-between">
+        {/* Clean Footer */}
+        <div className="text-[10.5px] text-muted-foreground pt-1 border-t border-border/40 flex items-center justify-between">
           <span>
             {isTimeMet
               ? t('dailyGoalReached')
@@ -155,7 +160,10 @@ export function TodayGoalProgressCard({
                 })}
           </span>
           {isTimeMet && (
-            <Icons name="check" className="h-3.5 w-3.5 text-emerald-500 shrink-0 stroke-[2.5]" />
+            <Icons
+              name="check"
+              className="h-3.5 w-3.5 text-emerald-500 shrink-0 stroke-[2.5]"
+            />
           )}
         </div>
       </CardContent>

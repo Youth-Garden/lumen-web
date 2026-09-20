@@ -8,10 +8,7 @@ export interface VocabularyWordCardProps {
   onClick: (word: VocabularyWord) => void;
 }
 
-export function VocabularyWordCard({
-  word,
-  onClick,
-}: VocabularyWordCardProps) {
+export function VocabularyWordCard({ word, onClick }: VocabularyWordCardProps) {
   const primaryDef = word.definitions?.[0];
   const meaningVi =
     primaryDef?.translationVi || primaryDef?.definition?.vi || '';

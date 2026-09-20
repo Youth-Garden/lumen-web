@@ -36,13 +36,27 @@ export function HeatmapGrid({
       <div className="flex gap-2.5 w-max py-1">
         {/* Day-of-week labels (All 7 days) */}
         <div className="flex flex-col gap-1 text-[9px] font-medium text-muted-foreground/70 select-none pt-5 shrink-0">
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('daySun')}</span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayMon')}</span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayTue')}</span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayWed')}</span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayThu')}</span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayFri')}</span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('daySat')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('daySun')}
+          </span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('dayMon')}
+          </span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('dayTue')}
+          </span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('dayWed')}
+          </span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('dayThu')}
+          </span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('dayFri')}
+          </span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+            {t('daySat')}
+          </span>
         </div>
 
         <div className="flex flex-col gap-1.5">

@@ -25,7 +25,10 @@ export function usePWA() {
     if ('serviceWorker' in navigator && !isInstalled) {
       navigator.serviceWorker
         .register('/sw.js')
-        .then(() => setIsInstalled(true))
+        .then((registration) => {
+          setIsInstalled(true);
+          void registration.update();
+        })
         .catch(() => {});
     }
 

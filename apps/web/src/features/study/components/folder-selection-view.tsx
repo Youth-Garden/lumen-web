@@ -4,10 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary';
-import {
-  Button,
-  Skeleton,
-} from '@lumen/uikit/components';
+import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';

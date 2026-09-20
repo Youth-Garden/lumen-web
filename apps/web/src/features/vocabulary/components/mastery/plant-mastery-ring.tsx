@@ -210,9 +210,7 @@ export function PlantMasteryRing({
             >
               <Icons
                 name="plant-growth"
-                stage={
-                  clampedLevel >= 1 ? 5 : Math.min(5, learningStep)
-                }
+                stage={clampedLevel >= 1 ? 5 : Math.min(5, learningStep)}
                 isWilted={isWilted}
                 className="w-full h-full"
               />

@@ -97,7 +97,7 @@ export function MasteryOverviewCard({
         className={cn(
           'flex items-center justify-between outline-none focus:outline-none focus-visible:outline-none',
           onViewDueWords &&
-            'cursor-pointer group hover:opacity-80 transition-opacity select-none'
+            'cursor-pointer group hover:opacity-80 transition-opacity select-none',
         )}
       >
         <div className="flex items-center gap-2">
@@ -175,11 +175,11 @@ export function MasteryOverviewCard({
         </Button>
 
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={onFlashcards || onReviewAll}
           className="gap-1.5 text-xs font-semibold cursor-pointer"
         >
-          <Icons name="layers" className="h-3.5 w-3.5 text-primary" />
+          <Icons name="layers" className="h-3.5 w-3.5" />
           <span>{t('flashcardsAction')}</span>
         </Button>
       </div>

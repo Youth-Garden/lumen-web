@@ -2,10 +2,7 @@ import { HeatmapItem } from '@/services/progress';
 import { format, isAfter, isSameDay, startOfDay, subDays } from 'date-fns';
 
 export type DayTrackerStatus =
-  | 'completed'
-  | 'active_today'
-  | 'missed'
-  | 'upcoming';
+  'completed' | 'active_today' | 'missed' | 'upcoming';
 
 export interface TrackerDayItem {
   date: Date;

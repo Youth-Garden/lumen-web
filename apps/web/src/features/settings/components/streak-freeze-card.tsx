@@ -20,7 +20,10 @@ interface StreakFreezeCardProps {
 export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
   const t = useTranslations('Settings.streakFreeze');
 
-  const streakFreezes = Math.min(Math.max(dashboardData?.streakFreezes ?? 0, 0), 5);
+  const streakFreezes = Math.min(
+    Math.max(dashboardData?.streakFreezes ?? 0, 0),
+    5,
+  );
   const maxFreezes = 5;
 
   return (
@@ -32,9 +35,7 @@ export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
               <StreakFreezeIcon size={28} />
             </div>
             <div>
-              <CardTitle className="text-lg font-bold">
-                {t('title')}
-              </CardTitle>
+              <CardTitle className="text-lg font-bold">{t('title')}</CardTitle>
               <CardDescription>{t('description')}</CardDescription>
             </div>
           </div>
@@ -56,9 +57,7 @@ export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
               <div
                 key={index}
                 className={`flex-1 h-2 rounded-full transition-colors ${
-                  isFilled
-                    ? 'bg-sky-500'
-                    : 'bg-muted/40'
+                  isFilled ? 'bg-sky-500' : 'bg-muted/40'
                 }`}
               />
             );
@@ -67,11 +66,17 @@ export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
 
         <div className="flex flex-col gap-2 text-xs text-muted-foreground leading-relaxed pt-1">
           <div className="flex items-start gap-2">
-            <Icons name="check" className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+            <Icons
+              name="check"
+              className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5"
+            />
             <span>{t('dailyRewardHint')}</span>
           </div>
           <div className="flex items-start gap-2">
-            <Icons name="shield" className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+            <Icons
+              name="shield"
+              className="h-4 w-4 text-sky-500 shrink-0 mt-0.5"
+            />
             <span>{t('autoProtectHint')}</span>
           </div>
         </div>

@@ -63,7 +63,9 @@ export function StudyChoiceMeaning({
               ? 'bg-primary text-primary-foreground scale-105 ring-4 ring-primary/30'
               : 'bg-primary text-primary-foreground hover:bg-primary/90')
           }
-          title={showShortcuts ? t('audioListenHintShortcut') : t('audioListenHint')}
+          title={
+            showShortcuts ? t('audioListenHintShortcut') : t('audioListenHint')
+          }
         >
           <Icons name="volume-2" className="w-10 h-10" />
         </button>

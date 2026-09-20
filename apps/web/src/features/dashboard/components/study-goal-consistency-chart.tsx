@@ -127,7 +127,9 @@ export function StudyGoalConsistencyChart({
             <StreakIcon size={14} />
             <span>
               {tDashboard('streakLabel')}:{' '}
-              <strong className="text-foreground font-semibold">{streak}</strong>{' '}
+              <strong className="text-foreground font-semibold">
+                {streak}
+              </strong>{' '}
               {t('days')}
             </span>
           </span>

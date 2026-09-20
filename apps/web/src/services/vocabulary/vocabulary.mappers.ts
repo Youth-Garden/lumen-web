@@ -64,7 +64,8 @@ export const wordMapper = (raw: any): VocabularyWord => ({
               const sentVi =
                 (typeof ex.sentence === 'object' && ex.sentence !== null
                   ? ex.sentence.vi
-                  : typeof ex.translation === 'object' && ex.translation !== null
+                  : typeof ex.translation === 'object' &&
+                      ex.translation !== null
                     ? ex.translation.vi
                     : typeof ex.translation === 'string'
                       ? ex.translation

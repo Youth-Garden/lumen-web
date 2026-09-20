@@ -56,24 +56,13 @@ export function CurrentLearningFolderCard({
       {/* Main Card */}
       <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={onViewFolder}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                onViewFolder?.();
-              }
-            }}
-            className="flex items-center gap-3.5 min-w-0 flex-1 text-left cursor-pointer group outline-none"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs shadow-primary/20 group-hover:brightness-105 transition-all">
+          <div className="flex items-center gap-3.5 min-w-0 flex-1 text-left">
+            <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs shadow-primary/20">
               <Icons name="folder" className="h-6 w-6 text-white" />
             </div>
 
             <div className="space-y-0.5 min-w-0 flex-1">
-              <h4 className="text-base font-bold text-foreground truncate group-hover:text-primary transition-colors">
+              <h4 className="text-base font-bold text-foreground truncate">
                 {displayName}
               </h4>
               <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground flex-wrap leading-tight">
@@ -151,7 +140,7 @@ export function CurrentLearningFolderCard({
           )}
 
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onFlashcards || onStudyNow}
             disabled={wordCount === 0}

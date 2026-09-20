@@ -19,11 +19,16 @@ export function SentencePracticeCard({
   const t = useTranslations('Vocabulary.Folders');
   return (
     <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-3">
-      <div>
-        <h4 className="text-sm font-bold text-foreground">
-          {t('sentencePracticeTitle')}
-        </h4>
-        <p className="text-xs text-muted-foreground mt-0.5">
+      <div className="space-y-1">
+        <div className="flex items-center justify-between gap-2">
+          <h4 className="text-sm font-bold text-foreground font-heading">
+            {t('sentencePracticeTitle')}
+          </h4>
+          <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary shrink-0">
+            {t('comingSoonBadge')}
+          </span>
+        </div>
+        <p className="text-xs text-muted-foreground">
           {t('sentencePracticeDesc', { used: usedCount, total: totalWords })}
         </p>
       </div>
@@ -31,8 +36,9 @@ export function SentencePracticeCard({
       <Button
         variant="outline"
         size="sm"
+        disabled
         onClick={onClick}
-        className="w-full gap-2 font-bold"
+        className="w-full gap-2 font-bold cursor-not-allowed"
       >
         <Icons name="edit-3" className="h-3.5 w-3.5 text-primary" />
         <span>{t('sentencePracticeAction')}</span>

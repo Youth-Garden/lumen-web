@@ -32,7 +32,10 @@ export function DueWordsPage() {
     useVocabularyFolders();
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
-  const allFolders = useMemo(() => foldersData?.data || [], [foldersData?.data]);
+  const allFolders = useMemo(
+    () => foldersData?.data || [],
+    [foldersData?.data],
+  );
 
   const { data: dueFlashcards, isLoading: isLoadingDue } = useDueFlashcards({
     limit: 500,
@@ -102,8 +105,7 @@ export function DueWordsPage() {
 
   const learnedCardsList = useMemo(() => {
     return enrichedFlashcards.filter(
-      (card) =>
-        (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5,
+      (card) => (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5,
     );
   }, [enrichedFlashcards]);
 

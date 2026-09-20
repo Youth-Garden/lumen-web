@@ -55,7 +55,8 @@ class SoundHelper {
 
     const config = SOUND_EFFECT_CONFIG[sound];
     const globalVolume = usePreferencesStore.getState().soundVolume ?? 0.8;
-    const targetVolume = (options?.volume ?? config?.volume ?? 0.8) * globalVolume;
+    const targetVolume =
+      (options?.volume ?? config?.volume ?? 0.8) * globalVolume;
 
     try {
       audio.currentTime = 0;

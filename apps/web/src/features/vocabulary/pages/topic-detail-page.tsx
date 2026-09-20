@@ -71,7 +71,10 @@ export function TopicDetailPage() {
       }
       items.push({
         label: topicViName || topicName,
-        isLoading: (isLoadingTopics || isLoadingFlashcards) && !topicViName && !topicName,
+        isLoading:
+          (isLoadingTopics || isLoadingFlashcards) &&
+          !topicViName &&
+          !topicName,
       });
       return items;
     }, [

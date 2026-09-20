@@ -22,8 +22,22 @@ export const useUpdateProgressSettings = () => {
   return useMutation({
     mutationFn: (payload: UpdateProgressSettingsPayload) =>
       progressService.updateSettings(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: progressKeys.all });
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData<DashboardProgressResponse>(
+        progressKeys.dashboard(),
+        (old) =>
+          old
+            ? {
+                ...old,
+                dailyGoalMinutes:
+                  variables.dailyGoalMinutes ?? old.dailyGoalMinutes,
+              }
+            : old,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: progressKeys.all,
+        refetchType: 'none',
+      });
     },
   });
 };

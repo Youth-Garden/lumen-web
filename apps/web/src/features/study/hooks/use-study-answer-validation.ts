@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef, type Dispatch, type SetStateAction } from 'react';
+import {
+  useState,
+  useCallback,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
 import {
   StudyFeedbackDrawer,
@@ -38,7 +44,10 @@ export interface UseStudyAnswerValidationProps {
   setMasteredIds: Dispatch<SetStateAction<string[]>>;
   setEarnedPoints: Dispatch<SetStateAction<number>>;
   recordMissedWord: (card: VocabularyWord) => void;
-  recordReviewPending: (flashcardId: string, data: { isCorrect: boolean }) => void;
+  recordReviewPending: (
+    flashcardId: string,
+    data: { isCorrect: boolean },
+  ) => void;
 }
 
 export function useStudyAnswerValidation({
@@ -63,7 +72,9 @@ export function useStudyAnswerValidation({
     });
   const handleContinueFeedbackRef = useRef<() => void>(() => {});
   const [feedback, setFeedback] = useState<StudyFeedbackState | null>(null);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(
+    null,
+  );
 
   const handleVerifyAnswer = useCallback(
     (isCorrect: boolean, userAnswer?: string) => {
@@ -76,27 +87,40 @@ export function useStudyAnswerValidation({
         );
       }
       const cardId = currentCard.id;
-      const feedbackState = buildFeedbackState(currentCard, isCorrect, userAnswer);
+      const feedbackState = buildFeedbackState(
+        currentCard,
+        isCorrect,
+        userAnswer,
+      );
       setFeedback(feedbackState);
       presentFeedback({
         feedback: feedbackState,
         onContinue: () => handleContinueFeedbackRef.current(),
       });
 
-      const currentProg = wordProgressMap[cardId] || (currentCard as CardWithProgress);
+      const currentProg =
+        wordProgressMap[cardId] || (currentCard as CardWithProgress);
       const nextProg = calculateNextProgressOnAnswer(
         isCorrect,
         currentProg.level ?? 0,
         currentProg.learningStep ?? 0,
       );
       setWordProgressMap((prev) =>
-        updateCardProgressMap(prev, cardId, nextProg.level, nextProg.learningStep),
+        updateCardProgressMap(
+          prev,
+          cardId,
+          nextProg.level,
+          nextProg.learningStep,
+        ),
       );
 
       if (!isCorrect) recordMissedWord(currentCard);
-      recordReviewPending((currentCard as CardWithProgress).flashcardId || cardId, {
-        isCorrect,
-      });
+      recordReviewPending(
+        (currentCard as CardWithProgress).flashcardId || cardId,
+        {
+          isCorrect,
+        },
+      );
     },
     [
       currentCard,

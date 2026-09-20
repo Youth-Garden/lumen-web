@@ -3,10 +3,7 @@
 import { LessonQuotaDialog } from '@/features/study/components/lesson-quota-dialog';
 import { PronunciationAccentDialog } from '@/features/study/components/pronunciation-accent-dialog';
 import { useStudySettings } from '@/features/study/hooks/use-study-settings';
-import {
-  LESSON_QUOTA_CONFIGS,
-  LessonQuotaPreset,
-} from '@/services/study';
+import { LESSON_QUOTA_CONFIGS, LessonQuotaPreset } from '@/services/study';
 import { PronunciationAccent } from '@/services/vocabulary';
 import {
   Dialog,

@@ -46,53 +46,92 @@ export function useStudySession({
 
   const resolvedMode = useMemo(() => {
     if (mode) return mode;
-    return isReviewMode ? StudySessionMode.PRACTICE : StudySessionMode.LEARN_NEW;
+    return isReviewMode
+      ? StudySessionMode.PRACTICE
+      : StudySessionMode.LEARN_NEW;
   }, [mode, isReviewMode]);
 
   const storageKey = useMemo(
-    () => `lumen_study_session_${selectedTopic ? encodeURIComponent(selectedTopic) : 'general'}`,
+    () =>
+      `lumen_study_session_${selectedTopic ? encodeURIComponent(selectedTopic) : 'general'}`,
     [selectedTopic],
   );
 
   const poolCards = useMemo(
-    () => filterPoolCards(cards, selectedTopic, settings.wordsPerSession || currentQuotaConfig.targetCount || 20, tFolders('generalTopic')),
-    [cards, selectedTopic, settings.wordsPerSession, currentQuotaConfig.targetCount, tFolders],
+    () =>
+      filterPoolCards(
+        cards,
+        selectedTopic,
+        settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
+        tFolders('generalTopic'),
+      ),
+    [
+      cards,
+      selectedTopic,
+      settings.wordsPerSession,
+      currentQuotaConfig.targetCount,
+      tFolders,
+    ],
   );
 
-  const { data: globalWordsRes } = useVocabularyWords({ limit: 100 }, { enabled: isOpen });
-  const globalCards = useMemo(() => globalWordsRes?.items || [], [globalWordsRes]);
+  const { data: globalWordsRes } = useVocabularyWords(
+    { limit: 100 },
+    { enabled: isOpen },
+  );
+  const globalCards = useMemo(
+    () => globalWordsRes?.items || [],
+    [globalWordsRes],
+  );
 
   const studyQueue = useQueue<StudyQueueItem>([]);
   const activeQueue = studyQueue.queue;
   const setActiveQueue = studyQueue.set;
   const [masteredIds, setMasteredIds] = useState<string[]>([]);
   const [isFlipped, toggleFlipped, setIsFlipped] = useToggle(false);
-  const [missedWordsMap, setMissedWordsMap] = useState<Record<string, MissedWordStat>>({});
-  const [wordProgressMap, setWordProgressMap] = useState<Record<string, { level: number; learningStep: number }>>({});
+  const [missedWordsMap, setMissedWordsMap] = useState<
+    Record<string, MissedWordStat>
+  >({});
+  const [wordProgressMap, setWordProgressMap] = useState<
+    Record<string, { level: number; learningStep: number }>
+  >({});
   const [earnedPoints, setEarnedPoints] = useState(0);
   const canFlipRef = useRef(true);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const currentItem = studyQueue.first || null;
   const currentCard = currentItem?.card || null;
-  const isFinished = isInitialized && poolCards.length > 0 && studyQueue.size === 0;
+  const isFinished =
+    isInitialized && poolCards.length > 0 && studyQueue.size === 0;
 
-  const { recordReviewPending, flushPendingReviews, clearPendingReviews, isSubmitting } =
-    useStudyReviews(isFinished);
+  const {
+    recordReviewPending,
+    flushPendingReviews,
+    clearPendingReviews,
+    isSubmitting,
+  } = useStudyReviews(isFinished);
 
   const targetPoints = useMemo(
     () => calculateTargetSessionPoints(poolCards, resolvedMode),
     [poolCards, resolvedMode],
   );
   const progressPercent = useMemo(
-    () => (isInitialized ? calculateCumulativeProgressPercent(earnedPoints, targetPoints, isFinished) : 0),
+    () =>
+      isInitialized
+        ? calculateCumulativeProgressPercent(
+            earnedPoints,
+            targetPoints,
+            isFinished,
+          )
+        : 0,
     [isInitialized, earnedPoints, targetPoints, isFinished],
   );
 
   const isInitializedRef = useRef(false);
 
   const initializeSession = useCallback(() => {
-    setActiveQueue(createInitialStudyQueue(poolCards, resolvedMode, cards, globalCards));
+    setActiveQueue(
+      createInitialStudyQueue(poolCards, resolvedMode, cards, globalCards),
+    );
     setMasteredIds([]);
     setIsFlipped(false);
     setWordProgressMap({});
@@ -192,7 +231,12 @@ export function useStudySession({
     setMissedWordsMap({});
     setWordProgressMap({});
     setEarnedPoints(0);
-  }, [storageKey, clearPendingReviews, answerValidation.resetAnswerState, initializeSession]);
+  }, [
+    storageKey,
+    clearPendingReviews,
+    answerValidation.resetAnswerState,
+    initializeSession,
+  ]);
 
   const handleSaveProgress = useCallback(() => {
     flushPendingReviews();
@@ -205,7 +249,16 @@ export function useStudySession({
         earnedPoints,
       );
     }
-  }, [flushPendingReviews, isOpen, poolCards.length, activeQueue, masteredIds, missedWordsMap, earnedPoints, storageKey]);
+  }, [
+    flushPendingReviews,
+    isOpen,
+    poolCards.length,
+    activeQueue,
+    masteredIds,
+    missedWordsMap,
+    earnedPoints,
+    storageKey,
+  ]);
 
   const audioState = useStudyAudio({
     currentCard,
@@ -238,7 +291,10 @@ export function useStudySession({
     onClose,
   });
 
-  const missedWordsList = useMemo(() => sortMissedWords(missedWordsMap), [missedWordsMap]);
+  const missedWordsList = useMemo(
+    () => sortMissedWords(missedWordsMap),
+    [missedWordsMap],
+  );
 
   return {
     mode: resolvedMode,
@@ -279,5 +335,3 @@ export function useStudySession({
     dismissFeedback: answerValidation.dismissFeedback,
   };
 }
-
-
