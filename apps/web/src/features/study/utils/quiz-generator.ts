@@ -97,8 +97,6 @@ export function createChoiceTermQuestion(
   globalPool: VocabularyWord[] = [],
   isReviewingFailed = false,
 ): StudyQueueItem {
-  const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
-
   const distractors = selectDistractorCards(
     card,
     pool,
@@ -106,6 +104,12 @@ export function createChoiceTermQuestion(
     globalPool,
     3,
   );
+
+  if (distractors.length < 3) {
+    return createTypingQuestion(card, isReviewingFailed);
+  }
+
+  const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
 
   const correctOption: ChoiceOption = {
     id: card.id,
@@ -147,8 +151,6 @@ export function createChoiceMeaningQuestion(
   globalPool: VocabularyWord[] = [],
   isReviewingFailed = false,
 ): StudyQueueItem {
-  const primary = getCardPrimaryDefinition(card);
-
   const distractors = selectDistractorCards(
     card,
     pool,
@@ -156,6 +158,12 @@ export function createChoiceMeaningQuestion(
     globalPool,
     3,
   );
+
+  if (distractors.length < 3) {
+    return createTypingQuestion(card, isReviewingFailed);
+  }
+
+  const primary = getCardPrimaryDefinition(card);
 
   const correctOption: ChoiceOption = {
     id: card.id,
@@ -229,6 +237,18 @@ export function createNextExerciseForWord(
   previousExerciseType?: StudyExerciseType,
   isReviewingFailed = false,
 ): StudyQueueItem {
+  const distractors = selectDistractorCards(
+    card,
+    pool,
+    fallbackPool,
+    globalPool,
+    3,
+  );
+
+  if (distractors.length < 3) {
+    return createTypingQuestion(card, isReviewingFailed);
+  }
+
   let nextExerciseType = StudyExerciseType.CHOICE_TERM;
 
   if (previousExerciseType === StudyExerciseType.CHOICE_TERM) {

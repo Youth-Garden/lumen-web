@@ -18,6 +18,7 @@ import {
   FlagUsIcon,
   FlagJpIcon,
   ChevronDownIcon,
+  StudyGraduateIcon,
 } from './svgs';
 import type { IconProps } from './types';
 
@@ -137,6 +138,8 @@ export const registry: Record<
   'plant-stage-4': PlantStage4Icon,
   'plant-stage-5': PlantStage5Icon,
   'plant-wilted': PlantWiltedIcon,
+  'study-graduate': StudyGraduateIcon,
+  graduate: StudyGraduateIcon,
   spinner: SpinnerIcon,
 
   // Rich Text Editor

@@ -98,7 +98,7 @@ export function useStudySession({
   );
 
   const globalCards = useMemo(
-    () => (globalWordsRes as any)?.items || (globalWordsRes as any)?.data || [],
+    () => globalWordsRes?.items || [],
     [globalWordsRes],
   );
 

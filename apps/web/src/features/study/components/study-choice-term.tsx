@@ -72,7 +72,7 @@ export function StudyChoiceTerm({
               className={
                 'relative flex flex-col justify-between p-5 rounded-2xl text-left transition-colors select-none ' +
                 (isSelected
-                  ? 'bg-primary/15 text-primary cursor-default'
+                  ? 'bg-muted text-foreground cursor-default'
                   : isAnswered
                     ? 'bg-card opacity-50 cursor-default'
                     : 'bg-card hover:bg-muted/70 active:scale-[0.99] cursor-pointer')

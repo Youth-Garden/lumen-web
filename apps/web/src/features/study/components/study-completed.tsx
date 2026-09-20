@@ -25,7 +25,11 @@ export function StudyCompleted({
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-5 animate-in zoom-in-95 duration-300 max-w-lg w-full mx-auto">
       <div className="flex items-center justify-center">
-        <Icons name="plant-growth" stage={5} className="w-16 h-16" />
+        <Icons
+          name="study-graduate"
+          size={110}
+          className="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-sm select-none"
+        />
       </div>
 
       <div className="space-y-1">

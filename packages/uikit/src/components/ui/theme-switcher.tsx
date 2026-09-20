@@ -28,12 +28,12 @@ export function ThemeSwitcher() {
 
   const renderTriggerIcon = () => {
     if (currentTheme === 'light') {
-      return <Icons name="sun" className="h-4 w-4 text-white" />;
+      return <Icons name="sun" />;
     }
     if (currentTheme === 'dark') {
-      return <Icons name="moon" className="h-4 w-4 text-white" />;
+      return <Icons name="moon" />;
     }
-    return <Icons name="monitor" className="h-4 w-4 text-white" />;
+    return <Icons name="monitor" />;
   };
 
   const renderTriggerLabel = () => {
@@ -56,15 +56,21 @@ export function ThemeSwitcher() {
       <DropdownMenuContent align="end" className="w-32 rounded-xl">
         <DropdownMenuRadioGroup value={currentTheme} onValueChange={setTheme}>
           <DropdownMenuRadioItem value="light" className="gap-2 text-xs py-2">
-            <Icons name="sun" className="h-3.5 w-3.5 text-white" />
+            <Icons
+              name="sun"
+              className="h-3.5 w-3.5 shrink-0 text-amber-500 dark:text-amber-400"
+            />
             Light
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark" className="gap-2 text-xs py-2">
-            <Icons name="moon" className="h-3.5 w-3.5 text-white" />
+            <Icons name="moon" className="h-3.5 w-3.5 shrink-0 text-sky-400" />
             Dark
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="system" className="gap-2 text-xs py-2">
-            <Icons name="monitor" className="h-3.5 w-3.5 text-white" />
+            <Icons
+              name="monitor"
+              className="h-3.5 w-3.5 shrink-0 text-foreground"
+            />
             System
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
