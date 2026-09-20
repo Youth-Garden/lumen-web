@@ -35,7 +35,7 @@ export function SegmentedTabs<T extends string = string>({
     <div
       role="tablist"
       className={cn(
-        'inline-flex items-center rounded-full bg-muted/40 p-1 border border-border/40 backdrop-blur-xs select-none',
+        'inline-flex items-center rounded-2xl bg-muted/40 p-1 border border-border/40 backdrop-blur-xs select-none',
         size === 'sm' ? 'h-8' : 'h-10',
         className,
       )}
@@ -52,7 +52,7 @@ export function SegmentedTabs<T extends string = string>({
             disabled={option.disabled}
             onClick={() => onValueChange(option.value)}
             className={cn(
-              'relative inline-flex items-center justify-center gap-1.5 rounded-full font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-50',
+              'relative inline-flex items-center justify-center gap-1.5 rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-50',
               size === 'sm' ? 'px-3 py-1 text-xs' : 'px-4 py-1.5 text-sm',
               isActive
                 ? 'text-primary-foreground font-semibold'
@@ -62,7 +62,7 @@ export function SegmentedTabs<T extends string = string>({
             {isActive && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-0 rounded-full bg-primary shadow-xs"
+                className="absolute inset-0 rounded-xl bg-gradient-to-b from-primary to-[color-mix(in_oklch,var(--primary),#000_7%)] border border-primary/20 shadow-xs shadow-primary/25"
                 transition={{
                   type: 'spring',
                   stiffness: 450,

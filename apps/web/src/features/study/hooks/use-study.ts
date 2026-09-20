@@ -19,13 +19,7 @@ export const useReviewFlashcard = () => {
         queryKey: studyKeys.dueFlashcards(),
       });
       queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.folders(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.words(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.overview(),
+        queryKey: vocabularyKeys.all,
       });
       queryClient.invalidateQueries({
         queryKey: progressKeys.all,
@@ -45,13 +39,7 @@ export const useBatchReviewFlashcards = () => {
         queryKey: studyKeys.dueFlashcards(),
       });
       queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.folders(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.words(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: vocabularyKeys.overview(),
+        queryKey: vocabularyKeys.all,
       });
       queryClient.invalidateQueries({
         queryKey: progressKeys.all,

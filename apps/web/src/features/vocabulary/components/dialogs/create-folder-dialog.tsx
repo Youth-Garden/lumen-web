@@ -1,18 +1,19 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import * as z from 'zod';
 
+import { useCreateFolder } from '@/features/vocabulary/hooks';
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Button,
   Form,
   FormControl,
   FormField,
@@ -22,7 +23,6 @@ import {
   Input,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useCreateFolder } from '@/features/vocabulary/hooks';
 import { PortalProps } from '@lumen/uikit/portal';
 
 const formSchema = z.object({
@@ -101,15 +101,7 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
               )}
             />
 
-            <div className="flex justify-end pt-4 space-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onDismiss?.()}
-                disabled={isPending}
-              >
-                {t('cancel')}
-              </Button>
+            <div className="flex justify-end pt-4">
               <Button type="submit" disabled={isPending}>
                 {isPending && (
                   <Icons
@@ -117,7 +109,7 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
                     className="mr-2 h-4 w-4 animate-spin"
                   />
                 )}
-                {t('save')}
+                {t('saveFolder')}
               </Button>
             </div>
           </form>

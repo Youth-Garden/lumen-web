@@ -94,10 +94,15 @@ export function insertNextExerciseInQueue(
 }
 
 export function calculateProgressPercent(
-  masteredCount: number,
-  totalCount: number,
+  activeQueue: StudyQueueItem[],
+  poolCards: VocabularyWord[],
 ): number {
-  return totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
+  if (poolCards.length === 0) return 0;
+  const remainingWordIds = new Set(activeQueue.map((item) => item.card.id));
+  const completedCount = poolCards.filter(
+    (card) => !remainingWordIds.has(card.id),
+  ).length;
+  return Math.min(100, Math.round((completedCount / poolCards.length) * 100));
 }
 
 export function determineFlashcardQuality(
@@ -315,6 +320,16 @@ export function processAdvanceFromFlashcard(
     level: newLevel,
     learningStep: newLearningStep,
   };
+
+  if (isMastered) {
+    return {
+      newLevel,
+      newLearningStep,
+      isMastered,
+      nextQueue: activeQueue.slice(1),
+    };
+  }
+
   const nextExercise = createNextExerciseForWord(
     updatedCard,
     poolCards,

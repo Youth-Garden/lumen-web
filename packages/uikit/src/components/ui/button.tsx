@@ -4,14 +4,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@lumen/uikit/utils';
 
 const buttonVariants = cva(
-  'group/button !cursor-pointer inline-flex shrink-0 items-center justify-center rounded-2xl bg-clip-padding text-sm font-semibold tracking-tight whitespace-nowrap transition-all duration-200 outline-none select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 active:not-aria-[haspopup]:scale-[0.985] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'group/button !cursor-pointer inline-flex shrink-0 items-center justify-center rounded-2xl bg-clip-padding text-sm font-medium tracking-tight whitespace-nowrap transition-all duration-200 outline-none select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 active:not-aria-[haspopup]:scale-[0.985] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
           'bg-gradient-to-b from-primary to-[color-mix(in_oklch,var(--primary),#000_7%)] text-primary-foreground shadow-xs shadow-primary/25 border border-primary/20 hover:shadow-md hover:shadow-primary/30 hover:brightness-105 active:brightness-95',
         outline:
-          'border border-border/40 bg-card text-foreground shadow-xs shadow-slate-200/50 dark:shadow-none hover:bg-muted/30 hover:border-border/70 hover:shadow-sm active:bg-muted/60 active:shadow-none aria-expanded:bg-muted aria-expanded:text-foreground dark:border-border/60 dark:bg-card/40 dark:hover:bg-accent dark:hover:border-border dark:hover:text-foreground',
+          'border border-border bg-card text-foreground shadow-2xs hover:bg-muted/40 hover:border-border/90 active:bg-muted/60 active:shadow-none aria-expanded:bg-muted aria-expanded:text-foreground dark:border-border dark:bg-card/60 dark:hover:bg-muted/40 dark:hover:border-border/80',
         secondary:
           'bg-muted/70 text-foreground hover:bg-muted active:bg-muted/90 aria-expanded:bg-muted aria-expanded:text-foreground',
         ghost:

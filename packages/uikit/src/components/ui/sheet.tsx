@@ -6,14 +6,35 @@ import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 import { Button } from './button';
 
+interface SheetContextValue {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onDismiss?: () => void;
+}
+
+const SheetContext = React.createContext<SheetContextValue | null>(null);
+
 function Sheet({
   children,
+  open,
+  onOpenChange,
 }: {
   children?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
-  return <>{children}</>;
+  const handleDismiss = React.useCallback(() => {
+    onOpenChange?.(false);
+  }, [onOpenChange]);
+
+  const value = React.useMemo(
+    () => ({ open, onOpenChange, onDismiss: handleDismiss }),
+    [open, onOpenChange, handleDismiss],
+  );
+
+  return (
+    <SheetContext.Provider value={value}>{children}</SheetContext.Provider>
+  );
 }
 
 interface TriggerProps extends React.ComponentProps<'button'> {
@@ -43,17 +64,24 @@ function SheetTrigger({ children, onClick, render, ...props }: TriggerProps) {
 }
 
 function SheetClose({ children, onClick, render, ...props }: TriggerProps) {
+  const context = React.useContext(SheetContext);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(e);
+    context?.onDismiss?.();
+  };
+
   if (render && React.isValidElement(render)) {
     return React.cloneElement(render as React.ReactElement<any>, {
       onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
         (render.props as any).onClick?.(e);
-        onClick?.(e);
+        handleClick(e);
       },
     });
   }
 
   return (
-    <button type="button" data-slot="sheet-close" onClick={onClick} {...props}>
+    <button type="button" data-slot="sheet-close" onClick={handleClick} {...props}>
       {children}
     </button>
   );
@@ -75,6 +103,9 @@ function SheetContent({
   onDismiss,
   ...props
 }: SheetContentProps) {
+  const context = React.useContext(SheetContext);
+  const handleClose = onDismiss ?? context?.onDismiss;
+
   return (
     <div
       role="dialog"
@@ -83,14 +114,14 @@ function SheetContent({
       data-side={side}
       data-state="open"
       className={cn(
-        'fixed flex flex-col gap-4 bg-popover bg-clip-padding text-sm text-popover-foreground shadow-2xl duration-200 ease-out outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
-        'data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=bottom]:data-[state=open]:slide-in-from-bottom data-[side=bottom]:data-[state=closed]:slide-out-to-bottom',
-        'data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=left]:data-[state=open]:slide-in-from-left data-[side=left]:data-[state=closed]:slide-out-to-left data-[side=left]:sm:max-w-sm',
-        'data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=right]:data-[state=open]:slide-in-from-right data-[side=right]:data-[state=closed]:slide-out-to-right data-[side=right]:sm:max-w-sm',
-        'data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:data-[state=open]:slide-in-from-top data-[side=top]:data-[state=closed]:slide-out-to-top',
+        'fixed flex flex-col gap-4 bg-popover bg-clip-padding text-sm text-popover-foreground duration-200 ease-out outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
+        'data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:data-[state=open]:slide-in-from-bottom data-[side=bottom]:data-[state=closed]:slide-out-to-bottom',
+        'data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:data-[state=open]:slide-in-from-left data-[side=left]:data-[state=closed]:slide-out-to-left data-[side=left]:sm:max-w-sm',
+        'data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:data-[state=open]:slide-in-from-right data-[side=right]:data-[state=closed]:slide-out-to-right data-[side=right]:sm:max-w-sm',
+        'data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:data-[state=open]:slide-in-from-top data-[side=top]:data-[state=closed]:slide-out-to-top',
         centered &&
           side === 'bottom' &&
-          'sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-lg sm:rounded-3xl sm:border sm:border-border/60 sm:shadow-2xl sm:data-[side=bottom]:data-[state=open]:slide-in-from-bottom-0 sm:data-[side=bottom]:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:zoom-out-95',
+          'sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-lg sm:rounded-3xl sm:border sm:border-border/60 sm:data-[side=bottom]:data-[state=open]:slide-in-from-bottom-0 sm:data-[side=bottom]:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:zoom-out-95',
         className,
       )}
       {...props}
@@ -101,7 +132,7 @@ function SheetContent({
           variant="ghost"
           size="icon-sm"
           className="absolute top-3 right-3"
-          onClick={onDismiss}
+          onClick={handleClose}
         >
           <Icons name="close" />
           <span className="sr-only">Close</span>

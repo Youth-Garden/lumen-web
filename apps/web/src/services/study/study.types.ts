@@ -39,6 +39,7 @@ export interface ReviewFlashcardPayload {
   isCorrect?: boolean;
   isFastTrackKnown?: boolean;
   isFastTrackTempMemory?: boolean;
+  isResetToUnlearned?: boolean;
 }
 
 export interface BatchReviewFlashcardsPayload {

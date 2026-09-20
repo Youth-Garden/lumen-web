@@ -11,7 +11,7 @@ import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 import { DailyGoalDialog } from './daily-goal-dialog';
@@ -69,18 +69,13 @@ export function DailyGoalWidget() {
 
       {/* Header */}
       <CardHeader className="p-0 pb-1 relative z-10 flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
-            <Icons name="target" className="h-4 w-4" />
-          </div>
-          <div>
-            <CardTitle className="text-sm font-bold text-foreground">
-              {t('dailyGoal')}
-            </CardTitle>
-            <CardDescription className="text-[11px] text-muted-foreground">
-              {t('learningProgress')}
-            </CardDescription>
-          </div>
+        <div>
+          <CardTitle className="text-sm font-bold text-foreground">
+            {t('dailyGoal')}
+          </CardTitle>
+          <CardDescription className="text-[11px] text-muted-foreground">
+            {t('learningProgress')}
+          </CardDescription>
         </div>
         <Button
           variant="ghost"

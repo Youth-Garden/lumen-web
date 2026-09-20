@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import type { StudyFeedbackState } from '@/features/study/types/study.types';
 import {
   Button,
   Sheet,
@@ -12,7 +12,7 @@ import { Icons } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
-import type { StudyFeedbackState } from '@/features/study/types/study.types';
+import Image from 'next/image';
 
 export interface StudyFeedbackDrawerData {
   feedback: StudyFeedbackState;
@@ -50,10 +50,8 @@ export function StudyFeedbackDrawer({
         side="bottom"
         showCloseButton={false}
         className={cn(
-          'w-full max-w-2xl mx-auto rounded-t-3xl p-5 sm:p-6 border-t backdrop-blur-xl transition-colors pointer-events-auto shadow-2xl gap-0',
-          isCorrect
-            ? 'bg-[#183a31] border-[#224f42] text-white'
-            : 'bg-[#4e1d1f] border-[#6b2527] text-white',
+          'w-full max-w-2xl mx-auto rounded-t-3xl p-5 sm:p-6 backdrop-blur-xl transition-colors pointer-events-auto gap-0',
+          isCorrect ? 'bg-[#183a31] text-white' : 'bg-[#4e1d1f] text-white',
         )}
       >
         <SheetTitle className="sr-only">

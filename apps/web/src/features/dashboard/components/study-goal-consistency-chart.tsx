@@ -104,14 +104,9 @@ export function StudyGoalConsistencyChart({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Icons name="target" className="h-4 w-4" />
-              </div>
-              <CardTitle className="text-base font-bold font-heading text-foreground">
-                {t('goalConsistencyTitle')}
-              </CardTitle>
-            </div>
+            <CardTitle className="text-base font-bold font-heading text-foreground">
+              {t('goalConsistencyTitle')}
+            </CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
               {t('goalConsistencyDesc')}
             </CardDescription>

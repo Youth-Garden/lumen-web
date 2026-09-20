@@ -2,6 +2,7 @@
 
 import { useLogout } from '@/features/auth/hooks';
 import { NotificationDropdown } from '@/features/notification/components/notification-dropdown';
+import { CommandPalette } from '@/shared/components/command-palette';
 import { RouteEnum } from '@/shared/constants';
 import { useRouter } from '@/shared/i18n/routing';
 import { useAuthStore } from '@/store/auth.store';
@@ -17,9 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
-import { CommandPalette } from '@/shared/components/command-palette';
-import { usePortal } from '@lumen/uikit/portal';
 import { Icons } from '@lumen/uikit/icons';
+import { usePortal } from '@lumen/uikit/portal';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 
 export function Header() {
@@ -50,10 +50,10 @@ export function Header() {
       className="relative z-30 flex items-center justify-between w-full px-6 md:px-10 pt-4 pb-2.5 shrink-0"
     >
       <Button
-        variant="outline"
+        variant="secondary"
         type="button"
         onClick={() => presentCommandPalette()}
-        className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground hover:text-foreground text-xs bg-card/90 backdrop-blur-md active:scale-100 active:not-aria-[haspopup]:scale-100"
+        className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground text-xs bg-card/90 hover:bg-card active:bg-card dark:bg-card/90 dark:hover:bg-card/90 backdrop-blur-md active:scale-100 active:not-aria-[haspopup]:scale-100"
         title="Search (Ctrl + K)"
       >
         <div className="flex items-center gap-2.5">
@@ -65,13 +65,13 @@ export function Header() {
             Search folders, words...
           </span>
         </div>
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-0.5 rounded-md border border-border/80 bg-muted/60 px-1.5 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs">
+        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-0.5 rounded-md bg-muted/60 px-1.5 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs">
           <span>Ctrl</span>
           <span>K</span>
         </kbd>
       </Button>
 
-      <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md border border-border/60 shadow-xs rounded-full p-1 pl-2">
+      <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md shadow-xs rounded-full p-1 pl-2">
         {progressData && (
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-semibold text-xs">
             <span className="text-sm select-none leading-none">🔥</span>
@@ -83,7 +83,7 @@ export function Header() {
 
         <DropdownMenu>
           <DropdownMenuTrigger className="h-8 w-8 rounded-full outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-            <Avatar className="h-8 w-8 border border-border/80 shadow-xs">
+            <Avatar className="h-8 w-8 shadow-xs after:border-none">
               <AvatarImage
                 src={user?.avatarUrl}
                 seed={user?.email}

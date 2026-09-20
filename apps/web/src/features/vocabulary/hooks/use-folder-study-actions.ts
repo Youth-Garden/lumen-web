@@ -28,37 +28,42 @@ export function useFolderStudyActions({
     [flashcards],
   );
 
-  const dueIdSet = useMemo(() => {
+  const { dueIdSet, dueTermSet } = useMemo(() => {
     const now = Date.now();
-    return new Set(
-      dueFlashcardsData
-        .filter((card) => {
-          const isPastDue =
-            Boolean(card.nextReviewAt) &&
-            new Date(card.nextReviewAt as string).getTime() <= now;
-          return (
-            (isPastDue || Boolean(card.isWilted)) &&
-            ((card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5)
-          );
-        })
-        .flatMap((dueFlashcard) => [
-          dueFlashcard.wordId,
-          dueFlashcard.flashcardId,
-        ]),
-    );
+    const idSet = new Set<string>();
+    const termSet = new Set<string>();
+
+    for (const card of dueFlashcardsData) {
+      const isPastDue =
+        Boolean(card.nextReviewAt) &&
+        new Date(card.nextReviewAt as string).getTime() <= now;
+      const isDue =
+        (isPastDue || Boolean(card.isWilted)) &&
+        ((card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5);
+
+      if (isDue) {
+        if (card.wordId) idSet.add(card.wordId);
+        if (card.flashcardId) idSet.add(card.flashcardId);
+        if (card.term) termSet.add(card.term.toLowerCase().trim());
+      }
+    }
+
+    return { dueIdSet: idSet, dueTermSet: termSet };
   }, [dueFlashcardsData]);
 
   const enrichedFlashcards = useMemo(() => {
     return allFlashcards.map((card) => {
+      const termKey = card.term.toLowerCase().trim();
       const isDue =
         dueIdSet.has(card.id) ||
         Boolean(card.wordId && dueIdSet.has(card.wordId)) ||
         Boolean(card.flashcardId && dueIdSet.has(card.flashcardId)) ||
+        dueTermSet.has(termKey) ||
         Boolean(card.isWilted);
 
       return isDue ? { ...card, isWilted: true } : card;
     });
-  }, [allFlashcards, dueIdSet]);
+  }, [allFlashcards, dueIdSet, dueTermSet]);
 
   const dueCardsList: VocabularyWord[] = useMemo(() => {
     return enrichedFlashcards.filter(
@@ -78,7 +83,7 @@ export function useFolderStudyActions({
   const uniqueFlashcards: VocabularyWord[] = useMemo(() => {
     const seen = new Set<string>();
     const list: VocabularyWord[] = [];
-    for (const card of allFlashcards) {
+    for (const card of enrichedFlashcards) {
       const termKey = card.term.toLowerCase().trim();
       if (!seen.has(termKey)) {
         seen.add(termKey);
@@ -86,7 +91,7 @@ export function useFolderStudyActions({
       }
     }
     return list;
-  }, [allFlashcards]);
+  }, [enrichedFlashcards]);
 
   const frequentlyMissedCards = useMemo(() => {
     if (!uniqueFlashcards.length) return [];

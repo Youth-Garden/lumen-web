@@ -7,7 +7,6 @@ import {
   CardTitle,
   Skeleton,
 } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
@@ -93,10 +92,7 @@ export function MemoryRetentionCard({
     <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
       <CardHeader className="pb-1">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Icons name="activity" className="h-4 w-4" />
-            </div>
+          <CardTitle className="text-base font-bold text-foreground">
             {t('memoryDistribution')}
           </CardTitle>
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary w-fit">

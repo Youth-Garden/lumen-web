@@ -82,6 +82,7 @@ export function FolderSelectionView({
           </div>
 
           <Button
+            variant="secondary"
             size="sm"
             onClick={onCreateFolder}
             className="gap-2 cursor-pointer font-semibold shrink-0"

@@ -89,6 +89,7 @@ export function WordDetailSheet({
       flashcardId,
       quality: FlashcardRating.WRONG,
       isCorrect: false,
+      isResetToUnlearned: true,
     });
   };
 
@@ -243,12 +244,9 @@ export function WordDetailSheet({
                 )}
 
                 {def.definitionEn && (
-                  <div className="flex items-start gap-2 text-sm text-foreground/90 leading-relaxed">
-                    <span className="shrink-0 font-semibold text-muted-foreground">
-                      {defIdx + 1}.
-                    </span>
-                    <span>{def.definitionEn}</span>
-                  </div>
+                  <p className="text-sm text-foreground/90 leading-relaxed">
+                    {def.definitionEn}
+                  </p>
                 )}
 
                 {def.examples.length > 0 && (

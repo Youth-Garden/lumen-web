@@ -1,15 +1,15 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
-import { useTranslations } from 'next-intl';
 import { OpenEffect } from '@lumen/uikit/components';
+import { useTranslations } from 'next-intl';
+import { PropsWithChildren } from 'react';
 import { Silk } from './silk';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const t = useTranslations('Auth.Layout');
 
   return (
-    <div className="min-h-screen w-full flex bg-background relative">
+    <div className="min-h-screen w-full flex relative">
       {/* Left side - Silk Brand Background */}
       <div className="hidden lg:flex lg:w-7/12 relative overflow-hidden">
         {/* React Bits Silk WebGL background */}

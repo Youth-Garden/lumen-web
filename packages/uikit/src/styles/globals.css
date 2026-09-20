@@ -43,9 +43,9 @@
   --primary-foreground: #ffffff;
   --secondary: #ffffff;
   --secondary-foreground: #000000;
-  --muted: #c2ccd8;
-  --muted-foreground: #404f54;
-  --accent: #f8f6fc;
+  --muted: #dde3ea;
+  --muted-foreground: #5a6578;
+  --accent: #f2f4f7;
   --accent-foreground: #375258;
   --destructive: #ff4395;
   --destructive-foreground: #ffffff;
@@ -192,12 +192,23 @@
   } */
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-layout text-foreground;
     letter-spacing: var(--tracking-normal);
   }
   html {
     @apply font-sans;
   }
+}
+
+/* Contextual surface for Cards inside Dialog, Sheet, Popover (0 specificity so active/utility classes can override) */
+:where([data-slot='dialog-content'], [data-slot='sheet-content'], [data-slot='popover-content']) :where([data-slot='card']) {
+  background-color: var(--accent);
+  box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:where([data-slot='dialog-content'], [data-slot='sheet-content'], [data-slot='popover-content']) :where([data-slot='card']):hover {
+  background-color: var(--muted);
 }
 
 /* Scale the whole UI up slightly on desktop. Spacing/text are rem-based,

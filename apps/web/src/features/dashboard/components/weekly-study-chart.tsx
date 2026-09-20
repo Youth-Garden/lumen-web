@@ -151,14 +151,9 @@ export function WeeklyStudyChart({
       {/* Header */}
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Icons name="bar-chart-2" className="h-4 w-4" />
-            </div>
-            <CardTitle className="text-lg font-bold font-heading text-foreground">
-              {t('studyTrends')}
-            </CardTitle>
-          </div>
+          <CardTitle className="text-lg font-bold font-heading text-foreground">
+            {t('studyTrends')}
+          </CardTitle>
           <CardDescription className="text-xs text-muted-foreground">
             {t('studyTrendsDesc')}
           </CardDescription>
@@ -363,7 +358,11 @@ export function WeeklyStudyChart({
                 {chartData.map((entry) => {
                   if (entry.minutes === 0) {
                     return (
-                      <Cell key={entry.dateStr} fill="transparent" opacity={0} />
+                      <Cell
+                        key={entry.dateStr}
+                        fill="transparent"
+                        opacity={0}
+                      />
                     );
                   }
 

@@ -24,31 +24,48 @@ export function ThemeSwitcher() {
     return <div className="h-9 w-24 bg-muted rounded-xl animate-pulse" />;
   }
 
-  const isDark = theme === 'dark';
+  const currentTheme = theme || 'system';
+
+  const renderTriggerIcon = () => {
+    if (currentTheme === 'light') {
+      return <Icons name="sun" className="h-4 w-4 text-white" />;
+    }
+    if (currentTheme === 'dark') {
+      return <Icons name="moon" className="h-4 w-4 text-white" />;
+    }
+    return <Icons name="monitor" className="h-4 w-4 text-white" />;
+  };
+
+  const renderTriggerLabel = () => {
+    if (currentTheme === 'light') return 'Light';
+    if (currentTheme === 'dark') return 'Dark';
+    return 'System';
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="outline" size="sm" className="gap-2 font-medium" />
+          <Button variant="outline" size="sm" className="gap-1.5 font-medium" />
         }
       >
-        {isDark ? (
-          <Icons name="moon" className="h-4 w-4 text-primary" />
-        ) : (
-          <Icons name="sun" className="h-4 w-4 text-amber-500" />
-        )}
-        <span className="capitalize">{isDark ? 'Dark' : 'Light'}</span>
+        {renderTriggerIcon()}
+        <span className="capitalize">{renderTriggerLabel()}</span>
+        <Icons name="chevron-down" className="h-3 w-3 opacity-60 ml-0.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-32 rounded-xl">
-        <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+        <DropdownMenuRadioGroup value={currentTheme} onValueChange={setTheme}>
           <DropdownMenuRadioItem value="light" className="gap-2 text-xs py-2">
-            <Icons name="sun" className="h-3.5 w-3.5 text-amber-500" />
+            <Icons name="sun" className="h-3.5 w-3.5 text-white" />
             Light
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark" className="gap-2 text-xs py-2">
-            <Icons name="moon" className="h-3.5 w-3.5 text-primary" />
+            <Icons name="moon" className="h-3.5 w-3.5 text-white" />
             Dark
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="system" className="gap-2 text-xs py-2">
+            <Icons name="monitor" className="h-3.5 w-3.5 text-white" />
+            System
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

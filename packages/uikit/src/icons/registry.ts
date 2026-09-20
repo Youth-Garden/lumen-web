@@ -17,6 +17,7 @@ import {
   FlagVnIcon,
   FlagUsIcon,
   FlagJpIcon,
+  ChevronDownIcon,
 } from './svgs';
 import type { IconProps } from './types';
 
@@ -38,6 +39,7 @@ export const registry: Record<
   close: LucideIcons.X,
   'close-circle': LucideIcons.XCircle,
   plus: LucideIcons.Plus,
+  minus: LucideIcons.Minus,
   'trash-2': LucideIcons.Trash2,
   edit: LucideIcons.Pencil,
   save: LucideIcons.Save,
@@ -56,7 +58,8 @@ export const registry: Record<
   image: LucideIcons.Image,
 
   // Chevrons & Arrows
-  'chevron-down': LucideIcons.ChevronDown,
+  'chevron-down': ChevronDownIcon,
+  'arrow-down': ChevronDownIcon,
   'chevron-up': LucideIcons.ChevronUp,
   'chevron-right': LucideIcons.ChevronRight,
   'chevron-left': LucideIcons.ChevronLeft,
@@ -157,6 +160,7 @@ export const registry: Record<
   // Theme & Brand
   sun: LucideIcons.Sun,
   moon: LucideIcons.Moon,
+  monitor: LucideIcons.Monitor,
   command: LucideIcons.Command,
   google: GoogleIcon,
   github: GithubIcon,

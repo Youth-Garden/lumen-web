@@ -255,14 +255,9 @@ export function HeatmapCalendar({
     <TooltipProvider delay={100}>
       <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Icons name="calendar" className="h-4 w-4" />
-            </div>
-            <CardTitle className="text-base font-bold font-heading text-foreground">
-              {t('activityHeatmap')}
-            </CardTitle>
-          </div>
+          <CardTitle className="text-base font-bold font-heading text-foreground">
+            {t('activityHeatmap')}
+          </CardTitle>
           {isInitialLoading ? (
             <Skeleton className="w-28 h-4 rounded-md" />
           ) : (

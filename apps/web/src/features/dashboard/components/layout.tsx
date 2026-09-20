@@ -65,11 +65,11 @@ function DashboardContent({
         >
           <div className="mx-auto w-full max-w-[1600px] h-full flex flex-col flex-1 min-h-0">
             {showBreadcrumbs && (
-              <div className="pt-2 pb-5 mb-2 min-h-[2.25rem]">
+              <div className="pt-2 pb-5 mb-2 min-h-[2.25rem] flex items-center">
                 <Breadcrumb>
                   <BreadcrumbList className="gap-0.5 sm:gap-1">
                     {breadcrumbs.length > 0 ? (
-                       breadcrumbs.map((item, index) => {
+                      breadcrumbs.map((item, index) => {
                         const isLast = index === breadcrumbs.length - 1;
                         return (
                           <React.Fragment key={index}>
@@ -106,15 +106,11 @@ function DashboardContent({
                         );
                       })
                     ) : (
-                      <>
-                        <BreadcrumbItem>
-                          <Skeleton className="h-4 w-14 rounded-md" />
-                        </BreadcrumbItem>
+                      <div className="flex items-center gap-1.5">
+                        <Skeleton className="h-3.5 w-14 rounded-md" />
                         <BreadcrumbSeparator className="text-muted-foreground/40 [&>svg]:size-3 mx-0 px-0" />
-                        <BreadcrumbItem>
-                          <Skeleton className="h-4 w-24 rounded-md" />
-                        </BreadcrumbItem>
-                      </>
+                        <Skeleton className="h-3.5 w-24 rounded-md" />
+                      </div>
                     )}
                   </BreadcrumbList>
                 </Breadcrumb>

@@ -118,14 +118,14 @@ export function useStudySession({
     Record<string, { level: number; learningStep: number }>
   >({});
   const canFlipRef = useRef(true);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const currentItem = studyQueue.first || null;
   const currentCard = currentItem?.card || null;
-  const isFinished = poolCards.length > 0 && studyQueue.size === 0;
-  const progressPercent = calculateProgressPercent(
-    masteredIds.length,
-    poolCards.length,
-  );
+  const isFinished = isInitialized && poolCards.length > 0 && studyQueue.size === 0;
+  const progressPercent = isInitialized
+    ? calculateProgressPercent(activeQueue, poolCards)
+    : 0;
 
   const isInitializedRef = useRef(false);
 
@@ -138,6 +138,7 @@ export function useStudySession({
     setFeedback(null);
     setSelectedOptionIndex(null);
     setWordProgressMap({});
+    setIsInitialized(true);
   }, [poolCards, resolvedMode, cards, globalCards]);
 
   useEffect(() => {
@@ -147,6 +148,7 @@ export function useStudySession({
     }
     if (!isOpen) {
       isInitializedRef.current = false;
+      setIsInitialized(false);
     }
   }, [isOpen, poolCards, initializeSession]);
 

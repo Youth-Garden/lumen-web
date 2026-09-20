@@ -59,8 +59,16 @@ export function useStudyShortcuts({
     if (!isOpen || isFinished) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Ctrl alone replays audio regardless of feedback state
-      if (event.key === StudyGlobalShortcutKey.REPLAY_AUDIO && !event.repeat) {
+      const isAudioPermitted =
+        isFeedbackOpen ||
+        exerciseType === StudyExerciseType.FLASHCARD ||
+        exerciseType === StudyExerciseType.CHOICE_MEANING;
+
+      if (
+        isAudioPermitted &&
+        event.key === StudyGlobalShortcutKey.REPLAY_AUDIO &&
+        !event.repeat
+      ) {
         const target = event.target as HTMLElement | null;
         if (
           !(target instanceof HTMLInputElement) &&
@@ -80,6 +88,17 @@ export function useStudyShortcuts({
         ) {
           event.preventDefault();
           onContinueFeedback?.();
+          return;
+        }
+        if (event.key.toLowerCase() === StudyGlobalShortcutKey.AUDIO_US) {
+          event.preventDefault();
+          onPlayUsAudio();
+          return;
+        }
+        if (event.key.toLowerCase() === StudyGlobalShortcutKey.AUDIO_UK) {
+          event.preventDefault();
+          onPlayUkAudio();
+          return;
         }
         return;
       }
@@ -107,12 +126,18 @@ export function useStudyShortcuts({
         return;
       }
 
-      if (event.key.toLowerCase() === StudyGlobalShortcutKey.AUDIO_US) {
+      if (
+        isAudioPermitted &&
+        event.key.toLowerCase() === StudyGlobalShortcutKey.AUDIO_US
+      ) {
         event.preventDefault();
         onPlayUsAudio();
         return;
       }
-      if (event.key.toLowerCase() === StudyGlobalShortcutKey.AUDIO_UK) {
+      if (
+        isAudioPermitted &&
+        event.key.toLowerCase() === StudyGlobalShortcutKey.AUDIO_UK
+      ) {
         event.preventDefault();
         onPlayUkAudio();
         return;

@@ -5,14 +5,35 @@ import { cn } from '@lumen/uikit/utils';
 import * as React from 'react';
 import { Button } from './button';
 
+interface DialogContextValue {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onDismiss?: () => void;
+}
+
+const DialogContext = React.createContext<DialogContextValue | null>(null);
+
 function Dialog({
   children,
+  open,
+  onOpenChange,
 }: {
   children?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
-  return <>{children}</>;
+  const handleDismiss = React.useCallback(() => {
+    onOpenChange?.(false);
+  }, [onOpenChange]);
+
+  const value = React.useMemo(
+    () => ({ open, onOpenChange, onDismiss: handleDismiss }),
+    [open, onOpenChange, handleDismiss],
+  );
+
+  return (
+    <DialogContext.Provider value={value}>{children}</DialogContext.Provider>
+  );
 }
 
 interface TriggerProps extends React.ComponentProps<'button'> {
@@ -42,17 +63,24 @@ function DialogTrigger({ children, onClick, render, ...props }: TriggerProps) {
 }
 
 function DialogClose({ children, onClick, render, ...props }: TriggerProps) {
+  const context = React.useContext(DialogContext);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(e);
+    context?.onDismiss?.();
+  };
+
   if (render && React.isValidElement(render)) {
     return React.cloneElement(render as React.ReactElement<any>, {
       onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
         (render.props as any).onClick?.(e);
-        onClick?.(e);
+        handleClick(e);
       },
     });
   }
 
   return (
-    <button type="button" data-slot="dialog-close" onClick={onClick} {...props}>
+    <button type="button" data-slot="dialog-close" onClick={handleClick} {...props}>
       {children}
     </button>
   );
@@ -72,6 +100,8 @@ function DialogContent({
   onDismiss,
   ...props
 }: DialogContentProps) {
+  const context = React.useContext(DialogContext);
+  const handleClose = onDismiss ?? context?.onDismiss;
   const isFullscreen = variant === 'fullscreen';
   const shouldShowClose = showCloseButton ?? !isFullscreen;
 
@@ -83,8 +113,8 @@ function DialogContent({
       data-state="open"
       className={cn(
         isFullscreen
-          ? 'fixed inset-0 flex h-screen w-screen max-w-none flex-col justify-between overflow-hidden bg-card p-0 select-none outline-none duration-200 pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0'
-          : 'fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover/95 backdrop-blur-2xl p-6 text-sm text-popover-foreground shadow-2xl transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+          ? 'fixed inset-0 flex h-screen w-screen max-w-none flex-col justify-between overflow-hidden bg-popover p-0 select-none outline-none duration-200 pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0'
+          : 'fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-3xl bg-popover p-6 text-sm text-foreground shadow-lg transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
         className,
       )}
       {...props}
@@ -95,7 +125,7 @@ function DialogContent({
           variant="ghost"
           size="icon-sm"
           className="absolute top-3.5 right-3.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80"
-          onClick={onDismiss}
+          onClick={handleClose}
         >
           <Icons name="close" className="h-4 w-4" />
           <span className="sr-only">Close</span>
@@ -125,6 +155,9 @@ function DialogFooter({
   showCloseButton?: boolean;
   onDismiss?: () => void;
 }) {
+  const context = React.useContext(DialogContext);
+  const handleClose = onDismiss ?? context?.onDismiss;
+
   return (
     <div
       data-slot="dialog-footer"
@@ -136,7 +169,7 @@ function DialogFooter({
     >
       {children}
       {showCloseButton && (
-        <Button variant="outline" onClick={onDismiss}>
+        <Button variant="outline" onClick={handleClose}>
           Close
         </Button>
       )}

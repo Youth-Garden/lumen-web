@@ -1,7 +1,9 @@
 'use client';
 
+import { useToggle } from '@lumen/hooks';
 import {
   Button,
+  Card,
   Dialog,
   DialogClose,
   DialogContent,
@@ -16,7 +18,6 @@ import { PortalProps } from '@lumen/uikit/portal';
 import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 import React from 'react';
-import { useToggle } from '@lumen/hooks';
 import {
   useProgressDashboard,
   useUpdateProgressSettings,
@@ -79,16 +80,16 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
 
   const [selectedGoal, setSelectedGoal] = React.useState(15);
   const [isCustom, , setIsCustom] = useToggle(false);
-  const [customMinutes, setCustomMinutes] = React.useState('20');
+  const [customMinutes, setCustomMinutes] = React.useState('15');
 
   React.useEffect(() => {
     if (progressData?.dailyGoalMinutes) {
       const current = progressData.dailyGoalMinutes;
       setSelectedGoal(current);
+      setCustomMinutes(String(current));
       const isPreset = GOAL_TIERS.some((tier) => tier.minutes === current);
       if (!isPreset) {
         setIsCustom(true);
-        setCustomMinutes(String(current));
       } else {
         setIsCustom(false);
       }
@@ -114,18 +115,29 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
     );
   };
 
+  const handleDecrementMinutes = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsCustom(true);
+    const val = parseInt(customMinutes, 10);
+    const current = Number.isNaN(val) ? 30 : val;
+    setCustomMinutes(String(Math.max(5, current - 1)));
+  };
+
+  const handleIncrementMinutes = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsCustom(true);
+    const val = parseInt(customMinutes, 10);
+    const current = Number.isNaN(val) ? 30 : val;
+    setCustomMinutes(String(Math.min(180, current + 1)));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent className="sm:max-w-[480px] border-none shadow-xl">
+      <DialogContent className="sm:max-w-[480px]">
         <DialogHeader className="space-y-1">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Icons name="target" className="h-4.5 w-4.5" />
-            </div>
-            <DialogTitle className="text-xl font-bold font-heading">
-              {t('setDailyGoal')}
-            </DialogTitle>
-          </div>
+          <DialogTitle className="text-xl font-bold font-heading">
+            {t('setDailyGoal')}
+          </DialogTitle>
           <DialogDescription className="text-xs sm:text-sm text-muted-foreground pt-0.5">
             {t('setDailyGoalDesc')}
           </DialogDescription>
@@ -136,20 +148,20 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
             {GOAL_TIERS.map((tier) => {
               const isSelected = selectedGoal === tier.minutes && !isCustom;
               return (
-                <button
-                  type="button"
+                <Card
                   key={tier.minutes}
                   role="radio"
                   aria-checked={isSelected}
                   onClick={() => {
                     setSelectedGoal(tier.minutes);
+                    setCustomMinutes(String(tier.minutes));
                     setIsCustom(false);
                   }}
                   className={cn(
-                    'group relative flex flex-col p-3 rounded-2xl text-left transition-all cursor-pointer border-none',
+                    'cursor-pointer transition-all p-3',
                     isSelected
-                      ? 'bg-primary/10 text-primary shadow-xs'
-                      : 'bg-muted/40 hover:bg-muted/70 text-foreground',
+                      ? '!bg-primary/10 ring-2 ring-primary/40 shadow-xs'
+                      : '',
                   )}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
@@ -167,25 +179,9 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                         {tier.minutes} {t('mins')}
                       </span>
                     </div>
-                    {tier.isPopular ? (
+                    {tier.isPopular && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                         {t('recommended')}
-                      </span>
-                    ) : (
-                      <span
-                        className={cn(
-                          'h-4 w-4 rounded-full flex items-center justify-center transition-colors',
-                          isSelected
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted/80',
-                        )}
-                      >
-                        {isSelected && (
-                          <Icons
-                            name="check"
-                            className="h-2.5 w-2.5 text-primary-foreground"
-                          />
-                        )}
                       </span>
                     )}
                   </div>
@@ -197,29 +193,24 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                       {t(tier.descKey)}
                     </p>
                   </div>
-                </button>
+                </Card>
               );
             })}
           </div>
 
-          {/* Custom goal option - borderless */}
-          <div
+          <Card
             className={cn(
-              'flex items-center justify-between p-3 rounded-2xl border-none transition-all',
+              'flex-row items-center justify-between p-3 gap-3 transition-all',
               isCustom
-                ? 'bg-primary/10 text-primary'
-                : 'bg-muted/40 hover:bg-muted/70 text-foreground',
+                ? '!bg-primary/10 ring-2 ring-primary/40 shadow-xs hover:!bg-primary/10'
+                : 'hover:!bg-accent',
             )}
           >
-            <button
-              type="button"
-              onClick={() => setIsCustom(true)}
-              className="flex items-center gap-2.5 cursor-pointer text-left grow"
-            >
+            <div className="flex items-center gap-2.5 min-w-0">
               <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-violet-500/10 text-violet-500 shrink-0">
                 <Icons name="sliders" className="h-3.5 w-3.5" />
               </div>
-              <div>
+              <div className="space-y-0.5">
                 <span className="text-xs font-bold text-foreground block">
                   {t('customGoal')}
                 </span>
@@ -227,33 +218,52 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                   5 - 180 {t('mins')}
                 </span>
               </div>
-            </button>
+            </div>
 
-            {isCustom ? (
-              <div className="flex items-center gap-2 shrink-0">
+            <div
+              className="flex items-center gap-2 shrink-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center rounded-xl bg-muted/60 p-0.5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  disabled={parseInt(customMinutes, 10) <= 5}
+                  onClick={handleDecrementMinutes}
+                  aria-label="Decrease minutes"
+                >
+                  <Icons name="minus" className="h-3.5 w-3.5" />
+                </Button>
                 <Input
                   type="number"
                   min={5}
                   max={180}
                   value={customMinutes}
-                  onChange={(event) => setCustomMinutes(event.target.value)}
-                  className="w-20 h-8 text-center text-xs font-bold border-none bg-background shadow-xs"
+                  onFocus={() => setIsCustom(true)}
+                  onChange={(event) => {
+                    setCustomMinutes(event.target.value);
+                    setIsCustom(true);
+                  }}
+                  className="w-10 h-7 text-center text-xs font-bold border-none shadow-none bg-transparent [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus-visible:ring-0 p-0"
                   placeholder="30"
                 />
-                <span className="text-xs font-semibold text-muted-foreground">
-                  {t('mins')}
-                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  disabled={parseInt(customMinutes, 10) >= 180}
+                  onClick={handleIncrementMinutes}
+                  aria-label="Increase minutes"
+                >
+                  <Icons name="plus" className="h-3.5 w-3.5" />
+                </Button>
               </div>
-            ) : (
-              <Button
-                variant="ghost"
-                size="xs"
-                onClick={() => setIsCustom(true)}
-              >
-                {t('customGoal')}
-              </Button>
-            )}
-          </div>
+              <span className="text-xs font-semibold text-muted-foreground">
+                {t('mins')}
+              </span>
+            </div>
+          </Card>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-0">
@@ -264,9 +274,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
             onClick={handleSaveGoal}
             disabled={updateSettings.isPending}
             size="default"
-            className="gap-2"
           >
-            <Icons name="check" className="h-4 w-4" />
             <span>
               {updateSettings.isPending ? t('saving') : t('saveChanges')}
             </span>
