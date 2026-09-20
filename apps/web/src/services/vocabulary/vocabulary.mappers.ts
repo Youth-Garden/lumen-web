@@ -95,8 +95,8 @@ export const wordMapper = (raw: any): VocabularyWord => ({
 export const folderMapper = (folder: any): Folder => ({
   id: folder.id || '',
   name: folder.name || '',
-  description: folder.description,
-  category: folder.category,
+  description: folder.description || null,
+  category: folder.category || null,
   isSystem: Boolean(folder.isSystem),
   flashcardCount: folder.flashcardCount || 0,
   learnedCount: folder.learnedCount || 0,

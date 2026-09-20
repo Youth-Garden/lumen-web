@@ -1,7 +1,8 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import type { Folder } from '@/services/vocabulary';
 import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -24,21 +25,28 @@ export function FolderCatalogSection({
   onCreateFolder,
 }: FolderCatalogSectionProps) {
   const t = useTranslations('Vocabulary.Folders');
+  const locale = useLocale();
+
   const { userFolders, categorizedGroups } = useMemo(() => {
     const userList: Folder[] = [];
     const catMap = new Map<string, Folder[]>();
 
     folders.forEach((folderItem) => {
+      const localizedCategory = getLocalizedText(
+        folderItem.category,
+        locale,
+      ).trim();
+
       if (
-        !folderItem.category ||
-        folderItem.category.trim() === '' ||
-        folderItem.category === 'Cá nhân'
+        !folderItem.isSystem ||
+        !localizedCategory ||
+        localizedCategory === 'Cá nhân' ||
+        localizedCategory === 'Personal'
       ) {
         userList.push(folderItem);
       } else {
-        const cat = folderItem.category.trim();
-        if (!catMap.has(cat)) catMap.set(cat, []);
-        catMap.get(cat)!.push(folderItem);
+        if (!catMap.has(localizedCategory)) catMap.set(localizedCategory, []);
+        catMap.get(localizedCategory)!.push(folderItem);
       }
     });
 
@@ -46,7 +54,7 @@ export function FolderCatalogSection({
       userFolders: userList,
       categorizedGroups: Array.from(catMap.entries()),
     };
-  }, [folders]);
+  }, [folders, locale]);
 
   return (
     <div className="space-y-6 w-full relative">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -9,6 +9,7 @@ import {
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import {
   StudyView,
   type StudyViewData,
@@ -24,6 +25,7 @@ import { TopicWordsList } from '../components/folder-detail/topic-words-list';
 
 export function TopicDetailPage() {
   const t = useTranslations('Vocabulary.Folders');
+  const locale = useLocale();
   const router = useRouter();
   const params = useParams();
 
@@ -56,6 +58,8 @@ export function TopicDetailPage() {
     [flashcardsPage?.data],
   );
 
+  const folderDisplayName = getLocalizedText(folderDetail?.name, locale);
+
   useSetBreadcrumb(
     useMemo(() => {
       const items: BreadcrumbConfigItem[] = [
@@ -65,7 +69,7 @@ export function TopicDetailPage() {
         items.push({ label: '', isLoading: true });
       } else if (folderDetail) {
         items.push({
-          label: folderDetail.name,
+          label: folderDisplayName,
           href: formatUrl(RouteEnum.FOLDER_DETAIL, { id: folderId }),
         });
       }
@@ -81,6 +85,7 @@ export function TopicDetailPage() {
       t,
       folderId,
       folderDetail,
+      folderDisplayName,
       isLoadingFolder,
       topicViName,
       topicName,
@@ -149,7 +154,7 @@ export function TopicDetailPage() {
     <div className="w-full py-2 pb-36">
       <TopicWordsList
         folderId={folderId}
-        folderName={folderDetail.name}
+        folderName={folderDisplayName}
         topicName={topicName}
         topicViName={topicViName}
         flashcards={flashcards}

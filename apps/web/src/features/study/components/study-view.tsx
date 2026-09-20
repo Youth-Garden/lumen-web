@@ -20,6 +20,7 @@ import {
   MasteryFlowerDialog,
   MasteryFlowerDialogData,
 } from '@/features/vocabulary/components/mastery/mastery-flower-dialog';
+import { WordDetailSheet } from '@/features/vocabulary/components/folder-detail/word-detail-sheet';
 import { type VocabularyWord } from '@/services/vocabulary';
 import { useToggle, useUnmount } from '@lumen/hooks';
 import {
@@ -51,6 +52,7 @@ export function StudyView({
   const [presentSettings] = usePortal(StudySettingsDialog);
   const [presentMastery] =
     usePortal<MasteryFlowerDialogData>(MasteryFlowerDialog);
+  const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
   const [showShortcuts, toggleShortcuts] = useToggle(true);
 
   useUnmount(() => {
@@ -177,6 +179,7 @@ export function StudyView({
                       onFlip={handleFlip}
                       onPlayUsAudio={handlePlayUsAudio}
                       onPlayUkAudio={handlePlayUkAudio}
+                      onOpenWordDetail={() => presentWordDetail(currentCard)}
                     />
 
                     {/* Action Buttons Below Flashcard */}

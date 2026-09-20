@@ -18,6 +18,7 @@ interface StudyFlashcardProps {
   onFlip: () => void;
   onPlayUsAudio: (event: React.MouseEvent) => void;
   onPlayUkAudio: (event: React.MouseEvent) => void;
+  onOpenWordDetail?: () => void;
 }
 
 const formatPartOfSpeech = (pos?: string): string => {
@@ -49,6 +50,7 @@ export function StudyFlashcard({
   onFlip,
   onPlayUsAudio,
   onPlayUkAudio,
+  onOpenWordDetail,
 }: StudyFlashcardProps) {
   const t = useTranslations('Vocabulary.Study');
   const definitions = card.definitions || [];
@@ -76,7 +78,27 @@ export function StudyFlashcard({
           {/* Center Content: Term & Pronunciations */}
           <div className="flex flex-col items-center justify-center space-y-4 my-auto w-full">
             <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
-              {card.term}
+              {onOpenWordDetail ? (
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onOpenWordDetail();
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.stopPropagation();
+                      onOpenWordDetail();
+                    }
+                  }}
+                  className="underline decoration-dotted decoration-foreground/40 underline-offset-8 cursor-pointer hover:text-primary hover:decoration-primary transition-colors inline-block"
+                >
+                  {card.term}
+                </span>
+              ) : (
+                card.term
+              )}
             </h1>
 
             {/* US & UK Audio Buttons */}

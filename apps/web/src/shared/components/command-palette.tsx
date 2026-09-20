@@ -2,13 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useDebounce } from '@lumen/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
 import {
   useVocabularyFolders,
   useVocabularyWords,
 } from '@/features/vocabulary/hooks/use-vocabulary';
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import {
   CommandDialog,
   CommandEmpty,
@@ -27,6 +28,7 @@ import { formatUrl } from '@lumen/shared-api';
 
 export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('CommandPalette');
+  const locale = useLocale();
   const router = useRouter();
   const { logout } = useLogout();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -40,7 +42,9 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
   const allFolders = foldersData?.data || [];
   const filteredFolders = debouncedSearch
     ? allFolders.filter((folder) =>
-        folder.name.toLowerCase().includes(debouncedSearch.toLowerCase()),
+        getLocalizedText(folder.name, locale)
+          .toLowerCase()
+          .includes(debouncedSearch.toLowerCase()),
       )
     : [];
 
@@ -128,13 +132,13 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                     />
                     <span>
                       <HighlightText
-                        text={folder.name}
+                        text={getLocalizedText(folder.name, locale)}
                         query={debouncedSearch}
                       />
                     </span>
                     {folder.category && (
                       <span className="ml-auto rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                        {folder.category}
+                        {getLocalizedText(folder.category, locale)}
                       </span>
                     )}
                   </CommandItem>

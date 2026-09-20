@@ -12,9 +12,13 @@ import {
   SheetContent,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import type { PortalProps } from '@lumen/uikit/portal';
+import { type PortalProps, usePortal } from '@lumen/uikit/portal';
 
 import { useReviewFlashcard } from '@/features/study/hooks';
+import {
+  SaveToFolderSheet,
+  type SaveToFolderData,
+} from '@/features/vocabulary/components/dialogs/save-to-folder-sheet';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
 import { FlashcardRating } from '@/services/study';
 import {
@@ -49,6 +53,8 @@ export function WordDetailSheet({
   const t = useTranslations('Vocabulary.Folders');
   const { playPronunciation } = usePronunciation();
   const { mutate: reviewFlashcard, isPending } = useReviewFlashcard();
+  const [presentSaveToFolder] =
+    usePortal<SaveToFolderData>(SaveToFolderSheet);
 
   const [localLevel, setLocalLevel] = useState<number | null>(null);
   const [localStep, setLocalStep] = useState<number | null>(null);
@@ -123,17 +129,34 @@ export function WordDetailSheet({
               </span>
             )}
             <div className="flex-1" />
-            <SheetClose
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="text-muted-foreground hover:text-foreground"
-                />
-              }
-            >
-              <Icons name="x" className="h-4 w-4" />
-            </SheetClose>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                type="button"
+                className="text-muted-foreground hover:text-foreground shrink-0"
+                onClick={() =>
+                  presentSaveToFolder({
+                    wordId: word?.wordId || word?.id || '',
+                    term: word?.term,
+                  })
+                }
+                title={t('saveToFolder')}
+              >
+                <Icons name="folder-plus" className="h-4 w-4" />
+              </Button>
+              <SheetClose
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="text-muted-foreground hover:text-foreground shrink-0"
+                  />
+                }
+              >
+                <Icons name="x" className="h-4 w-4" />
+              </SheetClose>
+            </div>
           </div>
 
           {word && (

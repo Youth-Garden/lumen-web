@@ -1,11 +1,11 @@
-import type { VocabularyWord } from '../vocabulary';
+import type { I18nString, VocabularyWord } from '../vocabulary';
 
 export interface DueFlashcard {
   flashcardId: string;
   wordId: string;
   term: string;
   folderId: string;
-  folderName: string;
+  folderName: I18nString;
   masteryScore: number;
   level: number;
   isWilted: boolean;

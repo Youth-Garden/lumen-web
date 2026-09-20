@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import {
@@ -30,6 +30,7 @@ import {
   useVocabularyFolders,
   useCreateFlashcard,
 } from '@/features/vocabulary/hooks';
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import { PortalProps } from '@lumen/uikit/portal';
 
 const formSchema = z.object({
@@ -50,6 +51,7 @@ export function AddFlashcardDialog({
 }: PortalProps<AddFlashcardDialogProps>) {
   const { wordId, term } = data || { wordId: '', term: '' };
   const t = useTranslations('Vocabulary.List');
+  const locale = useLocale();
 
   const { data: foldersData, isLoading: isLoadingFolders } =
     useVocabularyFolders();
@@ -121,7 +123,7 @@ export function AddFlashcardDialog({
                         ) : (
                           folders.map((folder) => (
                             <SelectItem key={folder.id} value={folder.id}>
-                              {folder.name}
+                              {getLocalizedText(folder.name, locale)}
                             </SelectItem>
                           ))
                         )}

@@ -1,9 +1,10 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary';
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
@@ -30,6 +31,7 @@ export function FolderSelectionView({
 }: FolderSelectionViewProps) {
   const t = useTranslations('Vocabulary.Folders');
   const tStudy = useTranslations('Vocabulary.Study');
+  const locale = useLocale();
   const [selectedFolderForAction, setSelectedFolderForAction] =
     useState<Folder | null>(null);
 
@@ -38,18 +40,23 @@ export function FolderSelectionView({
     const grouped = new Map<string, Folder[]>();
 
     allFolders.forEach((folder) => {
+      const localizedCategory = getLocalizedText(
+        folder.category,
+        locale,
+      ).trim();
+
       if (
-        !folder.category ||
-        folder.category.trim() === '' ||
-        folder.category === 'Cá nhân'
+        !folder.isSystem ||
+        !localizedCategory ||
+        localizedCategory === 'Cá nhân' ||
+        localizedCategory === 'Personal'
       ) {
         userList.push(folder);
       } else {
-        const cat = folder.category.trim();
-        if (!grouped.has(cat)) {
-          grouped.set(cat, []);
+        if (!grouped.has(localizedCategory)) {
+          grouped.set(localizedCategory, []);
         }
-        grouped.get(cat)!.push(folder);
+        grouped.get(localizedCategory)!.push(folder);
       }
     });
 
@@ -57,7 +64,7 @@ export function FolderSelectionView({
       userFolders: userList,
       categoryMap: grouped,
     };
-  }, [allFolders]);
+  }, [allFolders, locale]);
 
   const handleFolderClick = (folder: Folder) => {
     setSelectedFolderForAction(folder);

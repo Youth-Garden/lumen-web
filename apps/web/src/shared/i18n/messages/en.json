@@ -669,7 +669,13 @@
       "definition": "Definition",
       "examples": "Examples",
       "createSuccess": "Folder created successfully",
-      "createError": "Failed to create folder"
+      "createError": "Failed to create folder",
+      "saveToFolder": "Save to Folder",
+      "saveToFolderDescription": "Select a personal custom folder to save this word",
+      "createNewFolder": "Create New Folder",
+      "addedToFolderSuccess": "Word added to folder successfully",
+      "alreadyInFolder": "Word is already in this folder",
+      "inspectWordDetail": "View word detail"
     },
     "Mastery": {
       "dialogTitle": "Knowledge Journey & Spaced Repetition",

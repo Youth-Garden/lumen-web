@@ -1,7 +1,8 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import type { Folder } from '@/services/vocabulary';
 import { Icons } from '@lumen/uikit/icons';
 import Image from 'next/image';
@@ -11,7 +12,11 @@ export const FOLDER_COVERS: Record<string, string> = {
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
   '600 từ vựng TOEIC':
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
+  '600 Essential TOEIC Words':
+    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
   'Từ vựng TOEIC':
+    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
+  'TOEIC Vocabulary':
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
   TOEIC:
     'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
@@ -35,10 +40,17 @@ export function FolderCard({
   onViewFolderWords,
 }: FolderCardProps) {
   const t = useTranslations('Vocabulary.Folders');
+  const locale = useLocale();
+  const folderDisplayName = getLocalizedText(folder.name, locale);
+  const folderCategory = getLocalizedText(folder.category, locale);
+
   const coverUrl =
     FOLDER_COVERS[folder.id] ||
-    FOLDER_COVERS[folder.name] ||
-    (folder.category ? FOLDER_COVERS[folder.category] : null) ||
+    FOLDER_COVERS[folderDisplayName] ||
+    (typeof folder.name === 'object' && folder.name !== null
+      ? FOLDER_COVERS[folder.name.en || ''] || FOLDER_COVERS[folder.name.vi || '']
+      : null) ||
+    (folderCategory ? FOLDER_COVERS[folderCategory] : null) ||
     FOLDER_COVERS.user_default;
 
   const totalWords = folder.flashcardCount || 0;
@@ -65,7 +77,7 @@ export function FolderCard({
         {coverUrl ? (
           <Image
             src={coverUrl}
-            alt={folder.name}
+            alt={folderDisplayName}
             fill
             sizes="(max-width: 640px) 100vw, 260px"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -90,7 +102,7 @@ export function FolderCard({
       {/* BOTTOM: Folder Name & Stats Pill */}
       <div className="relative z-10 space-y-1.5 pointer-events-none">
         <h4 className="text-white font-extrabold text-sm sm:text-base leading-snug line-clamp-1 drop-shadow-md">
-          {folder.name}
+          {folderDisplayName}
         </h4>
 
         {/* Stats Pill: [✓] learned/total   [clock] due */}

@@ -669,7 +669,13 @@
       "examples": "Ví dụ",
       "createSuccess": "Tạo thư mục thành công",
       "createError": "Tạo thư mục thất bại",
-      "defaultFolderDescription": "Thư mục từ vựng"
+      "defaultFolderDescription": "Thư mục từ vựng",
+      "saveToFolder": "Lưu vào thư mục",
+      "saveToFolderDescription": "Chọn thư mục cá nhân để lưu từ vựng này",
+      "createNewFolder": "Tạo thư mục mới",
+      "addedToFolderSuccess": "Đã thêm từ vào thư mục thành công",
+      "alreadyInFolder": "Từ này đã có trong thư mục",
+      "inspectWordDetail": "Xem chi tiết từ vựng"
     },
     "Mastery": {
       "dialogTitle": "Hành trình Tri thức & Lặp lại Ngắt quãng",

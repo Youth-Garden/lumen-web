@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { StudySessionMode } from '@/features/study/types/study.types';
 import type { StudyViewData } from '@/features/study/components/study-view';
 import type { Folder, VocabularyWord } from '@/services/vocabulary';
 import type { DueFlashcard } from '@/services/study';
+import { getLocalizedText } from '../utils';
 
 interface UseFolderStudyActionsProps {
   activeFolder: Folder | null;
@@ -22,6 +23,8 @@ export function useFolderStudyActions({
 }: UseFolderStudyActionsProps) {
   const t = useTranslations('Vocabulary.Folders');
   const tStudy = useTranslations('Vocabulary.Study');
+  const locale = useLocale();
+  const activeFolderName = getLocalizedText(activeFolder?.name, locale);
 
   const allFlashcards: VocabularyWord[] = useMemo(
     () => flashcards,
@@ -104,8 +107,8 @@ export function useFolderStudyActions({
     if (!cardsToStudy.length) return;
     presentStudyView({
       cards: cardsToStudy,
-      folderName: activeFolder
-        ? `${activeFolder.name} - ${tStudy('practice')}`
+      folderName: activeFolderName
+        ? `${activeFolderName} - ${tStudy('practice')}`
         : tStudy('practice'),
       isReviewMode: dueCardsList.length > 0,
       mode: StudySessionMode.PRACTICE,
@@ -124,8 +127,8 @@ export function useFolderStudyActions({
 
     presentStudyView({
       cards: cardsToStudy,
-      folderName: activeFolder
-        ? `${activeFolder.name} - ${tStudy('learnNew')}`
+      folderName: activeFolderName
+        ? `${activeFolderName} - ${tStudy('learnNew')}`
         : tStudy('learnNew'),
       mode: StudySessionMode.PRACTICE,
     });
@@ -135,8 +138,8 @@ export function useFolderStudyActions({
     if (!allFlashcards.length) return;
     presentStudyView({
       cards: allFlashcards,
-      folderName: activeFolder
-        ? `${activeFolder.name} - ${tStudy('flashcards')}`
+      folderName: activeFolderName
+        ? `${activeFolderName} - ${tStudy('flashcards')}`
         : tStudy('flashcards'),
       mode: StudySessionMode.FLASHCARD,
     });

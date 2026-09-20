@@ -1,6 +1,10 @@
+import type { I18nMap, I18nString, SupportedLocale } from '@/shared/types';
+
+export type { I18nMap, I18nString, SupportedLocale };
+
 export interface VocabularyExample {
   id: string;
-  sentence?: Record<string, string>;
+  sentence?: I18nMap;
   sentenceEn: string;
   translationVi: string;
 }
@@ -8,7 +12,7 @@ export interface VocabularyExample {
 export interface VocabularyDefinition {
   id: string;
   partOfSpeech: string;
-  definition?: Record<string, string>;
+  definition?: I18nMap;
   definitionEn: string;
   translationVi: string;
   examples: VocabularyExample[];
@@ -39,9 +43,9 @@ export interface VocabularyWord {
 
 export interface Folder {
   id: string;
-  name: string;
-  description?: string;
-  category?: string;
+  name: I18nString;
+  description?: I18nString | null;
+  category?: I18nString | null;
   isSystem: boolean;
   flashcardCount: number;
   learnedCount: number;

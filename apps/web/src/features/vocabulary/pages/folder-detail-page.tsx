@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 
 import { useMemo } from 'react';
@@ -10,6 +10,7 @@ import {
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
+import { getLocalizedText } from '@/features/vocabulary/utils';
 import { RouteEnum } from '@/shared/constants';
 import { useGoBack, useSetBreadcrumb } from '@/shared/hooks';
 import { formatUrl } from '@lumen/shared-api';
@@ -35,6 +36,7 @@ export function FolderDetailPage({
   folderId: propFolderId,
 }: FolderDetailPageProps = {}) {
   const t = useTranslations('Vocabulary.Folders');
+  const locale = useLocale();
   const router = useRouter();
   const params = useParams();
   const routeId = typeof params?.id === 'string' ? params.id : '';
@@ -45,16 +47,18 @@ export function FolderDetailPage({
   const { data: topics = [], isLoading: isLoadingTopics } =
     useFolderTopics(folderId);
 
+  const folderDisplayName = getLocalizedText(folderDetail?.name, locale);
+
   useSetBreadcrumb(
     useMemo(
       () => [
         { label: t('title'), href: RouteEnum.VOCABULARY },
         {
-          label: folderDetail?.name || '',
+          label: folderDisplayName || '',
           isLoading: isLoading && !folderDetail,
         },
       ],
-      [t, folderDetail, isLoading],
+      [t, folderDisplayName, isLoading, folderDetail],
     ),
   );
 
@@ -73,7 +77,7 @@ export function FolderDetailPage({
     if (!folderDetail) return;
     presentDeleteConfirm({
       folderId: folderDetail.id,
-      folderName: folderDetail.name,
+      folderName: folderDisplayName,
       onSuccess: () => {
         router.push(RouteEnum.VOCABULARY);
       },
@@ -105,7 +109,7 @@ export function FolderDetailPage({
     presentStudyView({
       cards: [...flashcards].sort(() => Math.random() - 0.5),
       mode,
-      folderName: folderDetail?.name || t('defaultFolderDescription'),
+      folderName: folderDisplayName || t('defaultFolderDescription'),
     });
   };
 
@@ -169,9 +173,11 @@ export function FolderDetailPage({
   return (
     <div className="w-full py-2 pb-36">
       <FolderTopicGrid
-        folderName={folderDetail.name}
-        category={folderDetail.category || undefined}
-        description={folderDetail.description || undefined}
+        folderName={folderDisplayName}
+        category={getLocalizedText(folderDetail.category, locale) || undefined}
+        description={
+          getLocalizedText(folderDetail.description, locale) || undefined
+        }
         selectedTopic={null}
         topicStats={topicStats}
         onSelectTopic={handleTopicClick}

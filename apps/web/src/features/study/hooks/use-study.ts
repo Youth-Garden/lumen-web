@@ -1,12 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { progressKeys } from '@/services/progress';
 import {
   studyService,
   studyKeys,
   type BatchReviewFlashcardsPayload,
+  type DueFlashcard,
   type ReviewFlashcardPayload,
 } from '@/services/study';
-import { vocabularyKeys } from '@/services/vocabulary';
+import {
+  vocabularyKeys,
+  type FolderFlashcardsPage,
+} from '@/services/vocabulary';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useReviewFlashcard = () => {
   const queryClient = useQueryClient();
@@ -14,6 +18,63 @@ export const useReviewFlashcard = () => {
   return useMutation({
     mutationFn: (payload: ReviewFlashcardPayload) =>
       studyService.reviewFlashcard(payload),
+    onMutate: async (payload: ReviewFlashcardPayload) => {
+      await queryClient.cancelQueries({ queryKey: vocabularyKeys.all });
+      await queryClient.cancelQueries({ queryKey: studyKeys.all });
+
+      let newLevel: number | undefined;
+      let newStep: number | undefined;
+
+      if (payload.isResetToUnlearned) {
+        newLevel = 0;
+        newStep = 0;
+      } else if (payload.isFastTrackKnown) {
+        newLevel = 6;
+        newStep = 6;
+      } else if (payload.isFastTrackTempMemory) {
+        newLevel = 3;
+        newStep = 3;
+      }
+
+      if (newLevel !== undefined) {
+        queryClient.setQueriesData<FolderFlashcardsPage>(
+          { queryKey: vocabularyKeys.folders() },
+          (old) => {
+            if (!old || !Array.isArray(old.data)) return old;
+            return {
+              ...old,
+              data: old.data.map((item) => {
+                if (
+                  item.flashcardId === payload.flashcardId ||
+                  item.id === payload.flashcardId ||
+                  item.wordId === payload.flashcardId
+                ) {
+                  return {
+                    ...item,
+                    level: newLevel,
+                    learningStep: newStep ?? item.learningStep,
+                    isWilted: false,
+                  };
+                }
+                return item;
+              }),
+            };
+          },
+        );
+
+        queryClient.setQueriesData<DueFlashcard[]>(
+          { queryKey: studyKeys.all },
+          (old) => {
+            if (!Array.isArray(old)) return old;
+            return old.filter(
+              (item) =>
+                item.flashcardId !== payload.flashcardId &&
+                item.wordId !== payload.flashcardId,
+            );
+          },
+        );
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: studyKeys.dueFlashcards(),

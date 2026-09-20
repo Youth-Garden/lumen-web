@@ -3,6 +3,7 @@ import {
   CreateFlashcardPayload,
   vocabularyKeys,
   vocabularyService,
+  type Folder,
 } from '@/services/vocabulary';
 import { studyKeys } from '@/services/study';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -24,7 +25,28 @@ export const useDeleteFolder = () => {
 
   return useMutation({
     mutationFn: (id: string) => vocabularyService.deleteFolder(id),
-    onSuccess: () => {
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: vocabularyKeys.folders() });
+      const previousFolders = queryClient.getQueryData<Folder[]>(
+        vocabularyKeys.folders(),
+      );
+
+      queryClient.setQueryData<Folder[]>(vocabularyKeys.folders(), (old) => {
+        if (!Array.isArray(old)) return old;
+        return old.filter((f) => f.id !== id);
+      });
+
+      return { previousFolders };
+    },
+    onError: (_err, _id, context) => {
+      if (context?.previousFolders) {
+        queryClient.setQueryData(
+          vocabularyKeys.folders(),
+          context.previousFolders,
+        );
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
       queryClient.invalidateQueries({ queryKey: studyKeys.dueFlashcards() });
     },
