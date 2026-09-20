@@ -123,9 +123,7 @@ export function HeatmapCalendar({
           <CardTitle className="text-base font-bold font-heading text-foreground">
             {t('activityHeatmap')}
           </CardTitle>
-          {isInitialLoading ? (
-            <Skeleton className="w-28 h-4 rounded-md" />
-          ) : (
+          {!isInitialLoading && (
             <span className="text-xs text-muted-foreground font-medium">
               {totalActivities} {t('contributionsInYear', { year: activeYear })}
             </span>

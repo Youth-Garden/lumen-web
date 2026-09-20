@@ -19,6 +19,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -45,6 +46,7 @@ interface ChartDayItem {
   dayLabel: string;
   fullDate: string;
   minutes: number;
+  displayMinutes: number;
   goal: number;
   isGoalMet: boolean;
   isToday: boolean;
@@ -57,6 +59,33 @@ function formatDayLabel(date: Date, locale: string): string {
     return `T${day + 1}`;
   }
   return format(date, 'EEE');
+}
+
+interface CustomLabelProps {
+  x?: number;
+  y?: number;
+  width?: number;
+  value?: number;
+}
+
+function renderBarTopLabel(props: CustomLabelProps) {
+  const { x = 0, y = 0, width = 0, value } = props;
+  if (value === undefined || value === null) return null;
+  const isZero = value === 0;
+
+  return (
+    <text
+      x={x + width / 2}
+      y={y - 6}
+      fill={isZero ? 'var(--muted-foreground)' : 'var(--foreground)'}
+      textAnchor="middle"
+      fontSize={isZero ? 10 : 11}
+      fontWeight={isZero ? 500 : 700}
+      opacity={isZero ? 0.45 : 1}
+    >
+      {value}m
+    </text>
+  );
 }
 
 export function WeeklyStudyChart({
@@ -114,6 +143,7 @@ export function WeeklyStudyChart({
         dayLabel,
         fullDate: format(date, 'dd/MM/yyyy'),
         minutes,
+        displayMinutes: minutes,
         goal: safeGoal,
         isGoalMet: minutes >= safeGoal,
         isToday,
@@ -144,7 +174,7 @@ export function WeeklyStudyChart({
   }
 
   const maxMinutes = Math.max(...chartData.map((d) => d.minutes), safeGoal);
-  const yDomainMax = Math.ceil((maxMinutes * 1.2) / 5) * 5;
+  const yDomainMax = Math.ceil((maxMinutes * 1.25) / 5) * 5;
 
   return (
     <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
@@ -189,7 +219,7 @@ export function WeeklyStudyChart({
           </div>
           <div className="flex items-center gap-1.5">
             <span>{t('goalsMet')}:</span>
-            <strong className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-heading">
+            <strong className="text-sm font-bold text-foreground font-heading">
               {stats.metCount}/{chartData.length} {t('days')}
             </strong>
           </div>
@@ -200,45 +230,8 @@ export function WeeklyStudyChart({
           <ChartContainer width="100%" height="100%">
             <BarChart
               data={chartData}
-              margin={{ top: 20, right: 15, left: -20, bottom: 0 }}
+              margin={{ top: 24, right: 15, left: -20, bottom: 0 }}
             >
-              <defs>
-                <linearGradient id="goalMetGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10B981" stopOpacity={1} />
-                  <stop offset="100%" stopColor="#059669" stopOpacity={0.85} />
-                </linearGradient>
-                <linearGradient id="studiedGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="0%"
-                    stopColor="var(--primary)"
-                    stopOpacity={1}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="var(--primary)"
-                    stopOpacity={0.7}
-                  />
-                </linearGradient>
-                <linearGradient
-                  id="todayActiveGrad"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor="var(--primary)"
-                    stopOpacity={1}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="var(--primary)"
-                    stopOpacity={0.8}
-                  />
-                </linearGradient>
-              </defs>
-
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
@@ -292,13 +285,6 @@ export function WeeklyStudyChart({
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const item = payload[0].payload as ChartDayItem;
-                  const barColor = item.isGoalMet
-                    ? '#10B981'
-                    : item.isToday
-                      ? 'var(--primary)'
-                      : item.minutes > 0
-                        ? 'var(--primary)'
-                        : 'var(--muted-foreground)';
 
                   return (
                     <ChartTooltipCard>
@@ -306,7 +292,7 @@ export function WeeklyStudyChart({
                         {item.fullDate} {item.isToday && `• ${t('today')}`}
                       </ChartTooltipTitle>
                       <ChartTooltipRow
-                        color={barColor}
+                        color="var(--primary)"
                         label={t('studiedMinutes')}
                         value={`${item.minutes}m`}
                       />
@@ -316,7 +302,7 @@ export function WeeklyStudyChart({
                         value={`${item.goal}m`}
                       />
                       {item.isGoalMet ? (
-                        <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pt-0.5">
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-primary pt-0.5">
                           <Icons name="check" className="h-3 w-3" />
                           <span>{t('goalsMet')}</span>
                         </div>
@@ -350,35 +336,23 @@ export function WeeklyStudyChart({
               />
 
               <Bar
-                dataKey="minutes"
-                radius={[8, 8, 4, 4]}
+                dataKey="displayMinutes"
+                radius={[6, 6, 2, 2]}
                 maxBarSize={period === '7d' ? 36 : 10}
                 className="cursor-pointer"
               >
+                <LabelList
+                  dataKey="minutes"
+                  content={renderBarTopLabel}
+                />
                 {chartData.map((entry) => {
-                  if (entry.minutes === 0) {
-                    return (
-                      <Cell
-                        key={entry.dateStr}
-                        fill="transparent"
-                        opacity={0}
-                      />
-                    );
-                  }
-
-                  let fill = 'url(#studiedGrad)';
-                  let opacity = 0.9;
-
-                  if (entry.isGoalMet) {
-                    fill = 'url(#goalMetGrad)';
-                    opacity = 1;
-                  } else if (entry.isToday) {
-                    fill = 'url(#todayActiveGrad)';
-                    opacity = 1;
-                  }
-
+                  const isZero = entry.minutes === 0;
                   return (
-                    <Cell key={entry.dateStr} fill={fill} opacity={opacity} />
+                    <Cell
+                      key={entry.dateStr}
+                      fill={isZero ? 'transparent' : 'var(--primary)'}
+                      opacity={isZero ? 0 : 1}
+                    />
                   );
                 })}
               </Bar>

@@ -34,15 +34,15 @@ export function HeatmapGrid({
       className="overflow-x-auto pb-1 scrollbar-thin scroll-smooth"
     >
       <div className="flex gap-2.5 w-max py-1">
-        {/* Day-of-week labels */}
-        <div className="flex flex-col gap-1 text-[10px] font-medium text-muted-foreground/70 select-none pt-5 shrink-0">
-          <span className="h-3 leading-3" />
-          <span className="h-3 leading-3">{t('dayMon')}</span>
-          <span className="h-3 leading-3" />
-          <span className="h-3 leading-3">{t('dayWed')}</span>
-          <span className="h-3 leading-3" />
-          <span className="h-3 leading-3">{t('dayFri')}</span>
-          <span className="h-3 leading-3" />
+        {/* Day-of-week labels (All 7 days) */}
+        <div className="flex flex-col gap-1 text-[9px] font-medium text-muted-foreground/70 select-none pt-5 shrink-0">
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('daySun')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayMon')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayTue')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayWed')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayThu')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('dayFri')}</span>
+          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">{t('daySat')}</span>
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -55,7 +55,7 @@ export function HeatmapGrid({
               return (
                 <div
                   key={weekIndex}
-                  className="w-3 shrink-0 text-left overflow-visible"
+                  className="w-3 sm:w-3.5 shrink-0 text-left overflow-visible"
                 >
                   {monthItem?.label && (
                     <span className="whitespace-nowrap">{monthItem.label}</span>
@@ -74,7 +74,7 @@ export function HeatmapGrid({
                     return (
                       <div
                         key={`empty-${weekIndex}-${dayIndex}`}
-                        className="w-3 h-3 rounded-full shrink-0 bg-transparent"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-[3px] shrink-0 bg-transparent"
                       />
                     );
 
@@ -82,7 +82,7 @@ export function HeatmapGrid({
                     return (
                       <div
                         key={day.dateStr}
-                        className="w-3 h-3 rounded-full shrink-0 bg-muted/40 dark:bg-muted/30"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-[3px] shrink-0 bg-muted/40 dark:bg-muted/30"
                       />
                     );
                   }
@@ -98,12 +98,9 @@ export function HeatmapGrid({
                           <div
                             tabIndex={0}
                             className={cn(
-                              'w-3 h-3 rounded-full shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-card animate-in fade-in zoom-in-90',
+                              'w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-[3px] shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-card transition-colors duration-150',
                               getIntensityClass(safeCount),
                             )}
-                            style={{
-                              animationDelay: `${(weekIndex + dayIndex) % 500}ms`,
-                            }}
                           />
                         }
                       />

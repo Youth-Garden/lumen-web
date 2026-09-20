@@ -32,8 +32,6 @@ interface GoalTierConfig {
     | 'goalAcceleratedDesc'
     | 'goalIntensiveDesc';
   iconName: string;
-  color: string;
-  bgColor: string;
   isPopular?: boolean;
 }
 
@@ -43,16 +41,12 @@ const GOAL_TIERS: GoalTierConfig[] = [
     titleKey: 'goalCasual',
     descKey: 'goalCasualDesc',
     iconName: 'coffee',
-    color: 'text-sky-500',
-    bgColor: 'bg-sky-500/10',
   },
   {
     minutes: 30,
     titleKey: 'goalStandard',
     descKey: 'goalStandardDesc',
     iconName: 'zap',
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-500/10',
     isPopular: true,
   },
   {
@@ -60,16 +54,12 @@ const GOAL_TIERS: GoalTierConfig[] = [
     titleKey: 'goalAccelerated',
     descKey: 'goalAcceleratedDesc',
     iconName: 'flame',
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
   },
   {
     minutes: 60,
     titleKey: 'goalIntensive',
     descKey: 'goalIntensiveDesc',
     iconName: 'trophy',
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
   },
 ];
 
@@ -168,9 +158,10 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                     <div className="flex items-center gap-2">
                       <div
                         className={cn(
-                          'flex h-7 w-7 items-center justify-center rounded-xl shrink-0',
-                          tier.bgColor,
-                          tier.color,
+                          'flex h-7 w-7 items-center justify-center rounded-xl shrink-0 transition-colors',
+                          isSelected
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted/60 text-muted-foreground',
                         )}
                       >
                         <Icons name={tier.iconName} className="h-3.5 w-3.5" />
@@ -207,7 +198,14 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
             )}
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-violet-500/10 text-violet-500 shrink-0">
+              <div
+                className={cn(
+                  'flex h-7 w-7 items-center justify-center rounded-xl shrink-0 transition-colors',
+                  isCustom
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted/60 text-muted-foreground',
+                )}
+              >
                 <Icons name="sliders" className="h-3.5 w-3.5" />
               </div>
               <div className="space-y-0.5">

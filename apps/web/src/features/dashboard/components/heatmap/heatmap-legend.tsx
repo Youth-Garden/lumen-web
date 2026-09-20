@@ -43,7 +43,7 @@ export function HeatmapLegend({
               render={
                 <div
                   className={cn(
-                    'w-2.5 h-2.5 rounded-full cursor-help',
+                    'w-2.5 h-2.5 rounded-[2.5px] cursor-help',
                     getIntensityDotClass(item.count),
                   )}
                 />

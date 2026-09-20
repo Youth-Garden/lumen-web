@@ -78,7 +78,11 @@ export function Header() {
         {progressData && (
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-semibold text-xs">
             <StreakIcon size={16} />
-            <span>{progressData.streak}</span>
+            <span>
+              {progressData.todayStudyMinutes > 0 && progressData.streak === 0
+                ? 1
+                : progressData.streak}
+            </span>
           </div>
         )}
 

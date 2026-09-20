@@ -23,7 +23,7 @@ export const useUpdateProgressSettings = () => {
     mutationFn: (payload: UpdateProgressSettingsPayload) =>
       progressService.updateSettings(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: progressKeys.dashboard() });
+      queryClient.invalidateQueries({ queryKey: progressKeys.all });
     },
   });
 };

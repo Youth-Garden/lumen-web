@@ -1,25 +1,24 @@
 'use client';
 
 import { useVocabularyOverview } from '@/features/vocabulary/hooks';
-import { Button } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
-import { usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
-import { DailyGoalDialog } from '../components/daily-goal-dialog';
 import { HeatmapCalendar } from '../components/heatmap-calendar';
+import { HeroActionCard } from '../components/hero-action-card';
+import { HeroStreakCard } from '../components/hero-streak-card';
 import {
   MemoryRetentionCard,
   type MemoryLevelItem,
 } from '../components/memory-retention-card';
-import { StudyMetricsCards } from '../components/study-metrics-cards';
+import { StreakMilestoneCard } from '../components/streak-milestone-card';
+import { TodayGoalProgressCard } from '../components/today-goal-progress-card';
+import { WeeklyGoalTrackerCard } from '../components/weekly-goal-tracker-card';
 import { WeeklyStudyChart } from '../components/weekly-study-chart';
 import { useHeatmap, useProgressDashboard } from '../hooks';
 
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
-  const [presentDailyGoalDialog] = usePortal(DailyGoalDialog);
 
   const { data: progressData, isLoading: progressLoading } =
     useProgressDashboard();
@@ -31,8 +30,9 @@ export function OverviewPage() {
   const dueCount = overview?.dueCount ?? 0;
 
   const totalLearnedWords = overview?.totalLearnedWords ?? 0;
-  const streak = progressData?.streak ?? 0;
   const todayStudyMinutes = progressData?.todayStudyMinutes ?? 0;
+  const rawStreak = progressData?.streak ?? 0;
+  const streak = todayStudyMinutes > 0 && rawStreak === 0 ? 1 : rawStreak;
   const dailyGoalMinutes = progressData?.dailyGoalMinutes ?? 15;
 
   const isStatsLoading = progressLoading || overviewLoading;
@@ -71,37 +71,51 @@ export function OverviewPage() {
   return (
     <div className="space-y-6 pb-28">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-heading font-bold tracking-tight text-foreground">
-            {t('pageTitle')}
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            {t('pageSubtitle')}
-          </p>
-        </div>
-
-        <Button
-          variant="outline"
-          onClick={() => presentDailyGoalDialog()}
-          className="self-start sm:self-auto"
-        >
-          <Icons name="target" className="h-4 w-4 mr-1.5" />
-          {t('setDailyGoal')}
-        </Button>
+      <div>
+        <h2 className="text-3xl font-heading font-bold tracking-tight text-foreground">
+          {t('pageTitle')}
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {t('pageSubtitle')}
+        </p>
       </div>
 
-      {/* Tier 1: Core Study KPIs (4-Column Bento Row) */}
-      <StudyMetricsCards
-        streak={streak}
-        todayStudyMinutes={todayStudyMinutes}
-        dailyGoalMinutes={dailyGoalMinutes}
-        totalLearnedWords={totalLearnedWords}
-        dueCount={dueCount}
-        isLoading={isStatsLoading}
-      />
+      {/* Tier 1: Action-First Hero Row (3 Cards) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+        <HeroStreakCard
+          streak={streak}
+          todayStudyMinutes={todayStudyMinutes}
+          isLoading={isStatsLoading}
+        />
+        <HeroActionCard
+          dueCount={dueCount}
+          totalLearnedWords={totalLearnedWords}
+          isLoading={isStatsLoading}
+        />
+        <TodayGoalProgressCard
+          todayStudyMinutes={todayStudyMinutes}
+          dailyGoalMinutes={dailyGoalMinutes}
+          isLoading={isStatsLoading}
+        />
+      </div>
 
-      {/* Tier 2: Asymmetric Bento Row (8 cols vs 4 cols) */}
+      {/* Tier 2: Weekly Tracker & Milestone Hub (2-Column Balanced Row) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+        <WeeklyGoalTrackerCard
+          heatmapData={heatmapData}
+          todayStudyMinutes={todayStudyMinutes}
+          dailyGoalMinutes={dailyGoalMinutes}
+          streak={streak}
+          isLoading={isStatsLoading}
+        />
+        <StreakMilestoneCard
+          streak={streak}
+          streakFreezes={progressData?.streakFreezes ?? 0}
+          isLoading={isStatsLoading}
+        />
+      </div>
+
+      {/* Tier 3: Asymmetric Bento Row (8 cols vs 4 cols) */}
       <div className="grid gap-6 md:grid-cols-12 items-stretch">
         <div className="md:col-span-8 flex flex-col">
           <WeeklyStudyChart
@@ -122,7 +136,7 @@ export function OverviewPage() {
         </div>
       </div>
 
-      {/* Tier 3: Wide Bento Card with Integrated Activity Insights (Full Width) */}
+      {/* Tier 4: Wide Bento Card with Full Heatmap Grid (Full Width) */}
       <div className="w-full">
         <HeatmapCalendar
           todayStudyMinutes={todayStudyMinutes}
