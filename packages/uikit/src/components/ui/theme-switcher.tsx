@@ -56,14 +56,11 @@ export function ThemeSwitcher() {
       <DropdownMenuContent align="end" className="w-32 rounded-xl">
         <DropdownMenuRadioGroup value={currentTheme} onValueChange={setTheme}>
           <DropdownMenuRadioItem value="light" className="gap-2 text-xs py-2">
-            <Icons
-              name="sun"
-              className="h-3.5 w-3.5 shrink-0 text-amber-500 dark:text-amber-400"
-            />
+            <Icons name="sun" className="h-3.5 w-3.5 shrink-0 " />
             Light
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark" className="gap-2 text-xs py-2">
-            <Icons name="moon" className="h-3.5 w-3.5 shrink-0 text-sky-400" />
+            <Icons name="moon" className="h-3.5 w-3.5 shrink-0" />
             Dark
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="system" className="gap-2 text-xs py-2">

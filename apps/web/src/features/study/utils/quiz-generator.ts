@@ -90,12 +90,34 @@ export function selectDistractorCards(
   return selected;
 }
 
+export function createFlashcardItem(
+  card: VocabularyWord,
+  stepIndex = 0,
+  totalSteps = 3,
+): StudyQueueItem {
+  return {
+    id:
+      'flashcard_' +
+      card.id +
+      '_' +
+      Date.now() +
+      '_' +
+      Math.random().toString(36).substring(2, 6),
+    card,
+    exerciseType: StudyExerciseType.FLASHCARD,
+    stepIndex,
+    totalSteps,
+  };
+}
+
 export function createChoiceTermQuestion(
   card: VocabularyWord,
   pool: VocabularyWord[],
   fallbackPool: VocabularyWord[] = [],
   globalPool: VocabularyWord[] = [],
   isReviewingFailed = false,
+  stepIndex = 1,
+  totalSteps = 3,
 ): StudyQueueItem {
   const distractors = selectDistractorCards(
     card,
@@ -106,7 +128,7 @@ export function createChoiceTermQuestion(
   );
 
   if (distractors.length < 3) {
-    return createTypingQuestion(card, isReviewingFailed);
+    return createTypingQuestion(card, isReviewingFailed, 2, totalSteps);
   }
 
   const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
@@ -141,6 +163,8 @@ export function createChoiceTermQuestion(
     partOfSpeechPrompt: partOfSpeech,
     options,
     isReviewingFailed,
+    stepIndex,
+    totalSteps,
   };
 }
 
@@ -150,6 +174,8 @@ export function createChoiceMeaningQuestion(
   fallbackPool: VocabularyWord[] = [],
   globalPool: VocabularyWord[] = [],
   isReviewingFailed = false,
+  stepIndex = 1,
+  totalSteps = 3,
 ): StudyQueueItem {
   const distractors = selectDistractorCards(
     card,
@@ -160,7 +186,7 @@ export function createChoiceMeaningQuestion(
   );
 
   if (distractors.length < 3) {
-    return createTypingQuestion(card, isReviewingFailed);
+    return createTypingQuestion(card, isReviewingFailed, 2, totalSteps);
   }
 
   const primary = getCardPrimaryDefinition(card);
@@ -204,12 +230,16 @@ export function createChoiceMeaningQuestion(
     partOfSpeechPrompt: primary.partOfSpeech,
     options,
     isReviewingFailed,
+    stepIndex,
+    totalSteps,
   };
 }
 
 export function createTypingQuestion(
   card: VocabularyWord,
   isReviewingFailed = false,
+  stepIndex = 2,
+  totalSteps = 3,
 ): StudyQueueItem {
   const { meaning, partOfSpeech } = getCardPrimaryDefinition(card);
 
@@ -226,7 +256,54 @@ export function createTypingQuestion(
     meaningPrompt: meaning,
     partOfSpeechPrompt: partOfSpeech,
     isReviewingFailed,
+    stepIndex,
+    totalSteps,
   };
+}
+
+export function createProgressionExercise(
+  card: VocabularyWord,
+  targetStep: number,
+  pool: VocabularyWord[],
+  fallbackPool: VocabularyWord[] = [],
+  globalPool: VocabularyWord[] = [],
+  isReviewingFailed = false,
+): StudyQueueItem {
+  const distractors = selectDistractorCards(
+    card,
+    pool,
+    fallbackPool,
+    globalPool,
+    3,
+  );
+  const hasEnoughDistractors = distractors.length >= 3;
+
+  if (targetStep <= 1) {
+    if (!hasEnoughDistractors) {
+      return createTypingQuestion(card, isReviewingFailed, 2, 3);
+    }
+    return Math.random() > 0.5
+      ? createChoiceTermQuestion(
+          card,
+          pool,
+          fallbackPool,
+          globalPool,
+          isReviewingFailed,
+          1,
+          3,
+        )
+      : createChoiceMeaningQuestion(
+          card,
+          pool,
+          fallbackPool,
+          globalPool,
+          isReviewingFailed,
+          1,
+          3,
+        );
+  }
+
+  return createTypingQuestion(card, isReviewingFailed, 2, 3);
 }
 
 export function createNextExerciseForWord(
@@ -237,50 +314,28 @@ export function createNextExerciseForWord(
   previousExerciseType?: StudyExerciseType,
   isReviewingFailed = false,
 ): StudyQueueItem {
-  const distractors = selectDistractorCards(
+  if (previousExerciseType === StudyExerciseType.FLASHCARD) {
+    return createProgressionExercise(
+      card,
+      1,
+      pool,
+      fallbackPool,
+      globalPool,
+      isReviewingFailed,
+    );
+  }
+  if (
+    previousExerciseType === StudyExerciseType.CHOICE_TERM ||
+    previousExerciseType === StudyExerciseType.CHOICE_MEANING
+  ) {
+    return createTypingQuestion(card, isReviewingFailed, 2, 3);
+  }
+  return createProgressionExercise(
     card,
+    1,
     pool,
     fallbackPool,
     globalPool,
-    3,
+    isReviewingFailed,
   );
-
-  if (distractors.length < 3) {
-    return createTypingQuestion(card, isReviewingFailed);
-  }
-
-  let nextExerciseType = StudyExerciseType.CHOICE_TERM;
-
-  if (previousExerciseType === StudyExerciseType.CHOICE_TERM) {
-    nextExerciseType = StudyExerciseType.CHOICE_MEANING;
-  } else if (previousExerciseType === StudyExerciseType.CHOICE_MEANING) {
-    nextExerciseType = StudyExerciseType.TYPING;
-  } else if (previousExerciseType === StudyExerciseType.TYPING) {
-    nextExerciseType = StudyExerciseType.CHOICE_TERM;
-  } else {
-    nextExerciseType =
-      Math.random() > 0.5
-        ? StudyExerciseType.CHOICE_TERM
-        : StudyExerciseType.CHOICE_MEANING;
-  }
-
-  if (nextExerciseType === StudyExerciseType.CHOICE_TERM) {
-    return createChoiceTermQuestion(
-      card,
-      pool,
-      fallbackPool,
-      globalPool,
-      isReviewingFailed,
-    );
-  }
-  if (nextExerciseType === StudyExerciseType.CHOICE_MEANING) {
-    return createChoiceMeaningQuestion(
-      card,
-      pool,
-      fallbackPool,
-      globalPool,
-      isReviewingFailed,
-    );
-  }
-  return createTypingQuestion(card, isReviewingFailed);
 }

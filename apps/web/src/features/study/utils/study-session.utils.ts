@@ -6,10 +6,11 @@ import {
   type MissedWordStat,
 } from '@/features/study/types/study.types';
 import {
-  createNextExerciseForWord,
+  createFlashcardItem,
+  createProgressionExercise,
   getCardPrimaryDefinition,
 } from './quiz-generator';
-import { FlashcardRating, type CardWithProgress } from '@/services/study';
+import { FlashcardRating } from '@/services/study';
 import { type VocabularyWord } from '@/services/vocabulary';
 
 export function filterPoolCards(
@@ -28,6 +29,33 @@ export function filterPoolCards(
   return list.slice(0, count);
 }
 
+export function calculateTargetSessionPoints(
+  poolCards: VocabularyWord[],
+  mode: StudySessionMode = StudySessionMode.LEARN_NEW,
+): number {
+  if (poolCards.length === 0) return 1;
+  if (mode === StudySessionMode.FLASHCARD) {
+    return Math.max(1, poolCards.length * 1.0);
+  }
+  if (mode === StudySessionMode.PRACTICE) {
+    return Math.max(1, poolCards.length * 2.0);
+  }
+  return Math.max(1, poolCards.length * 3.0);
+}
+
+export function calculateCumulativeProgressPercent(
+  earnedPoints: number,
+  targetPoints: number,
+  isFinished: boolean,
+): number {
+  if (isFinished) return 100;
+  if (targetPoints <= 0) return 0;
+  return Math.min(
+    99,
+    Math.max(0, Math.round((earnedPoints / targetPoints) * 100)),
+  );
+}
+
 export function createInitialStudyQueue(
   poolCards: VocabularyWord[],
   mode: StudySessionMode = StudySessionMode.LEARN_NEW,
@@ -36,44 +64,21 @@ export function createInitialStudyQueue(
 ): StudyQueueItem[] {
   return poolCards.map((card) => {
     if (mode === StudySessionMode.FLASHCARD) {
-      return {
-        id: `flashcard_${card.id}_${Date.now()}_${Math.random()}`,
-        card,
-        exerciseType: StudyExerciseType.FLASHCARD,
-      };
+      return createFlashcardItem(card, 0, 1);
     }
 
     if (mode === StudySessionMode.PRACTICE) {
-      return createNextExerciseForWord(
+      return createProgressionExercise(
         card,
+        1,
         poolCards,
         fallbackPool,
         globalPool,
-        undefined,
         false,
       );
     }
 
-    const cardWithProg = card as CardWithProgress;
-    const isBrandNew =
-      (cardWithProg.level ?? 0) === 0 && (cardWithProg.learningStep ?? 0) === 0;
-
-    if (isBrandNew) {
-      return {
-        id: `flashcard_${card.id}_${Date.now()}_${Math.random()}`,
-        card,
-        exerciseType: StudyExerciseType.FLASHCARD,
-      };
-    }
-
-    return createNextExerciseForWord(
-      card,
-      poolCards,
-      fallbackPool,
-      globalPool,
-      undefined,
-      false,
-    );
+    return createFlashcardItem(card, 0, 3);
   });
 }
 
@@ -91,18 +96,6 @@ export function insertNextExerciseInQueue(
     ];
   }
   return [...remaining, nextExercise];
-}
-
-export function calculateProgressPercent(
-  activeQueue: StudyQueueItem[],
-  poolCards: VocabularyWord[],
-): number {
-  if (poolCards.length === 0) return 0;
-  const remainingWordIds = new Set(activeQueue.map((item) => item.card.id));
-  const completedCount = poolCards.filter(
-    (card) => !remainingWordIds.has(card.id),
-  ).length;
-  return Math.min(100, Math.round((completedCount / poolCards.length) * 100));
 }
 
 export function determineFlashcardQuality(
@@ -161,7 +154,6 @@ export function calculateNextProgressOnAnswer(
       learningStep: Math.min(5, currentStep + 1),
     };
   }
-  // Mirror backend: WRONG_ANSWER_SCORE_PENALTY = SCORE_PER_LEVEL = 20 → drop 1 level
   const penalizedLevel = Math.max(0, currentLevel - 1);
   return {
     level: penalizedLevel,
@@ -174,6 +166,7 @@ export function saveStudyProgressToStorage(
   activeQueue: StudyQueueItem[],
   masteredIds: string[],
   missedWordsMap: Record<string, MissedWordStat>,
+  earnedPoints = 0,
 ): boolean {
   try {
     localStorage.setItem(
@@ -182,6 +175,7 @@ export function saveStudyProgressToStorage(
         activeQueueIds: activeQueue.map((item) => item.card.id),
         masteredIds,
         missedWordsMap,
+        earnedPoints,
         updatedAt: Date.now(),
       }),
     );
@@ -213,23 +207,55 @@ export function buildFeedbackState(
 export function getNextQueueAfterFeedback(
   activeQueue: StudyQueueItem[],
   currentCard: VocabularyWord,
-  exerciseType: StudyExerciseType,
+  currentItem: StudyQueueItem,
   poolCards: VocabularyWord[],
   wasCorrect: boolean,
   fallbackPool: VocabularyWord[] = [],
   globalPool: VocabularyWord[] = [],
-): StudyQueueItem[] {
+): {
+  nextQueue: StudyQueueItem[];
+  isMastered: boolean;
+  earnedPointsDelta: number;
+} {
   const remaining = activeQueue.slice(1);
-  if (wasCorrect) return remaining;
-  const retry = createNextExerciseForWord(
+  const currentStep = currentItem.stepIndex ?? 1;
+
+  if (wasCorrect) {
+    if (currentStep === 1) {
+      const nextStepExercise = createProgressionExercise(
+        currentCard,
+        2,
+        poolCards,
+        fallbackPool,
+        globalPool,
+        false,
+      );
+      return {
+        nextQueue: insertNextExerciseInQueue(remaining, nextStepExercise),
+        isMastered: false,
+        earnedPointsDelta: 1.0,
+      };
+    }
+    return {
+      nextQueue: remaining,
+      isMastered: true,
+      earnedPointsDelta: 1.0,
+    };
+  }
+
+  const retryExercise = createProgressionExercise(
     currentCard,
+    currentStep,
     poolCards,
     fallbackPool,
     globalPool,
-    exerciseType,
     true,
   );
-  return [...remaining, retry];
+  return {
+    nextQueue: insertNextExerciseInQueue(remaining, retryExercise),
+    isMastered: false,
+    earnedPointsDelta: 0.3,
+  };
 }
 
 export function getCurrentCardMastery(
@@ -237,7 +263,7 @@ export function getCurrentCardMastery(
   progressMap: Record<string, { level: number; learningStep: number }>,
 ): number {
   if (!card) return 0;
-  return progressMap[card.id]?.level ?? (card as CardWithProgress).level ?? 0;
+  return progressMap[card.id]?.level ?? card.level ?? 0;
 }
 
 export function getCurrentCardLearningStep(
@@ -245,11 +271,7 @@ export function getCurrentCardLearningStep(
   progressMap: Record<string, { level: number; learningStep: number }>,
 ): number {
   if (!card) return 0;
-  return (
-    progressMap[card.id]?.learningStep ??
-    (card as CardWithProgress).learningStep ??
-    0
-  );
+  return progressMap[card.id]?.learningStep ?? card.learningStep ?? 0;
 }
 
 export function calculateFlashcardReviewProgress(
@@ -287,6 +309,7 @@ export function processFlashcardReviewStep(
   newLearningStep: number;
   nextQueue: StudyQueueItem[];
   isMastered: boolean;
+  earnedPointsDelta: number;
 } {
   const { newLevel, newLearningStep } = calculateFlashcardReviewProgress(
     currentLevel,
@@ -295,7 +318,13 @@ export function processFlashcardReviewStep(
   );
   const remaining = activeQueue.slice(1);
   const nextQueue = isKnown ? remaining : [...remaining, activeQueue[0]];
-  return { newLevel, newLearningStep, nextQueue, isMastered: isKnown };
+  return {
+    newLevel,
+    newLearningStep,
+    nextQueue,
+    isMastered: isKnown,
+    earnedPointsDelta: isKnown ? 1.0 : 0.3,
+  };
 }
 
 export function processAdvanceFromFlashcard(
@@ -312,6 +341,7 @@ export function processAdvanceFromFlashcard(
   newLearningStep: number;
   isMastered: boolean;
   nextQueue: StudyQueueItem[];
+  earnedPointsDelta: number;
 } {
   const { newLevel, newLearningStep, isMastered } =
     calculateNewFlashcardProgress(rating, currentLevel, currentStep);
@@ -327,19 +357,26 @@ export function processAdvanceFromFlashcard(
       newLearningStep,
       isMastered,
       nextQueue: activeQueue.slice(1),
+      earnedPointsDelta: 3.0,
     };
   }
 
-  const nextExercise = createNextExerciseForWord(
+  const nextExercise = createProgressionExercise(
     updatedCard,
+    1,
     poolCards,
     fallbackPool,
     globalPool,
-    StudyExerciseType.FLASHCARD,
     false,
   );
   const nextQueue = insertNextExerciseInQueue(activeQueue, nextExercise);
-  return { newLevel, newLearningStep, isMastered, nextQueue };
+  return {
+    newLevel,
+    newLearningStep,
+    isMastered,
+    nextQueue,
+    earnedPointsDelta: 1.0,
+  };
 }
 
 export function recordMissedWordItem(

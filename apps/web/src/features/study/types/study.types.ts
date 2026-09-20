@@ -28,6 +28,8 @@ export interface StudyQueueItem {
   partOfSpeechPrompt?: string;
   options?: ChoiceOption[];
   isReviewingFailed?: boolean;
+  stepIndex?: number;
+  totalSteps?: number;
 }
 
 export interface StudyFeedbackState {
