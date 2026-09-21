@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
+import { toast } from 'sonner';
 
 import {
   useFolderFlashcards,
@@ -100,6 +101,21 @@ export function TopicDetailPage() {
 
   const startStudy = (mode: StudySessionMode) => {
     if (!flashcards.length) return;
+
+    if (mode === StudySessionMode.LEARN_NEW) {
+      const unlearned = flashcards.filter(
+        (c) =>
+          (c.level ?? 0) === 0 &&
+          (c.learningStep ?? 0) === 0 &&
+          (c.masteryScore ?? 0) === 0,
+      );
+      if (unlearned.length === 0) {
+        toast.info(t('allWordsLearnedInTopic'));
+        startStudy(StudySessionMode.PRACTICE);
+        return;
+      }
+    }
+
     presentStudyView({
       cards: flashcards,
       selectedTopic: topicName,

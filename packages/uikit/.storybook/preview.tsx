@@ -1,6 +1,8 @@
 import type { Preview } from '@storybook/react-vite';
 import * as React from 'react';
 import '../src/styles/globals.css';
+import { PortalRenderer } from '../src/components/portal';
+import { Toaster } from '../src/components/ui/sonner';
 
 const preview: Preview = {
   globalTypes: {
@@ -23,6 +25,7 @@ const preview: Preview = {
       const theme = context.globals.theme || 'light';
       React.useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.classList.toggle('dark', theme === 'dark');
       }, [theme]);
 
       return (
@@ -31,10 +34,13 @@ const preview: Preview = {
           className="text-foreground font-sans antialiased p-4 transition-colors duration-200"
         >
           <Story />
+          <PortalRenderer />
+          <Toaster richColors position="top-right" />
         </div>
       );
     },
   ],
+
   parameters: {
     layout: 'padded',
     controls: {

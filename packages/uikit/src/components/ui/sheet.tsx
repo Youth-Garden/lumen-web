@@ -81,7 +81,12 @@ function SheetClose({ children, onClick, render, ...props }: TriggerProps) {
   }
 
   return (
-    <button type="button" data-slot="sheet-close" onClick={handleClick} {...props}>
+    <button
+      type="button"
+      data-slot="sheet-close"
+      onClick={handleClick}
+      {...props}
+    >
       {children}
     </button>
   );

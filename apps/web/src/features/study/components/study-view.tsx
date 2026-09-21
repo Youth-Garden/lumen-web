@@ -5,12 +5,16 @@ import { useTranslations } from 'next-intl';
 import { StudyChoiceMeaning } from '@/features/study/components/study-choice-meaning';
 import { StudyChoiceTerm } from '@/features/study/components/study-choice-term';
 import { StudyCompleted } from '@/features/study/components/study-completed';
+import {
+  StudyConfirmExitDialog,
+  type StudyConfirmExitData,
+} from '@/features/study/components/study-confirm-exit-dialog';
 import { StudyFlashcard } from '@/features/study/components/study-flashcard';
 import { StudyHeader } from '@/features/study/components/study-header';
 import { StudyRatingButton } from '@/features/study/components/study-rating-button';
 import { StudySettingsDialog } from '@/features/study/components/study-settings-dialog';
 import { StudyTyping } from '@/features/study/components/study-typing';
-import { useStudySession } from '@/features/study/hooks/use-study-session';
+import { useBlockBrowserBack, useStudySession } from '@/features/study/hooks';
 import {
   StudyExerciseType,
   StudySessionMode,
@@ -53,6 +57,9 @@ export function StudyView({
   const [presentMastery] =
     usePortal<MasteryFlowerDialogData>(MasteryFlowerDialog);
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
+  const [presentConfirmExit] = usePortal<StudyConfirmExitData>(
+    StudyConfirmExitDialog,
+  );
   const [showShortcuts, toggleShortcuts] = useToggle(true);
 
   useUnmount(() => {
@@ -101,7 +108,25 @@ export function StudyView({
     isReviewMode,
     mode,
     isOpen: Boolean(isOpen),
-    onClose: () => onDismiss?.(),
+    onClose: () => handleRequestExit(),
+  });
+
+  const handleConfirmSaveAndExit = () => {
+    dismissFeedback();
+    handleSaveProgress();
+    unblockAndExit();
+    onDismiss?.();
+  };
+
+  const handleRequestExit = () => {
+    presentConfirmExit({
+      onConfirmExit: handleConfirmSaveAndExit,
+    });
+  };
+
+  const { unblockAndExit } = useBlockBrowserBack({
+    isOpen: Boolean(isOpen),
+    onBlock: handleRequestExit,
   });
 
   if (!isOpen && !data) return null;
@@ -119,13 +144,20 @@ export function StudyView({
       open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
-          dismissFeedback();
-          handleSaveProgress();
-          onDismiss?.();
+          handleRequestExit();
         }
       }}
     >
-      <DialogContent variant="fullscreen">
+      <DialogContent
+        variant="fullscreen"
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            handleRequestExit();
+          }
+        }}
+      >
         <DialogTitle className="sr-only">
           {sessionMode === StudySessionMode.FLASHCARD
             ? t('flashcards')
@@ -143,10 +175,7 @@ export function StudyView({
             progressPercent={progressPercent}
             showShortcuts={showShortcuts}
             onToggleShortcuts={toggleShortcuts}
-            onSaveAndClose={() => {
-              handleSaveProgress();
-              onDismiss?.();
-            }}
+            onSaveAndClose={handleRequestExit}
             onOpenSettings={() => presentSettings({})}
           />
 
@@ -318,7 +347,11 @@ export function StudyView({
                   masteredCount={masteredIds.length}
                   missedWords={missedWordsList}
                   onRestart={handleRestart}
-                  onClose={() => onDismiss?.()}
+                  onClose={() => {
+                    handleSaveProgress();
+                    unblockAndExit();
+                    onDismiss?.();
+                  }}
                 />
               </div>
             )}

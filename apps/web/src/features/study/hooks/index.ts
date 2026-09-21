@@ -1,3 +1,4 @@
+export * from './use-block-browser-back';
 export * from './use-study';
 export * from './use-study-answer-validation';
 export * from './use-study-audio';

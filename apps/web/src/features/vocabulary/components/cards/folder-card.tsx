@@ -48,7 +48,8 @@ export function FolderCard({
     FOLDER_COVERS[folder.id] ||
     FOLDER_COVERS[folderDisplayName] ||
     (typeof folder.name === 'object' && folder.name !== null
-      ? FOLDER_COVERS[folder.name.en || ''] || FOLDER_COVERS[folder.name.vi || '']
+      ? FOLDER_COVERS[folder.name.en || ''] ||
+        FOLDER_COVERS[folder.name.vi || '']
       : null) ||
     (folderCategory ? FOLDER_COVERS[folderCategory] : null) ||
     FOLDER_COVERS.user_default;

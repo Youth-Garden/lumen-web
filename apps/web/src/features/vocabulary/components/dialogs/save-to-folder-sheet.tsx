@@ -147,7 +147,8 @@ export function SaveToFolderSheet({
                             {folderName}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {folder.flashcardCount} {t('wordDetail').toLowerCase()}
+                            {folder.flashcardCount}{' '}
+                            {t('wordDetail').toLowerCase()}
                           </p>
                         </div>
                       </div>

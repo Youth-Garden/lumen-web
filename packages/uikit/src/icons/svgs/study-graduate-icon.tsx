@@ -42,13 +42,7 @@ export function StudyGraduateIcon({
           <stop offset="100%" stopColor="#1F2937" />
         </linearGradient>
 
-        <linearGradient
-          id="lumen-star-gold"
-          x1="0%"
-          y1="0%"
-          x2="0%"
-          y2="100%"
-        >
+        <linearGradient id="lumen-star-gold" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#FDE047" />
           <stop offset="100%" stopColor="#F59E0B" />
         </linearGradient>
@@ -113,10 +107,7 @@ export function StudyGraduateIcon({
 
       {/* Graduation Cap */}
       {/* Base skull cap */}
-      <path
-        d="M52 48 Q80 34 108 48 L104 60 Q80 48 56 60 Z"
-        fill="#1F2937"
-      />
+      <path d="M52 48 Q80 34 108 48 L104 60 Q80 48 56 60 Z" fill="#1F2937" />
       {/* Top Diamond */}
       <polygon
         points="80,20 136,40 80,60 24,40"

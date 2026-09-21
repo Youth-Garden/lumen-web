@@ -58,4 +58,5 @@ export interface LessonQuotaConfig {
   targetCount: number;
   minCount: number;
   maxCount: number;
+  newWordsCount: number;
 }

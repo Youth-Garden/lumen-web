@@ -1,5 +1,8 @@
 'use client';
 
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useQueue, useToggle } from '@lumen/hooks';
 import {
   StudyExerciseType,
   StudyQueueItem,
@@ -10,17 +13,14 @@ import {
   calculateCumulativeProgressPercent,
   calculateTargetSessionPoints,
   createInitialStudyQueue,
-  filterPoolCards,
   getCurrentCardLearningStep,
   getCurrentCardMastery,
   recordMissedWordItem,
+  resolveStudyPool,
   saveStudyProgressToStorage,
   sortMissedWords,
 } from '@/features/study/utils/study-session.utils';
 import { type VocabularyWord } from '@/services/vocabulary';
-import { useQueue, useToggle } from '@lumen/hooks';
-import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { useStudyAnswerValidation } from './use-study-answer-validation';
 import { useStudyAudio } from './use-study-audio';
@@ -59,17 +59,21 @@ export function useStudySession({
 
   const poolCards = useMemo(
     () =>
-      filterPoolCards(
+      resolveStudyPool(
         cards,
         selectedTopic,
+        resolvedMode,
+        currentQuotaConfig.newWordsCount || 5,
         settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
         tFolders('generalTopic'),
       ),
     [
       cards,
       selectedTopic,
-      settings.wordsPerSession,
+      resolvedMode,
+      currentQuotaConfig.newWordsCount,
       currentQuotaConfig.targetCount,
+      settings.wordsPerSession,
       tFolders,
     ],
   );

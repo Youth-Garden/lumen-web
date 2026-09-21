@@ -53,8 +53,7 @@ export function WordDetailSheet({
   const t = useTranslations('Vocabulary.Folders');
   const { playPronunciation } = usePronunciation();
   const { mutate: reviewFlashcard, isPending } = useReviewFlashcard();
-  const [presentSaveToFolder] =
-    usePortal<SaveToFolderData>(SaveToFolderSheet);
+  const [presentSaveToFolder] = usePortal<SaveToFolderData>(SaveToFolderSheet);
 
   const [localLevel, setLocalLevel] = useState<number | null>(null);
   const [localStep, setLocalStep] = useState<number | null>(null);

@@ -29,6 +29,69 @@ export function filterPoolCards(
   return list.slice(0, count);
 }
 
+export function resolveStudyPool(
+  cards: VocabularyWord[],
+  selectedTopic: string | null | undefined,
+  mode: StudySessionMode = StudySessionMode.LEARN_NEW,
+  newWordsCount = 5,
+  targetCount = 20,
+  defaultTopicName = 'Chung',
+): VocabularyWord[] {
+  let scopedCards = cards;
+  if (selectedTopic) {
+    scopedCards = cards.filter((card) => {
+      const top = card.topic?.trim() || defaultTopicName;
+      return top === selectedTopic;
+    });
+  }
+
+  if (mode === StudySessionMode.FLASHCARD) {
+    return scopedCards.slice(0, targetCount);
+  }
+
+  if (mode === StudySessionMode.PRACTICE) {
+    const dueOrLearned = scopedCards.filter(
+      (c) =>
+        (c.level ?? 0) >= 1 ||
+        (c.learningStep ?? 0) >= 1 ||
+        Boolean(c.isWilted),
+    );
+    const pool = dueOrLearned.length > 0 ? dueOrLearned : scopedCards;
+    return pool.slice(0, targetCount);
+  }
+
+  const unlearnedCards = scopedCards.filter(
+    (c) =>
+      (c.level ?? 0) === 0 &&
+      (c.learningStep ?? 0) === 0 &&
+      (c.masteryScore ?? 0) === 0,
+  );
+  const reviewCards = scopedCards.filter(
+    (c) =>
+      (c.level ?? 0) > 0 ||
+      (c.learningStep ?? 0) > 0 ||
+      (c.masteryScore ?? 0) > 0 ||
+      Boolean(c.isWilted),
+  );
+
+  let orderedUnlearned = unlearnedCards;
+  if (!selectedTopic && unlearnedCards.length > 0) {
+    const topicMap = new Map<string, VocabularyWord[]>();
+    for (const card of unlearnedCards) {
+      const top = card.topic?.trim() || defaultTopicName;
+      if (!topicMap.has(top)) topicMap.set(top, []);
+      topicMap.get(top)!.push(card);
+    }
+    orderedUnlearned = Array.from(topicMap.values()).flat();
+  }
+
+  const selectedNew = orderedUnlearned.slice(0, newWordsCount);
+  const remainingSlots = Math.max(0, targetCount - selectedNew.length);
+  const selectedReview = reviewCards.slice(0, remainingSlots);
+
+  return [...selectedNew, ...selectedReview];
+}
+
 export function calculateTargetSessionPoints(
   poolCards: VocabularyWord[],
   mode: StudySessionMode = StudySessionMode.LEARN_NEW,
@@ -62,24 +125,45 @@ export function createInitialStudyQueue(
   fallbackPool: VocabularyWord[] = [],
   globalPool: VocabularyWord[] = [],
 ): StudyQueueItem[] {
-  return poolCards.map((card) => {
-    if (mode === StudySessionMode.FLASHCARD) {
-      return createFlashcardItem(card, 0, 1);
-    }
+  if (mode === StudySessionMode.FLASHCARD) {
+    return poolCards.map((card) => createFlashcardItem(card, 0, 1));
+  }
 
-    if (mode === StudySessionMode.PRACTICE) {
-      return createProgressionExercise(
+  if (mode === StudySessionMode.PRACTICE) {
+    return poolCards.map((card) =>
+      createProgressionExercise(
         card,
         1,
         poolCards,
         fallbackPool,
         globalPool,
         false,
-      );
-    }
+      ),
+    );
+  }
 
-    return createFlashcardItem(card, 0, 3);
-  });
+  const newCards = poolCards.filter(
+    (c) => (c.level ?? 0) === 0 && (c.learningStep ?? 0) === 0,
+  );
+  const reviewCards = poolCards.filter(
+    (c) => (c.level ?? 0) > 0 || (c.learningStep ?? 0) > 0,
+  );
+
+  const flashcardItems = newCards.map((card) =>
+    createFlashcardItem(card, 0, 3),
+  );
+  const reviewItems = reviewCards.map((card) =>
+    createProgressionExercise(
+      card,
+      1,
+      poolCards,
+      fallbackPool,
+      globalPool,
+      false,
+    ),
+  );
+
+  return [...flashcardItems, ...reviewItems];
 }
 
 export function insertNextExerciseInQueue(
@@ -123,10 +207,10 @@ export function calculateNewFlashcardProgress(
   currentStep: number,
 ): { newLevel: number; newLearningStep: number; isMastered: boolean } {
   if (rating === FlashcardRating.FAST_TRACK_KNOWN) {
-    return { newLevel: 5, newLearningStep: 5, isMastered: true };
+    return { newLevel: 6, newLearningStep: 6, isMastered: true };
   }
   if (rating === FlashcardRating.FAST_TRACK_TEMP) {
-    return { newLevel: 2, newLearningStep: 0, isMastered: false };
+    return { newLevel: 3, newLearningStep: 3, isMastered: false };
   }
   if (rating === FlashcardRating.WRONG) {
     const penalizedLevel = Math.max(0, currentLevel - 1);
@@ -351,13 +435,13 @@ export function processAdvanceFromFlashcard(
     learningStep: newLearningStep,
   };
 
-  if (isMastered) {
+  if (isMastered || rating === FlashcardRating.FAST_TRACK_TEMP) {
     return {
       newLevel,
       newLearningStep,
       isMastered,
       nextQueue: activeQueue.slice(1),
-      earnedPointsDelta: 3.0,
+      earnedPointsDelta: isMastered ? 3.0 : 1.5,
     };
   }
 

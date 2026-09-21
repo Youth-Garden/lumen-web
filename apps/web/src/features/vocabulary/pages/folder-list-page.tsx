@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
 
 import { StudySessionMode } from '@/features/study/types/study.types';
 import {
@@ -187,12 +188,19 @@ export function FolderListPage() {
         (card.learningStep ?? 0) === 0 &&
         (card.masteryScore ?? 0) === 0,
     );
-    const cardsToStudy = unlearned.length > 0 ? unlearned : allFlashcards;
-    if (!cardsToStudy.length) return;
+
+    if (!allFlashcards.length) return;
+
+    if (unlearned.length === 0) {
+      toast.info(tStudy('allWordsLearnedInFolder'));
+      handleGlobalPractice();
+      return;
+    }
+
     presentStudyView({
-      cards: cardsToStudy,
+      cards: allFlashcards,
       folderName: tStudy('learnNew'),
-      mode: StudySessionMode.PRACTICE,
+      mode: StudySessionMode.LEARN_NEW,
     });
   };
 

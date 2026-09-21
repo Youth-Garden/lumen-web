@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { StudySessionMode } from '@/features/study/types/study.types';
 import type { StudyViewData } from '@/features/study/components/study-view';
 import type { Folder, VocabularyWord } from '@/services/vocabulary';
@@ -122,15 +123,21 @@ export function useFolderStudyActions({
         (card.learningStep ?? 0) === 0 &&
         (card.masteryScore ?? 0) === 0,
     );
-    const cardsToStudy = unlearned.length > 0 ? unlearned : allFlashcards;
-    if (!cardsToStudy.length) return;
+
+    if (!allFlashcards.length) return;
+
+    if (unlearned.length === 0) {
+      toast.info(tStudy('allWordsLearnedInFolder'));
+      handlePractice();
+      return;
+    }
 
     presentStudyView({
-      cards: cardsToStudy,
+      cards: allFlashcards,
       folderName: activeFolderName
         ? `${activeFolderName} - ${tStudy('learnNew')}`
         : tStudy('learnNew'),
-      mode: StudySessionMode.PRACTICE,
+      mode: StudySessionMode.LEARN_NEW,
     });
   };
 

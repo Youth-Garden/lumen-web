@@ -82,25 +82,53 @@ export const Confirmation: Story = {
   ),
 };
 
-export const CenteredHeader: Story = {
+export const ExitConfirmation: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="default">Centered Modal</Button>} />
-      <DialogContent>
-        <DialogHeader align="center">
-          <DialogTitle>Centered Dialog Header</DialogTitle>
+      <DialogTrigger
+        render={<Button variant="outline">Exit Study Session</Button>}
+      />
+      <DialogContent className="sm:max-w-[420px]">
+        <DialogHeader>
+          <DialogTitle>Pause study session?</DialogTitle>
           <DialogDescription>
-            This dialog header is centered using align=&quot;center&quot;.
+            Your learned word progress will be saved. You can continue anytime.
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4 text-center text-sm text-muted-foreground">
-          Modal body content with centered layout.
+        <div className="flex items-center justify-end gap-3 pt-4">
+          <DialogClose
+            render={<Button variant="secondary">Continue Studying</Button>}
+          />
+          <Button variant="default">Save & Exit</Button>
         </div>
-        <DialogFooter className="justify-center sm:justify-center">
-          <Button variant="default">Got it</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   ),
 };
 
+export const Fullscreen: Story = {
+  render: () => (
+    <Dialog>
+      <DialogTrigger
+        render={<Button variant="default">Open Fullscreen View</Button>}
+      />
+      <DialogContent variant="fullscreen">
+        <DialogTitle className="sr-only">Fullscreen Study View</DialogTitle>
+        <DialogDescription className="sr-only">
+          Interactive full-screen learning session.
+        </DialogDescription>
+        <div className="flex flex-col h-full justify-between p-6">
+          <div className="flex items-center justify-between border-b pb-4">
+            <h2 className="text-xl font-bold">Fullscreen Session</h2>
+            <DialogClose render={<Button variant="ghost">Close</Button>} />
+          </div>
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-muted-foreground text-lg">
+              Fullscreen immersive content area.
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  ),
+};
