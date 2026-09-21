@@ -1,28 +1,28 @@
 # Lumen Frontend Monorepo
 
-The Lumen frontend is a monorepo managed by Turborepo and pnpm workspaces. It contains multiple applications and shared internal packages for the Lumen learning platform.
+The Lumen frontend is a monorepo managed by Turborepo and pnpm workspaces. It houses the student-facing web application and shared internal packages for the Lumen vocabulary platform.
 
 ## Workspace Layout
 
 ### Applications (`apps/`)
 
-- `web` - The primary student-facing platform (Next.js 16, App Router). See `apps/web/README.md`.
-- `admin` - The internal administrative dashboard (Vite + React 19 SPA). See `apps/admin/README.md`.
+- `web` - The primary student-facing web platform & PWA (Next.js 16, App Router, React 19). See `apps/web/README.md`.
 
 ### Packages (`packages/`)
 
-- `uikit` - Custom design system and shared UI components (Tailwind CSS v4, base-ui).
-- `shared-api` - Centralized API bindings, Axios clients, and data transfer objects (DTOs) shared by both apps.
-- `hooks` - Shared React hooks used across all apps.
-- `utils` - Generic helpers (string formatting, common logic).
+- `uikit` - Custom design system and shared UI components (Tailwind CSS v4, Base UI).
+- `shared-api` - Centralized API bindings, Axios clients, BaseResponse schemas, and typed `extractApiErrors`.
+- `hooks` - Comprehensive React hooks library (`useKeyPress`, `useBreakpoint`, `useNetworkState`, `useLongPress`, `useCountdown`, `useContinuousRetry`, `useDocumentTitle`, `useFavicon`, `usePreferredLanguage`, etc.).
+- `utils` - Generic helpers (timing, string formatting, date utilities).
 - `eslint-config` - Centralized ESLint configuration for consistency.
 - `typescript-config` - Shared `tsconfig.json` base configurations.
 
-## Tooling
+## Tooling & Testing
 
 - Turborepo - build caching, task pipelines, and parallel execution.
+- Vitest - ultra-fast Unit and React Hook testing (`pnpm test` / `pnpm run test`) with `@testing-library/react` and `jsdom`. All test files are located in dedicated `__tests__/` subfolders.
 - pnpm workspaces - dependency and package linking (`workspace:*`).
-- Prettier - formatting (`pnpm format` / `pnpm format:check`).
+- Prettier & ESLint - formatting and static analysis (`pnpm format` / `pnpm run lint`).
 
 ## Getting Started
 
@@ -30,28 +30,31 @@ Install once from the frontend root:
 
 ```bash
 pnpm install
-pnpm run dev      # runs apps/web (and other configured apps) in development
-pnpm run build    # builds the web app (filter with pnpm --filter <app>)
+pnpm run dev      # runs apps/web in development
+pnpm test         # runs all Vitest unit and hook tests across apps and packages
+pnpm run build    # builds the web app
 pnpm run lint     # lints the web app
 ```
 
-Run a single app directly:
+Run web app commands directly:
 
 ```bash
 pnpm --filter web dev
-pnpm --filter admin dev
+pnpm --filter web test
+pnpm --filter web build
 ```
 
-## Key Technologies (shared)
+## Key Technologies
 
-- React 19
+- Next.js 16 (App Router) & React 19
 - Tailwind CSS v4
-- Framer Motion (web)
+- Framer Motion
 - TanStack Query
-- Zod + React Hook Form
-- `next-intl` (web i18n)
+- Zustand & React Hook Form + Zod
+- `next-intl` (i18n: en/vi)
+- Base UI
 
 ## Notes
 
-- Both apps depend on the backend at `BACKEND_URL`. The web app additionally requires `FRONTEND_URL` for cookie/CSRF and Google OAuth callbacks.
-- The `web` app is the only one with SSR and i18n; `admin` is a pure client-side SPA.
+- The web app connects to the NestJS backend via `NEXT_PUBLIC_API_URL` (default: `http://localhost:3000`).
+- Supports PWA installation, dark/light themes, offline state handling, and keyboard navigation shortcuts.
