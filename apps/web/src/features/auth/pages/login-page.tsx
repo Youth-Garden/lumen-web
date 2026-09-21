@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { useCountdown } from '@lumen/hooks';
 import {
   VerifyEmailOtpFormData,
   getVerifyEmailOtpSchema,
@@ -40,7 +41,10 @@ export default function LoginPage() {
 
   const [step, setStep] = useState<Step>('email');
   const [isLoading, setIsLoading] = useState(false);
-  const [resendIn, setResendIn] = useState(0);
+  const { secondsRemaining, start: startResendTimer } = useCountdown({
+    initialSeconds: 30,
+    autoStart: false,
+  });
 
   const form = useForm<VerifyEmailOtpFormData>({
     resolver: zodResolver(getVerifyEmailOtpSchema(tVal)),
@@ -109,21 +113,8 @@ export default function LoginPage() {
     }
   }
 
-  function startResendTimer() {
-    setResendIn(30);
-    const id = setInterval(() => {
-      setResendIn((current) => {
-        if (current <= 1) {
-          clearInterval(id);
-          return 0;
-        }
-        return current - 1;
-      });
-    }, 1000);
-  }
-
   async function handleResend() {
-    if (resendIn > 0) return;
+    if (secondsRemaining > 0) return;
     await authService.sendEmailOtp({ email: form.getValues('email') });
     toast.success(t('otpSent'));
     startResendTimer();
@@ -199,11 +190,11 @@ export default function LoginPage() {
                 type="button"
                 variant="text"
                 className="h-auto p-0 text-sm"
-                disabled={resendIn > 0}
+                disabled={secondsRemaining > 0}
                 onClick={handleResend}
               >
-                {resendIn > 0
-                  ? t('resendIn', { seconds: resendIn })
+                {secondsRemaining > 0
+                  ? t('resendIn', { seconds: secondsRemaining })
                   : t('resend')}
               </Button>
             </div>

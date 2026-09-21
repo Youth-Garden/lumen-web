@@ -23,39 +23,26 @@ export interface BaseApiServiceConfig {
   onNetworkError?: (message: string) => void;
 }
 
-function flattenApiErrors(errors: unknown): string[] {
-  if (!errors) return [];
-  if (typeof errors === 'string') return [errors];
+export function extractApiErrors(
+  errorData?: Partial<BaseResponse<unknown>> | null,
+): string[] {
+  if (!errorData) return [];
 
-  if (Array.isArray(errors)) {
-    return errors.map((error) => {
-      if (typeof error === 'string') return error;
-      if (typeof error === 'object' && error !== null) {
-        if ('message' in error) return String(error.message);
-        return JSON.stringify(error);
+  if (Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+    return errorData.errors.map((item) => {
+      if (typeof item === 'string') return item;
+      if (item && typeof item === 'object' && 'message' in item) {
+        return item.field ? `${item.field}: ${item.message}` : item.message;
       }
-      return String(error);
+      return String(item);
     });
   }
 
-  if (typeof errors !== 'object') return [String(errors)];
+  if (errorData.message) {
+    return [errorData.message];
+  }
 
-  return Object.entries(errors as Record<string, unknown>).flatMap(
-    ([field, value]) => {
-      if (Array.isArray(value)) {
-        return value.map((message) => {
-          if (typeof message === 'object' && message !== null) {
-            return `${field}: ${message.message || JSON.stringify(message)}`;
-          }
-          return `${field}: ${String(message)}`;
-        });
-      }
-      if (typeof value === 'object' && value !== null) {
-        return [`${field}: ${JSON.stringify(value)}`];
-      }
-      return [`${field}: ${String(value)}`];
-    },
-  );
+  return [];
 }
 
 function formatUrl(
@@ -175,14 +162,10 @@ export abstract class BaseApiService {
       return result.data;
     } catch (error: any) {
       if (error.response && !config.disabledToast) {
-        const errorData = error.response.data;
-        const errors = flattenApiErrors(
-          errorData?.error ??
-            errorData?.errors ??
-            errorData?.message ??
-            error.message,
-        );
+        const errorData: Partial<BaseResponse<unknown>> | undefined =
+          error.response.data;
         const message = errorData?.message || error.message || 'Unknown Error';
+        const errors = extractApiErrors(errorData);
 
         console.error('API Error:', {
           method,

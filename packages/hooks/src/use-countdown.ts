@@ -30,7 +30,10 @@ export function useCountdown({
     return () => clearInterval(timer);
   }, [isActive, secondsRemaining, onComplete]);
 
-  const start = useCallback(() => setIsActive(true), []);
+  const start = useCallback(() => {
+    setSecondsRemaining((prev) => (prev <= 0 ? initialSeconds : prev));
+    setIsActive(true);
+  }, [initialSeconds]);
   const pause = useCallback(() => setIsActive(false), []);
   const reset = useCallback(
     (newSeconds?: number) => {
