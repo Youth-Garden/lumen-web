@@ -2,6 +2,7 @@ import { ApiEndpointEnum } from '@/shared/constants';
 import { useAuthStore } from '@/store/auth.store';
 import { BaseApiService, MapperRegistry } from '@lumen/shared-api';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 interface PendingRequest {
   resolve: (token: string | null) => void;
@@ -27,6 +28,13 @@ export abstract class CoreService extends BaseApiService {
     super({
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
       mappers,
+      onError: (errors) => {
+        const message = errors[0] || 'An error occurred';
+        toast.error(message, { id: message });
+      },
+      onNetworkError: (message) => {
+        toast.error(message, { id: 'network-error' });
+      },
     });
 
     this.axiosInstance.interceptors.request.use((reqConfig) => {
