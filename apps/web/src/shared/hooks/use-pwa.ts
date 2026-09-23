@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useToggle } from '@lumen/hooks';
+import { useCallback, useEffect, useState } from 'react';
+import { useEventListener, useToggle } from '@lumen/hooks';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -31,33 +31,21 @@ export function usePWA() {
         })
         .catch(() => {});
     }
-
-    const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
-      event.preventDefault();
-      setInstallEvent(event);
-      setShowInstallPrompt(true);
-    };
-
-    window.addEventListener(
-      'beforeinstallprompt' as keyof WindowEventMap,
-      handleBeforeInstallPrompt as EventListenerOrEventListenerObject,
-    );
-
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener(
-        'beforeinstallprompt' as keyof WindowEventMap,
-        handleBeforeInstallPrompt as EventListenerOrEventListenerObject,
-      );
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
   }, [isInstalled]);
+
+  const handleBeforeInstallPrompt = useCallback((event: Event) => {
+    const promptEvent = event as BeforeInstallPromptEvent;
+    promptEvent.preventDefault();
+    setInstallEvent(promptEvent);
+    setShowInstallPrompt(true);
+  }, []);
+
+  const handleOnline = useCallback(() => setIsOnline(true), []);
+  const handleOffline = useCallback(() => setIsOnline(false), []);
+
+  useEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  useEventListener('online', handleOnline);
+  useEventListener('offline', handleOffline);
 
   const promptInstall = async () => {
     if (!installEvent) {

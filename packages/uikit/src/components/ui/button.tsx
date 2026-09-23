@@ -19,20 +19,14 @@ const buttonVariants = cva(
         destructive:
           'bg-gradient-to-b from-[#ff529e] to-[#e62678] text-white shadow-xs shadow-[#ff4395]/30 hover:shadow-md hover:shadow-[#ff4395]/40 hover:brightness-105 active:brightness-95 focus-visible:ring-destructive/40',
         text: 'bg-transparent text-muted-foreground',
-        none: '',
       },
       size: {
         default:
           'h-10 gap-2 px-4 py-2 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3',
-        none: '',
-        xs: "h-7 gap-1 rounded-xl px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-9 gap-1.5 rounded-2xl px-3 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: 'h-11.5 gap-2.5 px-6 text-sm font-semibold rounded-2xl shadow-xs has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5',
-        icon: 'size-10',
-        'icon-xs':
-          "size-7 rounded-xl in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        'icon-sm': 'size-9 rounded-2xl in-data-[slot=button-group]:rounded-lg',
-        'icon-lg': 'size-11.5',
+        xs: "h-7 gap-1 px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-9 gap-1.5 px-3 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: 'h-11.5 gap-2.5 px-6 text-sm font-semibold shadow-xs has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5',
+        icon: 'size-7 rounded-full in-data-[slot=button-group]:rounded-lg',
       },
     },
     defaultVariants: {
@@ -43,9 +37,9 @@ const buttonVariants = cva(
 );
 
 function Button({
-  className,
   variant = 'default',
   size = 'default',
+  className,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
   return (
@@ -57,4 +51,26 @@ function Button({
   );
 }
 
-export { Button, buttonVariants };
+export type IconButtonProps = ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants>;
+
+function IconButton({
+  variant = 'ghost',
+  size = 'icon',
+  className,
+  ...props
+}: IconButtonProps) {
+  return (
+    <ButtonPrimitive
+      data-slot="icon-button"
+      className={cn(
+        buttonVariants({ variant, size }),
+        'text-muted-foreground hover:text-foreground',
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Button, buttonVariants, IconButton };

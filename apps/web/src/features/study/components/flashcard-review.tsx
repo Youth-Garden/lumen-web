@@ -1,12 +1,17 @@
 'use client';
 
-import { useToggle } from '@lumen/hooks';
+import { useKeyPress, useToggle } from '@lumen/hooks';
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
 import { DueFlashcard, FlashcardRating } from '@/services/study';
 import { AudioButton } from '@/shared/components/audio-button';
-import { useKeydownEventListener } from '@/shared/hooks/use-keydown-event-listener';
 import { playAudio } from '@/shared/utils/audio';
-import { Button, Card, CardContent, Skeleton } from '@lumen/uikit/components';
+import {
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  Skeleton,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { motion } from 'framer-motion';
@@ -37,7 +42,7 @@ export function FlashcardReview({
   isSubmitting = false,
 }: FlashcardReviewProps) {
   const t = useTranslations('Vocabulary.Study');
-  const [isFlipped, , setIsFlipped] = useToggle(false);
+  const [isFlipped, toggleFlip, setIsFlipped] = useToggle(false);
   const [presentShortcuts] = usePortal(KeyboardShortcutsDialog);
 
   const { data: wordDetailResponse, isLoading } = useVocabularyWordDetail(
@@ -50,8 +55,9 @@ export function FlashcardReview({
   const word = wordDetailResponse?.data;
 
   const handleFlip = useCallback(() => {
-    if (!isFlipped) setIsFlipped(true);
-  }, [isFlipped]);
+    if (isLoading) return;
+    toggleFlip();
+  }, [isLoading, toggleFlip]);
 
   useEffect(() => {
     if (isFlipped && word?.audioUrl) {
@@ -64,10 +70,36 @@ export function FlashcardReview({
       onGrade(grade);
       setTimeout(() => setIsFlipped(false), 200);
     },
-    [onGrade],
+    [onGrade, setIsFlipped],
   );
 
-  useKeydownEventListener(
+  useKeyPress(
+    (event) => {
+      if (!isFlipped) {
+        return (
+          event.code === FlashcardShortcutKey.FlipSpace ||
+          event.key === FlashcardShortcutKey.FlipEnter
+        );
+      }
+
+      if (
+        event.key.toLowerCase() === FlashcardShortcutKey.ReplayAudio &&
+        Boolean(word?.audioUrl)
+      ) {
+        return true;
+      }
+
+      if (!isSubmitting) {
+        return (
+          event.key === FlashcardShortcutKey.GradeAgain ||
+          event.key === FlashcardShortcutKey.GradeHard ||
+          event.key === FlashcardShortcutKey.GradeGood ||
+          event.key === FlashcardShortcutKey.GradeEasy
+        );
+      }
+
+      return false;
+    },
     (event) => {
       if (!isFlipped) {
         if (
@@ -107,15 +139,14 @@ export function FlashcardReview({
         }
       }
     },
-    [isFlipped, word, isSubmitting, handleFlip, handleGrade],
+    { ignoreInputElements: true },
   );
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-12 relative">
       <div className="absolute top-0 right-0 z-10 -mt-12">
-        <Button
+        <IconButton
           variant="outline"
-          size="icon-sm"
           title={t('shortcutsTitle')}
           onClick={() => {
             presentShortcuts({
@@ -131,7 +162,7 @@ export function FlashcardReview({
           }}
         >
           <Icons name="info" className="w-5 h-5 text-muted-foreground" />
-        </Button>
+        </IconButton>
       </div>
       <div
         className="w-full cursor-pointer perspective-[2000px]"

@@ -22,7 +22,7 @@ export function HeroStreakCard({
   const displayStreak = isStudiedToday && streak === 0 ? 1 : streak;
 
   return (
-    <Card className="bg-linear-to-br from-amber-400 via-amber-500 to-orange-600 text-white shadow-xs overflow-hidden relative group min-h-37 backdrop-blur-3xl">
+    <Card className="bg-linear-to-br from-amber-400 via-amber-500 to-orange-600 text-white overflow-hidden relative group min-h-37 backdrop-blur-3xl">
       <div className="absolute -bottom-3 right-2 w-32 h-32 sm:w-36 sm:h-36 pointer-events-none select-none z-0">
         <Image
           src="/images/common/streak.png"
@@ -55,7 +55,7 @@ export function HeroStreakCard({
 
         {/* Bottom-Left: Modern Status Pill (No icon, No border) */}
         <div className="pt-1.5">
-          <div className="text-[11px] font-bold text-white bg-white/20 backdrop-blur-xs px-3 py-0.5 rounded-full w-fit shadow-2xs">
+          <div className="text-[11px] font-bold text-white bg-white/20 backdrop-blur-xs px-3 py-0.5 rounded-full w-fit">
             <span>
               {isStudiedToday
                 ? t('streakActive').replace('🔥', '').trim()

@@ -30,7 +30,7 @@ export function HeroActionCard({
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-4 sm:p-5 space-y-3">
+      <Card className="p-4 sm:p-5 space-y-3">
         <Skeleton className="h-6 w-36 rounded-lg" />
         <Skeleton className="h-24 w-full rounded-2xl" />
       </Card>
@@ -40,7 +40,7 @@ export function HeroActionCard({
   const hasDueCards = dueCount > 0;
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col justify-between">
+    <Card className="h-full flex flex-col justify-between">
       <CardHeader className="px-5 pt-3.5 pb-0">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -88,12 +88,16 @@ export function HeroActionCard({
             </p>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-muted/30 px-3 py-1.5 rounded-2xl shrink-0">
+          <Card
+            variant="muted"
+            size="sm"
+            className="flex-row items-center gap-1.5 px-3 py-1.5 shrink-0"
+          >
             <Icons name="book-open" className="h-3.5 w-3.5 text-primary" />
             <span className="text-[11px] font-bold text-foreground">
               {t('totalWordsCount', { count: totalLearnedWords })}
             </span>
-          </div>
+          </Card>
         </div>
 
         {/* Action Button at the bottom */}
@@ -101,7 +105,7 @@ export function HeroActionCard({
           variant={hasDueCards ? 'default' : 'secondary'}
           size="sm"
           onClick={() => router.push(RouteEnum.VOCABULARY)}
-          className="w-full font-bold shadow-xs cursor-pointer h-9"
+          className="w-full font-bold h-9"
         >
           {hasDueCards ? (
             <>

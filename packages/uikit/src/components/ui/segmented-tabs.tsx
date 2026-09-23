@@ -35,7 +35,7 @@ export function SegmentedTabs<T extends string = string>({
     <div
       role="tablist"
       className={cn(
-        'inline-flex items-center rounded-2xl bg-muted/40 p-1 border border-border/40 backdrop-blur-xs select-none',
+        'inline-flex items-center rounded-2xl bg-muted/40 p-1 backdrop-blur-xs select-none',
         size === 'sm' ? 'h-8' : 'h-10',
         className,
       )}
@@ -62,7 +62,7 @@ export function SegmentedTabs<T extends string = string>({
             {isActive && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-0 rounded-xl bg-gradient-to-b from-primary to-[color-mix(in_oklch,var(--primary),#000_7%)] border border-primary/20 shadow-xs shadow-primary/25"
+                className="absolute inset-0 rounded-xl bg-gradient-to-b from-primary to-[color-mix(in_oklch,var(--primary),#000_7%)] shadow-xs shadow-primary/25"
                 transition={{
                   type: 'spring',
                   stiffness: 450,

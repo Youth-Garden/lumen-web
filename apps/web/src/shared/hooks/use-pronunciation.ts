@@ -15,6 +15,8 @@ export function usePronunciation() {
   const [playingAccent, setPlayingAccent] =
     useState<PronunciationAccent | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastPlayTimeRef = useRef<number>(0);
+  const lastKeyRef = useRef<string>('');
 
   useEffect(() => {
     return () => {
@@ -86,6 +88,18 @@ export function usePronunciation() {
         selectedAccent === PronunciationAccent.UK
           ? options.audioUkUrl
           : options.audioUsUrl || options.audioUrl;
+
+      const now = Date.now();
+      const currentKey = `${options.term}-${selectedAccent}-${remoteAudioUrl || 'tts'}`;
+
+      if (
+        now - lastPlayTimeRef.current < 350 &&
+        lastKeyRef.current === currentKey
+      ) {
+        return;
+      }
+      lastPlayTimeRef.current = now;
+      lastKeyRef.current = currentKey;
 
       stopPronunciation();
 

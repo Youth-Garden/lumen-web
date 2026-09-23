@@ -79,7 +79,11 @@ export function useFolderStudyActions({
 
   const learnedCardsList: VocabularyWord[] = useMemo(() => {
     return enrichedFlashcards.filter(
-      (card) => (card.level ?? 0) >= 1 || (card.learningStep ?? 0) >= 5,
+      (card) =>
+        (card.level ?? 0) >= 1 ||
+        (card.learningStep ?? 0) >= 1 ||
+        (card.masteryScore ?? 0) > 0 ||
+        Boolean(card.isWilted),
     );
   }, [enrichedFlashcards]);
 
@@ -104,8 +108,13 @@ export function useFolderStudyActions({
   }, [uniqueFlashcards]);
 
   const handlePractice = () => {
-    const cardsToStudy = dueCardsList.length > 0 ? dueCardsList : allFlashcards;
-    if (!cardsToStudy.length) return;
+    const cardsToStudy =
+      dueCardsList.length > 0 ? dueCardsList : learnedCardsList;
+    if (!cardsToStudy.length) {
+      toast.info(t('noLearnedWordsToPractice'));
+      handleLearnNew();
+      return;
+    }
     presentStudyView({
       cards: cardsToStudy,
       folderName: activeFolderName

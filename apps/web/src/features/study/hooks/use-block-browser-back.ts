@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import { useEventListener } from '@lumen/hooks';
 
 interface UseBlockBrowserBackProps {
   isOpen: boolean;
@@ -24,20 +25,27 @@ export function useBlockBrowserBack({
 
     isUnblockingRef.current = false;
     window.history.pushState({ isStudySession: true }, '');
-
-    const handlePopState = () => {
-      if (isUnblockingRef.current) return;
-
-      window.history.pushState({ isStudySession: true }, '');
-      onBlockRef.current();
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
   }, [isOpen]);
+
+  const handlePopState = useCallback(() => {
+    if (!isOpen || isUnblockingRef.current) return;
+
+    window.history.pushState({ isStudySession: true }, '');
+    onBlockRef.current();
+  }, [isOpen]);
+
+  useEventListener('popstate', handlePopState);
+
+  const handleBeforeUnload = useCallback(
+    (e: BeforeUnloadEvent) => {
+      if (!isOpen || isUnblockingRef.current) return;
+      e.preventDefault();
+      e.returnValue = '';
+    },
+    [isOpen],
+  );
+
+  useEventListener('beforeunload', handleBeforeUnload);
 
   const unblockAndExit = useCallback(() => {
     isUnblockingRef.current = true;

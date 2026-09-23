@@ -14,10 +14,7 @@ import {
   ChartTooltipTitle,
 } from '@/shared/components/chart/chart-tooltip';
 import type { HeatmapGridProps } from '../../types/heatmap.types';
-import {
-  getIntensityClass,
-  getIntensityDotClass,
-} from '../../utils/heatmap.utils';
+import { getIntensityClass } from '../../utils/heatmap.utils';
 
 export function HeatmapGrid({
   weeks,
@@ -29,37 +26,38 @@ export function HeatmapGrid({
   const tOverview = useTranslations('Dashboard.Overview');
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="overflow-x-auto pb-1 scrollbar-thin scroll-smooth"
-    >
-      <div className="flex gap-2.5 w-max py-1">
-        {/* Day-of-week labels (All 7 days) */}
-        <div className="flex flex-col gap-1 text-[9px] font-medium text-muted-foreground/70 select-none pt-5 shrink-0">
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('daySun')}
-          </span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('dayMon')}
-          </span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('dayTue')}
-          </span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('dayWed')}
-          </span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('dayThu')}
-          </span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('dayFri')}
-          </span>
-          <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
-            {t('daySat')}
-          </span>
-        </div>
+    <div className="flex gap-2.5 items-start">
+      {/* Day-of-week labels (All 7 days) - Fixed outside scrollable area */}
+      <div className="flex flex-col gap-1 text-[9px] font-medium text-muted-foreground/70 select-none pt-5 py-1 shrink-0">
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('daySun')}
+        </span>
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('dayMon')}
+        </span>
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('dayTue')}
+        </span>
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('dayWed')}
+        </span>
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('dayThu')}
+        </span>
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('dayFri')}
+        </span>
+        <span className="h-3 sm:h-3.5 leading-3 sm:leading-[14px]">
+          {t('daySat')}
+        </span>
+      </div>
 
-        <div className="flex flex-col gap-1.5">
+      {/* Scrollable grid area (Month labels + Activity matrix) */}
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 min-w-0 overflow-x-auto pb-1 scrollbar-thin scroll-smooth"
+      >
+        <div className="flex flex-col gap-1.5 w-max py-1">
           {/* Month labels */}
           <div className="flex gap-1 h-3.5 text-[10px] font-medium text-muted-foreground/70 select-none">
             {weeks.map((_, weekIndex) => {
@@ -138,19 +136,6 @@ export function HeatmapGrid({
                               : 0
                           }
                         />
-                        {safeCount > 0 && (
-                          <div className="w-full h-1.5 rounded-full bg-muted/50 mt-0.5 overflow-hidden">
-                            <div
-                              className={cn(
-                                'h-full rounded-full transition-all',
-                                getIntensityDotClass(Math.min(safeCount, 30)),
-                              )}
-                              style={{
-                                width: `${Math.min((safeCount / 30) * 100, 100)}%`,
-                              }}
-                            />
-                          </div>
-                        )}
                       </TooltipContent>
                     </Tooltip>
                   );

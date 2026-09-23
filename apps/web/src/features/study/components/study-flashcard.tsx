@@ -6,6 +6,7 @@ import type {
   VocabularyDefinition,
   VocabularyWord,
 } from '@/services/vocabulary';
+import { WordDetailTrigger } from '@/features/vocabulary/components/word-detail-trigger';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
@@ -78,27 +79,7 @@ export function StudyFlashcard({
           {/* Center Content: Term & Pronunciations */}
           <div className="flex flex-col items-center justify-center space-y-4 my-auto w-full">
             <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
-              {onOpenWordDetail ? (
-                <span
-                  role="button"
-                  tabIndex={0}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onOpenWordDetail();
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.stopPropagation();
-                      onOpenWordDetail();
-                    }
-                  }}
-                  className="underline decoration-dotted decoration-foreground/40 underline-offset-8 cursor-pointer hover:text-primary hover:decoration-primary transition-colors inline-block"
-                >
-                  {card.term}
-                </span>
-              ) : (
-                card.term
-              )}
+              <WordDetailTrigger word={card} onClick={onOpenWordDetail} />
             </h1>
 
             {/* US & UK Audio Buttons */}

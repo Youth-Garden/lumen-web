@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import { useEventListener } from './use-event-listener';
 
 export interface NetworkState {
   online: boolean | undefined;
@@ -74,40 +75,28 @@ export function useNetworkState(
     return getNetworkState();
   });
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleOnline = () => {
-      setState((prev) => ({ ...prev, online: true }));
-    };
-
-    const handleOffline = () => {
-      setState((prev) => ({ ...prev, online: false }));
-    };
-
-    const handleConnectionChange = () => {
-      setState(getNetworkState());
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    const nav = navigator as NavigatorWithConnection;
-    const connection =
-      nav.connection || nav.mozConnection || nav.webkitConnection;
-
-    if (connection) {
-      connection.addEventListener('change', handleConnectionChange);
-    }
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      if (connection) {
-        connection.removeEventListener('change', handleConnectionChange);
-      }
-    };
+  const handleOnline = useCallback(() => {
+    setState((prev) => ({ ...prev, online: true }));
   }, []);
+
+  const handleOffline = useCallback(() => {
+    setState((prev) => ({ ...prev, online: false }));
+  }, []);
+
+  const handleConnectionChange = useCallback(() => {
+    setState(getNetworkState());
+  }, []);
+
+  useEventListener('online', handleOnline);
+  useEventListener('offline', handleOffline);
+
+  const connection = useMemo(() => {
+    if (typeof navigator === 'undefined') return null;
+    const nav = navigator as NavigatorWithConnection;
+    return nav.connection || nav.mozConnection || nav.webkitConnection || null;
+  }, []);
+
+  useEventListener('change', handleConnectionChange, connection);
 
   return state;
 }

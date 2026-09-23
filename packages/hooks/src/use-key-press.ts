@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type RefObject } from 'react';
+import { useCallback, useRef, type RefObject } from 'react';
+import { useEventListener, type TargetElement } from './use-event-listener';
 
 export type KeyPredicate = (event: KeyboardEvent) => boolean;
 export type KeyFilter = string | string[] | KeyPredicate;
@@ -15,7 +16,7 @@ export interface UseKeyPressModifierKeys {
 
 export interface UseKeyPressOptions {
   event?: 'keydown' | 'keyup' | 'keypress';
-  target?: Window | Document | HTMLElement | RefObject<HTMLElement | null>;
+  target?: TargetElement<EventTarget>;
   modifierKeys?: UseKeyPressModifierKeys;
   preventDefault?: boolean;
   stopPropagation?: boolean;
@@ -98,10 +99,16 @@ export function useKeyPress(
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
-  useEffect(() => {
-    if (disabled || typeof window === 'undefined') return;
+  const keyRef = useRef(key);
+  keyRef.current = key;
 
-    const handler = (e: Event) => {
+  const modifierKeysRef = useRef(modifierKeys);
+  modifierKeysRef.current = modifierKeys;
+
+  const handleEvent = useCallback(
+    (e: Event) => {
+      if (disabled) return;
+
       const keyboardEvent = e as KeyboardEvent;
 
       if (ignoreInputElements && isInputElement(keyboardEvent.target)) {
@@ -109,8 +116,8 @@ export function useKeyPress(
       }
 
       if (
-        matchesKey(keyboardEvent, key) &&
-        matchesModifiers(keyboardEvent, modifierKeys)
+        matchesKey(keyboardEvent, keyRef.current) &&
+        matchesModifiers(keyboardEvent, modifierKeysRef.current)
       ) {
         if (preventDefault) {
           keyboardEvent.preventDefault();
@@ -120,35 +127,9 @@ export function useKeyPress(
         }
         callbackRef.current(keyboardEvent);
       }
-    };
+    },
+    [disabled, ignoreInputElements, preventDefault, stopPropagation],
+  );
 
-    let resolvedTarget: EventTarget | null = null;
-    if (target) {
-      if ('current' in target) {
-        resolvedTarget = target.current;
-      } else {
-        resolvedTarget = target;
-      }
-    } else {
-      resolvedTarget = window;
-    }
-
-    if (!resolvedTarget) return;
-
-    resolvedTarget.addEventListener(event, handler, eventOptions);
-
-    return () => {
-      resolvedTarget.removeEventListener(event, handler, eventOptions);
-    };
-  }, [
-    key,
-    event,
-    target,
-    modifierKeys,
-    preventDefault,
-    stopPropagation,
-    ignoreInputElements,
-    disabled,
-    eventOptions,
-  ]);
+  useEventListener(event, handleEvent, target, eventOptions);
 }

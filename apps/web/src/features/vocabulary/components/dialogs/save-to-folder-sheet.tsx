@@ -81,17 +81,7 @@ export function SaveToFolderSheet({
               {t('saveToFolderDescription')}
             </p>
           </div>
-          <SheetClose
-            render={
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className="text-muted-foreground hover:text-foreground shrink-0"
-              />
-            }
-          >
-            <Icons name="x" className="h-4 w-4" />
-          </SheetClose>
+          <SheetClose />
         </div>
 
         <div className="p-4 sm:p-6 space-y-4">

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useEventListener } from './use-event-listener';
 
 export function usePreferredLanguage(): string {
   const getLanguage = (): string => {
@@ -16,19 +17,11 @@ export function usePreferredLanguage(): string {
 
   const [language, setLanguage] = useState<string>(getLanguage);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleLanguageChange = () => {
-      setLanguage(getLanguage());
-    };
-
-    window.addEventListener('languagechange', handleLanguageChange);
-
-    return () => {
-      window.removeEventListener('languagechange', handleLanguageChange);
-    };
+  const handleLanguageChange = useCallback(() => {
+    setLanguage(getLanguage());
   }, []);
+
+  useEventListener('languagechange', handleLanguageChange);
 
   return language;
 }

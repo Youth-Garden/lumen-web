@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
@@ -30,10 +31,10 @@ export function StudyChoiceTerm({
       <div className="w-full flex items-center justify-between mb-8 px-1">
         <div className="space-y-1">
           {item.isReviewingFailed && (
-            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
+            <Badge variant="warning" size="sm" className="gap-1.5 mb-1">
               <Icons name="refresh-cw" className="w-3.5 h-3.5" />
-              <span>{t('previousMistake')}</span>
-            </div>
+              <span>{t('frequentlyMissedTag')}</span>
+            </Badge>
           )}
           <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
             {t('chooseTerm')}

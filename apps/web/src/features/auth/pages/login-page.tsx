@@ -1,13 +1,10 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useCountdown } from '@lumen/hooks';
 import {
   VerifyEmailOtpFormData,
   getVerifyEmailOtpSchema,
@@ -15,6 +12,7 @@ import {
 import { authService } from '@/services/auth';
 import { RouteEnum } from '@/shared/constants';
 import { useAuthStore } from '@/store/auth.store';
+import { useCountdown } from '@lumen/hooks';
 import {
   Button,
   Form,
@@ -25,6 +23,7 @@ import {
   FormMessage,
   Input,
   Logo,
+  useZodForm,
 } from '@lumen/uikit/components';
 
 import { Icons } from '@lumen/uikit/icons';
@@ -46,10 +45,12 @@ export default function LoginPage() {
     autoStart: false,
   });
 
-  const form = useForm<VerifyEmailOtpFormData>({
-    resolver: zodResolver(getVerifyEmailOtpSchema(tVal)),
-    defaultValues: { email: '', otp: '' },
-  });
+  const form = useZodForm<VerifyEmailOtpFormData>(
+    getVerifyEmailOtpSchema(tVal),
+    {
+      defaultValues: { email: '', otp: '' },
+    },
+  );
 
   const handleGoogleLogin = useGoogleLogin({
     prompt: 'select_account',
@@ -85,8 +86,6 @@ export default function LoginPage() {
       setStep('otp');
       toast.success(t('otpSent'));
       startResendTimer();
-    } catch {
-      // Errors handled globally
     } finally {
       setIsLoading(false);
     }

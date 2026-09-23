@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { useCounter } from '@lumen/hooks';
-import { Button, Input } from '@lumen/uikit/components';
+import type { StudyQueueItem } from '@/features/study/types/study.types';
+import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
+import { useCounter, useSubmitLock } from '@lumen/hooks';
+import { Badge, Button, IconButton, Input } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
-import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
-import type { StudyQueueItem } from '@/features/study/types/study.types';
+import { useEffect, useRef, useState } from 'react';
 
 interface StudyTypingProps {
   item: StudyQueueItem;
@@ -31,19 +31,26 @@ export function StudyTyping({
     useCounter(0, { max: maxHints });
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [submitLocked, { isLocked: isSubmitted, resetLock }] = useSubmitLock(
+    (trimmed: string) => {
+      onSubmitAnswer(trimmed);
+    },
+  );
+
   const remainingHints = Math.max(0, maxHints - hintCount);
 
   useEffect(() => {
     setValue('');
+    resetLock();
     resetHint();
     const timer = setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
     return () => clearTimeout(timer);
-  }, [item.id, resetHint]);
+  }, [item.id, resetHint, resetLock]);
 
   const handleApplyHint = () => {
-    if (hintCount < maxHints) {
+    if (remainingHints > 0 && !isSubmitted) {
       const nextCount = hintCount + 1;
       incrementHint();
       setValue(targetTerm.slice(0, nextCount));
@@ -51,14 +58,19 @@ export function StudyTyping({
     }
   };
 
+  const handleSubmit = () => {
+    const trimmed = value.trim();
+    if (trimmed) {
+      submitLocked(trimmed);
+    }
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      if (value.trim()) {
-        onSubmitAnswer(value.trim());
-      }
+      handleSubmit();
     } else if (event.key === 'Shift' && !event.repeat) {
-      if (hintCount < maxHints) {
+      if (remainingHints > 0) {
         handleApplyHint();
       }
     }
@@ -69,13 +81,10 @@ export function StudyTyping({
       <div className="w-full flex items-center justify-between mb-8 px-1">
         <div className="space-y-1">
           {item.isReviewingFailed && (
-            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
-              <Icons
-                name="zap"
-                className="w-3.5 h-3.5 text-amber-500 fill-current"
-              />
+            <Badge variant="warning" size="sm" className="gap-1.5 mb-1">
+              <Icons name="refresh-cw" className="w-3.5 h-3.5" />
               <span>{t('frequentlyMissedTag')}</span>
-            </div>
+            </Badge>
           )}
           <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
             {t('typeWord')}
@@ -101,7 +110,7 @@ export function StudyTyping({
       </div>
 
       <div className="w-full max-w-md mt-4 space-y-4">
-        <div className="relative">
+        <div className="relative group w-full">
           <Input
             ref={inputRef}
             type="text"
@@ -112,19 +121,33 @@ export function StudyTyping({
             autoComplete="off"
             autoCorrect="off"
             spellCheck="false"
-            className="w-full h-14 text-center font-bold text-lg sm:text-xl tracking-wide"
+            className="w-full h-16 px-5 text-center font-black text-xl sm:text-2xl tracking-wide bg-background/80 dark:bg-muted/15 border-2 border-border/80 focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/15 rounded-2xl placeholder:font-medium placeholder:text-base sm:placeholder:text-lg placeholder:text-muted-foreground/35 transition-all duration-200 shadow-xs hover:border-primary/40 focus-visible:shadow-md"
           />
+
+          {value.length > 0 && (
+            <IconButton
+              type="button"
+              onClick={() => {
+                setValue('');
+                inputRef.current?.focus();
+              }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
+            >
+              <Icons name="x" className="w-4 h-4" />
+            </IconButton>
+          )}
         </div>
 
-        <div className="flex items-center justify-center gap-3">
+        <div className="grid grid-cols-2 gap-3 w-full">
           <Button
             variant="outline"
-            size="default"
+            size="lg"
             type="button"
             onClick={handleApplyHint}
             disabled={remainingHints === 0}
+            className="w-full cursor-pointer"
           >
-            <Icons name="lightbulb" className="text-amber-500" />
+            <Icons name="lightbulb" className="text-amber-500 w-4 h-4" />
             <span>
               {t('hintAction', {
                 count: remainingHints.toString(),
@@ -134,10 +157,11 @@ export function StudyTyping({
 
           <Button
             variant="default"
-            size="default"
+            size="lg"
             type="button"
-            onClick={() => value.trim() && onSubmitAnswer(value.trim())}
-            disabled={!value.trim()}
+            onClick={handleSubmit}
+            disabled={isSubmitted || !value.trim()}
+            className="w-full cursor-pointer"
           >
             <span>{t('checkAction')}</span>
           </Button>

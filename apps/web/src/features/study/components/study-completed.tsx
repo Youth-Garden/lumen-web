@@ -2,97 +2,62 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Icons } from '@lumen/uikit/icons';
-import { Button } from '@lumen/uikit/components';
 import { MissedWordStat } from '@/features/study/types/study.types';
+import { WordDetailTrigger } from '@/features/vocabulary/components/word-detail-trigger';
+import { Badge, Button } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
 
 interface StudyCompletedProps {
-  totalInBatch: number;
-  masteredCount: number;
-  missedWords: MissedWordStat[];
-  onRestart: () => void;
+  missedWords?: MissedWordStat[];
   onClose: () => void;
 }
 
 export function StudyCompleted({
-  totalInBatch,
-  masteredCount,
-  missedWords,
-  onRestart,
+  missedWords = [],
   onClose,
 }: StudyCompletedProps) {
   const t = useTranslations('Vocabulary.Study');
+
   return (
-    <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-5 animate-in zoom-in-95 duration-300 max-w-lg w-full mx-auto">
-      <div className="flex items-center justify-center">
-        <Icons
-          name="study-graduate"
-          size={110}
-          className="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-sm select-none"
-        />
+    <div className="flex flex-col items-center justify-center p-6 sm:p-8 max-w-md mx-auto text-center space-y-6 animate-in fade-in-50 zoom-in-95 duration-300">
+      <div className="relative">
+        <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+          <Icons name="checkCircle2" className="w-8 h-8" />
+        </div>
       </div>
 
-      <div className="space-y-1">
-        <h3 className="text-3xl font-black text-foreground">
-          {t('completedLessonTitle')}
+      <div className="space-y-2">
+        <h3 className="text-2xl font-black text-foreground tracking-tight">
+          {t('congratsSession')}
         </h3>
-        <p className="text-sm text-muted-foreground">
-          {t('completedLessonSubtitle', {
-            mastered: masteredCount,
-            total: totalInBatch,
-          })}
-        </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 w-full pt-2">
-        <div className="p-4 rounded-2xl bg-emerald-500/10">
-          <p className="text-2xl font-black text-emerald-500">
-            {masteredCount}
-          </p>
-          <p className="text-xs font-semibold text-muted-foreground uppercase mt-0.5">
-            {t('masteredWordsCard')}
-          </p>
-        </div>
-        <div className="p-4 rounded-2xl bg-rose-500/10">
-          <p className="text-2xl font-black text-rose-500">
-            {missedWords.length}
-          </p>
-          <p className="text-xs font-semibold text-muted-foreground uppercase mt-0.5">
-            {t('wordsToReviewCard')}
-          </p>
-        </div>
-      </div>
-
-      {/* Missed words list if any */}
       {missedWords.length > 0 && (
-        <div className="w-full text-left space-y-2 pt-2">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            <Icons
-              name="alert-triangle"
-              className="w-3.5 h-3.5 text-rose-500"
-            />
-            <span>{t('missedWordsToReview')}</span>
-          </div>
-          <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1">
+        <div className="w-full text-left space-y-2.5">
+          <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            {t('needReviewWords')}
+          </h4>
+          <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
             {missedWords.map((item) => {
               const def = item.card.definitions?.[0];
               const meaning = def?.translationVi || def?.definitionEn || '';
               return (
                 <div
                   key={item.card.id}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl bg-muted/30 text-xs"
+                  className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-background border border-border/40 hover:border-border transition-colors"
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-foreground">
-                      {item.card.term}
-                    </span>
-                    <span className="text-muted-foreground truncate max-w-[200px]">
+                  <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
+                    <WordDetailTrigger
+                      word={item.card}
+                      className="font-bold text-foreground text-xs shrink-0"
+                    />
+                    <span className="text-muted-foreground truncate">
                       {meaning}
                     </span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 font-semibold">
+                  <Badge variant="destructive" size="sm">
                     {t('missedCount', { count: item.errorCount })}
-                  </span>
+                  </Badge>
                 </div>
               );
             })}
@@ -100,17 +65,11 @@ export function StudyCompleted({
         </div>
       )}
 
-      <div className="flex space-x-3 pt-4 w-full">
-        <Button
-          variant="outline"
-          className="flex-1 cursor-pointer"
-          onClick={onRestart}
-        >
-          {t('studyAgain')}
-        </Button>
+      <div className="pt-2 w-full">
         <Button
           variant="default"
-          className="flex-1 cursor-pointer"
+          size="lg"
+          className="w-full cursor-pointer"
           onClick={onClose}
         >
           {t('finish')}

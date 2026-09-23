@@ -52,10 +52,8 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="bg-card">
-        <DialogHeader align="center" className="pb-1">
-          <DialogTitle className="text-lg font-bold text-foreground">
-            {t('settingsTitle')}
-          </DialogTitle>
+        <DialogHeader align="center">
+          <DialogTitle>{t('settingsTitle')}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-1">
@@ -96,19 +94,22 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               event.stopPropagation();
               presentQuota({});
             }}
-            className="w-full flex items-center justify-between text-left h-12 cursor-pointer"
+            className="w-full flex items-center justify-between text-left py-3 cursor-pointer"
           >
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
                 {t('maxQuestionsPerSession')}
               </p>
-              <p className="text-xs font-semibold text-primary">
+              <p className="text-xs text-muted-foreground">
+                {t('autoPlayAudioDesc')}
+              </p>
+              <p className="text-xs font-semibold text-primary pt-0.5">
                 {quotaPresetName} ({quotaRangeText})
               </p>
             </div>
             <Icons
               name="chevron-right"
-              className="w-4 h-4 text-muted-foreground"
+              className="w-4 h-4 text-muted-foreground shrink-0"
             />
           </div>
 
@@ -117,19 +118,22 @@ export function StudySettingsDialog({ isOpen, onDismiss }: PortalProps) {
               event.stopPropagation();
               presentAccent({});
             }}
-            className="w-full flex items-center justify-between text-left h-12 cursor-pointer"
+            className="w-full flex items-center justify-between text-left py-3 cursor-pointer"
           >
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-foreground">
                 {t('vocabularyAccentTitle')}
               </p>
-              <p className="text-xs font-semibold text-primary">
+              <p className="text-xs text-muted-foreground">
+                {t('autoPlayAudioDesc')}
+              </p>
+              <p className="text-xs font-semibold text-primary pt-0.5">
                 {currentAccentLabel}
               </p>
             </div>
             <Icons
               name="chevron-right"
-              className="w-4 h-4 text-muted-foreground"
+              className="w-4 h-4 text-muted-foreground shrink-0"
             />
           </div>
         </div>

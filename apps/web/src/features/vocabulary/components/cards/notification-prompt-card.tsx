@@ -14,7 +14,7 @@ export function NotificationPromptCard() {
   if (isDismissed) return null;
 
   return (
-    <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-3.5 relative overflow-hidden">
+    <Card className="p-5 space-y-3.5 relative overflow-hidden">
       <div className="flex items-start gap-3.5">
         <div className="h-10 w-10 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0">
           <Icons name="bell" className="h-5 w-5" />

@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, type RefObject } from 'react';
+import { type RefObject } from 'react';
 import {
   StudyExerciseType,
   StudySessionMode,
 } from '@/features/study/types/study.types';
+import { useKeyPress } from '@lumen/hooks';
+import { usePortalStore } from '@lumen/uikit/portal';
 import {
   ChoiceShortcutKey,
   FlashcardReviewShortcutKey,
@@ -55,10 +57,9 @@ export function useStudyShortcuts({
   onReplayAudio,
   onClose,
 }: UseStudyShortcutsProps) {
-  useEffect(() => {
-    if (!isOpen || isFinished) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
+  useKeyPress(
+    () => true,
+    (event: KeyboardEvent) => {
       const isAudioPermitted =
         isFeedbackOpen ||
         exerciseType === StudyExerciseType.FLASHCARD ||
@@ -69,16 +70,9 @@ export function useStudyShortcuts({
         event.key === StudyGlobalShortcutKey.REPLAY_AUDIO &&
         !event.repeat
       ) {
-        const target = event.target as HTMLElement | null;
-        if (
-          !(target instanceof HTMLInputElement) &&
-          !(target instanceof HTMLTextAreaElement) &&
-          !target?.isContentEditable
-        ) {
-          event.preventDefault();
-          onReplayAudio();
-          return;
-        }
+        event.preventDefault();
+        onReplayAudio();
+        return;
       }
 
       if (isFeedbackOpen) {
@@ -103,20 +97,11 @@ export function useStudyShortcuts({
         return;
       }
 
-      const target = event.target as HTMLElement | null;
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target?.isContentEditable
-      ) {
-        return;
-      }
-
-      const hasAnyDialogOpen = Boolean(
-        document.querySelector('[role="dialog"]') ||
-        document.querySelector('[aria-modal="true"]'),
-      );
-      if (hasAnyDialogOpen) {
+      // Check Portal Store directly: If any sub-dialog/modal is open on top of StudyView, yield control
+      const openPortals = usePortalStore
+        .getState()
+        .portals.filter((p) => p.isOpen);
+      if (openPortals.length > 1) {
         return;
       }
 
@@ -196,29 +181,10 @@ export function useStudyShortcuts({
           onSelectChoice?.(3);
         }
       }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [
-    isOpen,
-    isFinished,
-    isFlipped,
-    isFeedbackOpen,
-    exerciseType,
-    mode,
-    canFlipRef,
-    onFlip,
-    onMastered,
-    onReview,
-    onDontKnow,
-    onFlashcardAgain,
-    onFlashcardKnown,
-    onSelectChoice,
-    onContinueFeedback,
-    onPlayUsAudio,
-    onPlayUkAudio,
-    onReplayAudio,
-    onClose,
-  ]);
+    },
+    {
+      disabled: !isOpen || isFinished,
+      ignoreInputElements: true,
+    },
+  );
 }

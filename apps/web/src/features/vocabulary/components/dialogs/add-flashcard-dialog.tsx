@@ -1,18 +1,16 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
+import * as z from 'zod';
 
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Button,
   Form,
   FormControl,
   FormField,
@@ -24,11 +22,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  useZodForm,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import {
-  useVocabularyFolders,
   useCreateFlashcard,
+  useVocabularyFolders,
 } from '@/features/vocabulary/hooks';
 import { getLocalizedText } from '@/features/vocabulary/utils';
 import { PortalProps } from '@lumen/uikit/portal';
@@ -57,8 +56,7 @@ export function AddFlashcardDialog({
     useVocabularyFolders();
   const { mutateAsync: createFlashcard, isPending } = useCreateFlashcard();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useZodForm<FormValues>(formSchema, {
     defaultValues: {
       folderId: '',
     },

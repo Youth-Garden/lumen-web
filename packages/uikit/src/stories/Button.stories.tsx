@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../components/ui/button';
+import { Button, IconButton } from '../components/ui/button';
 import { Icons } from '../icons';
 
 const meta = {
@@ -23,16 +23,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: [
-        'default',
-        'xs',
-        'sm',
-        'lg',
-        'icon',
-        'icon-xs',
-        'icon-sm',
-        'icon-lg',
-      ],
+      options: ['default', 'xs', 'sm', 'lg', 'icon'],
     },
     disabled: { control: 'boolean' },
   },
@@ -110,21 +101,21 @@ export const AllButtons: Story = {
         {/* Icon Only Buttons */}
         <div className="space-y-2">
           <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-            Icon Only (Sizes)
+            Icon Buttons
           </span>
           <div className="flex flex-wrap items-center gap-2.5">
-            <Button size="icon-xs" variant="outline" title="icon-xs">
-              <Icons name="plus" className="w-3 h-3" />
-            </Button>
-            <Button size="icon-sm" variant="outline" title="icon-sm">
-              <Icons name="search" className="w-3.5 h-3.5" />
-            </Button>
-            <Button size="icon" variant="outline" title="icon (default)">
+            <IconButton variant="ghost" title="ghost (default)">
               <Icons name="settings" className="w-4 h-4" />
-            </Button>
-            <Button size="icon-lg" variant="outline" title="icon-lg">
-              <Icons name="bell" className="w-5 h-5" />
-            </Button>
+            </IconButton>
+            <IconButton variant="outline" title="outline">
+              <Icons name="settings" className="w-4 h-4" />
+            </IconButton>
+            <IconButton variant="secondary" title="secondary">
+              <Icons name="bookmark" className="w-4 h-4" />
+            </IconButton>
+            <IconButton variant="default" title="default">
+              <Icons name="play" className="w-4 h-4 fill-current" />
+            </IconButton>
           </div>
         </div>
 

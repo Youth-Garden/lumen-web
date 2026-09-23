@@ -2,6 +2,7 @@
 
 import { useToggle } from '@lumen/hooks';
 import {
+  Badge,
   Button,
   Card,
   Dialog,
@@ -11,6 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  IconButton,
   Input,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -100,11 +102,11 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
       { dailyGoalMinutes: finalMinutes },
       {
         onSuccess: () => {
-          toast.success(t('goalUpdatedSuccess') || 'Goal updated successfully');
+          toast.success(t('goalUpdatedSuccess'));
           onDismiss?.();
         },
         onError: () => {
-          toast.error(t('goalUpdatedError') || 'Failed to update daily goal');
+          toast.error(t('goalUpdatedError'));
         },
       },
     );
@@ -129,13 +131,9 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="sm:max-w-[480px]">
-        <DialogHeader align="center" className="space-y-1 text-center">
-          <DialogTitle className="text-xl font-bold font-heading text-center">
-            {t('setDailyGoal')}
-          </DialogTitle>
-          <DialogDescription className="text-xs sm:text-sm text-muted-foreground pt-0.5 text-center">
-            {t('setDailyGoalDesc')}
-          </DialogDescription>
+        <DialogHeader align="center">
+          <DialogTitle>{t('setDailyGoal')}</DialogTitle>
+          <DialogDescription>{t('setDailyGoalDesc')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-3 my-4">
@@ -154,9 +152,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                   }}
                   className={cn(
                     'cursor-pointer transition-all p-3',
-                    isSelected
-                      ? '!bg-primary/10 ring-2 ring-primary/40 shadow-xs'
-                      : '',
+                    isSelected ? '!bg-primary/10 ring-2 ring-primary/40' : '',
                   )}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
@@ -176,9 +172,9 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                       </span>
                     </div>
                     {tier.isPopular && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/20 text-primary">
+                      <Badge variant="subtle" size="sm">
                         {t('recommended')}
-                      </span>
+                      </Badge>
                     )}
                   </div>
                   <div className="space-y-0.5 pl-0.5">
@@ -198,7 +194,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
             className={cn(
               'flex-row items-center justify-between p-3 gap-3 transition-all',
               isCustom
-                ? '!bg-primary/10 ring-2 ring-primary/40 shadow-xs hover:!bg-primary/10'
+                ? '!bg-primary/10 ring-2 ring-primary/40 hover:!bg-primary/10'
                 : 'hover:!bg-accent',
             )}
           >
@@ -228,16 +224,14 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center rounded-xl bg-muted/60 p-0.5">
-                <Button
+                <IconButton
                   type="button"
-                  variant="ghost"
-                  size="icon-xs"
                   disabled={parseInt(customMinutes, 10) <= 5}
                   onClick={handleDecrementMinutes}
                   aria-label="Decrease minutes"
                 >
                   <Icons name="minus" className="h-3.5 w-3.5" />
-                </Button>
+                </IconButton>
                 <Input
                   type="number"
                   min={5}
@@ -251,16 +245,14 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                   className="w-10 h-7 text-center text-xs font-bold border-none shadow-none bg-transparent [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus-visible:ring-0 p-0"
                   placeholder="30"
                 />
-                <Button
+                <IconButton
                   type="button"
-                  variant="ghost"
-                  size="icon-xs"
                   disabled={parseInt(customMinutes, 10) >= 180}
                   onClick={handleIncrementMinutes}
                   aria-label="Increase minutes"
                 >
                   <Icons name="plus" className="h-3.5 w-3.5" />
-                </Button>
+                </IconButton>
               </div>
               <span className="text-xs font-semibold text-muted-foreground">
                 {t('mins')}

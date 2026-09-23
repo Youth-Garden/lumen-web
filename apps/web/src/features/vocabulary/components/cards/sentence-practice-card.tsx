@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@lumen/uikit/components';
+import { Badge, Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 interface SentencePracticeCardProps {
@@ -18,16 +18,17 @@ export function SentencePracticeCard({
 }: SentencePracticeCardProps) {
   const t = useTranslations('Vocabulary.Folders');
   return (
-    <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-3">
+    <Card className="p-5 space-y-3">
       <div className="space-y-1">
         <div className="flex items-center justify-between gap-2">
           <h4 className="text-sm font-bold text-foreground font-heading">
             {t('sentencePracticeTitle')}
           </h4>
-          <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary shrink-0">
+          <Badge variant="default" size="sm">
             {t('comingSoonBadge')}
-          </span>
+          </Badge>
         </div>
+
         <p className="text-xs text-muted-foreground">
           {t('sentencePracticeDesc', { used: usedCount, total: totalWords })}
         </p>

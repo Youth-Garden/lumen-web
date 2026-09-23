@@ -79,7 +79,7 @@ export function ReviewReadinessChart({
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-6 space-y-4">
+      <Card className="p-6 space-y-4">
         <Skeleton className="h-6 w-40 rounded-lg" />
         <Skeleton className="h-44 w-full rounded-2xl" />
       </Card>
@@ -87,7 +87,7 @@ export function ReviewReadinessChart({
   }
 
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden">
+    <Card className="overflow-hidden">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">

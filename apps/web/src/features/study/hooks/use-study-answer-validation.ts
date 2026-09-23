@@ -121,15 +121,20 @@ export function useStudyAnswerValidation({
           isCorrect,
         },
       );
+
+      const earnedDelta = isCorrect ? 1.0 : 0.3;
+      setEarnedPoints((prev) => prev + earnedDelta);
     },
     [
       currentCard,
       currentItem,
       wordProgressMap,
+      soundEffectsEnabled,
       recordReviewPending,
       recordMissedWord,
       presentFeedback,
       setWordProgressMap,
+      setEarnedPoints,
     ],
   );
 
@@ -168,7 +173,6 @@ export function useStudyAnswerValidation({
         cards,
         globalCards,
       );
-      setEarnedPoints((prev) => prev + res.earnedPointsDelta);
       if (res.isMastered) {
         setMasteredIds((prev) => updateMasteredWordIds(prev, currentCard.id));
       }
@@ -187,7 +191,6 @@ export function useStudyAnswerValidation({
     dismissFeedback,
     setActiveQueue,
     setMasteredIds,
-    setEarnedPoints,
   ]);
 
   handleContinueFeedbackRef.current = handleContinueFeedback;

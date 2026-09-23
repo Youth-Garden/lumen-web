@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import {
   Button,
+  IconButton,
   Logo,
   Tooltip,
   TooltipContent,
@@ -98,11 +99,9 @@ export function Sidebar({ defaultCollapsed }: SidebarProps) {
           <Tooltip>
             <TooltipTrigger
               render={
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
+                <IconButton
                   onClick={toggleSidebar}
-                  className="text-muted-foreground hover:text-foreground h-9 w-9 shrink-0 flex items-center justify-center"
+                  className="shrink-0"
                   aria-label={
                     sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')
                   }
@@ -113,7 +112,7 @@ export function Sidebar({ defaultCollapsed }: SidebarProps) {
                     }
                     className="h-5 w-5"
                   />
-                </Button>
+                </IconButton>
               }
             />
             <TooltipContent side="right" sideOffset={8}>

@@ -1,12 +1,44 @@
 'use client';
 
-import * as React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Slot } from '@radix-ui/react-slot';
-import { Controller, FormProvider, useFormContext } from 'react-hook-form';
-import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form';
+import * as React from 'react';
+import type {
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  UseFormProps,
+  UseFormReturn,
+} from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from 'react-hook-form';
 
 import { cn } from '../../utils/cn';
 import { Label } from './label';
+
+function useZodForm<
+  TFieldValues extends FieldValues = FieldValues,
+  TContext = any,
+  TTransformedValues extends FieldValues | undefined = TFieldValues,
+>(
+  schema: Parameters<
+    typeof zodResolver<TFieldValues, TContext, TTransformedValues>
+  >[0],
+  options?: Omit<
+    UseFormProps<TFieldValues, TContext, TTransformedValues>,
+    'resolver'
+  >,
+): UseFormReturn<TFieldValues, TContext, TTransformedValues> {
+  return useForm<TFieldValues, TContext, TTransformedValues>({
+    mode: 'onChange',
+    resolver: zodResolver<TFieldValues, TContext, TTransformedValues>(schema),
+    ...options,
+  });
+}
 
 const Form = FormProvider;
 
@@ -161,12 +193,13 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = 'FormMessage';
 
 export {
-  useFormField,
   Form,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
-  FormMessage,
   FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useFormField,
+  useZodForm,
 };

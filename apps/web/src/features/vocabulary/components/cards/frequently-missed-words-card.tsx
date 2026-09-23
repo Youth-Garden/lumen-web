@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import Image from 'next/image';
 import { useMemo } from 'react';
-import { Button, Card } from '@lumen/uikit/components';
+import { Badge, Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { type VocabularyWord } from '@/services/vocabulary';
 
@@ -23,47 +23,37 @@ export function FrequentlyMissedWordsCard({
   const tStudy = useTranslations('Vocabulary.Study');
 
   const displayCards = useMemo(() => {
-    if (!missedCards || missedCards.length === 0) return [];
-    const seen = new Set<string>();
-    const unique: VocabularyWord[] = [];
-
-    for (const card of missedCards) {
-      const termKey = card.term.toLowerCase().trim();
-      if (!seen.has(termKey)) {
-        seen.add(termKey);
-        unique.push(card);
-      }
-      if (unique.length >= 3) break;
-    }
-    return unique;
+    return missedCards.slice(0, 3);
   }, [missedCards]);
 
-  if (displayCards.length === 0) {
+  if (!missedCards || missedCards.length === 0) {
     return null;
   }
 
   return (
-    <Card className="rounded-3xl border-none bg-card p-4 shadow-sm space-y-3">
-      {/* Header - Compact */}
-      <div>
-        <h4 className="text-sm font-bold tracking-tight text-foreground">
-          {t('frequentlyMissedHeader', { count: displayCards.length })}
-        </h4>
-        <p className="text-[11px] text-muted-foreground mt-0.5">
-          {t('frequentlyMissedSubtitle')}
-        </p>
+    <Card className="p-4 sm:p-5 rounded-2xl bg-muted/20 border-none space-y-3.5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-xl bg-destructive/10 text-destructive">
+            <Icons name="trendingDown" className="h-4 w-4" />
+          </div>
+          <div>
+            <h4 className="text-xs font-bold font-heading text-foreground">
+              {t('frequentlyMissed')}
+            </h4>
+            <p className="text-[10px] text-muted-foreground">
+              {t('missedDesc')}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Word Cards with Image Thumbnail - 3 Column Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+      <div className="space-y-2">
         {displayCards.map((card, index) => {
           const firstDef = card.definitions?.[0];
           const partOfSpeech = firstDef?.partOfSpeech || 'n.';
           const meaning =
-            firstDef?.translationVi ||
-            firstDef?.definitionEn ||
-            (firstDef?.definition as Record<string, string>)?.en ||
-            '';
+            firstDef?.translationVi || firstDef?.definitionEn || '';
 
           const errorRate = 35 - index * 3;
 
@@ -74,9 +64,9 @@ export function FrequentlyMissedWordsCard({
             >
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-500">
+                  <Badge variant="destructive" size="sm">
                     {t('errorRate', { rate: errorRate })}
-                  </span>
+                  </Badge>
                 </div>
 
                 <div>

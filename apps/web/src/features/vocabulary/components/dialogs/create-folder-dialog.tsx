@@ -1,8 +1,6 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -21,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  useZodForm,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
@@ -36,8 +35,7 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
   const t = useTranslations('Vocabulary.Folders');
   const { mutateAsync: createFolder, isPending } = useCreateFolder();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useZodForm<FormValues>(formSchema, {
     defaultValues: {
       name: '',
       description: '',
@@ -61,13 +59,9 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader align="center" className="text-center space-y-1">
-          <DialogTitle className="text-xl font-bold font-heading text-center">
-            {t('createFolder')}
-          </DialogTitle>
-          <DialogDescription className="text-xs sm:text-sm text-muted-foreground pt-0.5 text-center">
-            {t('createFolderDescription')}
-          </DialogDescription>
+        <DialogHeader align="center">
+          <DialogTitle>{t('createFolder')}</DialogTitle>
+          <DialogDescription>{t('createFolderDescription')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

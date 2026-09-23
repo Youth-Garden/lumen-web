@@ -2,12 +2,12 @@
 
 import { DailyGoalDialog } from '@/features/dashboard/components/daily-goal-dialog';
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  IconButton,
   Skeleton,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -45,7 +45,7 @@ export function TodayGoalProgressCard({
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-4 sm:p-5 space-y-3">
+      <Card className="p-4 sm:p-5 space-y-3">
         <Skeleton className="h-6 w-36 rounded-lg" />
         <Skeleton className="h-24 w-full rounded-2xl" />
       </Card>
@@ -53,7 +53,7 @@ export function TodayGoalProgressCard({
   }
 
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
+    <Card className="h-full flex flex-col justify-between">
       <CardHeader className="px-5 pt-3.5 pb-0">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -71,19 +71,13 @@ export function TodayGoalProgressCard({
             </div>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon-sm"
+          <IconButton
             onClick={() => presentDailyGoalDialog()}
             title={t('setDailyGoal')}
             aria-label={t('setDailyGoal')}
-            className="h-7 w-7 rounded-full"
           >
-            <Icons
-              name="settings"
-              className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground"
-            />
-          </Button>
+            <Icons name="settings" className="h-3.5 w-3.5" />
+          </IconButton>
         </div>
       </CardHeader>
 

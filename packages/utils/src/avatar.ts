@@ -15,6 +15,8 @@ export const AvatarStyles = [
   'stripes',
   'triangles',
   'disco',
+  'glass',
+  'waves',
 ] as const;
 
 /**
@@ -30,10 +32,11 @@ export function getAvatarUrl(
   style: (typeof AvatarStyles)[number],
   seed: string,
   options: Record<string, string | number> = {},
+  format: 'svg' | 'png' | 'jpg' | 'webp' = 'svg',
 ): string {
   // Use the SVG format because it scales cleanly inside React components.
   // Callers that need PNG can switch the extension to `png`.
-  const base = `https://api.dicebear.com/8.x/${style}/svg`;
+  const base = `https://api.dicebear.com/10.x/${style}/${format}`;
 
   // The API expects the seed to be URL-encoded.
   const params = new URLSearchParams({ seed });

@@ -42,7 +42,7 @@ export function StudySessionActionCard({
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-6 space-y-4 h-full flex flex-col justify-between">
+      <Card className="p-6 space-y-4 h-full flex flex-col justify-between">
         <Skeleton className="h-6 w-36 rounded-lg" />
         <Skeleton className="h-28 w-full rounded-2xl" />
         <Skeleton className="h-10 w-full rounded-xl" />
@@ -51,7 +51,7 @@ export function StudySessionActionCard({
   }
 
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
+    <Card className="h-full flex flex-col justify-between">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
@@ -96,7 +96,11 @@ export function StudySessionActionCard({
         </div>
 
         {/* Due Cards Status Prompt */}
-        <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border/40">
+        <Card
+          variant="muted"
+          size="sm"
+          className="flex-row items-center justify-between p-3"
+        >
           <div className="space-y-0.5">
             <p className="text-xs font-bold text-foreground">
               {dueCount > 0
@@ -120,7 +124,7 @@ export function StudySessionActionCard({
               className="h-4 w-4"
             />
           </div>
-        </div>
+        </Card>
 
         {/* Action Button */}
         {dueCount > 0 ? (

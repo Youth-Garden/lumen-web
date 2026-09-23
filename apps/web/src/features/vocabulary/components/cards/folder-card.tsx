@@ -2,7 +2,10 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import {
+  getFolderCoverUrl,
+  getLocalizedText,
+} from '@/features/vocabulary/utils';
 import type { Folder } from '@/services/vocabulary';
 import { Icons } from '@lumen/uikit/icons';
 import Image from 'next/image';
@@ -52,7 +55,7 @@ export function FolderCard({
         FOLDER_COVERS[folder.name.vi || '']
       : null) ||
     (folderCategory ? FOLDER_COVERS[folderCategory] : null) ||
-    FOLDER_COVERS.user_default;
+    getFolderCoverUrl(folder.id);
 
   const totalWords = folder.flashcardCount || 0;
   const learnedCount = folder.learnedCount ?? 0;
@@ -69,25 +72,21 @@ export function FolderCard({
   return (
     <div
       onClick={handleClick}
-      className={`group relative overflow-hidden rounded-2xl h-36 sm:h-40 p-3.5 flex flex-col justify-between select-none cursor-pointer transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-0.5 border-none max-w-sm ${
+      className={`group relative overflow-hidden rounded-2xl h-36 sm:h-40 p-3.5 flex flex-col justify-between select-none cursor-pointer transition-all duration-300 shadow-sm hover:shadow-xl border-none max-w-sm ${
         isActive ? 'shadow-md scale-[1.01]' : ''
       }`}
     >
       {/* Background Cover Image with Gradient Overlay */}
       <div className="absolute inset-0 w-full h-full bg-muted overflow-hidden pointer-events-none">
-        {coverUrl ? (
-          <Image
-            src={coverUrl}
-            alt={folderDisplayName}
-            fill
-            sizes="(max-width: 640px) 100vw, 260px"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            unoptimized
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
-        )}
-        {/* Smooth Dark Gradient for clear typography */}
+        <Image
+          src={coverUrl}
+          alt={folderDisplayName}
+          fill
+          sizes="(max-width: 640px) 100vw, 260px"
+          unoptimized
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {/* Dark gradient overlay for readable text */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
       </div>
 

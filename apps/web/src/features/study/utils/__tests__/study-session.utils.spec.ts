@@ -184,10 +184,18 @@ describe('study-session.utils', () => {
       expect(
         calculateTargetSessionPoints(cards, StudySessionMode.LEARN_NEW),
       ).toBe(6);
+
+      const mixedCards = [
+        createMockWord('1', 'a', 0, 0),
+        createMockWord('2', 'b', 2, 2),
+      ];
+      expect(
+        calculateTargetSessionPoints(mixedCards, StudySessionMode.LEARN_NEW),
+      ).toBe(5);
     });
 
-    it('should cap progress percent at 99% before finished and return 100% when finished', () => {
-      expect(calculateCumulativeProgressPercent(10, 10, false)).toBe(99);
+    it('should accurately calculate progress percent up to 100%', () => {
+      expect(calculateCumulativeProgressPercent(10, 10, false)).toBe(100);
       expect(calculateCumulativeProgressPercent(10, 10, true)).toBe(100);
       expect(calculateCumulativeProgressPercent(5, 10, false)).toBe(50);
       expect(calculateCumulativeProgressPercent(0, 0, false)).toBe(0);

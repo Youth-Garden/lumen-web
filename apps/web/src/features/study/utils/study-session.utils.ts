@@ -54,6 +54,7 @@ export function resolveStudyPool(
       (c) =>
         (c.level ?? 0) >= 1 ||
         (c.learningStep ?? 0) >= 1 ||
+        (c.masteryScore ?? 0) > 0 ||
         Boolean(c.isWilted),
     );
     const pool = dueOrLearned.length > 0 ? dueOrLearned : scopedCards;
@@ -103,7 +104,11 @@ export function calculateTargetSessionPoints(
   if (mode === StudySessionMode.PRACTICE) {
     return Math.max(1, poolCards.length * 2.0);
   }
-  return Math.max(1, poolCards.length * 3.0);
+  const total = poolCards.reduce((acc, card) => {
+    const isNew = (card.level ?? 0) === 0 && (card.learningStep ?? 0) === 0;
+    return acc + (isNew ? 3.0 : 2.0);
+  }, 0);
+  return Math.max(1, total);
 }
 
 export function calculateCumulativeProgressPercent(
@@ -114,7 +119,7 @@ export function calculateCumulativeProgressPercent(
   if (isFinished) return 100;
   if (targetPoints <= 0) return 0;
   return Math.min(
-    99,
+    100,
     Math.max(0, Math.round((earnedPoints / targetPoints) * 100)),
   );
 }

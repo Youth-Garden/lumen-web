@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { Button } from './button';
+import { IconButton } from './button';
 
 interface SheetContextValue {
   open?: boolean;
@@ -48,6 +48,7 @@ function SheetTrigger({ children, onClick, render, ...props }: TriggerProps) {
         (render.props as any).onClick?.(e);
         onClick?.(e);
       },
+      children: (render.props as any).children ?? children,
     });
   }
 
@@ -63,7 +64,13 @@ function SheetTrigger({ children, onClick, render, ...props }: TriggerProps) {
   );
 }
 
-function SheetClose({ children, onClick, render, ...props }: TriggerProps) {
+function SheetClose({
+  children,
+  onClick,
+  render,
+  className,
+  ...props
+}: TriggerProps) {
   const context = React.useContext(SheetContext);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -77,18 +84,35 @@ function SheetClose({ children, onClick, render, ...props }: TriggerProps) {
         (render.props as any).onClick?.(e);
         handleClick(e);
       },
+      children: (render.props as any).children ?? children,
     });
   }
 
+  if (children) {
+    return (
+      <button
+        type="button"
+        data-slot="sheet-close"
+        onClick={handleClick}
+        className={className}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
-    <button
+    <IconButton
       type="button"
       data-slot="sheet-close"
+      className={cn('shrink-0', className)}
       onClick={handleClick}
       {...props}
     >
-      {children}
-    </button>
+      <Icons name="close" className="h-4 w-4" />
+      <span className="sr-only">Close</span>
+    </IconButton>
   );
 }
 
@@ -133,15 +157,10 @@ function SheetContent({
     >
       {children}
       {showCloseButton && (
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className="absolute top-3 right-3"
-          onClick={handleClose}
-        >
+        <IconButton className="absolute top-3 right-3" onClick={handleClose}>
           <Icons name="close" />
           <span className="sr-only">Close</span>
-        </Button>
+        </IconButton>
       )}
     </div>
   );

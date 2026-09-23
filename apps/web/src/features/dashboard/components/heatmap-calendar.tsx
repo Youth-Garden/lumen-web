@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  IconButton,
   TooltipProvider,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -122,22 +122,20 @@ export function HeatmapCalendar({
 
   return (
     <TooltipProvider delay={100}>
-      <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden">
+      <Card className="overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div className="flex items-center gap-1">
             <CardTitle className="text-base font-bold font-heading text-foreground">
               {t('activityHeatmap')}
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="icon-sm"
+
+            <IconButton
               onClick={() => presentActivityInfoDialog()}
-              className="h-6 w-6 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
               aria-label={t('ActivityInfo.infoButtonAria')}
               title={t('ActivityInfo.infoButtonAria')}
             >
               <Icons name="info" className="size-3.5" />
-            </Button>
+            </IconButton>
           </div>
           {!isInitialLoading && (
             <span className="text-xs text-muted-foreground font-medium">

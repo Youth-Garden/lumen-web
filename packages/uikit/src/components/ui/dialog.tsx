@@ -3,7 +3,7 @@
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 import * as React from 'react';
-import { Button } from './button';
+import { Button, IconButton } from './button';
 
 interface DialogContextValue {
   open?: boolean;
@@ -62,7 +62,13 @@ function DialogTrigger({ children, onClick, render, ...props }: TriggerProps) {
   );
 }
 
-function DialogClose({ children, onClick, render, ...props }: TriggerProps) {
+function DialogClose({
+  children,
+  onClick,
+  render,
+  className,
+  ...props
+}: TriggerProps) {
   const context = React.useContext(DialogContext);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -76,18 +82,35 @@ function DialogClose({ children, onClick, render, ...props }: TriggerProps) {
         (render.props as any).onClick?.(e);
         handleClick(e);
       },
+      children: (render.props as any).children ?? children,
     });
   }
 
+  if (children) {
+    return (
+      <button
+        type="button"
+        data-slot="dialog-close"
+        onClick={handleClick}
+        className={className}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
-    <button
+    <IconButton
       type="button"
       data-slot="dialog-close"
+      className={cn('shrink-0', className)}
       onClick={handleClick}
       {...props}
     >
-      {children}
-    </button>
+      <Icons name="close" className="h-4 w-4" />
+      <span className="sr-only">Close</span>
+    </IconButton>
   );
 }
 
@@ -115,26 +138,25 @@ function DialogContent({
       role="dialog"
       aria-modal="true"
       data-slot="dialog-content"
+      data-variant={variant}
       data-state="open"
       className={cn(
         isFullscreen
           ? 'fixed inset-0 flex h-screen w-screen max-w-none flex-col justify-between overflow-hidden bg-popover p-0 select-none outline-none duration-200 pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0'
-          : 'fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-3xl bg-popover p-6 text-sm text-foreground shadow-lg transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+          : 'fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-3xl bg-popover p-6 text-sm text-foreground shadow-md transition-all duration-200 outline-none sm:max-w-md pointer-events-auto data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
         className,
       )}
       {...props}
     >
       {children}
       {shouldShowClose && (
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className="absolute top-3.5 right-3.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80"
+        <IconButton
+          className="absolute top-2.5 right-2.5"
           onClick={handleClose}
         >
           <Icons name="close" className="h-4 w-4" />
           <span className="sr-only">Close</span>
-        </Button>
+        </IconButton>
       )}
     </div>
   );
@@ -153,7 +175,7 @@ function DialogHeader({
     <div
       data-slot="dialog-header"
       className={cn(
-        'flex flex-col gap-1.5',
+        'flex flex-col gap-1.5 shrink-0',
         align === 'center'
           ? 'text-center items-center justify-center'
           : 'text-left items-start',
@@ -201,7 +223,7 @@ function DialogTitle({ className, ...props }: React.ComponentProps<'h2'>) {
     <h2
       data-slot="dialog-title"
       className={cn(
-        'font-heading text-lg leading-tight font-semibold tracking-tight text-foreground',
+        'font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground leading-snug',
         className,
       )}
       {...props}
@@ -214,7 +236,7 @@ function DialogDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot="dialog-description"
       className={cn(
-        'text-sm text-muted-foreground leading-relaxed *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground',
+        'text-xs sm:text-sm text-muted-foreground leading-relaxed pt-0.5 *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground',
         className,
       )}
       {...props}

@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  Button,
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
+  IconButton,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
@@ -48,7 +48,7 @@ export function DailyGoalWidget() {
 
   if (isLoading || !progressData) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-5 flex flex-col items-center justify-center min-h-[220px]">
+      <Card className="p-5 flex flex-col items-center justify-center min-h-[220px]">
         <div className="animate-pulse flex flex-col items-center gap-3">
           <div className="h-28 w-28 rounded-full bg-muted/40" />
           <div className="h-3.5 w-24 bg-muted/40 rounded" />
@@ -58,7 +58,7 @@ export function DailyGoalWidget() {
   }
 
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs p-5 flex flex-col justify-between overflow-hidden relative">
+    <Card className="p-5 flex flex-col justify-between overflow-hidden relative">
       {/* Background glow effect */}
       <div
         className={cn(
@@ -77,18 +77,13 @@ export function DailyGoalWidget() {
             {t('learningProgress')}
           </CardDescription>
         </div>
-        <Button
-          variant="ghost"
-          size="icon-sm"
+        <IconButton
           onClick={() => presentDailyGoalDialog()}
           aria-label={t('setDailyGoal')}
           title={t('setDailyGoal')}
         >
-          <Icons
-            name="settings"
-            className="h-4 w-4 text-muted-foreground hover:text-foreground"
-          />
-        </Button>
+          <Icons name="settings" className="h-4 w-4" />
+        </IconButton>
       </CardHeader>
 
       {/* Semi-Circle Arc Gauge */}

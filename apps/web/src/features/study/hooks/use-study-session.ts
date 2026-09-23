@@ -44,6 +44,27 @@ export function useStudySession({
   const tFolders = useTranslations('Vocabulary.Folders');
   const { settings, currentQuotaConfig } = useStudySettings();
 
+  const [sessionQuota, setSessionQuota] = useState(() => ({
+    newWordsCount: currentQuotaConfig.newWordsCount || 5,
+    targetCount:
+      settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
+  }));
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSessionQuota({
+        newWordsCount: currentQuotaConfig.newWordsCount || 5,
+        targetCount:
+          settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
+      });
+    }
+  }, [
+    isOpen,
+    currentQuotaConfig.newWordsCount,
+    currentQuotaConfig.targetCount,
+    settings.wordsPerSession,
+  ]);
+
   const resolvedMode = useMemo(() => {
     if (mode) return mode;
     return isReviewMode
@@ -63,17 +84,16 @@ export function useStudySession({
         cards,
         selectedTopic,
         resolvedMode,
-        currentQuotaConfig.newWordsCount || 5,
-        settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
+        sessionQuota.newWordsCount,
+        sessionQuota.targetCount,
         tFolders('generalTopic'),
       ),
     [
       cards,
       selectedTopic,
       resolvedMode,
-      currentQuotaConfig.newWordsCount,
-      currentQuotaConfig.targetCount,
-      settings.wordsPerSession,
+      sessionQuota.newWordsCount,
+      sessionQuota.targetCount,
       tFolders,
     ],
   );

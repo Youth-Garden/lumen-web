@@ -37,7 +37,9 @@ describe('usePreferencesStore', () => {
   it('should update accent and quota preset correctly', () => {
     act(() => {
       usePreferencesStore.getState().setAccent(PronunciationAccent.UK);
-      usePreferencesStore.getState().setLessonQuotaPreset(LessonQuotaPreset.FEW);
+      usePreferencesStore
+        .getState()
+        .setLessonQuotaPreset(LessonQuotaPreset.FEW);
     });
 
     expect(usePreferencesStore.getState().accent).toBe(PronunciationAccent.UK);

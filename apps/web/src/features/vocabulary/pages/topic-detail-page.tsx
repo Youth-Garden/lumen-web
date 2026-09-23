@@ -116,6 +116,21 @@ export function TopicDetailPage() {
       }
     }
 
+    if (mode === StudySessionMode.PRACTICE) {
+      const learned = flashcards.filter(
+        (c) =>
+          (c.level ?? 0) >= 1 ||
+          (c.learningStep ?? 0) >= 1 ||
+          (c.masteryScore ?? 0) > 0 ||
+          Boolean(c.isWilted),
+      );
+      if (learned.length === 0) {
+        toast.info(t('noLearnedWordsToPractice'));
+        startStudy(StudySessionMode.LEARN_NEW);
+        return;
+      }
+    }
+
     presentStudyView({
       cards: flashcards,
       selectedTopic: topicName,

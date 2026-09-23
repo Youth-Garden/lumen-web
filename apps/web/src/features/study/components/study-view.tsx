@@ -96,7 +96,6 @@ export function StudyView({
     handleSelectChoiceOption,
     handleSubmitTyping,
     handleContinueFeedback,
-    handleRestart,
     handlePlayUsAudio,
     handlePlayUkAudio,
     handlePlayAudio,
@@ -148,16 +147,7 @@ export function StudyView({
         }
       }}
     >
-      <DialogContent
-        variant="fullscreen"
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            e.stopPropagation();
-            handleRequestExit();
-          }
-        }}
-      >
+      <DialogContent variant="fullscreen">
         <DialogTitle className="sr-only">
           {sessionMode === StudySessionMode.FLASHCARD
             ? t('flashcards')
@@ -175,7 +165,7 @@ export function StudyView({
             progressPercent={progressPercent}
             showShortcuts={showShortcuts}
             onToggleShortcuts={toggleShortcuts}
-            onSaveAndClose={handleRequestExit}
+            onSaveAndClose={handleConfirmSaveAndExit}
             onOpenSettings={() => presentSettings({})}
           />
 
@@ -343,10 +333,7 @@ export function StudyView({
             ) : (
               <div className="w-full max-w-xl my-auto">
                 <StudyCompleted
-                  totalInBatch={poolCards.length}
-                  masteredCount={masteredIds.length}
                   missedWords={missedWordsList}
-                  onRestart={handleRestart}
                   onClose={() => {
                     handleSaveProgress();
                     unblockAndExit();

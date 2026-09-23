@@ -10,8 +10,8 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 
-import { StreakFreezeIcon } from '@/shared/components/streak-icon';
 import type { DashboardProgressResponse } from '@/services/progress';
+import { StreakFreezeIcon } from '@/shared/components/streak-icon';
 
 interface StreakFreezeCardProps {
   dashboardData?: DashboardProgressResponse;
@@ -27,7 +27,7 @@ export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
   const maxFreezes = 5;
 
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">

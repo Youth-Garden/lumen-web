@@ -1,10 +1,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useMemo, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { Icons } from '@lumen/uikit/icons';
 import { Button } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
 
 interface StudyBottomActionBarProps {
@@ -23,14 +23,6 @@ export function StudyBottomActionBar({
 }: StudyBottomActionBarProps) {
   const t = useTranslations('Vocabulary.Study');
 
-  const shouldAnimate = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    const now = Date.now();
-    const isRecent = now - lastActionBarTimestamp < 600;
-    lastActionBarTimestamp = now;
-    return !isRecent;
-  }, []);
-
   useEffect(() => {
     lastActionBarTimestamp = Date.now();
     return () => {
@@ -41,8 +33,7 @@ export function StudyBottomActionBar({
   return (
     <div
       className={cn(
-        'fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl border border-border/80 px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2.5 max-w-fit',
-        shouldAnimate && 'animate-in slide-in-from-bottom duration-200',
+        'fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl border border-border/80 px-2.5 py-2 rounded-3xl shadow-2xl flex items-center gap-2.5 max-w-fit',
       )}
     >
       {/* Button 1: Learn New */}

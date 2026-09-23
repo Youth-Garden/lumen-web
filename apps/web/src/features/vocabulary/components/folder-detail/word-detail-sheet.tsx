@@ -6,13 +6,14 @@ import { useEffect, useState } from 'react';
 
 import {
   Button,
+  IconButton,
   ScrollArea,
   Sheet,
   SheetClose,
   SheetContent,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { type PortalProps, usePortal } from '@lumen/uikit/portal';
+import { usePortal, type PortalProps } from '@lumen/uikit/portal';
 
 import { useReviewFlashcard } from '@/features/study/hooks';
 import {
@@ -129,11 +130,9 @@ export function WordDetailSheet({
             )}
             <div className="flex-1" />
             <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon-sm"
+              <IconButton
                 type="button"
-                className="text-muted-foreground hover:text-foreground shrink-0"
+                className="shrink-0"
                 onClick={() =>
                   presentSaveToFolder({
                     wordId: word?.wordId || word?.id || '',
@@ -143,18 +142,8 @@ export function WordDetailSheet({
                 title={t('saveToFolder')}
               >
                 <Icons name="folder-plus" className="h-4 w-4" />
-              </Button>
-              <SheetClose
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="text-muted-foreground hover:text-foreground shrink-0"
-                  />
-                }
-              >
-                <Icons name="x" className="h-4 w-4" />
-              </SheetClose>
+              </IconButton>
+              <SheetClose />
             </div>
           </div>
 

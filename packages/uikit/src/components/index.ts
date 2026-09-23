@@ -1,8 +1,10 @@
 export * from './ui/avatar';
 export * from './ui/backdrop';
+export * from './ui/badge';
 export * from './ui/breadcrumb';
 export * from './ui/open-effect';
 export * from './ui/button';
+
 export * from './ui/command';
 export * from './ui/radial-progress';
 export * from './ui/card';
@@ -27,6 +29,7 @@ export * from './ui/segmented-tabs';
 export * from './ui/logo';
 export {
   useFormField,
+  useZodForm,
   Form,
   FormItem,
   FormLabel,

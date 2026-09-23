@@ -1,8 +1,8 @@
 'use client';
 
-import React, { CSSProperties, ReactNode } from 'react';
 import { useMeasure } from '@lumen/hooks';
 import { cn } from '@lumen/uikit/utils';
+import React, { CSSProperties, ReactNode } from 'react';
 
 interface NeonColorsProps {
   firstColor: string;
@@ -51,7 +51,7 @@ export const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
         } as CSSProperties
       }
       className={cn(
-        'relative z-10 size-full rounded-[var(--border-radius)]',
+        'relative z-10 size-full rounded-(--border-radius)',
         className,
       )}
       {...props}

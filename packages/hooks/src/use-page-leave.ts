@@ -1,27 +1,24 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
+import { useEventListener } from './use-event-listener';
 
 export function usePageLeave(onLeave: () => void): void {
   const onLeaveRef = useRef(onLeave);
   onLeaveRef.current = onLeave;
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+  const documentRef = useRef<Document | null>(
+    typeof document !== 'undefined' ? document : null,
+  );
 
-    const handleMouseLeave = (event: MouseEvent) => {
-      const from =
-        event.relatedTarget ||
-        (event as unknown as { toElement: Element }).toElement;
-      if (!from) {
-        onLeaveRef.current();
-      }
-    };
-
-    document.addEventListener('mouseout', handleMouseLeave);
-
-    return () => {
-      document.removeEventListener('mouseout', handleMouseLeave);
-    };
+  const handleMouseLeave = useCallback((event: MouseEvent) => {
+    const from =
+      event.relatedTarget ||
+      (event as unknown as { toElement: Element }).toElement;
+    if (!from) {
+      onLeaveRef.current();
+    }
   }, []);
+
+  useEventListener('mouseout', handleMouseLeave, documentRef);
 }

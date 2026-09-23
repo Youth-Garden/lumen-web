@@ -77,9 +77,11 @@ export const registry: Record<
   // Status & Feedback
   info: LucideIcons.Info,
   danger: LucideIcons.AlertTriangle,
+  'alert-circle': LucideIcons.AlertCircle,
   star: LucideIcons.Star,
   'loader-2': LucideIcons.Loader2,
   activity: LucideIcons.Activity,
+  target: LucideIcons.Target,
   zap: LucideIcons.Zap,
   sparkles: LucideIcons.Sparkles,
   flag: LucideIcons.Flag,
@@ -105,10 +107,12 @@ export const registry: Record<
   'book-open': LucideIcons.BookOpen,
   book: LucideIcons.Book,
   'book-marked': LucideIcons.Bookmark,
+  bookmark: LucideIcons.Bookmark,
   newspaper: LucideIcons.Newspaper,
   'file-text': LucideIcons.FileText,
   'file-question': LucideIcons.FileQuestion,
   folder: LucideIcons.Folder,
+  'folder-plus': LucideIcons.FolderPlus,
   layers: LucideIcons.Layers,
   tag: LucideIcons.Tag,
   languages: LucideIcons.Languages,
@@ -116,6 +120,8 @@ export const registry: Record<
   // Charts & Analytics
   'bar-chart': LucideIcons.BarChart3,
   'pie-chart': LucideIcons.PieChart,
+  'trending-down': LucideIcons.TrendingDown,
+  trendingDown: LucideIcons.TrendingDown,
 
   // Users & Identity
   user: LucideIcons.User,
@@ -136,6 +142,7 @@ export const registry: Record<
   award: LucideIcons.Award,
   flame: LucideIcons.Flame,
   clock: LucideIcons.Clock,
+  droplet: LucideIcons.Droplet,
   cardiology: LucideIcons.HeartPulse,
   'plant-growth': PlantGrowthIcon,
   'plant-stage-0': PlantStage0Icon,
@@ -154,6 +161,7 @@ export const registry: Record<
   italic: LucideIcons.Italic,
   strikethrough: LucideIcons.Strikethrough,
   'heading-2': LucideIcons.Heading2,
+  'edit-3': LucideIcons.Edit3,
   list: LucideIcons.List,
   'list-ordered': LucideIcons.ListOrdered,
   quote: LucideIcons.Quote,
@@ -166,6 +174,7 @@ export const registry: Record<
   settings: LucideIcons.Settings,
   'log-out': LucideIcons.LogOut,
   more: LucideIcons.MoreHorizontal,
+  'more-horizontal': LucideIcons.MoreHorizontal,
 
   // Theme & Brand
   sun: LucideIcons.Sun,

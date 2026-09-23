@@ -1,7 +1,9 @@
-import { useLayoutEffect } from 'react';
+'use client';
+
+import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect';
 
 export function useLockBodyScroll(locked: boolean = true): void {
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!locked || typeof document === 'undefined') return;
 
     const originalOverflow = document.body.style.overflow;

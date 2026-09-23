@@ -1,13 +1,13 @@
 'use client';
 
 import { useToggle } from '@lumen/hooks';
-import { Button } from '@lumen/uikit/components';
+import { IconButton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { ComponentProps, useCallback } from 'react';
+import { ComponentProps, useCallback, useEffect, useRef } from 'react';
 
 export interface AudioButtonProps extends Omit<
-  ComponentProps<typeof Button>,
+  ComponentProps<typeof IconButton>,
   'onClick'
 > {
   url: string;
@@ -23,6 +23,17 @@ export function AudioButton({
   ...props
 }: AudioButtonProps) {
   const [isPlaying, , setIsPlaying] = useToggle(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastPlayTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+    };
+  }, []);
 
   const handlePlay = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -31,11 +42,25 @@ export function AudioButton({
 
       if (!url) return;
 
+      const now = Date.now();
+      if (now - lastPlayTimeRef.current < 350) {
+        return;
+      }
+      lastPlayTimeRef.current = now;
+
       try {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
+
         const audio = new Audio(url);
+        audioRef.current = audio;
         setIsPlaying(true);
         audio.play().catch((err) => {
-          console.error(err);
+          if ((err as Error)?.name !== 'AbortError') {
+            console.error(err);
+          }
           setIsPlaying(false);
         });
         audio.onended = () => setIsPlaying(false);
@@ -49,9 +74,7 @@ export function AudioButton({
   );
 
   return (
-    <Button
-      variant="ghost"
-      size="icon-sm"
+    <IconButton
       className={cn(isPlaying && 'text-primary bg-muted', className)}
       onClick={handlePlay}
       {...props}
@@ -67,6 +90,6 @@ export function AudioButton({
           iconClassName,
         )}
       />
-    </Button>
+    </IconButton>
   );
 }

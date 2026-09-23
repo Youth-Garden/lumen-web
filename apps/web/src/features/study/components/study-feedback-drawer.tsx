@@ -1,6 +1,7 @@
 'use client';
 
 import type { StudyFeedbackState } from '@/features/study/types/study.types';
+import { WordDetailTrigger } from '@/features/vocabulary/components/word-detail-trigger';
 import {
   Button,
   Sheet,
@@ -63,20 +64,14 @@ export function StudyFeedbackDrawer({
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div
+            <div className="flex items-center gap-1.5">
+              <Icons
+                name={isCorrect ? 'check' : 'x'}
                 className={cn(
-                  'w-7 h-7 rounded-full flex items-center justify-center shrink-0',
-                  isCorrect
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : 'bg-rose-500/20 text-rose-400',
+                  'w-5 h-5 stroke-[3] shrink-0',
+                  isCorrect ? 'text-emerald-400' : 'text-rose-400',
                 )}
-              >
-                <Icons
-                  name={isCorrect ? 'check' : 'x'}
-                  className="w-4 h-4 stroke-[3]"
-                />
-              </div>
+              />
               <h3
                 className={cn(
                   'text-lg sm:text-xl font-bold tracking-tight',
@@ -104,9 +99,10 @@ export function StudyFeedbackDrawer({
                 </p>
               )}
 
-              <p className="text-base sm:text-lg font-black text-white underline underline-offset-4 decoration-current/40 truncate">
-                {feedback.card.term}
-              </p>
+              <WordDetailTrigger
+                word={feedback.card}
+                className="text-base sm:text-lg font-black text-white truncate max-w-full block"
+              />
 
               <p className="text-xs sm:text-sm text-white/80 leading-relaxed line-clamp-2">
                 {feedback.partOfSpeech && (

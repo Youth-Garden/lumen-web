@@ -13,15 +13,15 @@ export function HeatmapSkeleton({ yearsCount = 1 }: HeatmapSkeletonProps) {
     <div className="flex flex-col lg:flex-row items-stretch gap-6 animate-pulse">
       {/* Grid Skeleton */}
       <div className="flex-1 min-w-0 flex flex-col justify-between gap-3">
-        <div className="overflow-x-auto pb-1 scrollbar-thin">
-          <div className="flex gap-2.5 w-max py-1">
-            <div className="flex flex-col gap-1 pt-5 shrink-0">
-              <Skeleton className="w-4 h-3 rounded" />
-              <Skeleton className="w-4 h-3 rounded" />
-              <Skeleton className="w-4 h-3 rounded" />
-            </div>
+        <div className="flex gap-2.5 items-start">
+          <div className="flex flex-col gap-1 pt-5 py-1 shrink-0">
+            <Skeleton className="w-4 h-3 rounded" />
+            <Skeleton className="w-4 h-3 rounded" />
+            <Skeleton className="w-4 h-3 rounded" />
+          </div>
 
-            <div className="flex flex-col gap-1.5">
+          <div className="flex-1 min-w-0 overflow-x-auto pb-1 scrollbar-thin">
+            <div className="flex flex-col gap-1.5 w-max py-1">
               <div className="flex gap-2 h-3.5">
                 {Array.from({ length: 12 }).map((_, i) => (
                   <Skeleton key={i} className="w-8 h-3 rounded shrink-0 mr-2" />

@@ -78,7 +78,7 @@ export function MasteryOverviewCard({
   ];
 
   return (
-    <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-3">
+    <Card className="p-5 space-y-3">
       {/* Header using Lumen primary */}
       <div
         role={onViewDueWords ? 'button' : undefined}

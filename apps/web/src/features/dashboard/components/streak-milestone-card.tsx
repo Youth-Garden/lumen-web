@@ -1,10 +1,9 @@
-'use client';
-
 import {
   LongestStreakIcon,
   StreakFreezeIcon,
 } from '@/shared/components/streak-icon';
 import {
+  Badge,
   Card,
   CardContent,
   CardDescription,
@@ -36,22 +35,28 @@ export function StreakMilestoneCard({
 
   if (isLoading) {
     return (
-      <Card className="rounded-3xl border-none bg-card shadow-xs p-4 sm:p-5 space-y-3">
+      <Card className="p-4 sm:p-5 space-y-3">
         <Skeleton className="h-6 w-36 rounded-lg" />
         <Skeleton className="h-24 w-full rounded-2xl" />
       </Card>
     );
   }
 
+  const streakUnit = streak === 1 ? t('daySingular') : t('days');
+  const freezeUnit =
+    streakFreezes === 1 ? t('freezeShieldSingle') : t('freezeShieldPlural');
+  const longestStreakDays = Math.max(streak, 1);
+  const longestStreakUnit =
+    longestStreakDays === 1 ? t('daySingular') : t('days');
+
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
-      <CardHeader className="px-5 pt-3.5 pb-0">
+    <Card className="h-full flex flex-col justify-between">
+      <CardHeader className="px-5 pt-4 pb-0">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Icons
-              name="trophy"
-              className="h-4.5 w-4.5 text-amber-500 shrink-0"
-            />
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 shrink-0">
+              <Icons name="trophy" className="size-4" />
+            </div>
             <div>
               <CardTitle className="text-sm font-bold font-heading text-foreground">
                 {t('streakMilestoneTitle')}
@@ -62,20 +67,20 @@ export function StreakMilestoneCard({
             </div>
           </div>
 
-          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+          <Badge variant="warning" size="sm" className="shrink-0 font-bold">
             {t('nextMilestoneLabel', { days: milestone.nextMilestone })}
-          </span>
+          </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="px-5 pb-3 pt-1 flex-1 flex flex-col justify-between gap-2">
+      <CardContent className="px-5 pb-3.5 pt-2 flex-1 flex flex-col justify-between gap-3">
         {/* Milestone Progress Bar */}
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5">
-              <Icons name="award" className="h-4 w-4 text-amber-500 shrink-0" />
+              <Icons name="award" className="size-4 text-amber-500 shrink-0" />
               <span className="text-xs font-bold text-foreground">
-                {streak} {t('days')}{' '}
+                {streak} {streakUnit}{' '}
                 <span className="text-[11px] text-muted-foreground font-normal">
                   ({milestone.progressPercent}%)
                 </span>
@@ -86,50 +91,63 @@ export function StreakMilestoneCard({
             </span>
           </div>
 
-          <div className="w-full h-2 bg-muted/40 rounded-full overflow-hidden p-0.5">
+          <div className="w-full h-2 bg-muted/60 dark:bg-muted/40 rounded-full overflow-hidden">
             <div
-              className="h-full bg-linear-to-r from-amber-400 via-amber-500 to-orange-500 rounded-full transition-all duration-500 shadow-2xs"
+              className="h-full bg-linear-to-r from-amber-400 via-amber-500 to-orange-500 rounded-full transition-all duration-500"
               style={{ width: `${Math.max(6, milestone.progressPercent)}%` }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+          <div className="flex items-center justify-between text-[10px] text-muted-foreground font-medium">
             <span>
-              {milestone.prevMilestone} {t('days')}
+              {milestone.prevMilestone}{' '}
+              {milestone.prevMilestone === 1 ? t('daySingular') : t('days')}
             </span>
             <span>
-              {milestone.nextMilestone} {t('days')} 🏆
+              {milestone.nextMilestone} {t('days')}
             </span>
           </div>
         </div>
 
-        {/* Protection & Record Badges */}
-        <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/40">
+        {/* Protection & Record Stat Mini-Tiles */}
+        <div className="grid grid-cols-2 gap-2 pt-1">
           {/* Streak Freeze Inventory */}
-          <div className="flex items-center gap-2 py-0.5">
-            <StreakFreezeIcon size={16} />
-            <div className="min-w-0">
-              <p className="text-[10px] text-muted-foreground font-medium truncate">
+          <Card
+            variant="muted"
+            size="sm"
+            className="flex-row items-center gap-2.5 p-2.5 rounded-2xl"
+          >
+            <div className="flex size-7 shrink-0 items-center justify-center">
+              <StreakFreezeIcon size={22} />
+            </div>
+            <div className="min-w-0 flex-1 flex flex-col justify-center">
+              <p className="text-[10px] text-muted-foreground font-medium truncate leading-tight">
                 {t('streakProtection')}
               </p>
-              <p className="text-xs font-bold text-foreground truncate">
-                {streakFreezes} {t('streakFreezesCount', { count: '' }).trim()}
+              <p className="text-xs font-bold text-foreground truncate leading-snug">
+                {streakFreezes} {freezeUnit}
               </p>
             </div>
-          </div>
+          </Card>
 
           {/* Longest Streak Record */}
-          <div className="flex items-center gap-2 py-0.5">
-            <LongestStreakIcon size={16} />
-            <div className="min-w-0">
-              <p className="text-[10px] text-muted-foreground font-medium truncate">
-                {t('longestStreakRecord', { days: '' }).replace(':', '').trim()}
+          <Card
+            variant="muted"
+            size="sm"
+            className="flex-row items-center gap-2.5 p-2.5 rounded-2xl"
+          >
+            <div className="flex size-7 shrink-0 items-center justify-center">
+              <LongestStreakIcon size={22} />
+            </div>
+            <div className="min-w-0 flex-1 flex flex-col justify-center">
+              <p className="text-[10px] text-muted-foreground font-medium truncate leading-tight">
+                {t('longestStreakTitle')}
               </p>
-              <p className="text-xs font-bold text-foreground truncate">
-                {Math.max(streak, 1)} {t('days')}
+              <p className="text-xs font-bold text-foreground truncate leading-snug">
+                {longestStreakDays} {longestStreakUnit}
               </p>
             </div>
-          </div>
+          </Card>
         </div>
       </CardContent>
     </Card>

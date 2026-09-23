@@ -1,8 +1,8 @@
 'use client';
 
+import { Icons } from '@lumen/uikit/icons';
 import { useTheme } from 'next-themes';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
-import { Icons } from '@lumen/uikit/icons';
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme } = useTheme();
@@ -38,15 +38,13 @@ const Toaster = ({ ...props }: ToasterProps) => {
         style: {
           background: 'var(--card)',
           color: 'var(--card-foreground)',
-          border: '1px solid var(--border)',
-          borderRadius: '12px',
+          borderRadius: '16px',
           padding: '10px 14px',
           fontSize: '13px',
-          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.08)',
         },
         classNames: {
-          toast:
-            'group toast !min-h-0 !w-auto !max-w-md font-sans border-border/80 shadow-md',
+          toast: 'group toast !min-h-0 !w-auto !max-w-md font-sans shadow-md',
           title: 'font-medium text-xs text-foreground tracking-tight',
           description: 'text-muted-foreground text-[11px] leading-snug',
           actionButton:

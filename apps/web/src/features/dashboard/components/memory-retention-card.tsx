@@ -89,7 +89,7 @@ export function MemoryRetentionCard({
   }, [levels, totalLearnedWords, safeTotal, t]);
 
   return (
-    <Card className="rounded-3xl border-none bg-card shadow-xs overflow-hidden h-full flex flex-col justify-between">
+    <Card className="h-full flex flex-col justify-between overflow-hidden">
       <CardHeader className="pb-1">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-bold text-foreground">

@@ -1,19 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import * as React from 'react';
 import {
+  IconButton,
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from '../components/ui/tooltip';
-import { Button } from '../components/ui/button';
+  TooltipTrigger,
+} from '../components';
 import { Icons } from '../icons';
 
 const meta = {
-  title: 'UI/Tooltip',
+  title: 'Feedback/Tooltip',
   component: Tooltip,
   parameters: {
-    layout: 'padded',
+    layout: 'centered',
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof Tooltip>;
@@ -28,9 +27,9 @@ export const Default: Story = {
         <Tooltip>
           <TooltipTrigger
             render={
-              <Button variant="outline" size="icon">
+              <IconButton variant="outline">
                 <Icons name="volume-2" className="w-4 h-4" />
-              </Button>
+              </IconButton>
             }
           />
           <TooltipContent side="top">Listen pronunciation (US)</TooltipContent>
@@ -39,9 +38,9 @@ export const Default: Story = {
         <Tooltip>
           <TooltipTrigger
             render={
-              <Button variant="secondary" size="icon">
+              <IconButton variant="secondary">
                 <Icons name="bookmark" className="w-4 h-4" />
-              </Button>
+              </IconButton>
             }
           />
           <TooltipContent side="bottom">Save to quick review</TooltipContent>

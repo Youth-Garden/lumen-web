@@ -1,5 +1,6 @@
 'use client';
 
+import { Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
 import React from 'react';
@@ -83,9 +84,13 @@ export function HeatmapInsightsSidebar({
         </div>
       </div>
 
-      <div className="p-2.5 rounded-2xl bg-muted/30 border border-border/40 text-[11px] text-muted-foreground leading-relaxed">
+      <Card
+        variant="muted"
+        size="sm"
+        className="p-2.5 text-[11px] text-muted-foreground leading-relaxed"
+      >
         {t('fsrsTip')}
-      </div>
+      </Card>
     </div>
   );
 }

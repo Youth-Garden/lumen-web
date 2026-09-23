@@ -2,6 +2,7 @@
 
 import {
   Button,
+  Card,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -38,19 +39,19 @@ export function MasteryFlowerDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent className="max-w-md max-h-[88vh] p-6 rounded-xl border-none shadow-2xl bg-card flex flex-col overflow-hidden transition-all duration-200">
-        <DialogHeader align="center" className="pb-2 shrink-0">
-          <DialogTitle className="text-lg font-bold text-foreground">
-            {t('dialogTitle')}
-          </DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground pt-0.5 text-center">
-            {t('dialogDescription')}
-          </DialogDescription>
+      <DialogContent className="sm:max-w-md max-h-[88vh] flex flex-col overflow-hidden">
+        <DialogHeader align="center">
+          <DialogTitle>{t('dialogTitle')}</DialogTitle>
+          <DialogDescription>{t('dialogDescription')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
           {data?.term && (
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
+            <Card
+              variant="muted"
+              size="sm"
+              className="flex-row items-center gap-3 p-3"
+            >
               <PlantMasteryRing
                 level={currentLevel}
                 isWilted={isWilted}
@@ -88,7 +89,7 @@ export function MasteryFlowerDialog({
                   </>
                 )}
               </div>
-            </div>
+            </Card>
           )}
 
           <div className="space-y-2.5">
@@ -97,7 +98,11 @@ export function MasteryFlowerDialog({
             </p>
 
             <div className="space-y-2">
-              <div className="p-3 rounded-lg bg-background flex items-center gap-3">
+              <Card
+                variant="muted"
+                size="sm"
+                className="flex-row items-center gap-3 p-3"
+              >
                 <PlantMasteryRing level={0} size={38} />
                 <div className="space-y-0.5 flex-1">
                   <p className="text-sm font-bold text-foreground">
@@ -107,9 +112,9 @@ export function MasteryFlowerDialog({
                     {t('step1Desc')}
                   </p>
                 </div>
-              </div>
+              </Card>
 
-              <div className="p-4 rounded-2xl bg-background space-y-3">
+              <Card variant="muted" size="sm" className="p-4 space-y-3">
                 <div className="flex items-center justify-around px-1 py-2">
                   {[1, 2, 3, 4, 5].map((stageLevel) => (
                     <div
@@ -132,9 +137,13 @@ export function MasteryFlowerDialog({
                     {t('step2Desc')}
                   </p>
                 </div>
-              </div>
+              </Card>
 
-              <div className="p-3 rounded-lg bg-background flex items-center gap-3">
+              <Card
+                variant="muted"
+                size="sm"
+                className="flex-row items-center gap-3 p-3"
+              >
                 <PlantMasteryRing level={5} size={38} />
                 <div className="space-y-0.5 flex-1">
                   <p className="text-sm font-bold text-foreground">
@@ -144,7 +153,7 @@ export function MasteryFlowerDialog({
                     {t('step3Desc')}
                   </p>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
 
@@ -158,7 +167,11 @@ export function MasteryFlowerDialog({
               {t('stage2Desc')}
             </p>
 
-            <div className="p-3 rounded-lg bg-background flex items-center gap-3">
+            <Card
+              variant="muted"
+              size="sm"
+              className="flex-row items-center gap-3 p-3"
+            >
               <PlantMasteryRing level={5} isWilted size={40} />
               <div className="space-y-0.5 text-xs flex-1">
                 <p className="font-bold text-foreground">
@@ -168,7 +181,7 @@ export function MasteryFlowerDialog({
                   {t('waterPlantDesc')}
                 </p>
               </div>
-            </div>
+            </Card>
           </div>
 
           {/* STAGE 3: 5 MEMORY LEVELS */}
@@ -223,6 +236,7 @@ export function MasteryFlowerDialog({
         <div className="pt-3 shrink-0">
           <Button
             variant="default"
+            size="default"
             className="w-full"
             onClick={() => onDismiss?.()}
           >

@@ -1,10 +1,9 @@
 'use client';
 
-import { Button } from '@lumen/uikit/components';
+import { Button, IconButton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import React from 'react';
 
 interface StudyHeaderProps {
   progressPercent: number;
@@ -26,19 +25,17 @@ export function StudyHeader({
   return (
     <header className="relative w-full flex items-center justify-between px-4 sm:px-8 py-3.5 shrink-0">
       <div className="flex items-center gap-2 z-10">
-        <Button
-          variant="ghost"
-          size="icon-sm"
+        <IconButton
           type="button"
           onClick={onSaveAndClose}
           title={t('saveAndClose')}
         >
           <Icons name="save" className="w-4 h-4" />
-        </Button>
+        </IconButton>
 
         <Button
           variant="ghost"
-          size="sm"
+          size="xs"
           type="button"
           onClick={onToggleShortcuts}
         >
@@ -60,15 +57,13 @@ export function StudyHeader({
 
       {/* Right: Settings modal trigger only */}
       <div className="flex items-center gap-2 z-10">
-        <Button
-          variant="ghost"
-          size="icon-sm"
+        <IconButton
           type="button"
           onClick={onOpenSettings}
           title={t('settingsTitle')}
         >
           <Icons name="settings" className="w-4 h-4" />
-        </Button>
+        </IconButton>
       </div>
     </header>
   );

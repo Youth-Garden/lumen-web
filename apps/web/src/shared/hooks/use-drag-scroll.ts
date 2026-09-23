@@ -1,74 +1,65 @@
-import { useEffect, useRef } from 'react';
+'use client';
+
+import { useCallback, useRef } from 'react';
+import { useEventListener } from '@lumen/hooks';
 
 export function useDragScroll<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T>(null);
+  const isDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const hasMovedRef = useRef(false);
 
-  useEffect(() => {
+  const onMouseDown = useCallback((event: MouseEvent) => {
+    if (event.button !== 0 || !ref.current) return;
+    isDownRef.current = true;
+    hasMovedRef.current = false;
+    startXRef.current = event.pageX - ref.current.offsetLeft;
+    scrollLeftRef.current = ref.current.scrollLeft;
+  }, []);
+
+  const onMouseMove = useCallback((event: MouseEvent) => {
+    if (!isDownRef.current || !ref.current) return;
+    const x = event.pageX - ref.current.offsetLeft;
+    const walk = (x - startXRef.current) * 1.3;
+    if (Math.abs(walk) > 4) {
+      hasMovedRef.current = true;
+    }
+    ref.current.scrollLeft = scrollLeftRef.current - walk;
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    isDownRef.current = false;
+  }, []);
+
+  const onMouseLeave = useCallback(() => {
+    isDownRef.current = false;
+  }, []);
+
+  const onClickCapture = useCallback((event: MouseEvent) => {
+    if (hasMovedRef.current) {
+      event.stopPropagation();
+      event.preventDefault();
+      hasMovedRef.current = false;
+    }
+  }, []);
+
+  const onWheel = useCallback((event: WheelEvent) => {
     const element = ref.current;
     if (!element) return;
 
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-    let hasMoved = false;
-
-    const onMouseDown = (event: MouseEvent) => {
-      if (event.button !== 0) return;
-      isDown = true;
-      hasMoved = false;
-      startX = event.pageX - element.offsetLeft;
-      scrollLeft = element.scrollLeft;
-    };
-
-    const onMouseMove = (event: MouseEvent) => {
-      if (!isDown) return;
-      const x = event.pageX - element.offsetLeft;
-      const walk = (x - startX) * 1.3;
-      if (Math.abs(walk) > 4) {
-        hasMoved = true;
-      }
-      element.scrollLeft = scrollLeft - walk;
-    };
-
-    const onMouseUp = () => {
-      isDown = false;
-    };
-
-    const onMouseLeave = () => {
-      isDown = false;
-    };
-
-    const onClickCapture = (event: MouseEvent) => {
-      if (hasMoved) {
-        event.stopPropagation();
-        event.preventDefault();
-        hasMoved = false;
-      }
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      if (event.deltaY !== 0 && element.scrollWidth > element.clientWidth) {
-        element.scrollLeft += event.deltaY;
-        event.preventDefault();
-      }
-    };
-
-    element.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    element.addEventListener('mouseleave', onMouseLeave);
-    element.addEventListener('click', onClickCapture, true);
-    element.addEventListener('wheel', onWheel, { passive: false });
-
-    return () => {
-      element.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      element.removeEventListener('mouseleave', onMouseLeave);
-      element.removeEventListener('click', onClickCapture, true);
-      element.removeEventListener('wheel', onWheel);
-    };
+    if (event.deltaY !== 0 && element.scrollWidth > element.clientWidth) {
+      element.scrollLeft += event.deltaY;
+      event.preventDefault();
+    }
   }, []);
+
+  useEventListener('mousedown', onMouseDown, ref);
+  useEventListener('mousemove', onMouseMove);
+  useEventListener('mouseup', onMouseUp);
+  useEventListener('mouseleave', onMouseLeave, ref);
+  useEventListener('click', onClickCapture, ref, true);
+  useEventListener('wheel', onWheel, ref, { passive: false });
 
   return ref;
 }

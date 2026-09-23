@@ -54,8 +54,8 @@ const DEFAULT_DAILY_GOAL_MINUTES = 15;
 const MINUTES_PER_ACTIVITY = 2;
 const MIN_ACTIVE_MINUTES = 5;
 
-/** In the 30-day view, only every Nth day gets an x-axis label. */
-const MONTH_TICK_INTERVAL = 5;
+/** In the 30-day view, display date label every 2 days for rich horizontal timeline. */
+const MONTH_TICK_INTERVAL = 2;
 
 /** Y-axis max = tallest value × headroom, rounded up to the next step. */
 const Y_AXIS_HEADROOM = 1.25;
@@ -275,7 +275,7 @@ function DayTick({ x = 0, y = 0, item, showTodayDot }: DayTickProps) {
         dy={14}
         textAnchor="middle"
         fill={item.isToday ? 'var(--primary)' : 'var(--muted-foreground)'}
-        fontSize={11}
+        fontSize={showTodayDot ? 11 : 10}
         fontWeight={item.isToday ? 700 : 500}
       >
         {item.tickLabel}
@@ -374,10 +374,7 @@ function StudyChartTooltip({ active, payload, goal }: StudyChartTooltipProps) {
 
 function StudyChartSkeleton() {
   return (
-    <Card
-      aria-busy="true"
-      className="space-y-4 rounded-3xl border-none bg-card p-6 shadow-xs"
-    >
+    <Card aria-busy="true" className="space-y-4 p-6">
       <div className="flex items-center justify-between">
         <Skeleton className="h-6 w-48 rounded-lg" />
         <Skeleton className="h-8 w-28 rounded-xl" />
@@ -427,7 +424,11 @@ function StudyChartSummary({
   ];
 
   return (
-    <dl className="grid grid-cols-3 divide-x divide-border/50 rounded-2xl bg-muted/40 py-3">
+    <Card
+      variant="muted"
+      size="sm"
+      className="grid grid-cols-3 divide-x divide-border/50 py-3 rounded-2xl"
+    >
       {items.map(({ key, label, value, suffix }) => (
         <div key={key} className="min-w-0 space-y-0.5 px-3 sm:px-4">
           <dt className="truncate text-xs text-muted-foreground">{label}</dt>
@@ -441,7 +442,7 @@ function StudyChartSummary({
           </dd>
         </div>
       ))}
-    </dl>
+    </Card>
   );
 }
 
@@ -474,11 +475,10 @@ function StudyBarChart({ data, stats, goal, isWeekView }: StudyBarChartProps) {
       <ChartContainer width="100%" height="100%">
         <BarChart data={data} margin={CHART_MARGIN}>
           <CartesianGrid
-            strokeDasharray="3 3"
-            vertical={true}
+            vertical={false}
             horizontal={true}
             stroke="var(--border)"
-            strokeOpacity={0.7}
+            strokeOpacity={0.6}
           />
 
           <XAxis
@@ -526,15 +526,15 @@ function StudyBarChart({ data, stats, goal, isWeekView }: StudyBarChartProps) {
               fill: 'var(--primary)',
               fontSize: 10,
               fontWeight: 600,
-              position: 'insideTopLeft',
+              position: 'insideTopRight',
               offset: 8,
             }}
           />
 
           <Bar
             dataKey="minutes"
-            radius={[6, 6, 2, 2]}
-            maxBarSize={isWeekView ? 36 : 10}
+            radius={[8, 8, 3, 3]}
+            barSize={isWeekView ? 70 : 30}
           >
             {/* Value labels would be unreadable on 30 slim bars. */}
             {isWeekView && (
@@ -587,7 +587,7 @@ export function WeeklyStudyChart({
   if (isLoading) return <StudyChartSkeleton />;
 
   return (
-    <Card className="flex h-full flex-col justify-between overflow-hidden rounded-3xl border-none bg-card shadow-xs">
+    <Card className="flex h-full flex-col justify-between overflow-hidden">
       <CardHeader className="flex flex-col justify-between gap-3 pb-2 sm:flex-row sm:items-center">
         <div className="space-y-0.5">
           <CardTitle className="font-heading text-lg font-bold text-foreground">

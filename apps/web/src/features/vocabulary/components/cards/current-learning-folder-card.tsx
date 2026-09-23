@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { getLocalizedText } from '@/features/vocabulary/utils';
 import type { Folder } from '@/services/vocabulary';
 import { useDragScroll } from '@/shared/hooks';
-import { Button, Card } from '@lumen/uikit/components';
+import { Button, Card, IconButton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
 interface CurrentLearningFolderCardProps {
@@ -56,7 +56,7 @@ export function CurrentLearningFolderCard({
       </div>
 
       {/* Main Card */}
-      <Card className="rounded-3xl border-none bg-card p-5 shadow-sm space-y-4">
+      <Card className="p-5 space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3.5 min-w-0 flex-1 text-left">
             <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs shadow-primary/20">
@@ -91,14 +91,9 @@ export function CurrentLearningFolderCard({
           </div>
 
           {onViewFolder && (
-            <Button
-              variant="text"
-              size="icon-sm"
-              onClick={onViewFolder}
-              aria-label={t('viewFolder')}
-            >
+            <IconButton onClick={onViewFolder} aria-label={t('viewFolder')}>
               <Icons name="chevron-right" className="h-4 w-4" />
-            </Button>
+            </IconButton>
           )}
         </div>
 
