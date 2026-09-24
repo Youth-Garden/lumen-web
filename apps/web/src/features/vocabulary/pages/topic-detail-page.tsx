@@ -10,7 +10,7 @@ import {
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { getLocalizedText, getLocalizedTopicName } from '@/features/vocabulary/utils';
 import {
   StudyView,
   type StudyViewData,
@@ -53,7 +53,11 @@ export function TopicDetailPage() {
     [topics, topicName],
   );
 
-  const topicViName = topicInfo?.topicVi || topicName;
+  const { primary: localizedTopicTitle } = getLocalizedTopicName(
+    topicName,
+    topicInfo?.topicVi,
+    locale,
+  );
   const flashcards = useMemo(
     () => flashcardsPage?.data ?? [],
     [flashcardsPage?.data],
@@ -75,10 +79,10 @@ export function TopicDetailPage() {
         });
       }
       items.push({
-        label: topicViName || topicName,
+        label: localizedTopicTitle || topicName,
         isLoading:
           (isLoadingTopics || isLoadingFlashcards) &&
-          !topicViName &&
+          !localizedTopicTitle &&
           !topicName,
       });
       return items;
@@ -88,7 +92,7 @@ export function TopicDetailPage() {
       folderDetail,
       folderDisplayName,
       isLoadingFolder,
-      topicViName,
+      localizedTopicTitle,
       topicName,
       isLoadingTopics,
       isLoadingFlashcards,
@@ -135,7 +139,7 @@ export function TopicDetailPage() {
       cards: flashcards,
       selectedTopic: topicName,
       mode,
-      folderName: topicViName || topicName,
+      folderName: localizedTopicTitle || topicName,
     });
   };
 
@@ -187,7 +191,7 @@ export function TopicDetailPage() {
         folderId={folderId}
         folderName={folderDisplayName}
         topicName={topicName}
-        topicViName={topicViName}
+        topicViName={localizedTopicTitle}
         flashcards={flashcards}
         onBackToTopics={handleBackToTopics}
       />

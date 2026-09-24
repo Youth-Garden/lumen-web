@@ -1,5 +1,9 @@
 'use client';
 
+import { DailyGoalDialog } from '@/features/dashboard/components/daily-goal-dialog';
+import { useProgressDashboard } from '@/features/dashboard/hooks/use-progress-dashboard';
+import { LanguageSwitcher } from '@/shared/components/language-switcher';
+import { useAuthStore } from '@/store/auth.store';
 import {
   Button,
   Card,
@@ -7,58 +11,22 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Input,
-  Label,
   ThemeSwitcher,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
-import { useProgressDashboard } from '@/features/dashboard/hooks/use-progress-dashboard';
-import { useProgressSettings } from '@/features/dashboard/hooks/use-progress-settings';
-import { useAuthStore } from '@/store/auth.store';
-
-import { LanguageSwitcher } from '@/shared/components/language-switcher';
 import { ProfileCard } from '../components/profile-card';
 import { StreakFreezeCard } from '../components/streak-freeze-card';
 
 export const SettingsPage = () => {
   const t = useTranslations('Settings');
   const user = useAuthStore((state) => state.user);
-  const { mutate: updateProgressSettings, isPending: isUpdatingProgress } =
-    useProgressSettings();
-
   const { data: dashboardData } = useProgressDashboard();
+  const [presentDailyGoalDialog] = usePortal(DailyGoalDialog);
 
-  const progressForm = useForm({
-    defaultValues: {
-      dailyGoalMinutes: 15,
-    },
-  });
-
-  useEffect(() => {
-    if (dashboardData) {
-      progressForm.reset({
-        dailyGoalMinutes: dashboardData.dailyGoalMinutes || 15,
-      });
-    }
-  }, [dashboardData, progressForm]);
-
-  const onProgressSubmit = progressForm.handleSubmit((data) => {
-    updateProgressSettings(
-      { dailyGoalMinutes: Number(data.dailyGoalMinutes) },
-      {
-        onSuccess: () => {
-          toast.success(t('goalsUpdateSuccess'));
-        },
-        onError: () => {
-          toast.error(t('goalsUpdateFailed'));
-        },
-      },
-    );
-  });
+  const dailyGoalMinutes = dashboardData?.dailyGoalMinutes || 15;
 
   return (
     <div className="w-full max-w-[680px] mx-auto space-y-6 pb-10">
@@ -125,28 +93,28 @@ export const SettingsPage = () => {
             <CardDescription>{t('goals.description')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={onProgressSubmit} className="flex items-end gap-4">
-              <div className="space-y-1.5 flex-1 max-w-xs">
-                <Label
-                  htmlFor="dailyGoalMinutes"
-                  className="text-xs font-semibold"
-                >
+            <div className="flex items-center justify-between gap-4 py-1">
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium text-foreground">
                   {t('goals.dailyGoalMinutes')}
-                </Label>
-                <Input
-                  id="dailyGoalMinutes"
-                  type="number"
-                  min="1"
-                  className="border-border/60"
-                  {...progressForm.register('dailyGoalMinutes')}
-                />
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t('goals.dailyGoalDescription')}
+                </p>
               </div>
-              <Button type="submit" size="sm" disabled={isUpdatingProgress}>
-                {isUpdatingProgress
-                  ? t('buttons.saving')
-                  : t('buttons.saveGoals')}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => presentDailyGoalDialog()}
+                className="gap-2 shrink-0 font-medium"
+              >
+                <span>{dailyGoalMinutes}m</span>
+                <Icons
+                  name="chevron-right"
+                  className="h-3.5 w-3.5 text-muted-foreground"
+                />
               </Button>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>

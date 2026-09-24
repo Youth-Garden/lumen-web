@@ -10,6 +10,7 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'style'> {
   variant?: 'bold' | 'linear';
   stage?: number;
   isWilted?: boolean;
+  percent?: number;
 }
 
 export type IconComponent = ComponentType<IconProps>;

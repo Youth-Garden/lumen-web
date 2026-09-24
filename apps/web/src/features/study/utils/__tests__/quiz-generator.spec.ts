@@ -44,11 +44,26 @@ describe('quiz-generator', () => {
   const pool = [cardA, cardB, cardC, cardD, cardE];
 
   describe('getCardPrimaryDefinition', () => {
-    it('should extract meaning and normalize part of speech', () => {
-      const card = createMockWord('1', 'run', 'chạy', 'v.');
-      const def = getCardPrimaryDefinition(card);
-      expect(def.meaning).toBe('chạy');
-      expect(def.partOfSpeech).toBe('verb');
+    it('should extract meaning and normalize part of speech based on locale', () => {
+      const card: VocabularyWord = {
+        id: '1',
+        term: 'run',
+        definitions: [
+          {
+            id: 'def-1',
+            partOfSpeech: 'v.',
+            definitionEn: 'to move fast',
+            translationVi: 'chạy',
+            examples: [],
+          },
+        ],
+      };
+      const defEn = getCardPrimaryDefinition(card, 'en');
+      expect(defEn.meaning).toBe('to move fast');
+      expect(defEn.partOfSpeech).toBe('verb');
+
+      const defVi = getCardPrimaryDefinition(card, 'vi');
+      expect(defVi.meaning).toBe('chạy');
     });
 
     it('should fall back to term when definition is missing', () => {

@@ -22,6 +22,7 @@ import {
   SidebarCloseIcon,
   SidebarOpenIcon,
   SidebarToggleIcon,
+  ProgressRingIcon,
 } from './svgs';
 import type { IconProps } from './types';
 
@@ -33,6 +34,7 @@ export const registry: Record<
   home: LucideIcons.Home,
   'layout-dashboard': LucideIcons.LayoutDashboard,
   menu: LucideIcons.Menu,
+  'progress-ring': ProgressRingIcon,
   'panel-left-close': SidebarCloseIcon,
   'panel-left-open': SidebarOpenIcon,
   'sidebar-toggle': SidebarToggleIcon,

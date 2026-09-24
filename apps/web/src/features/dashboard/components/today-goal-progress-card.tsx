@@ -2,6 +2,7 @@
 
 import { DailyGoalDialog } from '@/features/dashboard/components/daily-goal-dialog';
 import {
+  Badge,
   Card,
   CardContent,
   CardDescription,
@@ -12,6 +13,7 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
+import { cn } from '@lumen/uikit/utils';
 import { useTranslations } from 'next-intl';
 
 interface TodayGoalProgressCardProps {
@@ -34,14 +36,7 @@ export function TodayGoalProgressCard({
     Math.round((todayStudyMinutes / safeGoal) * 100),
   );
   const isTimeMet = todayStudyMinutes >= safeGoal;
-
-  // Cleanly scaled SVG ring
-  const size = 76;
-  const center = size / 2;
-  const strokeWidth = 6;
-  const radius = 32;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (timePercent / 100) * circumference;
+  const minutesRemaining = Math.max(0, safeGoal - todayStudyMinutes);
 
   if (isLoading) {
     return (
@@ -53,14 +48,21 @@ export function TodayGoalProgressCard({
   }
 
   return (
-    <Card className="h-full flex flex-col justify-between">
-      <CardHeader className="px-5 pt-3.5 pb-0">
+    <Card className="h-full flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-card via-card to-primary/5 dark:to-primary/10">
+      {/* Ambient background glow spot */}
+      <div
+        className={cn(
+          'absolute -top-16 -right-16 w-36 h-36 rounded-full blur-3xl opacity-20 pointer-events-none transition-all duration-700',
+          isTimeMet ? 'bg-emerald-500' : 'bg-primary',
+        )}
+      />
+
+      <CardHeader className="px-5 pt-3.5 pb-0 relative z-10">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Icons
-              name="target"
-              className="h-4.5 w-4.5 text-primary shrink-0"
-            />
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">
+              <Icons name="target" className="h-4 w-4" />
+            </div>
             <div>
               <CardTitle className="text-sm font-bold font-heading text-foreground">
                 {t('todayGoalTitle')}
@@ -81,84 +83,92 @@ export function TodayGoalProgressCard({
         </div>
       </CardHeader>
 
-      <CardContent className="px-5 pb-3.5 pt-1.5 flex-1 flex flex-col justify-between gap-2">
-        <div className="flex items-center justify-between gap-3.5">
-          {/* Radial Ring */}
-          <div className="relative flex items-center justify-center shrink-0">
-            <svg
-              width={size}
-              height={size}
-              className="transform -rotate-90 origin-center"
-            >
-              <circle
-                cx={center}
-                cy={center}
-                r={radius}
-                fill="none"
-                stroke="var(--muted)"
-                strokeWidth={strokeWidth}
-                opacity={0.3}
-              />
-              <circle
-                cx={center}
-                cy={center}
-                r={radius}
-                fill="none"
-                stroke={isTimeMet ? '#10B981' : 'var(--primary)'}
-                strokeWidth={strokeWidth}
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                className="transition-all duration-700 ease-out"
-              />
-            </svg>
-
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
-              <span className="text-sm font-black font-heading tracking-tight text-foreground">
-                {timePercent}%
-              </span>
-            </div>
-          </div>
-
-          {/* Time and Goal Numbers */}
-          <div className="flex-1 space-y-1">
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-heading font-black tracking-tight text-foreground">
+      <CardContent className="px-5 pb-3.5 pt-3 flex-1 flex flex-col justify-between gap-3 relative z-10">
+        {/* Core Metric Display: Big Bold Numbers + Status Badge */}
+        <div className="space-y-2.5">
+          <div className="flex items-end justify-between gap-2">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-4xl font-heading font-black tracking-tight text-foreground leading-none">
                 {todayStudyMinutes}
               </span>
-              <span className="text-xs font-semibold text-muted-foreground">
-                /{dailyGoalMinutes}m
+              <span className="text-sm font-bold text-muted-foreground">
+                /{safeGoal}m
               </span>
             </div>
 
-            <div className="w-full h-1.5 bg-muted/30 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary rounded-full transition-all duration-500"
-                style={{ width: `${timePercent}%` }}
-              />
-            </div>
+            <Badge
+              variant={isTimeMet ? 'success' : 'default'}
+              size="default"
+              className="font-bold flex items-center gap-1.5 px-3 py-1 text-xs shrink-0"
+            >
+              {isTimeMet ? (
+                <>
+                  <Icons name="check" className="h-3.5 w-3.5 stroke-[3]" />
+                  <span>100%</span>
+                </>
+              ) : (
+                <span>{timePercent}%</span>
+              )}
+            </Badge>
+          </div>
 
-            <div className="flex items-center gap-1.5 text-[10.5px] font-semibold text-emerald-600 dark:text-emerald-400">
-              <span>{t('goalProgress', { percent: timePercent })}</span>
-            </div>
+          {/* High-Contrast Gradient Progress Bar */}
+          <div className="w-full h-2.5 bg-muted/40 rounded-full overflow-hidden p-0.5 relative">
+            <div
+              className={cn(
+                'h-full rounded-full transition-all duration-700 ease-out shadow-2xs',
+                isTimeMet
+                  ? 'bg-linear-to-r from-emerald-500 to-teal-400'
+                  : 'bg-linear-to-r from-primary via-indigo-500 to-emerald-400',
+              )}
+              style={{
+                width: timePercent > 0 ? `${Math.max(timePercent, 4)}%` : '0%',
+              }}
+            />
           </div>
         </div>
 
-        {/* Clean Footer */}
-        <div className="text-[10.5px] text-muted-foreground pt-1 border-t border-border/40 flex items-center justify-between">
-          <span>
-            {isTimeMet
-              ? t('dailyGoalReached')
-              : t('keepGoingToReachGoal', {
-                  minutes: Math.max(0, safeGoal - todayStudyMinutes),
-                })}
-          </span>
-          {isTimeMet && (
+        {/* Clean Bento Footer Chips */}
+        <div className="grid grid-cols-2 gap-2 pt-0.5">
+          <Card
+            variant="muted"
+            size="sm"
+            className="flex-row items-center gap-2 px-2.5 py-1.5"
+          >
+            <Icons name="clock" className="h-3.5 w-3.5 text-primary shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] text-muted-foreground truncate leading-tight">
+                {t('studyTimeProgress')}
+              </span>
+              <span className="text-xs font-bold text-foreground truncate leading-tight">
+                {todayStudyMinutes}m
+              </span>
+            </div>
+          </Card>
+
+          <Card
+            variant="muted"
+            size="sm"
+            className="flex-row items-center gap-2 px-2.5 py-1.5"
+          >
             <Icons
-              name="check"
-              className="h-3.5 w-3.5 text-emerald-500 shrink-0 stroke-[2.5]"
+              name={isTimeMet ? 'sparkles' : 'flame'}
+              className={cn(
+                'h-3.5 w-3.5 shrink-0',
+                isTimeMet ? 'text-emerald-500' : 'text-amber-500',
+              )}
             />
-          )}
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] text-muted-foreground truncate leading-tight">
+                {isTimeMet ? t('dailyGoalReached') : t('streakActive')}
+              </span>
+              <span className="text-xs font-bold text-foreground truncate leading-tight">
+                {isTimeMet
+                  ? '100%'
+                  : `${minutesRemaining}m ${t('days').slice(0, 0)}`}
+              </span>
+            </div>
+          </Card>
         </div>
       </CardContent>
     </Card>

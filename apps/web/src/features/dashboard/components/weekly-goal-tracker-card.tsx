@@ -103,13 +103,6 @@ export function WeeklyGoalTrackerCard({
             const isTodayActive = item.isToday && !item.isGoalMet;
             const isMissed = item.status === 'missed';
 
-            // Radial arc for today in-progress
-            const ringRadius = 10;
-            const ringCircumference = 2 * Math.PI * ringRadius;
-            const ringOffset =
-              ringCircumference -
-              (todayProgressPercent / 100) * ringCircumference;
-
             return (
               <div
                 key={item.dateStr}
@@ -129,37 +122,14 @@ export function WeeklyGoalTrackerCard({
                     </div>
                   ) : isTodayActive ? (
                     <div className="relative flex items-center justify-center h-6 w-6">
-                      <svg
-                        width="24"
-                        height="24"
-                        className="transform -rotate-90 origin-center"
-                      >
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r={ringRadius}
-                          fill="none"
-                          stroke="var(--muted)"
-                          strokeWidth="2.5"
-                          opacity={0.35}
-                        />
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r={ringRadius}
-                          fill="none"
-                          stroke="var(--primary)"
-                          strokeWidth="2.5"
-                          strokeDasharray={ringCircumference}
-                          strokeDashoffset={ringOffset}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      {item.minutes > 0 && (
-                        <span className="absolute text-[8px] font-black text-primary font-heading">
-                          {todayProgressPercent}%
-                        </span>
-                      )}
+                      <Icons
+                        name="progress-ring"
+                        percent={todayProgressPercent}
+                        className="h-6 w-6 text-primary"
+                      />
+                      <span className="absolute text-[8px] font-black text-primary font-heading select-none">
+                        {todayProgressPercent}%
+                      </span>
                     </div>
                   ) : isMissed ? (
                     <div className="h-6 w-6 flex items-center justify-center">
@@ -168,9 +138,9 @@ export function WeeklyGoalTrackerCard({
                       </span>
                     </div>
                   ) : (
-                    /* Upcoming days: clean subtle concentric ring */
-                    <div className="h-5 w-5 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center opacity-40">
-                      <div className="h-2 w-2 rounded-full border border-muted-foreground/40" />
+                    /* Upcoming days: clean borderless subtle dot */
+                    <div className="h-6 w-6 flex items-center justify-center">
+                      <div className="h-2 w-2 rounded-full bg-muted-foreground/30" />
                     </div>
                   )}
                 </div>

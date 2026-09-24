@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { getLocalizedTopicName } from '@/features/vocabulary/utils';
 import Image from 'next/image';
 
 export interface TopicStatItem {
@@ -41,8 +42,7 @@ export function FolderTopicGrid({
   onDeleteFolder,
 }: FolderTopicGridProps) {
   const t = useTranslations('Vocabulary.Folders');
-  const radius = 37;
-  const circumference = 2 * Math.PI * radius;
+  const locale = useLocale();
 
   return (
     <div className="space-y-8">
@@ -92,6 +92,11 @@ export function FolderTopicGrid({
         {topicStats.map((topicItem) => {
           const topicImg = topicItem.imageUrl;
           const isSelected = selectedTopic === topicItem.name;
+          const { primary: title } = getLocalizedTopicName(
+            topicItem.name,
+            topicItem.viName,
+            locale,
+          );
 
           const learnedCount = topicItem.learnedCount ?? 0;
           const dueCount = topicItem.dueCount ?? 0;
@@ -99,8 +104,6 @@ export function FolderTopicGrid({
             topicItem.count > 0
               ? Math.min(1, learnedCount / topicItem.count)
               : 0;
-          const strokeDashoffset = circumference * (1 - progressRatio);
-          const progressStroke = progressRatio >= 1 ? '#10b981' : '#0ea5e9';
 
           return (
             <div
@@ -114,40 +117,17 @@ export function FolderTopicGrid({
             >
               {/* Circular Avatar with Circular Progress Ring */}
               <div className="relative w-22 h-22 sm:w-24 sm:h-24 flex items-center justify-center">
-                <svg
-                  className="w-22 h-22 sm:w-24 sm:h-24 -rotate-90 absolute inset-0 pointer-events-none"
-                  viewBox="0 0 88 88"
-                >
-                  <circle
-                    cx="44"
-                    cy="44"
-                    r={radius}
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    className="text-black/[0.06] dark:text-white/[0.08]"
-                    fill="none"
-                  />
-                  {progressRatio > 0 && (
-                    <circle
-                      cx="44"
-                      cy="44"
-                      r={radius}
-                      stroke={progressStroke}
-                      strokeWidth="3"
-                      strokeDasharray={circumference}
-                      strokeDashoffset={strokeDashoffset}
-                      strokeLinecap="round"
-                      className="transition-all duration-700 ease-out"
-                      fill="none"
-                    />
-                  )}
-                </svg>
+                <Icons
+                  name="progress-ring"
+                  percent={Math.round(progressRatio * 100)}
+                  className="w-22 h-22 sm:w-24 sm:h-24 absolute inset-0 pointer-events-none text-primary"
+                />
 
                 <div className="w-16 h-16 sm:w-17 sm:h-17 rounded-full overflow-hidden relative bg-muted/40 transition-transform group-hover:scale-105">
                   {topicImg ? (
                     <Image
                       src={topicImg}
-                      alt={topicItem.name}
+                      alt={title}
                       fill
                       sizes="72px"
                       className="object-cover"
@@ -164,11 +144,8 @@ export function FolderTopicGrid({
               {/* Topic Title */}
               <div className="mt-2.5 w-full px-1">
                 <h4 className="text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-                  {topicItem.viName}
+                  {title}
                 </h4>
-                <p className="text-[10px] sm:text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
-                  {topicItem.name}
-                </p>
               </div>
 
               {/* Stats Row */}

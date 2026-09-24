@@ -107,7 +107,7 @@ export function DailyGoalWidget() {
                 <Cell
                   key={entry.name}
                   fill={entry.fill}
-                  opacity={entry.name === 'remaining' ? 0.35 : 1}
+                  opacity={entry.name === 'remaining' ? 0.75 : 1}
                 />
               ))}
             </Pie>

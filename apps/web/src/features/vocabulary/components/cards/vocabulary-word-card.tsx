@@ -1,7 +1,9 @@
 'use client';
 
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
+import { getLocalizedCardMeaning } from '@/features/vocabulary/utils';
 import type { VocabularyWord } from '@/services/vocabulary';
+import { useLocale } from 'next-intl';
 
 export interface VocabularyWordCardProps {
   word: VocabularyWord;
@@ -9,9 +11,9 @@ export interface VocabularyWordCardProps {
 }
 
 export function VocabularyWordCard({ word, onClick }: VocabularyWordCardProps) {
+  const locale = useLocale();
   const primaryDef = word.definitions?.[0];
-  const meaningVi =
-    primaryDef?.translationVi || primaryDef?.definition?.vi || '';
+  const meaningText = getLocalizedCardMeaning(word, locale);
   const partOfSpeech = primaryDef?.partOfSpeech || '';
 
   return (
@@ -42,9 +44,10 @@ export function VocabularyWordCard({ word, onClick }: VocabularyWordCardProps) {
           {partOfSpeech && (
             <span className="italic mr-1 font-medium">{partOfSpeech}</span>
           )}
-          {meaningVi}
+          {meaningText}
         </p>
       </div>
     </div>
   );
 }
+

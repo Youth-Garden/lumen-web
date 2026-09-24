@@ -5,17 +5,21 @@ import {
   type StudyQueueItem,
 } from '@/features/study/types/study.types';
 
-export function getCardPrimaryDefinition(card: VocabularyWord): {
+export function getCardPrimaryDefinition(
+  card: VocabularyWord,
+  locale: string = 'en',
+): {
   meaning: string;
   partOfSpeech: string;
 } {
   const primaryDef = card.definitions?.[0];
+  const enDef = primaryDef?.definitionEn || primaryDef?.definition?.en || '';
+  const viDef = primaryDef?.translationVi || primaryDef?.definition?.vi || '';
+
   const meaning =
-    primaryDef?.definition?.vi ||
-    primaryDef?.translationVi ||
-    primaryDef?.definitionEn ||
-    primaryDef?.definition?.en ||
-    card.term;
+    locale === 'en'
+      ? enDef || viDef || card.term
+      : viDef || enDef || card.term;
 
   let partOfSpeech = primaryDef?.partOfSpeech?.trim() || '';
   if (partOfSpeech) {

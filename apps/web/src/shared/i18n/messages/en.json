@@ -924,7 +924,8 @@
     "goals": {
       "title": "Study Goals",
       "description": "Set your daily learning target to maintain your streak.",
-      "dailyGoalMinutes": "Daily Goal (Minutes)"
+      "dailyGoalMinutes": "Daily Goal",
+      "dailyGoalDescription": "Daily learning and review target in minutes"
     },
     "account": {
       "title": "Password & Security",

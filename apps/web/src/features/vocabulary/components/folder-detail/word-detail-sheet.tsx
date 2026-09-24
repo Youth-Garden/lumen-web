@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -52,6 +52,7 @@ export function WordDetailSheet({
   data: word,
 }: PortalProps<VocabularyWord>) {
   const t = useTranslations('Vocabulary.Folders');
+  const locale = useLocale();
   const { playPronunciation } = usePronunciation();
   const { mutate: reviewFlashcard, isPending } = useReviewFlashcard();
   const [presentSaveToFolder] = usePortal<SaveToFolderData>(SaveToFolderSheet);
@@ -241,50 +242,66 @@ export function WordDetailSheet({
           )}
 
           <div className="px-6 pb-8 space-y-6">
-            {word?.definitions.map((def, defIdx) => (
-              <div key={def.id} className="space-y-2">
-                {def.partOfSpeech && (
-                  <p className="text-xs font-semibold italic text-muted-foreground uppercase tracking-wide">
-                    {def.partOfSpeech}
-                  </p>
-                )}
+            {word?.definitions.map((def) => {
+              const primaryText =
+                locale === 'en'
+                  ? def.definitionEn || def.translationVi
+                  : def.translationVi || def.definitionEn;
 
-                {def.translationVi && (
-                  <p className="text-base font-bold text-primary leading-snug">
-                    {def.translationVi}
-                  </p>
-                )}
+              const secondaryText =
+                locale === 'en'
+                  ? def.definitionEn && def.translationVi !== def.definitionEn
+                    ? def.translationVi
+                    : null
+                  : def.translationVi && def.definitionEn !== def.translationVi
+                    ? def.definitionEn
+                    : null;
 
-                {def.definitionEn && (
-                  <p className="text-sm text-foreground/90 leading-relaxed">
-                    {def.definitionEn}
-                  </p>
-                )}
-
-                {def.examples.length > 0 && (
-                  <div className="mt-3 space-y-2.5">
-                    <p className="text-xs font-medium italic text-muted-foreground">
-                      {t('examples')}:
+              return (
+                <div key={def.id} className="space-y-2">
+                  {def.partOfSpeech && (
+                    <p className="text-xs font-semibold italic text-muted-foreground uppercase tracking-wide">
+                      {def.partOfSpeech}
                     </p>
-                    {def.examples.map((example) => (
-                      <div key={example.id} className="space-y-0.5">
-                        <p className="text-sm font-medium text-foreground leading-normal">
-                          {renderHighlightedSentence(
-                            example.sentenceEn,
-                            word.term,
-                          )}
-                        </p>
-                        {example.translationVi && (
-                          <p className="text-sm text-muted-foreground leading-normal">
-                            {example.translationVi}
+                  )}
+
+                  {primaryText && (
+                    <p className="text-base font-bold text-primary leading-snug">
+                      {primaryText}
+                    </p>
+                  )}
+
+                  {secondaryText && (
+                    <p className="text-sm text-foreground/90 leading-relaxed">
+                      {secondaryText}
+                    </p>
+                  )}
+
+                  {def.examples.length > 0 && (
+                    <div className="mt-3 space-y-2.5">
+                      <p className="text-xs font-medium italic text-muted-foreground">
+                        {t('examples')}:
+                      </p>
+                      {def.examples.map((example) => (
+                        <div key={example.id} className="space-y-0.5">
+                          <p className="text-sm font-medium text-foreground leading-normal">
+                            {renderHighlightedSentence(
+                              example.sentenceEn,
+                              word.term,
+                            )}
                           </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                          {example.translationVi && (
+                            <p className="text-sm text-muted-foreground leading-normal">
+                              {example.translationVi}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </ScrollArea>
       </SheetContent>

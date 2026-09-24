@@ -924,7 +924,8 @@
     "goals": {
       "title": "Mục tiêu học tập",
       "description": "Thiết lập mục tiêu học tập hàng ngày để duy trì chuỗi ngày học của bạn.",
-      "dailyGoalMinutes": "Mục tiêu hàng ngày (Phút)"
+      "dailyGoalMinutes": "Mục tiêu hàng ngày",
+      "dailyGoalDescription": "Mục tiêu thời gian học tập và ôn tập hàng ngày"
     },
     "account": {
       "title": "Mật khẩu & Bảo mật",

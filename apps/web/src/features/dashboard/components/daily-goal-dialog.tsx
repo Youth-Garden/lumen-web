@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -144,6 +143,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                 <Card
                   key={tier.minutes}
                   role="radio"
+                  variant="muted"
                   aria-checked={isSelected}
                   onClick={() => {
                     setSelectedGoal(tier.minutes);
@@ -152,7 +152,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                   }}
                   className={cn(
                     'cursor-pointer transition-all p-3',
-                    isSelected ? '!bg-primary/10 ring-2 ring-primary/40' : '',
+                    isSelected ? 'bg-primary/20' : 'hover:bg-muted/70',
                   )}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
@@ -191,11 +191,10 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
           </div>
 
           <Card
+            variant="muted"
             className={cn(
               'flex-row items-center justify-between p-3 gap-3 transition-all',
-              isCustom
-                ? '!bg-primary/10 ring-2 ring-primary/40 hover:!bg-primary/10'
-                : 'hover:!bg-accent',
+              isCustom ? 'bg-primary/20' : 'hover:bg-muted/70',
             )}
           >
             <div className="flex items-center gap-2.5 min-w-0">
@@ -261,10 +260,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
           </Card>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
-          <DialogClose render={<Button variant="ghost" size="default" />}>
-            {t('cancel')}
-          </DialogClose>
+        <DialogFooter>
           <Button
             onClick={handleSaveGoal}
             disabled={updateSettings.isPending}

@@ -94,7 +94,12 @@ export function StreakMilestoneCard({
           <div className="w-full h-2 bg-muted/60 dark:bg-muted/40 rounded-full overflow-hidden">
             <div
               className="h-full bg-linear-to-r from-amber-400 via-amber-500 to-orange-500 rounded-full transition-all duration-500"
-              style={{ width: `${Math.max(6, milestone.progressPercent)}%` }}
+              style={{
+                width:
+                  milestone.progressPercent > 0
+                    ? `${Math.max(6, milestone.progressPercent)}%`
+                    : '0%',
+              }}
             />
           </div>
 

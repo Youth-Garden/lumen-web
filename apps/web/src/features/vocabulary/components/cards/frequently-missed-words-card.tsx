@@ -1,11 +1,12 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { Badge, Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
+import { getLocalizedCardMeaning } from '@/features/vocabulary/utils';
 import { type VocabularyWord } from '@/services/vocabulary';
 
 interface FrequentlyMissedWordsCardProps {
@@ -19,6 +20,7 @@ export function FrequentlyMissedWordsCard({
   onReviewMissed,
   onFlashcardsMissed,
 }: FrequentlyMissedWordsCardProps) {
+  const locale = useLocale();
   const t = useTranslations('Vocabulary.Folders');
   const tStudy = useTranslations('Vocabulary.Study');
 
@@ -52,8 +54,7 @@ export function FrequentlyMissedWordsCard({
         {displayCards.map((card, index) => {
           const firstDef = card.definitions?.[0];
           const partOfSpeech = firstDef?.partOfSpeech || 'n.';
-          const meaning =
-            firstDef?.translationVi || firstDef?.definitionEn || '';
+          const meaning = getLocalizedCardMeaning(card, locale);
 
           const errorRate = 35 - index * 3;
 
