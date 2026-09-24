@@ -60,9 +60,7 @@ export function TodayGoalProgressCard({
       <CardHeader className="px-5 pt-3.5 pb-0 relative z-10">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">
-              <Icons name="target" className="h-4 w-4" />
-            </div>
+            <Icons name="target" className="h-5 w-5 text-primary shrink-0" />
             <div>
               <CardTitle className="text-sm font-bold font-heading text-foreground">
                 {t('todayGoalTitle')}

@@ -54,9 +54,7 @@ export function StreakMilestoneCard({
       <CardHeader className="px-5 pt-4 pb-0">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 shrink-0">
-              <Icons name="trophy" className="size-4" />
-            </div>
+            <Icons name="trophy" className="h-5 w-5 text-amber-500 shrink-0" />
             <div>
               <CardTitle className="text-sm font-bold font-heading text-foreground">
                 {t('streakMilestoneTitle')}

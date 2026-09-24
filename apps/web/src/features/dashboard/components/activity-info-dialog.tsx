@@ -79,9 +79,7 @@ export function ActivityInfoDialog({ isOpen, onDismiss }: PortalProps) {
         <div className="min-h-0 flex-1 overflow-y-auto pr-1 space-y-5">
           <section className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Icons name="activity" className="size-3.5" />
-              </div>
+              <Icons name="activity" className="h-5 w-5 text-primary shrink-0" />
 
               <div>
                 <h4 className="font-heading text-sm font-bold text-foreground">
@@ -124,9 +122,7 @@ export function ActivityInfoDialog({ isOpen, onDismiss }: PortalProps) {
 
           <section className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Icons name="sparkles" className="size-3.5" />
-              </div>
+              <Icons name="sparkles" className="h-5 w-5 text-primary shrink-0" />
 
               <div>
                 <h4 className="font-heading text-sm font-bold text-foreground">
@@ -164,9 +160,7 @@ export function ActivityInfoDialog({ isOpen, onDismiss }: PortalProps) {
 
           <section className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Icons name="trophy" className="size-3.5" />
-              </div>
+              <Icons name="trophy" className="h-5 w-5 text-amber-500 shrink-0" />
 
               <div>
                 <h4 className="font-heading text-sm font-bold text-foreground">
