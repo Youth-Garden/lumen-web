@@ -1,6 +1,7 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -27,6 +28,12 @@ import {
   type VocabularyWord,
 } from '@/services/vocabulary';
 import { usePronunciation } from '@/shared/hooks';
+import { Locale } from '@/shared/types';
+import {
+  getSecondaryI18nText,
+  i18nText,
+  normalizePartOfSpeech,
+} from '@/shared/utils';
 
 function renderHighlightedSentence(sentence: string, term: string) {
   if (!sentence || !term) return sentence;
@@ -243,25 +250,19 @@ export function WordDetailSheet({
 
           <div className="px-6 pb-8 space-y-6">
             {word?.definitions.map((def) => {
-              const primaryText =
-                locale === 'en'
-                  ? def.definitionEn || def.translationVi
-                  : def.translationVi || def.definitionEn;
-
+              const primaryText = i18nText(def.definition, locale);
               const secondaryText =
-                locale === 'en'
-                  ? def.definitionEn && def.translationVi !== def.definitionEn
-                    ? def.translationVi
-                    : null
-                  : def.translationVi && def.definitionEn !== def.translationVi
-                    ? def.definitionEn
-                    : null;
+                locale !== Locale.EN
+                  ? i18nText(def.definition, Locale.EN)
+                  : getSecondaryI18nText(def.definition, Locale.EN);
+
+              const partOfSpeech = normalizePartOfSpeech(def.partOfSpeech);
 
               return (
                 <div key={def.id} className="space-y-2">
-                  {def.partOfSpeech && (
+                  {partOfSpeech && (
                     <p className="text-xs font-semibold italic text-muted-foreground uppercase tracking-wide">
-                      {def.partOfSpeech}
+                      {partOfSpeech}
                     </p>
                   )}
 
@@ -271,7 +272,7 @@ export function WordDetailSheet({
                     </p>
                   )}
 
-                  {secondaryText && (
+                  {secondaryText && secondaryText !== primaryText && (
                     <p className="text-sm text-foreground/90 leading-relaxed">
                       {secondaryText}
                     </p>
@@ -282,21 +283,30 @@ export function WordDetailSheet({
                       <p className="text-xs font-medium italic text-muted-foreground">
                         {t('examples')}:
                       </p>
-                      {def.examples.map((example) => (
-                        <div key={example.id} className="space-y-0.5">
-                          <p className="text-sm font-medium text-foreground leading-normal">
-                            {renderHighlightedSentence(
-                              example.sentenceEn,
-                              word.term,
-                            )}
-                          </p>
-                          {example.translationVi && (
-                            <p className="text-sm text-muted-foreground leading-normal">
-                              {example.translationVi}
+                      {def.examples.map((example) => {
+                        const sentenceEn = i18nText(
+                          example.sentence,
+                          Locale.EN,
+                        );
+                        const nativeSentence =
+                          locale !== Locale.EN
+                            ? i18nText(example.sentence, locale)
+                            : null;
+
+                        return (
+                          <div key={example.id} className="space-y-0.5">
+                            <p className="text-sm font-medium text-foreground leading-normal">
+                              {renderHighlightedSentence(sentenceEn, word.term)}
                             </p>
-                          )}
-                        </div>
-                      ))}
+                            {nativeSentence &&
+                              nativeSentence !== sentenceEn && (
+                                <p className="text-sm text-muted-foreground leading-normal">
+                                  {nativeSentence}
+                                </p>
+                              )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

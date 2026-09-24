@@ -2,14 +2,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useDebounce } from '@lumen/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
 import {
   useVocabularyFolders,
   useVocabularyWords,
 } from '@/features/vocabulary/hooks/use-vocabulary';
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { i18nText, includesI18n } from '@/shared/utils';
 import {
   CommandDialog,
   CommandEmpty,
@@ -41,11 +42,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
   });
   const allFolders = foldersData?.data || [];
   const filteredFolders = debouncedSearch
-    ? allFolders.filter((folder) =>
-        getLocalizedText(folder.name, locale)
-          .toLowerCase()
-          .includes(debouncedSearch.toLowerCase()),
-      )
+    ? allFolders.filter((folder) => includesI18n(folder.name, debouncedSearch))
     : [];
 
   const vocabWords = useVocabularyWords(
@@ -132,13 +129,13 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                     />
                     <span>
                       <HighlightText
-                        text={getLocalizedText(folder.name, locale)}
+                        text={i18nText(folder.name, locale)}
                         query={debouncedSearch}
                       />
                     </span>
                     {folder.category && (
                       <span className="ml-auto rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                        {getLocalizedText(folder.category, locale)}
+                        {i18nText(folder.category, locale)}
                       </span>
                     )}
                   </CommandItem>

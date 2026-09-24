@@ -1,2 +1,4 @@
 export * from './audio';
-export * from './sound.helper';
+export * from './sound';
+export * from './i18n';
+export * from './vocabulary';

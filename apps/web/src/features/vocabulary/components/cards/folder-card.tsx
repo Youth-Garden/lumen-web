@@ -1,31 +1,13 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
-import {
-  getFolderCoverUrl,
-  getLocalizedText,
-} from '@/features/vocabulary/utils';
+import { getFolderCoverUrl } from '@/features/vocabulary/utils';
+import { useLocale } from '@/shared/hooks';
+import { i18nText } from '@/shared/utils';
 import type { Folder } from '@/services/vocabulary';
 import { Icons } from '@lumen/uikit/icons';
 import Image from 'next/image';
-
-export const FOLDER_COVERS: Record<string, string> = {
-  '84f92475-bee4-41ff-8372-c50593e46920':
-    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  '600 từ vựng TOEIC':
-    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  '600 Essential TOEIC Words':
-    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  'Từ vựng TOEIC':
-    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  'TOEIC Vocabulary':
-    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  TOEIC:
-    'https://res.cloudinary.com/dms9jruo5/image/upload/v1788521229/lumen/vocabulary/images/train.jpg',
-  user_default:
-    'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=80',
-};
 
 interface FolderCardProps {
   folder: Folder;
@@ -44,18 +26,9 @@ export function FolderCard({
 }: FolderCardProps) {
   const t = useTranslations('Vocabulary.Folders');
   const locale = useLocale();
-  const folderDisplayName = getLocalizedText(folder.name, locale);
-  const folderCategory = getLocalizedText(folder.category, locale);
+  const folderDisplayName = i18nText(folder.name, locale);
 
-  const coverUrl =
-    FOLDER_COVERS[folder.id] ||
-    FOLDER_COVERS[folderDisplayName] ||
-    (typeof folder.name === 'object' && folder.name !== null
-      ? FOLDER_COVERS[folder.name.en || ''] ||
-        FOLDER_COVERS[folder.name.vi || '']
-      : null) ||
-    (folderCategory ? FOLDER_COVERS[folderCategory] : null) ||
-    getFolderCoverUrl(folder.id);
+  const coverUrl = folder.imageUrl || getFolderCoverUrl(folder.id);
 
   const totalWords = folder.flashcardCount || 0;
   const learnedCount = folder.learnedCount ?? 0;

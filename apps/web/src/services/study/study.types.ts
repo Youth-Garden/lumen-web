@@ -1,4 +1,5 @@
-import type { I18nString, VocabularyWord } from '../vocabulary';
+import type { I18nString } from '@/shared/types';
+import type { VocabularyWord } from '../vocabulary';
 
 export interface DueFlashcard {
   flashcardId: string;

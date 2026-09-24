@@ -1,24 +1,25 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { toast } from 'sonner';
 
+import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
+import {
+  StudyView,
+  type StudyViewData,
+} from '@/features/study/components/study-view';
+import { StudySessionMode } from '@/features/study/types/study.types';
 import {
   useFolderFlashcards,
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
-import { getLocalizedText, getLocalizedTopicName } from '@/features/vocabulary/utils';
-import {
-  StudyView,
-  type StudyViewData,
-} from '@/features/study/components/study-view';
-import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
-import { StudySessionMode } from '@/features/study/types/study.types';
 import { RouteEnum } from '@/shared/constants';
 import { useSetBreadcrumb, type BreadcrumbConfigItem } from '@/shared/hooks';
+import { i18nText, includesI18n } from '@/shared/utils';
 import { formatUrl } from '@lumen/shared-api';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortalWithoutBackdrop } from '@lumen/uikit/portal';
@@ -49,21 +50,19 @@ export function TopicDetailPage() {
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
   const topicInfo = useMemo(
-    () => topics.find((item) => item.topic === topicName),
+    () => topics.find((item) => includesI18n(item.topic, topicName)),
     [topics, topicName],
   );
 
-  const { primary: localizedTopicTitle } = getLocalizedTopicName(
-    topicName,
-    topicInfo?.topicVi,
-    locale,
-  );
+  const localizedTopicTitle = topicInfo
+    ? i18nText(topicInfo.topic, locale)
+    : topicName;
   const flashcards = useMemo(
     () => flashcardsPage?.data ?? [],
     [flashcardsPage?.data],
   );
 
-  const folderDisplayName = getLocalizedText(folderDetail?.name, locale);
+  const folderDisplayName = i18nText(folderDetail?.name, locale);
 
   useSetBreadcrumb(
     useMemo(() => {
@@ -98,10 +97,6 @@ export function TopicDetailPage() {
       isLoadingFlashcards,
     ]),
   );
-
-  const handleBackToTopics = () => {
-    router.push(formatUrl(RouteEnum.FOLDER_DETAIL, { id: folderId }));
-  };
 
   const startStudy = (mode: StudySessionMode) => {
     if (!flashcards.length) return;
@@ -187,14 +182,7 @@ export function TopicDetailPage() {
 
   return (
     <div className="w-full py-2 pb-36">
-      <TopicWordsList
-        folderId={folderId}
-        folderName={folderDisplayName}
-        topicName={topicName}
-        topicViName={localizedTopicTitle}
-        flashcards={flashcards}
-        onBackToTopics={handleBackToTopics}
-      />
+      <TopicWordsList flashcards={flashcards} />
 
       {flashcards.length > 0 && (
         <StudyBottomActionBar

@@ -11,7 +11,7 @@ export const FlagVnIcon = ({
     <svg
       width={size}
       height={size}
-      viewBox="0 0 28 20"
+      viewBox="0 0 36 36"
       fill="none"
       style={style}
       className={className}
@@ -19,10 +19,14 @@ export const FlagVnIcon = ({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <rect width="28" height="20" rx="3" fill="#DA251D" />
-      <polygon
-        points="14,4.2 15.68,9.36 21.11,9.36 16.71,12.56 18.39,17.72 14,14.52 9.61,17.72 11.29,12.56 6.89,9.36 12.32,9.36"
-        fill="#FFEB3B"
+      <title>flag-vietnam</title>
+      <path
+        fill="#da251d"
+        d="M32 5H4a4 4 0 0 0-4 4v18a4 4 0 0 0 4 4h28a4 4 0 0 0 4-4V9a4 4 0 0 0-4-4"
+      />
+      <path
+        fill="#ff0"
+        d="M19.753 16.037L18 10.642l-1.753 5.395h-5.672l4.589 3.333l-1.753 5.395L18 21.431l4.589 3.334l-1.753-5.395l4.589-3.333z"
       />
     </svg>
   );

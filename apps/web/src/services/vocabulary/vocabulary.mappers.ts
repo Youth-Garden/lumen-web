@@ -1,3 +1,4 @@
+import { toI18nString } from '@/services/core';
 import {
   VocabularyWord,
   Folder,
@@ -11,8 +12,7 @@ import {
 export const wordMapper = (raw: any): VocabularyWord => ({
   id: raw.id || '',
   term: raw.term || '',
-  topic: raw.topic,
-  topicVi: raw.topicVi,
+  topic: toI18nString(raw.topic),
   topicImageUrl: raw.topicImageUrl,
   phonetic: raw.phonetic,
   phoneticUs: raw.phoneticUs,
@@ -29,74 +29,26 @@ export const wordMapper = (raw: any): VocabularyWord => ({
   flashcardId: raw.flashcardId || raw.id,
   wordId: raw.wordId,
   definitions: Array.isArray(raw.definitions)
-    ? raw.definitions.map((def: any) => {
-        const defEn =
-          (typeof def.definition === 'object' && def.definition !== null
-            ? def.definition.en
-            : typeof def.definition === 'string'
-              ? def.definition
-              : '') ||
-          def.definitionEn ||
-          '';
-
-        const transVi =
-          (typeof def.definition === 'object' && def.definition !== null
-            ? def.definition.vi
-            : typeof def.translation === 'object' && def.translation !== null
-              ? def.translation.vi
-              : typeof def.translation === 'string'
-                ? def.translation
-                : '') ||
-          def.translationVi ||
-          '';
-
-        const examples = Array.isArray(def.examples)
-          ? def.examples.map((ex: any) => {
-              const sentEn =
-                (typeof ex.sentence === 'object' && ex.sentence !== null
-                  ? ex.sentence.en
-                  : typeof ex.sentence === 'string'
-                    ? ex.sentence
-                    : '') ||
-                ex.sentenceEn ||
-                '';
-
-              const sentVi =
-                (typeof ex.sentence === 'object' && ex.sentence !== null
-                  ? ex.sentence.vi
-                  : typeof ex.translation === 'object' &&
-                      ex.translation !== null
-                    ? ex.translation.vi
-                    : typeof ex.translation === 'string'
-                      ? ex.translation
-                      : '') ||
-                ex.translationVi ||
-                '';
-
-              return {
-                id: ex.id || '',
-                sentenceEn: sentEn,
-                translationVi: sentVi,
-              };
-            })
-          : [];
-
-        return {
-          id: def.id || '',
-          partOfSpeech: def.partOfSpeech || '',
-          definitionEn: defEn,
-          translationVi: transVi,
-          examples,
-        };
-      })
+    ? raw.definitions.map((def: any) => ({
+        id: def.id || '',
+        partOfSpeech: def.partOfSpeech || '',
+        definition: toI18nString(def.definition),
+        examples: Array.isArray(def.examples)
+          ? def.examples.map((ex: any) => ({
+              id: ex.id || '',
+              sentence: toI18nString(ex.sentence),
+            }))
+          : [],
+      }))
     : [],
 });
 
 export const folderMapper = (folder: any): Folder => ({
   id: folder.id || '',
-  name: folder.name || '',
-  description: folder.description || null,
-  category: folder.category || null,
+  name: toI18nString(folder.name),
+  description: folder.description ? toI18nString(folder.description) : null,
+  category: folder.category ? toI18nString(folder.category) : null,
+  imageUrl: folder.imageUrl ?? null,
   isSystem: Boolean(folder.isSystem),
   flashcardCount: folder.flashcardCount || 0,
   learnedCount: folder.learnedCount || 0,
@@ -110,8 +62,7 @@ export const folderListMapper = (raw: any): Folder[] => {
 };
 
 export const folderTopicMapper = (raw: any): FolderTopic => ({
-  topic: raw.topic || '',
-  topicVi: raw.topicVi || null,
+  topic: toI18nString(raw.topic),
   topicImageUrl: raw.topicImageUrl || null,
   count: raw.count || 0,
   learnedCount: raw.learnedCount || 0,
@@ -150,7 +101,7 @@ export const vocabularyOverviewMapper = (raw: any): VocabularyOverview => {
         wordId: item.wordId || '',
         term: item.term || '',
         partOfSpeech: item.partOfSpeech || '',
-        definition: item.definition || '',
+        definition: toI18nString(item.definition),
         phonetic: item.phonetic,
         audioUrl: item.audioUrl,
         audioUsUrl: item.audioUsUrl,

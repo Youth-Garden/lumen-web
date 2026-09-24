@@ -1,33 +1,37 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Locale } from '@/shared/types';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cookieHelper } from '@lumen/utils';
 import './globals.css';
 
-const MESSAGES = {
-  vi: {
+const MESSAGES: Record<
+  Locale,
+  { title: string; subtitle: string; backHome: string }
+> = {
+  [Locale.VI]: {
     title: 'Đã có lỗi xảy ra!',
     subtitle:
       'Chúng tôi xin lỗi vì sự bất tiện này. Đã có sự cố trong quá trình xử lý.',
     backHome: 'Về trang chủ',
   },
-  en: {
+  [Locale.EN]: {
     title: 'Something went wrong!',
     subtitle:
       'We apologize for the inconvenience. An unexpected error has occurred.',
     backHome: 'Back to Home',
   },
-} as const;
+};
 
 export default function GlobalError() {
-  const [locale, setLocale] = useState<'vi' | 'en'>('vi');
+  const [locale, setLocale] = useState<Locale>(Locale.VI);
 
   useEffect(() => {
     const savedLocale = cookieHelper.get('NEXT_LOCALE');
-    if (savedLocale === 'en' || savedLocale === 'vi') {
-      setLocale(savedLocale);
+    if (savedLocale === Locale.EN || savedLocale === Locale.VI) {
+      setLocale(savedLocale as Locale);
     }
   }, []);
 

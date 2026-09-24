@@ -1,6 +1,7 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 
 import {
   DropdownMenu,
@@ -9,12 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { getLocalizedTopicName } from '@/features/vocabulary/utils';
+import { I18nString } from '@/shared/types';
+import { i18nText } from '@/shared/utils';
 import Image from 'next/image';
 
 export interface TopicStatItem {
   name: string;
-  viName: string;
+  topic: I18nString;
   imageUrl?: string;
   count: number;
   learnedCount: number;
@@ -92,11 +94,7 @@ export function FolderTopicGrid({
         {topicStats.map((topicItem) => {
           const topicImg = topicItem.imageUrl;
           const isSelected = selectedTopic === topicItem.name;
-          const { primary: title } = getLocalizedTopicName(
-            topicItem.name,
-            topicItem.viName,
-            locale,
-          );
+          const title = i18nText(topicItem.topic, locale);
 
           const learnedCount = topicItem.learnedCount ?? 0;
           const dueCount = topicItem.dueCount ?? 0;
@@ -143,7 +141,7 @@ export function FolderTopicGrid({
 
               {/* Topic Title */}
               <div className="mt-2.5 w-full px-1">
-                <h4 className="text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                <h4 className="text-xs sm:text-sm font-bold text-foreground line-clamp-1">
                   {title}
                 </h4>
               </div>

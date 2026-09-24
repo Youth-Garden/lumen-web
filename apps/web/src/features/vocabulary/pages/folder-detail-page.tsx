@@ -1,7 +1,8 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
+import { useLocale } from '@/shared/hooks';
 
 import { useMemo } from 'react';
 import { toast } from 'sonner';
@@ -11,9 +12,10 @@ import {
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { i18nText } from '@/shared/utils';
 import { RouteEnum } from '@/shared/constants';
 import { useGoBack, useSetBreadcrumb } from '@/shared/hooks';
+import { Locale } from '@/shared/types';
 import { formatUrl } from '@lumen/shared-api';
 import { Skeleton } from '@lumen/uikit/components';
 import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
@@ -48,7 +50,7 @@ export function FolderDetailPage({
   const { data: topics = [], isLoading: isLoadingTopics } =
     useFolderTopics(folderId);
 
-  const folderDisplayName = getLocalizedText(folderDetail?.name, locale);
+  const folderDisplayName = i18nText(folderDetail?.name, locale);
 
   useSetBreadcrumb(
     useMemo(
@@ -86,8 +88,8 @@ export function FolderDetailPage({
   };
 
   const topicStats = topics.map((topicItem) => ({
-    name: topicItem.topic,
-    viName: topicItem.topicVi ?? topicItem.topic,
+    name: i18nText(topicItem.topic, Locale.EN),
+    topic: topicItem.topic,
     imageUrl: topicItem.topicImageUrl ?? undefined,
     count: topicItem.count,
     learnedCount: topicItem.learnedCount,
@@ -204,10 +206,8 @@ export function FolderDetailPage({
     <div className="w-full py-2 pb-36">
       <FolderTopicGrid
         folderName={folderDisplayName}
-        category={getLocalizedText(folderDetail.category, locale) || undefined}
-        description={
-          getLocalizedText(folderDetail.description, locale) || undefined
-        }
+        category={i18nText(folderDetail.category, locale) || undefined}
+        description={i18nText(folderDetail.description, locale) || undefined}
         selectedTopic={null}
         topicStats={topicStats}
         onSelectTopic={handleTopicClick}

@@ -15,6 +15,8 @@ import {
 import { FlashcardRating } from '@/services/study';
 import { StudySessionMode } from '@/features/study/types/study.types';
 import { type VocabularyWord } from '@/services/vocabulary';
+import { Locale } from '@/shared/types';
+import { i18nText } from '@/shared/utils';
 
 const createMockWord = (
   id: string,
@@ -29,15 +31,14 @@ const createMockWord = (
     {
       id: `def-${id}`,
       partOfSpeech: 'noun',
-      definitionEn: `${term} meaning`,
-      translationVi: `${term} meaning`,
+      definition: { en: `${term} meaning`, vi: `${term} meaning` },
       examples: [],
     },
   ],
   level,
   learningStep,
   masteryScore: level * 20,
-  topic,
+  topic: { en: topic, vi: topic },
 });
 
 describe('study-session.utils', () => {
@@ -137,7 +138,9 @@ describe('study-session.utils', () => {
     it('should filter pool cards by selected topic', () => {
       const foodCards = filterPoolCards(mockCards, 'Food');
       expect(foodCards).toHaveLength(2);
-      expect(foodCards.every((c) => c.topic === 'Food')).toBe(true);
+      expect(
+        foodCards.every((c) => i18nText(c.topic, Locale.EN) === 'Food'),
+      ).toBe(true);
     });
 
     it('should prioritize unlearned words first in LEARN_NEW mode', () => {

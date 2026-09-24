@@ -1,8 +1,9 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { useLocale } from '@/shared/hooks';
+import { i18nText } from '@/shared/utils';
 import type { Folder } from '@/services/vocabulary';
 import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -32,10 +33,7 @@ export function FolderCatalogSection({
     const catMap = new Map<string, Folder[]>();
 
     folders.forEach((folderItem) => {
-      const localizedCategory = getLocalizedText(
-        folderItem.category,
-        locale,
-      ).trim();
+      const localizedCategory = i18nText(folderItem.category, locale).trim();
 
       if (
         !folderItem.isSystem ||

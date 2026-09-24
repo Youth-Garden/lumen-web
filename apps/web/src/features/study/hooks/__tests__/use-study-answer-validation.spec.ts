@@ -18,8 +18,7 @@ const mockCard: VocabularyWord = {
     {
       id: 'def-1',
       partOfSpeech: 'noun',
-      definitionEn: 'Innovation',
-      translationVi: 'Sự đổi mới',
+      definition: { en: 'Innovation', vi: 'Sự đổi mới' },
       examples: [],
     },
   ],

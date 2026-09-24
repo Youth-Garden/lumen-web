@@ -1,6 +1,7 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -9,7 +10,7 @@ import {
   useCreateFlashcard,
   useVocabularyFolders,
 } from '@/features/vocabulary/hooks';
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { i18nText } from '@/shared/utils';
 import {
   Button,
   ScrollArea,
@@ -118,7 +119,7 @@ export function SaveToFolderSheet({
               <div className="space-y-2">
                 {customFolders.map((folder) => {
                   const isSaving = savingFolderId === folder.id;
-                  const folderName = getLocalizedText(folder.name, locale);
+                  const folderName = i18nText(folder.name, locale);
 
                   return (
                     <button

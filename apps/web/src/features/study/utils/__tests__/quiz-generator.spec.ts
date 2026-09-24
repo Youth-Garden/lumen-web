@@ -10,6 +10,7 @@ import {
   createNextExerciseForWord,
 } from '../quiz-generator';
 import { StudyExerciseType } from '@/features/study/types/study.types';
+import { Locale } from '@/shared/types';
 import type { VocabularyWord } from '@/services/vocabulary';
 
 const createMockWord = (
@@ -24,8 +25,7 @@ const createMockWord = (
     {
       id: `def-${id}`,
       partOfSpeech,
-      definitionEn: meaning,
-      translationVi: meaning,
+      definition: { en: meaning, vi: meaning },
       examples: [],
     },
   ],
@@ -52,17 +52,16 @@ describe('quiz-generator', () => {
           {
             id: 'def-1',
             partOfSpeech: 'v.',
-            definitionEn: 'to move fast',
-            translationVi: 'chạy',
+            definition: { en: 'to move fast', vi: 'chạy' },
             examples: [],
           },
         ],
       };
-      const defEn = getCardPrimaryDefinition(card, 'en');
+      const defEn = getCardPrimaryDefinition(card, Locale.EN);
       expect(defEn.meaning).toBe('to move fast');
       expect(defEn.partOfSpeech).toBe('verb');
 
-      const defVi = getCardPrimaryDefinition(card, 'vi');
+      const defVi = getCardPrimaryDefinition(card, Locale.VI);
       expect(defVi.meaning).toBe('chạy');
     });
 

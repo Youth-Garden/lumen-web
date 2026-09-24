@@ -1,6 +1,7 @@
 'use client';
 
 import { HeatmapItem } from '@/services/progress';
+import { Locale } from '@/shared/types';
 import {
   Card,
   CardContent,
@@ -12,7 +13,8 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { format, startOfDay, subDays } from 'date-fns';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import {
   Bar,
@@ -114,8 +116,8 @@ function formatDuration(totalMinutes: number): string {
   return rest === 0 ? `${hours}h` : `${hours}h ${rest}m`;
 }
 
-function formatWeekdayLabel(date: Date, locale: string): string {
-  if (locale === 'vi') {
+function formatWeekdayLabel(date: Date, locale: Locale): string {
+  if (locale === Locale.VI) {
     const day = date.getDay();
     return day === 0 ? 'CN' : `T${day + 1}`;
   }
@@ -129,7 +131,7 @@ function getBarOpacity(day: ChartDayItem): number {
 
 interface BuildChartDataParams {
   period: Period;
-  locale: string;
+  locale: Locale;
   goal: number;
   todayStudyMinutes: number;
   activityByDate: ReadonlyMap<string, number>;
@@ -211,7 +213,7 @@ interface UseStudyChartDataParams {
   dailyGoalMinutes: number;
   todayStudyMinutes: number;
   period: Period;
-  locale: string;
+  locale: Locale;
 }
 
 function useStudyChartData({

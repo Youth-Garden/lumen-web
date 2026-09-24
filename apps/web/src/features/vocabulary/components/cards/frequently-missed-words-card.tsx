@@ -1,12 +1,14 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
+
+import { useLocale } from '@/shared/hooks';
 
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { Badge, Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { getLocalizedCardMeaning } from '@/features/vocabulary/utils';
+import { i18nText, formatPartOfSpeechShort } from '@/shared/utils';
 import { type VocabularyWord } from '@/services/vocabulary';
 
 interface FrequentlyMissedWordsCardProps {
@@ -53,8 +55,9 @@ export function FrequentlyMissedWordsCard({
       <div className="space-y-2">
         {displayCards.map((card, index) => {
           const firstDef = card.definitions?.[0];
-          const partOfSpeech = firstDef?.partOfSpeech || 'n.';
-          const meaning = getLocalizedCardMeaning(card, locale);
+          const partOfSpeech =
+            formatPartOfSpeechShort(firstDef?.partOfSpeech) || 'n.';
+          const meaning = i18nText(firstDef?.definition, locale) || card.term;
 
           const errorRate = 35 - index * 3;
 

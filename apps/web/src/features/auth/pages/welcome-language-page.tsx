@@ -2,6 +2,7 @@
 
 import { NATIVE_LANGUAGE_STORAGE_KEY, RouteEnum } from '@/shared/constants';
 import { useRouter } from '@/shared/i18n/routing';
+import { Locale } from '@/shared/types';
 import { useLocalStorage } from '@lumen/hooks';
 import { Button, Logo } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -11,7 +12,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 interface LanguageOption {
-  code: 'vi' | 'en';
+  code: Locale;
   name: string;
   nativeName: string;
   icon: 'flag-vn' | 'flag-us';
@@ -19,13 +20,13 @@ interface LanguageOption {
 
 const SUPPORTED_LANGUAGES: LanguageOption[] = [
   {
-    code: 'vi',
+    code: Locale.VI,
     name: 'Vietnamese',
     nativeName: 'Tiếng Việt',
     icon: 'flag-vn',
   },
   {
-    code: 'en',
+    code: Locale.EN,
     name: 'English',
     nativeName: 'English',
     icon: 'flag-us',
@@ -33,7 +34,7 @@ const SUPPORTED_LANGUAGES: LanguageOption[] = [
 ];
 
 export const WelcomeLanguagePage = () => {
-  const currentLocale = useLocale() as 'vi' | 'en';
+  const currentLocale = useLocale() as Locale;
   const t = useTranslations('Auth.Welcome');
   const router = useRouter();
 
@@ -42,10 +43,10 @@ export const WelcomeLanguagePage = () => {
     null,
   );
 
-  const [selectedLanguage, setSelectedLanguage] = useState<'vi' | 'en'>(
+  const [selectedLanguage, setSelectedLanguage] = useState<Locale>(
     SUPPORTED_LANGUAGES.some((lang) => lang.code === currentLocale)
       ? currentLocale
-      : 'vi',
+      : Locale.VI,
   );
 
   useEffect(() => {
@@ -58,11 +59,11 @@ export const WelcomeLanguagePage = () => {
       candidate &&
       SUPPORTED_LANGUAGES.some((lang) => lang.code === candidate)
     ) {
-      setSelectedLanguage(candidate as 'vi' | 'en');
+      setSelectedLanguage(candidate as Locale);
     }
   }, [storedLanguage]);
 
-  const handleSelect = (code: 'vi' | 'en') => {
+  const handleSelect = (code: Locale) => {
     setSelectedLanguage(code);
   };
 
@@ -91,7 +92,7 @@ export const WelcomeLanguagePage = () => {
         <Logo iconSize={36} textClassName="text-2xl font-bold tracking-tight" />
       </div>
 
-      <div className="w-full max-w-[440px] rounded-3xl bg-card p-6 sm:p-8 flex flex-col gap-6 shadow-xl shadow-slate-200/50 dark:shadow-none">
+      <div className="w-full max-w-[440px] rounded-3xl bg-card p-6 sm:p-8 flex flex-col gap-6">
         <div className="flex flex-col items-center gap-1.5 text-center select-none">
           <h1 className="text-xl font-bold tracking-tight text-foreground font-heading">
             {t('title')}
@@ -116,11 +117,7 @@ export const WelcomeLanguagePage = () => {
                     : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
                 )}
               >
-                <Icons
-                  name={lang.icon}
-                  size={28}
-                  className="rounded-full shadow-2xs overflow-hidden shrink-0"
-                />
+                <Icons name={lang.icon} size={28} className="shrink-0" />
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-foreground leading-tight">
                     {lang.nativeName}

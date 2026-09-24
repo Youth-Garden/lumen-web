@@ -1,6 +1,7 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -29,7 +30,7 @@ import {
   useCreateFlashcard,
   useVocabularyFolders,
 } from '@/features/vocabulary/hooks';
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { i18nText } from '@/shared/utils';
 import { PortalProps } from '@lumen/uikit/portal';
 
 const formSchema = z.object({
@@ -121,7 +122,7 @@ export function AddFlashcardDialog({
                         ) : (
                           folders.map((folder) => (
                             <SelectItem key={folder.id} value={folder.id}>
-                              {getLocalizedText(folder.name, locale)}
+                              {i18nText(folder.name, locale)}
                             </SelectItem>
                           ))
                         )}

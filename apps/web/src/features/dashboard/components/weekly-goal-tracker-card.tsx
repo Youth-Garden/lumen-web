@@ -1,6 +1,7 @@
 'use client';
 
 import { HeatmapItem } from '@/services/progress';
+import { StreakIcon, StreakFreezeIcon } from '@/shared/components/streak-icon';
 import {
   Badge,
   Card,
@@ -12,7 +13,8 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { computeWeeklyTrackerDays } from '../utils/streak-tracker.utils';
 
@@ -101,6 +103,7 @@ export function WeeklyGoalTrackerCard({
             const isTodayMet = item.isToday && item.isGoalMet;
             const isCompleted = item.status === 'completed' || isTodayMet;
             const isTodayActive = item.isToday && !item.isGoalMet;
+            const isFrozen = item.status === 'frozen';
             const isMissed = item.status === 'missed';
 
             return (
@@ -109,17 +112,22 @@ export function WeeklyGoalTrackerCard({
                 className={cn(
                   'flex flex-col items-center justify-between py-3 sm:py-3.5 px-1 min-h-[72px] sm:min-h-[80px] rounded-2xl relative transition-all duration-200',
                   isCompleted && 'bg-emerald-500/10 dark:bg-emerald-500/15',
+                  isFrozen && 'bg-blue-500/10 dark:bg-blue-500/15',
                   isMissed && 'bg-rose-500/10 dark:bg-rose-500/15',
                   isTodayActive && 'bg-primary/10 dark:bg-primary/20',
-                  !isCompleted && !isMissed && !item.isToday && 'bg-muted/30',
+                  !isCompleted &&
+                    !isFrozen &&
+                    !isMissed &&
+                    !item.isToday &&
+                    'bg-muted/30',
                 )}
               >
                 {/* Status Indicator Icon */}
                 <div className="h-6 w-6 flex items-center justify-center">
                   {isCompleted ? (
-                    <div className="h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-                      <Icons name="check" className="h-3.5 w-3.5 stroke-[3]" />
-                    </div>
+                    <StreakIcon size={22} />
+                  ) : isFrozen ? (
+                    <StreakFreezeIcon size={20} />
                   ) : isTodayActive ? (
                     <div className="relative flex items-center justify-center h-6 w-6">
                       <Icons

@@ -1,12 +1,14 @@
 'use client';
 
-import { useKeyPress, useToggle } from '@lumen/hooks';
+import { FlashcardGradeButtons } from '@/features/study/components/flashcard-grade-buttons';
+import { KeyboardShortcutsDialog } from '@/features/study/components/keyboard-shortcuts-dialog';
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
 import { DueFlashcard, FlashcardRating } from '@/services/study';
 import { AudioButton } from '@/shared/components/audio-button';
-import { playAudio } from '@/shared/utils/audio';
+import { Locale } from '@/shared/types';
+import { getSecondaryI18nText, i18nText, playAudio } from '@/shared/utils';
+import { useKeyPress, useToggle } from '@lumen/hooks';
 import {
-  Button,
   Card,
   CardContent,
   IconButton,
@@ -15,10 +17,9 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { motion } from 'framer-motion';
+import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect } from 'react';
-import { FlashcardGradeButtons } from '@/features/study/components/flashcard-grade-buttons';
-import { KeyboardShortcutsDialog } from '@/features/study/components/keyboard-shortcuts-dialog';
 
 export enum FlashcardShortcutKey {
   GradeAgain = '1',
@@ -42,6 +43,7 @@ export function FlashcardReview({
   isSubmitting = false,
 }: FlashcardReviewProps) {
   const t = useTranslations('Vocabulary.Study');
+  const locale = useLocale();
   const [isFlipped, toggleFlip, setIsFlipped] = useToggle(false);
   const [presentShortcuts] = usePortal(KeyboardShortcutsDialog);
 
@@ -181,7 +183,7 @@ export function FlashcardReview({
         >
           {/* Front Face */}
           <Card
-            className="absolute inset-0 w-full min-h-[500px] border-2 border-border hover:border-primary/50 hover:shadow-lg"
+            className="absolute inset-0 w-full min-h-[500px] border-2 border-border hover:border-primary/50"
             style={{ backfaceVisibility: 'hidden' }}
           >
             <CardContent className="flex flex-col items-center justify-center min-h-[500px] h-full p-12 text-center relative">
@@ -199,7 +201,7 @@ export function FlashcardReview({
 
           {/* Back Face */}
           <Card
-            className="absolute inset-0 w-full min-h-[500px] border-2 border-primary shadow-xl"
+            className="absolute inset-0 w-full min-h-[500px] border-2 border-primary"
             style={{
               backfaceVisibility: 'hidden',
               transform: 'rotateY(-180deg)',
@@ -234,28 +236,47 @@ export function FlashcardReview({
                     </div>
 
                     <div className="space-y-10 w-full text-left mt-8 max-w-2xl mx-auto">
-                      {word.definitions.slice(0, 2).map((def, idx) => (
-                        <div key={def.id || idx} className="space-y-4">
-                          <div className="flex flex-col sm:flex-row sm:items-baseline gap-3">
-                            <span className="text-sm font-bold uppercase tracking-widest text-primary px-3 py-1 bg-primary/5 rounded-none border-l-4 border-primary">
-                              {def.partOfSpeech}
-                            </span>
-                            <span className="text-2xl font-semibold text-foreground">
-                              {def.translationVi}
-                            </span>
-                          </div>
-                          <p className="text-lg text-muted-foreground leading-relaxed">
-                            {def.definitionEn}
-                          </p>
-                          {def.examples && def.examples.length > 0 && (
-                            <div className="pl-6 border-l-2 border-primary/20 pt-2 pb-2">
-                              <p className="mt-2 text-sm italic text-slate-500 dark:text-slate-400">
-                                &quot;{def.examples[0].sentenceEn}&quot;
-                              </p>
+                      {word.definitions.slice(0, 2).map((def, idx) => {
+                        const primaryMeaning = i18nText(def.definition, locale);
+                        const secondaryMeaning = getSecondaryI18nText(
+                          def.definition,
+                          locale,
+                        );
+
+                        return (
+                          <div key={def.id || idx} className="space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-baseline gap-3">
+                              {def.partOfSpeech && (
+                                <span className="text-sm font-bold uppercase tracking-widest text-primary px-3 py-1 bg-primary/5 rounded-none border-l-4 border-primary">
+                                  {def.partOfSpeech}
+                                </span>
+                              )}
+                              {primaryMeaning && (
+                                <span className="text-2xl font-semibold text-foreground">
+                                  {primaryMeaning}
+                                </span>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      ))}
+                            {secondaryMeaning && (
+                              <p className="text-lg text-muted-foreground leading-relaxed">
+                                {secondaryMeaning}
+                              </p>
+                            )}
+                            {def.examples && def.examples.length > 0 && (
+                              <div className="pl-6 border-l-2 border-primary/20 pt-2 pb-2">
+                                <p className="mt-2 text-sm italic text-slate-500 dark:text-slate-400">
+                                  &quot;
+                                  {i18nText(
+                                    def.examples[0].sentence,
+                                    Locale.EN,
+                                  )}
+                                  &quot;
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </>
                 ) : (

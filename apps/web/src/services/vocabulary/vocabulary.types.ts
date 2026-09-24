@@ -1,28 +1,21 @@
-import type { I18nMap, I18nString, SupportedLocale } from '@/shared/types';
-
-export type { I18nMap, I18nString, SupportedLocale };
+import type { I18nString } from '@/shared/types';
 
 export interface VocabularyExample {
   id: string;
-  sentence?: I18nMap;
-  sentenceEn: string;
-  translationVi: string;
+  sentence: I18nString;
 }
 
 export interface VocabularyDefinition {
   id: string;
   partOfSpeech: string;
-  definition?: I18nMap;
-  definitionEn: string;
-  translationVi: string;
+  definition: I18nString;
   examples: VocabularyExample[];
 }
 
 export interface VocabularyWord {
   id: string;
   term: string;
-  topic?: string;
-  topicVi?: string;
+  topic?: I18nString;
   topicImageUrl?: string;
   phonetic?: string;
   phoneticUs?: string;
@@ -46,6 +39,7 @@ export interface Folder {
   name: I18nString;
   description?: I18nString | null;
   category?: I18nString | null;
+  imageUrl?: string | null;
   isSystem: boolean;
   flashcardCount: number;
   learnedCount: number;
@@ -53,8 +47,7 @@ export interface Folder {
 }
 
 export interface FolderTopic {
-  topic: string;
-  topicVi: string | null;
+  topic: I18nString;
   topicImageUrl: string | null;
   count: number;
   learnedCount: number;
@@ -91,7 +84,7 @@ export interface FrequentlyMissedWordItem {
   wordId: string;
   term: string;
   partOfSpeech: string;
-  definition: string;
+  definition: I18nString;
   phonetic?: string;
   audioUrl?: string;
   audioUsUrl?: string;

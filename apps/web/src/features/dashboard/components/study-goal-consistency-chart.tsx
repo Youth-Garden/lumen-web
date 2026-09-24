@@ -2,6 +2,7 @@
 
 import { StreakIcon } from '@/shared/components/streak-icon';
 import { HeatmapItem } from '@/services/progress';
+import { Locale } from '@/shared/types';
 import {
   Card,
   CardContent,
@@ -13,7 +14,8 @@ import {
 import { Icons } from '@lumen/uikit/icons';
 import { format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { vi } from 'date-fns/locale';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 import React, { useMemo } from 'react';
 import { Area, AreaChart, ReferenceLine, XAxis, YAxis } from 'recharts';
 
@@ -44,7 +46,7 @@ export function StudyGoalConsistencyChart({
   const t = useTranslations('Dashboard.Overview');
   const tDashboard = useTranslations('Dashboard');
   const locale = useLocale();
-  const dateLocale = locale === 'vi' ? vi : undefined;
+  const dateLocale = locale === Locale.VI ? vi : undefined;
 
   const chartData = useMemo(() => {
     const today = startOfDay(new Date());

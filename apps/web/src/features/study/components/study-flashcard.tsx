@@ -1,5 +1,6 @@
 'use client';
 
+import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 
 import type {
@@ -7,6 +8,7 @@ import type {
   VocabularyWord,
 } from '@/services/vocabulary';
 import { WordDetailTrigger } from '@/features/vocabulary/components/word-detail-trigger';
+import { i18nText, normalizePartOfSpeech } from '@/shared/utils';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { motion } from 'framer-motion';
@@ -22,28 +24,6 @@ interface StudyFlashcardProps {
   onOpenWordDetail?: () => void;
 }
 
-const formatPartOfSpeech = (pos?: string): string => {
-  if (!pos) return '';
-  const trimmed = pos.trim().toLowerCase().replace(/\.$/, '');
-  if (trimmed === 'n' || trimmed === 'noun') return 'noun';
-  if (trimmed === 'v' || trimmed === 'verb') return 'verb';
-  if (trimmed === 'adj' || trimmed === 'adjective') return 'adjective';
-  if (trimmed === 'adv' || trimmed === 'adverb') return 'adverb';
-  if (trimmed === 'prep' || trimmed === 'preposition') return 'preposition';
-  return pos;
-};
-
-const getViMeaning = (definition?: VocabularyDefinition | null): string => {
-  if (!definition) return '';
-  return (
-    definition.definition?.vi ||
-    definition.translationVi ||
-    definition.definitionEn ||
-    definition.definition?.en ||
-    ''
-  );
-};
-
 export function StudyFlashcard({
   card,
   isFlipped,
@@ -54,6 +34,7 @@ export function StudyFlashcard({
   onOpenWordDetail,
 }: StudyFlashcardProps) {
   const t = useTranslations('Vocabulary.Study');
+  const locale = useLocale();
   const definitions = card.definitions || [];
   const phoneticUs = card.phoneticUs || card.phonetic || '';
   const phoneticUk = card.phoneticUk || card.phonetic || '';
@@ -171,8 +152,8 @@ export function StudyFlashcard({
             <div className="space-y-2.5 w-full">
               {definitions.length > 0 ? (
                 definitions.map((def, idx) => {
-                  const pos = formatPartOfSpeech(def.partOfSpeech);
-                  const meaning = getViMeaning(def);
+                  const pos = normalizePartOfSpeech(def.partOfSpeech);
+                  const meaning = i18nText(def.definition, locale);
                   if (!meaning) return null;
 
                   return (

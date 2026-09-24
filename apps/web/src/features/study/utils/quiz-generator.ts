@@ -4,35 +4,19 @@ import {
   type ChoiceOption,
   type StudyQueueItem,
 } from '@/features/study/types/study.types';
+import { Locale } from '@/shared/types';
+import { i18nText, normalizePartOfSpeech } from '@/shared/utils';
 
 export function getCardPrimaryDefinition(
   card: VocabularyWord,
-  locale: string = 'en',
+  locale: Locale = Locale.EN,
 ): {
   meaning: string;
   partOfSpeech: string;
 } {
   const primaryDef = card.definitions?.[0];
-  const enDef = primaryDef?.definitionEn || primaryDef?.definition?.en || '';
-  const viDef = primaryDef?.translationVi || primaryDef?.definition?.vi || '';
-
-  const meaning =
-    locale === 'en'
-      ? enDef || viDef || card.term
-      : viDef || enDef || card.term;
-
-  let partOfSpeech = primaryDef?.partOfSpeech?.trim() || '';
-  if (partOfSpeech) {
-    const normalized = partOfSpeech.toLowerCase().replace(/\.$/, '');
-    if (normalized === 'n' || normalized === 'noun') partOfSpeech = 'noun';
-    else if (normalized === 'v' || normalized === 'verb') partOfSpeech = 'verb';
-    else if (normalized === 'adj' || normalized === 'adjective')
-      partOfSpeech = 'adjective';
-    else if (normalized === 'adv' || normalized === 'adverb')
-      partOfSpeech = 'adverb';
-    else if (normalized === 'prep' || normalized === 'preposition')
-      partOfSpeech = 'preposition';
-  }
+  const meaning = i18nText(primaryDef?.definition, locale) || card.term;
+  const partOfSpeech = normalizePartOfSpeech(primaryDef?.partOfSpeech);
 
   return { meaning, partOfSpeech };
 }

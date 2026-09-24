@@ -1,10 +1,11 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/shared/hooks';
+import { useTranslations } from 'next-intl';
 
 import { useState, useMemo } from 'react';
 import type { Folder } from '@/services/vocabulary';
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { i18nText } from '@/shared/utils';
 import { Button, Skeleton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
@@ -40,10 +41,7 @@ export function FolderSelectionView({
     const grouped = new Map<string, Folder[]>();
 
     allFolders.forEach((folder) => {
-      const localizedCategory = getLocalizedText(
-        folder.category,
-        locale,
-      ).trim();
+      const localizedCategory = i18nText(folder.category, locale).trim();
 
       if (
         !folder.isSystem ||

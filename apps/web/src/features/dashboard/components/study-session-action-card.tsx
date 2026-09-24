@@ -56,7 +56,10 @@ export function StudySessionActionCard({
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <Icons name="sparkles" className="h-5 w-5 text-primary shrink-0" />
+              <Icons
+                name="sparkles"
+                className="h-5 w-5 text-primary shrink-0"
+              />
               <CardTitle className="text-base font-bold font-heading text-foreground">
                 {t('dailyGoal')}
               </CardTitle>

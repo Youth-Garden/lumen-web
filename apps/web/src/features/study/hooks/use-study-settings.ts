@@ -9,9 +9,6 @@ import {
 import type { PronunciationAccent } from '@/services/vocabulary';
 import { usePreferencesStore } from '@/store';
 
-export type { LessonQuotaConfig };
-export { LessonQuotaPreset, LESSON_QUOTA_CONFIGS };
-
 export interface StudySettings {
   lessonQuotaPreset: LessonQuotaPreset;
   wordsPerSession: number;

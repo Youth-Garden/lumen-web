@@ -469,6 +469,8 @@
       "completedTitle": "Đã hoàn thành phiên học!",
       "completedDescription": "Tất cả {count} từ vựng trong phiên này đã được nắm vững.",
       "congratsSession": "Đã hoàn thành phiên học!",
+      "streakActiveTitle": "Bạn đang có <highlight>Streak {streak} ngày</highlight>",
+      "continue": "Tiếp tục",
       "masteredOutOf": "Bạn đã thuộc {mastered} trên tổng số {total} từ trong phiên này.",
       "masteredLabel": "Đã thuộc",
       "reviewNeeded": "Cần ôn lại",

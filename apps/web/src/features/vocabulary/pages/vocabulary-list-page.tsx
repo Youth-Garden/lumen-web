@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 
 import { useDebounce } from '@lumen/hooks';
@@ -19,10 +20,16 @@ import { AddFlashcardDialog } from '@/features/vocabulary/components/dialogs/add
 import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { HighlightText } from '@/shared/components/highlight-text';
 import { AudioButton } from '@/shared/components/audio-button';
-import { CefrLevelEnum } from '@/shared/types';
+import { CefrLevelEnum, Locale } from '@/shared/types';
+import {
+  formatPartOfSpeechShort,
+  getSecondaryI18nText,
+  i18nText,
+} from '@/shared/utils';
 
 export function VocabularyListPage() {
   const t = useTranslations('Vocabulary.List');
+  const locale = useLocale();
   const [search, setSearch] = useState('');
   const [cefrLevel, setCefrLevel] = useState<string>('');
   const debouncedSearch = useDebounce(search, 500);
@@ -148,25 +155,41 @@ export function VocabularyListPage() {
                     <div className="space-y-1">
                       {(word.definitions || [])
                         .slice(0, 2)
-                        .map((def, defIndex) => (
-                          <div
-                            key={def.id || `def-${defIndex}`}
-                            className="text-sm"
-                          >
-                            <span className="italic text-muted-foreground mr-2">
-                              {def.partOfSpeech}.
-                            </span>
-                            <span className="text-foreground">
-                              <HighlightText
-                                text={def.definitionEn}
-                                query={debouncedSearch}
-                              />
-                            </span>
-                            <span className="text-muted-foreground ml-2">
-                              ({def.translationVi})
-                            </span>
-                          </div>
-                        ))}
+                        .map((def, defIndex) => {
+                          const primaryMeaning = i18nText(
+                            def.definition,
+                            locale,
+                          );
+                          const secondaryMeaning = getSecondaryI18nText(
+                            def.definition,
+                            locale,
+                          );
+
+                          return (
+                            <div
+                              key={def.id || `def-${defIndex}`}
+                              className="text-sm"
+                            >
+                              {def.partOfSpeech && (
+                                <span className="italic text-muted-foreground mr-2">
+                                  {formatPartOfSpeechShort(def.partOfSpeech)}
+                                </span>
+                              )}
+                              <span className="text-foreground">
+                                <HighlightText
+                                  text={primaryMeaning}
+                                  query={debouncedSearch}
+                                />
+                              </span>
+                              {secondaryMeaning &&
+                                secondaryMeaning !== primaryMeaning && (
+                                  <span className="text-muted-foreground ml-2">
+                                    ({secondaryMeaning})
+                                  </span>
+                                )}
+                            </div>
+                          );
+                        })}
                     </div>
                     <div className="flex items-center gap-2 mt-4">
                       <Button

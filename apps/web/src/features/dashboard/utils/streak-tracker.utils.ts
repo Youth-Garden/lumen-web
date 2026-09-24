@@ -1,8 +1,9 @@
 import { HeatmapItem } from '@/services/progress';
+import { Locale } from '@/shared/types';
 import { format, isAfter, isSameDay, startOfDay, subDays } from 'date-fns';
 
 export type DayTrackerStatus =
-  'completed' | 'active_today' | 'missed' | 'upcoming';
+  'completed' | 'active_today' | 'frozen' | 'missed' | 'upcoming';
 
 export interface TrackerDayItem {
   date: Date;
@@ -25,8 +26,8 @@ export interface StreakMilestoneInfo {
 
 const MILESTONES = [3, 7, 14, 30, 60, 100, 180, 365];
 
-export function formatTrackerDayLabel(date: Date, locale: string): string {
-  if (locale === 'vi') {
+export function formatTrackerDayLabel(date: Date, locale: Locale): string {
+  if (locale === Locale.VI) {
     const day = date.getDay();
     if (day === 0) return 'CN';
     return `T${day + 1}`;
@@ -38,7 +39,9 @@ export function computeWeeklyTrackerDays(
   heatmapData: HeatmapItem[] | undefined,
   todayStudyMinutes: number,
   dailyGoalMinutes: number,
-  locale: string,
+  locale: Locale,
+  streakFreezes = 0,
+  forceTodayCompleted = false,
 ): TrackerDayItem[] {
   const today = startOfDay(new Date());
   const safeGoal = Math.max(dailyGoalMinutes, 1);
@@ -55,6 +58,7 @@ export function computeWeeklyTrackerDays(
   });
 
   const days: TrackerDayItem[] = [];
+  let availableFreezes = Math.max(0, streakFreezes);
 
   for (let i = 6; i >= 0; i--) {
     const date = subDays(today, i);
@@ -64,7 +68,7 @@ export function computeWeeklyTrackerDays(
 
     let minutes = 0;
     if (isToday) {
-      minutes = todayStudyMinutes;
+      minutes = forceTodayCompleted ? safeGoal : todayStudyMinutes;
     } else if (!isFuture) {
       const count = historyMap.get(dateStr) || 0;
       minutes = count > 0 ? Math.max(5, count * 2) : 0;
@@ -74,9 +78,19 @@ export function computeWeeklyTrackerDays(
 
     let status: DayTrackerStatus = 'upcoming';
     if (isToday) {
-      status = 'active_today';
+      status =
+        forceTodayCompleted || isGoalMet || minutes > 0
+          ? 'completed'
+          : 'active_today';
     } else if (!isFuture) {
-      status = isGoalMet || minutes > 0 ? 'completed' : 'missed';
+      if (isGoalMet || minutes > 0) {
+        status = 'completed';
+      } else if (availableFreezes > 0) {
+        status = 'frozen';
+        availableFreezes--;
+      } else {
+        status = 'missed';
+      }
     }
 
     days.push({
@@ -86,7 +100,7 @@ export function computeWeeklyTrackerDays(
       isToday,
       isFuture,
       minutes,
-      isGoalMet,
+      isGoalMet: forceTodayCompleted && isToday ? true : isGoalMet,
       status,
     });
   }

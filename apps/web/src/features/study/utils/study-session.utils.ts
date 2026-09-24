@@ -12,6 +12,8 @@ import {
 } from './quiz-generator';
 import { FlashcardRating } from '@/services/study';
 import { type VocabularyWord } from '@/services/vocabulary';
+import { Locale } from '@/shared/types';
+import { i18nText } from '@/shared/utils';
 
 export function filterPoolCards(
   cards: VocabularyWord[],
@@ -22,7 +24,7 @@ export function filterPoolCards(
   let list = cards;
   if (selectedTopic) {
     list = cards.filter((card) => {
-      const top = card.topic?.trim() || defaultTopicName;
+      const top = i18nText(card.topic, Locale.EN) || defaultTopicName;
       return top === selectedTopic;
     });
   }
@@ -40,7 +42,7 @@ export function resolveStudyPool(
   let scopedCards = cards;
   if (selectedTopic) {
     scopedCards = cards.filter((card) => {
-      const top = card.topic?.trim() || defaultTopicName;
+      const top = i18nText(card.topic, Locale.EN) || defaultTopicName;
       return top === selectedTopic;
     });
   }
@@ -79,7 +81,7 @@ export function resolveStudyPool(
   if (!selectedTopic && unlearnedCards.length > 0) {
     const topicMap = new Map<string, VocabularyWord[]>();
     for (const card of unlearnedCards) {
-      const top = card.topic?.trim() || defaultTopicName;
+      const top = i18nText(card.topic, Locale.EN) || defaultTopicName;
       if (!topicMap.has(top)) topicMap.set(top, []);
       topicMap.get(top)!.push(card);
     }

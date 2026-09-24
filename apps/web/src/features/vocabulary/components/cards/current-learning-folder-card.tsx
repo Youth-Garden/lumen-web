@@ -1,10 +1,10 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
-import { getLocalizedText } from '@/features/vocabulary/utils';
+import { i18nText } from '@/shared/utils';
 import type { Folder } from '@/services/vocabulary';
-import { useDragScroll } from '@/shared/hooks';
+import { useDragScroll, useLocale } from '@/shared/hooks';
 import { Button, Card, IconButton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -39,7 +39,7 @@ export function CurrentLearningFolderCard({
   }
 
   const wordCount = activeFolder.flashcardCount || 0;
-  const displayName = getLocalizedText(activeFolder.name, locale);
+  const displayName = i18nText(activeFolder.name, locale);
   const learnedApprox = Math.min(wordCount, Math.max(0, learnedCount));
 
   return (

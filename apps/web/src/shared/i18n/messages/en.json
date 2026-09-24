@@ -469,6 +469,8 @@
       "completedTitle": "Session Completed!",
       "completedDescription": "All {count} cards in this session have been mastered.",
       "congratsSession": "Session Completed!",
+      "streakActiveTitle": "You have a <highlight>{streak} day streak</highlight>",
+      "continue": "Continue",
       "masteredOutOf": "You have mastered {mastered} out of {total} words in this session.",
       "masteredLabel": "Mastered",
       "reviewNeeded": "Needs Review",

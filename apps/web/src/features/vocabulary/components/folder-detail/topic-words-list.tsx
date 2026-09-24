@@ -6,12 +6,7 @@ import { usePortal } from '@lumen/uikit/portal';
 import { WordDetailSheet } from './word-detail-sheet';
 
 export interface TopicWordsListProps {
-  folderId?: string;
-  folderName?: string;
-  topicName: string;
-  topicViName?: string;
   flashcards: VocabularyWord[];
-  onBackToTopics?: () => void;
 }
 
 export function TopicWordsList({ flashcards }: TopicWordsListProps) {
