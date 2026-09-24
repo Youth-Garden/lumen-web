@@ -42,13 +42,12 @@ export function SegmentedTabs<T extends string = string>({
     >
       {options.map((option, index) => {
         const isActive = option.value === value;
-        const prevIsActive = index > 0 && options[index - 1].value === value;
-        const showDivider = index > 0 && !isActive && !prevIsActive;
+        const showDivider = index > 0;
 
         return (
           <React.Fragment key={option.value}>
             {showDivider && (
-              <span className="h-3.5 w-px bg-muted-foreground/30 dark:bg-border/60 shrink-0 self-center mx-0.5" />
+              <span className="h-3.5 w-px bg-border/80 dark:bg-border/60 shrink-0 self-center mx-1 sm:mx-1.5 opacity-75" />
             )}
             <button
               type="button"
