@@ -35,9 +35,50 @@ export function StreakMilestoneCard({
 
   if (isLoading) {
     return (
-      <Card className="p-4 sm:p-5 space-y-3">
-        <Skeleton className="h-6 w-36 rounded-lg" />
-        <Skeleton className="h-24 w-full rounded-2xl" />
+      <Card className="h-full flex flex-col justify-between">
+        <CardHeader className="px-5 pt-4 pb-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <Skeleton className="h-5 w-5 rounded-full shrink-0" />
+              <div className="space-y-1">
+                <Skeleton className="h-4 w-32 rounded-md" />
+                <Skeleton className="h-3 w-40 rounded-md" />
+              </div>
+            </div>
+            <Skeleton className="h-5 w-20 rounded-full" />
+          </div>
+        </CardHeader>
+
+        <CardContent className="px-5 pb-3.5 pt-2 flex-1 flex flex-col justify-between gap-3">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-4 w-28 rounded-md" />
+              <Skeleton className="h-3 w-20 rounded-md" />
+            </div>
+            <Skeleton className="w-full h-2 rounded-full" />
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-2.5 w-12 rounded" />
+              <Skeleton className="h-2.5 w-12 rounded" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <div className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-muted/20">
+              <Skeleton className="size-7 rounded-full shrink-0" />
+              <div className="space-y-1 flex-1">
+                <Skeleton className="h-2.5 w-16 rounded" />
+                <Skeleton className="h-3.5 w-12 rounded" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-muted/20">
+              <Skeleton className="size-7 rounded-full shrink-0" />
+              <div className="space-y-1 flex-1">
+                <Skeleton className="h-2.5 w-16 rounded" />
+                <Skeleton className="h-3.5 w-12 rounded" />
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     );
   }

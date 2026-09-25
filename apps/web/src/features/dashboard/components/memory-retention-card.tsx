@@ -107,8 +107,33 @@ export function MemoryRetentionCard({
 
       <CardContent className="space-y-4 pt-1 flex-1 flex flex-col justify-between">
         {isLoading ? (
-          <div className="h-44 w-full flex items-center justify-center">
-            <Skeleton className="h-32 w-32 rounded-full" />
+          <div className="flex flex-col items-center flex-1 justify-between">
+            {/* Semicircle Gauge Skeleton */}
+            <div className="w-full h-40 relative flex items-center justify-center -mb-2 pt-1">
+              <div className="w-36 h-36 rounded-full border-8 border-muted/40 border-b-transparent -rotate-45 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-1 pt-4">
+                  <Skeleton className="h-7 w-14 rounded-md" />
+                  <Skeleton className="h-3 w-20 rounded-md" />
+                </div>
+              </div>
+            </div>
+
+            {/* Level Breakdown Skeleton */}
+            <div className="w-full pt-3 border-t border-border/40 space-y-2">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between gap-3 text-xs"
+                >
+                  <div className="flex items-center gap-2 min-w-[90px]">
+                    <Skeleton className="h-2 w-2 rounded-full shrink-0" />
+                    <Skeleton className="h-3 w-16 rounded-md" />
+                  </div>
+                  <Skeleton className="flex-1 h-1.5 rounded-full" />
+                  <Skeleton className="h-3 w-12 rounded-md" />
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center flex-1 justify-between">

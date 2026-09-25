@@ -134,7 +134,7 @@ export function StudySessionActionCard({
             onClick={() => router.push(RouteEnum.STUDY)}
             className="w-full"
           >
-            <Icons name="play" className="h-4 w-4 mr-1.5" />
+            <Icons name="play" className="h-4 w-4 fill-current mr-1.5" />
             {t('startReview', { count: dueCount })}
           </Button>
         ) : (

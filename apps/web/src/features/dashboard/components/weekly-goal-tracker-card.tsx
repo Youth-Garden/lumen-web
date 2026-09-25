@@ -1,7 +1,8 @@
 'use client';
 
 import { HeatmapItem } from '@/services/progress';
-import { StreakIcon, StreakFreezeIcon } from '@/shared/components/streak-icon';
+import { StreakFreezeIcon, StreakIcon } from '@/shared/components/streak-icon';
+import { useLocale } from '@/shared/hooks';
 import {
   Badge,
   Card,
@@ -13,7 +14,6 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { cn } from '@lumen/uikit/utils';
-import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { computeWeeklyTrackerDays } from '../utils/streak-tracker.utils';

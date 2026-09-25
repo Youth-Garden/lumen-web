@@ -30,9 +30,34 @@ export function HeroActionCard({
 
   if (isLoading) {
     return (
-      <Card className="p-4 sm:p-5 space-y-3">
-        <Skeleton className="h-6 w-36 rounded-lg" />
-        <Skeleton className="h-24 w-full rounded-2xl" />
+      <Card className="h-full flex flex-col justify-between">
+        <CardHeader className="px-5 pt-3.5 pb-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-4.5 w-4.5 rounded-full shrink-0" />
+              <div className="space-y-1">
+                <Skeleton className="h-4 w-28 rounded-md" />
+                <Skeleton className="h-3 w-36 rounded-md" />
+              </div>
+            </div>
+            <Skeleton className="h-5 w-16 rounded-full" />
+          </div>
+        </CardHeader>
+
+        <CardContent className="px-5 pb-3.5 pt-1.5 flex-1 flex flex-col justify-between gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-baseline gap-1.5">
+                <Skeleton className="h-7 w-12 rounded-md" />
+                <Skeleton className="h-3.5 w-16 rounded" />
+              </div>
+              <Skeleton className="h-3 w-28 rounded" />
+            </div>
+            <Skeleton className="h-7 w-20 rounded-xl" />
+          </div>
+
+          <Skeleton className="w-full h-9 rounded-xl" />
+        </CardContent>
       </Card>
     );
   }
@@ -109,7 +134,7 @@ export function HeroActionCard({
         >
           {hasDueCards ? (
             <>
-              <Icons name="play" className="h-3.5 w-3.5 mr-1.5" />
+              <Icons name="play" className="h-3.5 w-3.5 fill-current mr-1.5" />
               <span>{t('startReview', { count: dueCount })}</span>
             </>
           ) : (

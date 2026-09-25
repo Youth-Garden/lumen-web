@@ -40,9 +40,49 @@ export function TodayGoalProgressCard({
 
   if (isLoading) {
     return (
-      <Card className="p-4 sm:p-5 space-y-3">
-        <Skeleton className="h-6 w-36 rounded-lg" />
-        <Skeleton className="h-24 w-full rounded-2xl" />
+      <Card className="h-full flex flex-col justify-between">
+        <CardHeader className="px-5 pt-3.5 pb-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <Skeleton className="h-5 w-5 rounded-full shrink-0" />
+              <div className="space-y-1">
+                <Skeleton className="h-4 w-28 rounded-md" />
+                <Skeleton className="h-3 w-36 rounded-md" />
+              </div>
+            </div>
+            <Skeleton className="h-7 w-7 rounded-lg" />
+          </div>
+        </CardHeader>
+
+        <CardContent className="px-5 pb-3.5 pt-3 flex-1 flex flex-col justify-between gap-3">
+          <div className="space-y-2.5">
+            <div className="flex items-end justify-between gap-2">
+              <div className="flex items-baseline gap-1.5">
+                <Skeleton className="h-8 w-14 rounded-lg" />
+                <Skeleton className="h-4 w-10 rounded-md" />
+              </div>
+              <Skeleton className="h-6 w-16 rounded-full" />
+            </div>
+            <Skeleton className="w-full h-2.5 rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-0.5">
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/20">
+              <Skeleton className="h-3.5 w-3.5 rounded-full shrink-0" />
+              <div className="space-y-1 flex-1">
+                <Skeleton className="h-2.5 w-12 rounded" />
+                <Skeleton className="h-3 w-8 rounded" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/20">
+              <Skeleton className="h-3.5 w-3.5 rounded-full shrink-0" />
+              <div className="space-y-1 flex-1">
+                <Skeleton className="h-2.5 w-12 rounded" />
+                <Skeleton className="h-3 w-8 rounded" />
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     );
   }
