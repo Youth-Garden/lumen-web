@@ -6,12 +6,14 @@
     "markAllAsRead": "Mark all as read"
   },
   "CommandPalette": {
-    "placeholder": "Search folders, words, or commands... (Ctrl + K)",
+    "placeholder": "Search folders, topics, words, or pages... (Ctrl + K)",
     "empty": "No results found.",
     "noResults": "No results found.",
     "searching": "Searching...",
     "suggestions": "Suggestions",
-    "folders": "Folders",
+    "pages": "Pages & Features",
+    "folders": "Folders & Decks",
+    "topics": "Sub-Topics",
     "vocabulary": "Vocabulary Words",
     "vocabularyWords": "Vocabulary Words",
     "quickActions": "Quick Actions",

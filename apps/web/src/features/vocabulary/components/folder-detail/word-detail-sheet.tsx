@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import {
+  Badge,
   Button,
   IconButton,
   ScrollArea,
@@ -132,9 +133,9 @@ export function WordDetailSheet({
               {word?.term ?? ''}
             </h2>
             {word?.cefrLevel && (
-              <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-primary/10 text-primary uppercase shrink-0 select-none">
+              <Badge variant="subtle" size="sm" className="uppercase">
                 {word.cefrLevel}
-              </span>
+              </Badge>
             )}
             <div className="flex-1" />
             <div className="flex items-center gap-1">

@@ -6,6 +6,7 @@ import { getFolderCoverUrl } from '@/features/vocabulary/utils';
 import { useLocale } from '@/shared/hooks';
 import { i18nText } from '@/shared/utils';
 import type { Folder } from '@/services/vocabulary';
+import { Badge } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import Image from 'next/image';
 
@@ -66,9 +67,9 @@ export function FolderCard({
       {/* TOP: Active indicator badge on top right (Type removed as requested) */}
       <div className="relative z-10 flex items-start justify-end pointer-events-none w-full min-h-[22px]">
         {isActive && (
-          <span className="px-2.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold shadow-md">
+          <Badge variant="default" size="sm">
             {t('activeBadge')}
-          </span>
+          </Badge>
         )}
       </div>
 

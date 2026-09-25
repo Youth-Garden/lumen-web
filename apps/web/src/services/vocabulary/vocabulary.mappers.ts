@@ -62,11 +62,11 @@ export const folderListMapper = (raw: any): Folder[] => {
 };
 
 export const folderTopicMapper = (raw: any): FolderTopic => ({
-  topic: toI18nString(raw.topic),
-  topicImageUrl: raw.topicImageUrl || null,
-  count: raw.count || 0,
-  learnedCount: raw.learnedCount || 0,
-  dueCount: raw.dueCount || 0,
+  topic: toI18nString(raw?.topic),
+  topicImageUrl: raw?.topicImageUrl || null,
+  count: raw?.count || 0,
+  learnedCount: raw?.learnedCount || 0,
+  dueCount: raw?.dueCount || 0,
 });
 
 export const folderTopicListMapper = (raw: any): FolderTopic[] => {

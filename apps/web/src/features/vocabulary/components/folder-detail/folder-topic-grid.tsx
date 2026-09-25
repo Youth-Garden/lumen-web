@@ -4,6 +4,7 @@ import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 
 import {
+  Badge,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -56,9 +57,9 @@ export function FolderTopicGrid({
               {folderName}
             </h1>
             {category && (
-              <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-primary/10 text-primary">
+              <Badge variant="subtle" size="sm">
                 {category}
-              </span>
+              </Badge>
             )}
           </div>
 

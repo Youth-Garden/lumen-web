@@ -1,5 +1,6 @@
 'use client';
 
+import { NotFoundView } from '@/shared/components/not-found-view';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { useLocale } from '@/shared/hooks';
@@ -97,10 +98,11 @@ export function FolderDetailPage({
   }));
 
   const handleTopicClick = (topicName: string) => {
+    if (!topicName || !topicName.trim()) return;
     router.push(
       formatUrl(RouteEnum.FOLDER_TOPIC_DETAIL, {
         id: folderId,
-        topic: encodeURIComponent(topicName),
+        topic: encodeURIComponent(topicName.trim()),
       }),
     );
   };
@@ -190,16 +192,7 @@ export function FolderDetailPage({
   }
 
   if (!folderDetail) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-6 space-y-4">
-        <h2 className="text-xl font-bold text-foreground">
-          {t('folderNotFound')}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {t('folderNotFoundDesc')}
-        </p>
-      </div>
-    );
+    return <NotFoundView />;
   }
 
   return (

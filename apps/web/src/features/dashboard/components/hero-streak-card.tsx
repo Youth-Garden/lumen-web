@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent, Skeleton } from '@lumen/uikit/components';
+import { Badge, Card, CardContent, Skeleton } from '@lumen/uikit/components';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -53,15 +53,13 @@ export function HeroStreakCard({
           </p>
         </div>
 
-        {/* Bottom-Left: Modern Status Pill (No icon, No border) */}
+        {/* Bottom-Left: Status Badge */}
         <div className="pt-1.5">
-          <div className="text-[11px] font-bold text-white bg-white/20 backdrop-blur-xs px-3 py-0.5 rounded-full w-fit">
-            <span>
-              {isStudiedToday
-                ? t('streakActive').replace('🔥', '').trim()
-                : t('streakInactive')}
-            </span>
-          </div>
+          <Badge variant="subtle" size="sm" className="bg-white/20 text-white font-bold backdrop-blur-xs">
+            {isStudiedToday
+              ? t('streakActive').replace('🔥', '').trim()
+              : t('streakInactive')}
+          </Badge>
         </div>
       </CardContent>
     </Card>

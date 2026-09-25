@@ -206,7 +206,7 @@ export function MemoryRetentionCard({
                       />
                     </div>
 
-                    <span className="text-[11px] font-bold text-foreground text-right min-w-[50px]">
+                    <span className="text-[11px] font-bold text-foreground text-left min-w-[50px]">
                       {count}{' '}
                       <span className="font-normal text-muted-foreground">
                         ({percent}%)

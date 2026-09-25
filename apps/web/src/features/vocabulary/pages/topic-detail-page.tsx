@@ -1,5 +1,6 @@
 'use client';
 
+import { NotFoundView } from '@/shared/components/not-found-view';
 import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
@@ -168,16 +169,7 @@ export function TopicDetailPage() {
   }
 
   if (!folderDetail) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-6 space-y-4">
-        <h2 className="text-xl font-bold text-foreground">
-          {t('folderNotFound')}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {t('folderNotFoundDesc')}
-        </p>
-      </div>
-    );
+    return <NotFoundView />;
   }
 
   return (

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { useDebounce } from '@lumen/hooks';
 import {
+  Badge,
   Button,
   Card,
   CardContent,
@@ -41,21 +42,6 @@ export function VocabularyListPage() {
     cefrLevel,
   });
 
-  const getCefrColor = (level: string) => {
-    switch (level.toUpperCase()) {
-      case CefrLevelEnum.A1:
-      case CefrLevelEnum.A2:
-        return 'bg-green-500/10 text-green-500';
-      case CefrLevelEnum.B1:
-      case CefrLevelEnum.B2:
-        return 'bg-blue-500/10 text-blue-500';
-      case CefrLevelEnum.C1:
-      case CefrLevelEnum.C2:
-        return 'bg-purple-500/10 text-purple-500';
-      default:
-        return 'bg-secondary text-secondary-foreground';
-    }
-  };
 
   return (
     <div className="flex flex-col space-y-6 h-full min-h-[calc(100vh-8rem)]">
@@ -133,11 +119,9 @@ export function VocabularyListPage() {
                         />
                       </h3>
                       {word.cefrLevel && (
-                        <div
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getCefrColor(word.cefrLevel)}`}
-                        >
+                        <Badge variant="subtle" size="sm">
                           {word.cefrLevel}
-                        </div>
+                        </Badge>
                       )}
                       {word.audioUrl && (
                         <AudioButton

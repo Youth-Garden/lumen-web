@@ -117,7 +117,15 @@ export abstract class BaseApiService {
         (create().defaults.transformResponse as AxiosResponseTransformer[]) ||
         [];
 
-      const mapSuccessResponse = (raw: any) => {
+      const mapSuccessResponse = (
+        raw: any,
+        _headers?: any,
+        status?: number,
+      ) => {
+        if (status !== undefined && (status < 200 || status >= 300)) {
+          return raw;
+        }
+
         if (!mapper) return raw;
 
         // If data is array (like in pagination items), map each item
@@ -139,7 +147,7 @@ export abstract class BaseApiService {
           return { ...raw, data: mapper(raw.data) };
         }
 
-        return mapper(raw);
+        return raw;
       };
 
       finalConfig.transformResponse = [

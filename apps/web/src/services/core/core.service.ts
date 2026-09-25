@@ -28,8 +28,7 @@ export abstract class CoreService extends BaseApiService {
     super({
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
       mappers,
-      onError: (errors) => {
-        const message = errors[0] || 'An error occurred';
+      onError: (_errors, message) => {
         toast.error(message, { id: message });
       },
       onNetworkError: (message) => {

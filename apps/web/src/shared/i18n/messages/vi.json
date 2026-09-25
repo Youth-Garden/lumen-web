@@ -6,12 +6,14 @@
     "markAllAsRead": "Đánh dấu tất cả đã đọc"
   },
   "CommandPalette": {
-    "placeholder": "Tìm kiếm thư mục, từ vựng hoặc lệnh... (Ctrl + K)",
+    "placeholder": "Tìm kiếm thư mục, chủ đề, từ vựng hoặc trang... (Ctrl + K)",
     "empty": "Không tìm thấy kết quả phù hợp.",
     "noResults": "Không tìm thấy kết quả phù hợp.",
     "searching": "Đang tìm kiếm...",
     "suggestions": "Gợi ý nhanh",
+    "pages": "Trang & Tính năng",
     "folders": "Thư mục từ vựng",
+    "topics": "Chủ đề từ vựng",
     "vocabulary": "Từ vựng",
     "vocabularyWords": "Từ vựng",
     "quickActions": "Hành động nhanh",

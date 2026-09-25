@@ -60,12 +60,6 @@ export function WeeklyGoalTrackerCard({
     );
   }
 
-  const safeGoal = Math.max(dailyGoalMinutes, 1);
-  const todayProgressPercent = Math.min(
-    100,
-    Math.round((todayStudyMinutes / safeGoal) * 100),
-  );
-
   return (
     <Card className="h-full flex flex-col justify-between">
       <CardHeader className="px-5 pt-3.5 pb-0">
@@ -129,15 +123,12 @@ export function WeeklyGoalTrackerCard({
                   ) : isFrozen ? (
                     <StreakFreezeIcon size={20} />
                   ) : isTodayActive ? (
-                    <div className="relative flex items-center justify-center h-6 w-6">
+                    <div className="relative h-6 w-6 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-full border-[1.5px] border-dashed border-primary/50 dark:border-primary/60 animate-pulse" />
                       <Icons
-                        name="progress-ring"
-                        percent={todayProgressPercent}
-                        className="h-6 w-6 text-primary"
+                        name="flame"
+                        className="h-3.5 w-3.5 text-primary stroke-[2.2] fill-primary/15 shrink-0"
                       />
-                      <span className="absolute text-[8px] font-black text-primary font-heading select-none">
-                        {todayProgressPercent}%
-                      </span>
                     </div>
                   ) : isMissed ? (
                     <div className="h-6 w-6 flex items-center justify-center">

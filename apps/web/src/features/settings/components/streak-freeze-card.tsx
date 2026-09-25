@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Badge,
   Card,
   CardContent,
   CardDescription,
@@ -40,12 +41,12 @@ export function StreakFreezeCard({ dashboardData }: StreakFreezeCardProps) {
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold text-xs shrink-0">
+          <Badge variant="info" size="sm" className="gap-1.5 shrink-0">
             <Icons name="shield" className="h-3.5 w-3.5" />
             <span>
               {streakFreezes}/{maxFreezes} {t('available')}
             </span>
-          </div>
+          </Badge>
         </div>
       </CardHeader>
 
