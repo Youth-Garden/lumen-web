@@ -122,7 +122,6 @@ export function StudyFeedbackDrawer({
                   fill
                   sizes="80px"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
             )}

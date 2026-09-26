@@ -130,7 +130,6 @@ export function FolderTopicGrid({
                       fill
                       sizes="72px"
                       className="object-cover"
-                      unoptimized
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary">

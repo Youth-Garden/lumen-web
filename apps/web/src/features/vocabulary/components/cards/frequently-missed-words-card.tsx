@@ -101,7 +101,6 @@ export function FrequentlyMissedWordsCard({
                     fill
                     sizes="56px"
                     className="object-cover"
-                    unoptimized
                   />
                 </div>
               )}

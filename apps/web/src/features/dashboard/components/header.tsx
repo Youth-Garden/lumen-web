@@ -1,10 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { StreakIcon } from '@/shared/components/streak-icon';
 import { useLogout } from '@/features/auth/hooks';
 import { NotificationDropdown } from '@/features/notification/components/notification-dropdown';
 import { CommandPalette } from '@/shared/components/command-palette';
+import { StreakIcon } from '@/shared/components/streak-icon';
 import { RouteEnum } from '@/shared/constants';
 import { useRouter } from '@/shared/i18n/routing';
 import { useAuthStore } from '@/store/auth.store';
@@ -22,6 +21,7 @@ import {
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
+import { useTranslations } from 'next-intl';
 import { useProgressDashboard } from '../hooks/use-progress-dashboard';
 
 export function Header() {
@@ -74,7 +74,7 @@ export function Header() {
         </kbd>
       </Button>
 
-      <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md shadow-xs rounded-full p-1 pl-2">
+      <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md rounded-full p-1 pl-2">
         {progressData && (
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-semibold text-xs">
             <StreakIcon size={16} />

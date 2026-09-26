@@ -6,6 +6,7 @@ export interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   iconSize?: number;
   textClassName?: string;
   iconClassName?: string;
+  src?: string;
 }
 
 export const Logo = forwardRef<HTMLDivElement, LogoProps>(
@@ -16,6 +17,7 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
       iconSize = 32,
       textClassName,
       iconClassName,
+      src = '/logo.png',
       ...props
     },
     ref,
@@ -27,7 +29,7 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
         {...props}
       >
         <img
-          src="/logo.png"
+          src={src}
           alt="Lumen Logo"
           width={iconSize}
           height={iconSize}

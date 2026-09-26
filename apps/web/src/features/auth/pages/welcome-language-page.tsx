@@ -113,7 +113,7 @@ export const WelcomeLanguagePage = () => {
                 className={cn(
                   'w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-200 cursor-pointer text-left',
                   isSelected
-                    ? 'bg-primary/15 text-foreground font-medium'
+                    ? 'bg-primary/15 text-foreground'
                     : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
                 )}
               >

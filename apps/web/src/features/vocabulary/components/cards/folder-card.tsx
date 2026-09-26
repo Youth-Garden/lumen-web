@@ -57,7 +57,6 @@ export function FolderCard({
           alt={folderDisplayName}
           fill
           sizes="(max-width: 640px) 100vw, 260px"
-          unoptimized
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {/* Dark gradient overlay for readable text */}

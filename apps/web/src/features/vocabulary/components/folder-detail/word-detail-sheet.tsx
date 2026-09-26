@@ -243,7 +243,6 @@ export function WordDetailSheet({
                   fill
                   sizes="176px"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
             </div>

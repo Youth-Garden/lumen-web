@@ -143,7 +143,6 @@ export function StudyFlashcard({
                   fill
                   sizes="150px"
                   className="object-contain"
-                  unoptimized
                 />
               </div>
             ) : null}

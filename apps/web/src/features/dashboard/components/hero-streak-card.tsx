@@ -30,7 +30,6 @@ export function HeroStreakCard({
           width={180}
           height={180}
           priority
-          unoptimized
           className="w-full h-full object-contain"
         />
       </div>
