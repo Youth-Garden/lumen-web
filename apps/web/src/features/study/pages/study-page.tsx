@@ -1,24 +1,16 @@
 'use client';
 
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { Icons } from '@lumen/uikit/icons';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  Button,
-  OpenEffect,
-} from '@lumen/uikit/components';
+import { Button, OpenEffect } from '@lumen/uikit/components';
 import { useCounter } from '@lumen/hooks';
-import { useDueFlashcards, useReviewFlashcard } from '@/features/study/hooks';
+import { useDueWords, useReviewFlashcard } from '@/features/study/hooks';
 import { FlashcardReview } from '@/features/study/components/flashcard-review';
 import { RouteEnum } from '@/shared/constants';
 import { FlashcardRating } from '@/services/study';
+import { useSetBreadcrumb } from '@/shared/hooks';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -34,25 +26,34 @@ export function StudyPage() {
 
   const [currentIndex, { increment: nextIndex }] = useCounter(0);
 
+  useSetBreadcrumb(
+    useMemo(
+      () => [
+        { label: tVocab('title'), href: RouteEnum.VOCABULARY },
+        { label: t('practice') },
+      ],
+      [tVocab, t],
+    ),
+  );
+
   const {
-    data: dueFlashcardsResponse,
+    data: dueWordsResponse,
     isLoading,
     isError,
-  } = useDueFlashcards({ folderId, limit });
+  } = useDueWords({ folderId, limit });
   const { mutateAsync: reviewFlashcard, isPending: isReviewing } =
     useReviewFlashcard();
 
-  const dueFlashcards = dueFlashcardsResponse?.data || [];
-  const currentFlashcard = dueFlashcards[currentIndex];
-  const isFinished =
-    currentIndex >= dueFlashcards.length && dueFlashcards.length > 0;
+  const dueWords = dueWordsResponse?.data || [];
+  const currentWord = dueWords[currentIndex];
+  const isFinished = currentIndex >= dueWords.length && dueWords.length > 0;
 
   const handleGrade = async (grade: FlashcardRating) => {
-    if (!currentFlashcard) return;
+    if (!currentWord) return;
 
     try {
       await reviewFlashcard({
-        flashcardId: currentFlashcard.flashcardId,
+        flashcardId: currentWord.flashcardId,
         quality: grade,
       });
       nextIndex();
@@ -84,7 +85,7 @@ export function StudyPage() {
     );
   }
 
-  if (dueFlashcards.length === 0 || isFinished) {
+  if (dueWords.length === 0 || isFinished) {
     return (
       <OpenEffect
         variant="grow"
@@ -112,28 +113,14 @@ export function StudyPage() {
     );
   }
 
-  const progress = (currentIndex / dueFlashcards.length) * 100;
+  const progress = (currentIndex / dueWords.length) * 100;
 
   return (
     <div className="flex flex-col h-full max-w-4xl mx-auto w-full pb-10">
-      <div className="flex items-center justify-between mb-8">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={RouteEnum.VOCABULARY}>{tVocab('title')}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{t('practice')}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
+      <div className="flex items-center justify-end mb-8">
         <div className="flex flex-col items-end">
           <span className="text-sm font-medium text-muted-foreground mb-2">
-            {currentIndex} / {dueFlashcards.length} {t('cards')}
+            {currentIndex} / {dueWords.length} {t('cards')}
           </span>
           <div className="h-2.5 w-48 bg-muted rounded-full overflow-hidden">
             <div
@@ -145,10 +132,10 @@ export function StudyPage() {
       </div>
 
       <div className="flex-1 flex flex-col justify-center">
-        {currentFlashcard && (
+        {currentWord && (
           <FlashcardReview
-            key={currentFlashcard.flashcardId}
-            flashcard={currentFlashcard}
+            key={currentWord.flashcardId}
+            flashcard={currentWord}
             onGrade={handleGrade}
             isSubmitting={isReviewing}
           />

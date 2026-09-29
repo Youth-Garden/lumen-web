@@ -9,7 +9,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   Form,
@@ -84,7 +83,6 @@ export function AddFlashcardDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t('addToFolder')}</DialogTitle>
-          <DialogDescription>{t('addToFolderDescription')}</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">

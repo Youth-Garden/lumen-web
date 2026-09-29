@@ -1,24 +1,27 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useLocale } from '@/shared/hooks';
-import { useTranslations } from 'next-intl';
-import { useDebounce } from '@lumen/hooks';
-import { useQueries } from '@tanstack/react-query';
-import { HighlightText } from '@/shared/components/highlight-text';
+import { useLogout } from '@/features/auth/hooks';
+import { WordDetailSheet } from '@/features/vocabulary/components/folder-detail/word-detail-sheet';
 import {
   useVocabularyFolders,
   useVocabularyWords,
 } from '@/features/vocabulary/hooks/use-vocabulary';
-import { WordDetailSheet } from '@/features/vocabulary/components/folder-detail/word-detail-sheet';
 import {
   vocabularyKeys,
   vocabularyService,
+  type FolderTopic,
   type VocabularyWord,
 } from '@/services/vocabulary';
+import { HighlightText } from '@/shared/components/highlight-text';
+import { RouteEnum } from '@/shared/constants';
+import { useLocale } from '@/shared/hooks';
+import { Locale } from '@/shared/types';
 import { i18nText, includesI18n } from '@/shared/utils';
+import { useAuthStore } from '@/store/auth.store';
+import { useDebounce } from '@lumen/hooks';
+import { formatUrl } from '@lumen/shared-api';
 import {
+  Badge,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -29,11 +32,10 @@ import {
 } from '@lumen/uikit/components';
 import { Icons, type IconName } from '@lumen/uikit/icons';
 import { usePortal, type PortalProps } from '@lumen/uikit/portal';
-import { useAuthStore } from '@/store/auth.store';
-import { useLogout } from '@/features/auth/hooks';
-import { RouteEnum } from '@/shared/constants';
-import { formatUrl } from '@lumen/shared-api';
-import { Locale } from '@/shared/types';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
 
 interface NavPageItem {
   id: string;
@@ -97,9 +99,16 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
 
+  // Auto dismiss if unauthenticated
+  useEffect(() => {
+    if (!isAuthenticated && isOpen) {
+      onDismiss?.();
+    }
+  }, [isAuthenticated, isOpen, onDismiss]);
+
   // 1. System & Custom Folders
   const { data: foldersData } = useVocabularyFolders({
-    enabled: Boolean(isOpen),
+    enabled: Boolean(isOpen) && isAuthenticated,
   });
   const allFolders = foldersData?.data || [];
 
@@ -113,59 +122,26 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
     );
   }, [allFolders, debouncedSearch]);
 
-  // 2. Sub-topics across folders
-  const topicQueries = useQueries({
-    queries: allFolders.map((folder) => ({
-      queryKey: vocabularyKeys.folderTopics(folder.id),
-      queryFn: () =>
-        vocabularyService
-          .getFolderTopics(folder.id)
-          .then((res) => res?.data ?? []),
-      enabled: Boolean(isOpen) && Boolean(folder.id),
-      staleTime: 5 * 60 * 1000,
-    })),
+  // 2. Search topics across folders via single endpoint
+  const isSearchActive =
+    Boolean(isOpen) && isAuthenticated && debouncedSearch.trim().length > 0;
+
+  const { data: topicsRes } = useQuery({
+    queryKey: ['vocabulary', 'topics', 'search', debouncedSearch.trim()],
+    queryFn: () =>
+      vocabularyService
+        .getAllTopics({ search: debouncedSearch.trim(), limit: 10 })
+        .then((res) => res?.data ?? []),
+    enabled: isSearchActive,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const allTopics = useMemo(() => {
-    const topicsList: {
-      folderId: string;
-      folderName: Record<string, string>;
-      topic: Record<string, string>;
-      topicImageUrl: string | null;
-      count: number;
-    }[] = [];
-
-    allFolders.forEach((folder, idx) => {
-      const topicsData = topicQueries[idx]?.data;
-      if (Array.isArray(topicsData)) {
-        topicsData.forEach((tData) => {
-          if (tData.topic && (tData.topic.en || tData.topic.vi)) {
-            topicsList.push({
-              folderId: folder.id,
-              folderName: folder.name,
-              topic: tData.topic,
-              topicImageUrl: tData.topicImageUrl,
-              count: tData.count,
-            });
-          }
-        });
-      }
-    });
-
-    return topicsList;
-  }, [allFolders, topicQueries]);
-
-  const filteredTopics = useMemo(() => {
+  const filteredTopics: FolderTopic[] = useMemo(() => {
     if (!debouncedSearch.trim()) return [];
-    return allTopics.filter(
-      (item) =>
-        includesI18n(item.topic, debouncedSearch) ||
-        includesI18n(item.folderName, debouncedSearch),
-    );
-  }, [allTopics, debouncedSearch]);
+    return topicsRes ?? [];
+  }, [debouncedSearch, topicsRes]);
 
   // 3. Vocabulary Master Words (Triggers GET /vocabulary/words?search=... API call)
-  const isSearchActive = Boolean(isOpen) && debouncedSearch.trim().length > 0;
   const vocabWords = useVocabularyWords(
     { search: debouncedSearch.trim(), limit: 10 },
     {
@@ -193,6 +169,8 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
     },
     [onDismiss],
   );
+
+  if (!isAuthenticated) return null;
 
   return (
     <CommandDialog
@@ -232,7 +210,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                   )
                 }
               >
-                <Icons name="folder" className="mr-2 h-4 w-4 text-primary" />
+                <Icons name="folder" className="mr-2 h-4 w-4" />
                 <span>
                   <HighlightText
                     text={i18nText(folder.name, locale)}
@@ -240,9 +218,13 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                   />
                 </span>
                 {folder.category && (
-                  <span className="ml-auto rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  <Badge
+                    variant="subtle"
+                    size="sm"
+                    className="ml-auto shrink-0 font-medium"
+                  >
                     {i18nText(folder.category, locale)}
-                  </span>
+                  </Badge>
                 )}
               </CommandItem>
             ))}
@@ -253,29 +235,30 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
         {debouncedSearch && filteredTopics.length > 0 && (
           <CommandGroup heading={t('topics')}>
             {filteredTopics.slice(0, 6).map((item, idx) => {
-              const topicTitle = i18nText(item.topic, locale);
-              const folderTitle = i18nText(item.folderName, locale);
+              const topicTitle = i18nText(item.name || item.topic, locale);
+              const folderTitle = item.folderName
+                ? i18nText(item.folderName, locale)
+                : '';
               const topicParamEn =
-                i18nText(item.topic, Locale.EN) || topicTitle;
+                i18nText(item.name || item.topic, Locale.EN) || topicTitle;
 
               return (
                 <CommandItem
-                  key={`${item.folderId}-${idx}`}
+                  key={`${item.folderId ?? 'topic'}-${item.id || idx}`}
                   onSelect={() =>
-                    runCommand(() =>
-                      router.push(
-                        formatUrl(RouteEnum.FOLDER_TOPIC_DETAIL, {
-                          id: item.folderId,
-                          topic: encodeURIComponent(topicParamEn),
-                        }),
-                      ),
-                    )
+                    runCommand(() => {
+                      if (item.folderId) {
+                        router.push(
+                          formatUrl(RouteEnum.FOLDER_TOPIC_DETAIL, {
+                            id: item.folderId,
+                            topic: encodeURIComponent(topicParamEn),
+                          }),
+                        );
+                      }
+                    })
                   }
                 >
-                  <Icons
-                    name="book-open"
-                    className="mr-2 h-4 w-4 text-blue-500"
-                  />
+                  <Icons name="book-open" className="mr-2 h-4 w-4" />
                   <div className="flex flex-col">
                     <span>
                       <HighlightText
@@ -283,13 +266,19 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                         query={debouncedSearch}
                       />
                     </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      {folderTitle}
-                    </span>
+                    {folderTitle && (
+                      <span className="text-[11px] text-muted-foreground">
+                        {folderTitle}
+                      </span>
+                    )}
                   </div>
-                  <span className="ml-auto rounded bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    {item.count} từ
-                  </span>
+                  <Badge
+                    variant="secondary"
+                    size="sm"
+                    className="ml-auto shrink-0 font-medium"
+                  >
+                    {t('wordsCount', { count: item.count })}
+                  </Badge>
                 </CommandItem>
               );
             })}
@@ -309,10 +298,7 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                   <Icons name="file-text" className="mr-2 h-4 w-4" />
                   <div className="flex flex-col">
                     <span>
-                      <HighlightText
-                        text={word.term}
-                        query={debouncedSearch}
-                      />
+                      <HighlightText text={word.term} query={debouncedSearch} />
                     </span>
                     {word.definitions?.[0]?.definition && (
                       <span className="text-[11px] text-muted-foreground line-clamp-1">
@@ -321,9 +307,13 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
                     )}
                   </div>
                   {word.cefrLevel && (
-                    <span className="ml-auto rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+                    <Badge
+                      variant="subtle"
+                      size="sm"
+                      className="ml-auto shrink-0 font-medium"
+                    >
                       {word.cefrLevel}
-                    </span>
+                    </Badge>
                   )}
                 </CommandItem>
               ))}
@@ -361,19 +351,28 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
 
         {/* PRIORITY 5: Quick Actions (Settings & Logout) */}
         {(!debouncedSearch ||
-          includesI18n({ en: 'Settings Profile', vi: 'Cài đặt Tài khoản' }, debouncedSearch) ||
-          includesI18n({ en: 'Logout Sign out', vi: 'Đăng xuất Thoát' }, debouncedSearch)) && (
+          includesI18n(
+            { en: 'Settings Profile', vi: 'Cài đặt Tài khoản' },
+            debouncedSearch,
+          ) ||
+          includesI18n(
+            { en: 'Logout Sign out', vi: 'Đăng xuất Thoát' },
+            debouncedSearch,
+          )) && (
           <>
             <CommandSeparator />
             <CommandGroup heading={t('quickActions')}>
               <CommandItem
-                onSelect={() => runCommand(() => router.push(RouteEnum.SETTINGS))}
+                onSelect={() =>
+                  runCommand(() => router.push(RouteEnum.SETTINGS))
+                }
               >
                 <Icons name="user" className="mr-2 h-4 w-4" />
                 <span>{t('profileSettings')}</span>
               </CommandItem>
               {isAuthenticated && (
                 <CommandItem
+                  variant="destructive"
                   onSelect={() => {
                     runCommand(async () => {
                       await logout();

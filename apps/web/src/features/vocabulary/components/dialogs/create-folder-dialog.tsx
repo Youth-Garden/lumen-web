@@ -9,7 +9,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   Form,
@@ -61,7 +60,6 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader align="center">
           <DialogTitle>{t('createFolder')}</DialogTitle>
-          <DialogDescription>{t('createFolderDescription')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -100,13 +98,7 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
             />
 
             <div className="flex justify-end pt-4">
-              <Button type="submit" disabled={isPending}>
-                {isPending && (
-                  <Icons
-                    name="loader-2"
-                    className="mr-2 h-4 w-4 animate-spin"
-                  />
-                )}
+              <Button type="submit" loading={isPending}>
                 {t('saveFolder')}
               </Button>
             </div>

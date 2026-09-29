@@ -1,7 +1,7 @@
 import type { I18nString } from '@/shared/types';
-import type { VocabularyWord } from '../vocabulary';
+import type { VocabularyDefinition, VocabularyWord } from '../vocabulary';
 
-export interface DueFlashcard {
+export interface DueWord {
   flashcardId: string;
   wordId: string;
   term: string;
@@ -14,6 +14,14 @@ export interface DueFlashcard {
   reviewCountAtCurrentLevel: number;
   intervalDays: number;
   nextReviewAt?: string;
+  phonetic?: string;
+  phoneticUs?: string;
+  phoneticUk?: string;
+  audioUrl?: string;
+  audioUsUrl?: string;
+  audioUkUrl?: string;
+  imageUrl?: string;
+  definitions?: VocabularyDefinition[];
 }
 
 export interface CardWithProgress extends VocabularyWord {

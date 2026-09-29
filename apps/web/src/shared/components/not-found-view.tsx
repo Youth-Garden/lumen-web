@@ -19,7 +19,7 @@ export function NotFoundView() {
   }, [clearBreadcrumbs]);
 
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center p-4 text-center">
+    <div className="flex min-h-[100dvh] w-full flex-col items-center justify-center p-4 text-center">
       <div className="flex max-w-md flex-col items-center space-y-5">
         {/* Standalone 3D Empty State Image */}
         <Image
@@ -41,15 +41,21 @@ export function NotFoundView() {
           </p>
         </div>
 
-        {/* Button */}
-        <Button
-          onClick={() => router.push(RouteEnum.DASHBOARD)}
-          size="lg"
-          className="mt-2"
-        >
-          <Icons name="home" />
-          {t('backHome')}
-        </Button>
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-2 w-full sm:w-auto">
+          <Button variant="outline" size="lg" onClick={() => router.back()}>
+            <Icons name="arrow-left" />
+            {t('goBack')}
+          </Button>
+          <Button
+            variant="default"
+            size="lg"
+            onClick={() => router.push(RouteEnum.DASHBOARD)}
+          >
+            <Icons name="home" />
+            {t('backHome')}
+          </Button>
+        </div>
       </div>
     </div>
   );

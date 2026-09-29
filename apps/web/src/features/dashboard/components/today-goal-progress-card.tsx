@@ -5,7 +5,6 @@ import {
   Badge,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   IconButton,
@@ -43,14 +42,8 @@ export function TodayGoalProgressCard({
       <Card className="h-full flex flex-col justify-between">
         <CardHeader className="px-5 pt-3.5 pb-0">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5">
-              <Skeleton className="h-5 w-5 rounded-full shrink-0" />
-              <div className="space-y-1">
-                <Skeleton className="h-4 w-28 rounded-md" />
-                <Skeleton className="h-3 w-36 rounded-md" />
-              </div>
-            </div>
-            <Skeleton className="h-7 w-7 rounded-lg" />
+            <Skeleton className="h-4.5 w-32 rounded-md" />
+            <Skeleton className="h-7 w-7 rounded-lg shrink-0" />
           </div>
         </CardHeader>
 
@@ -58,29 +51,39 @@ export function TodayGoalProgressCard({
           <div className="space-y-2.5">
             <div className="flex items-end justify-between gap-2">
               <div className="flex items-baseline gap-1.5">
-                <Skeleton className="h-8 w-14 rounded-lg" />
+                <Skeleton className="h-9 w-14 rounded-lg" />
                 <Skeleton className="h-4 w-10 rounded-md" />
               </div>
-              <Skeleton className="h-6 w-16 rounded-full" />
+              <Skeleton className="h-6.5 w-16 rounded-full shrink-0" />
             </div>
-            <Skeleton className="w-full h-2.5 rounded-full" />
+            <div className="w-full h-2.5 bg-muted/40 rounded-full p-0.5">
+              <Skeleton className="h-full w-full rounded-full" />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2 pt-0.5">
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/20">
-              <Skeleton className="h-3.5 w-3.5 rounded-full shrink-0" />
-              <div className="space-y-1 flex-1">
+            <Card
+              variant="muted"
+              size="sm"
+              className="flex-row items-center gap-2.5 px-3 py-2"
+            >
+              <Skeleton className="h-4 w-4 rounded-full shrink-0" />
+              <div className="space-y-1 flex-1 min-w-0">
                 <Skeleton className="h-2.5 w-12 rounded" />
                 <Skeleton className="h-3 w-8 rounded" />
               </div>
-            </div>
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/20">
-              <Skeleton className="h-3.5 w-3.5 rounded-full shrink-0" />
-              <div className="space-y-1 flex-1">
+            </Card>
+            <Card
+              variant="muted"
+              size="sm"
+              className="flex-row items-center gap-2.5 px-3 py-2"
+            >
+              <Skeleton className="h-4 w-4 rounded-full shrink-0" />
+              <div className="space-y-1 flex-1 min-w-0">
                 <Skeleton className="h-2.5 w-12 rounded" />
                 <Skeleton className="h-3 w-8 rounded" />
               </div>
-            </div>
+            </Card>
           </div>
         </CardContent>
       </Card>
@@ -99,16 +102,10 @@ export function TodayGoalProgressCard({
 
       <CardHeader className="px-5 pt-3.5 pb-0 relative z-10">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5">
-            <Icons name="target" className="h-5 w-5 text-primary shrink-0" />
-            <div>
-              <CardTitle className="text-sm font-bold font-heading text-foreground">
-                {t('todayGoalTitle')}
-              </CardTitle>
-              <CardDescription className="text-[11px] text-muted-foreground">
-                {t('todayGoalDesc')}
-              </CardDescription>
-            </div>
+          <div>
+            <CardTitle className="text-sm font-bold font-heading text-foreground">
+              {t('todayGoalTitle')}
+            </CardTitle>
           </div>
 
           <IconButton
@@ -116,7 +113,7 @@ export function TodayGoalProgressCard({
             title={t('setDailyGoal')}
             aria-label={t('setDailyGoal')}
           >
-            <Icons name="settings" className="h-3.5 w-3.5" />
+            <Icons name="settings" className="h-4 w-4" />
           </IconButton>
         </div>
       </CardHeader>
@@ -171,9 +168,12 @@ export function TodayGoalProgressCard({
           <Card
             variant="muted"
             size="sm"
-            className="flex-row items-center gap-2 px-2.5 py-1.5"
+            className="flex-row items-center gap-2.5 px-3 py-2"
           >
-            <Icons name="clock" className="h-3.5 w-3.5 text-primary shrink-0" />
+            <Icons
+              name="clock"
+              className="h-4 w-4 text-muted-foreground shrink-0"
+            />
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] text-muted-foreground truncate leading-tight">
                 {t('studyTimeProgress')}
@@ -187,18 +187,17 @@ export function TodayGoalProgressCard({
           <Card
             variant="muted"
             size="sm"
-            className="flex-row items-center gap-2 px-2.5 py-1.5"
+            className="flex-row items-center gap-2.5 px-3 py-2"
           >
             <Icons
               name={isTimeMet ? 'sparkles' : 'flame'}
-              className={cn(
-                'h-3.5 w-3.5 shrink-0',
-                isTimeMet ? 'text-emerald-500' : 'text-amber-500',
-              )}
+              className="h-4 w-4 text-muted-foreground shrink-0"
             />
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] text-muted-foreground truncate leading-tight">
-                {isTimeMet ? t('dailyGoalReached') : t('streakActive')}
+                {isTimeMet
+                  ? t('dailyGoalReached')
+                  : t('streakActive').replace('🔥', '').trim()}
               </span>
               <span className="text-xs font-bold text-foreground truncate leading-tight">
                 {isTimeMet

@@ -8,7 +8,8 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -67,7 +68,7 @@ export function LanguageSwitcher({ align = 'end' }: LanguageSwitcherProps) {
       <DropdownMenuTrigger
         aria-label={t('appearance.nativeLanguage')}
         render={
-          <Button variant="outline" size="sm" className="gap-2 font-medium" />
+          <Button variant="outline" size="sm" className="gap-1.5 font-medium" />
         }
       >
         <Icons name={currentConfig.icon} size={18} className="shrink-0" />
@@ -76,31 +77,25 @@ export function LanguageSwitcher({ align = 'end' }: LanguageSwitcherProps) {
         </span>
         <Icons name="chevron-down" className="h-3 w-3 opacity-60 ml-0.5" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align={align}
-        className="min-w-40 rounded-xl border border-border/60 bg-popover/95 backdrop-blur-lg shadow-xl"
-      >
-        {routing.locales.map((loc) => {
-          const item = LANGUAGE_CONFIG[loc] ?? { label: loc, icon: 'flag-vn' };
-          return (
-            <DropdownMenuItem
-              key={loc}
-              onClick={() => change(loc)}
-              className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-primary/10"
-            >
-              <div className="flex items-center gap-2.5">
+      <DropdownMenuContent align={align} className="w-36 rounded-xl">
+        <DropdownMenuRadioGroup value={locale} onValueChange={change}>
+          {routing.locales.map((loc) => {
+            const item = LANGUAGE_CONFIG[loc] ?? {
+              label: loc,
+              icon: 'flag-vn',
+            };
+            return (
+              <DropdownMenuRadioItem
+                key={loc}
+                value={loc}
+                className="gap-2.5 text-xs py-2"
+              >
                 <Icons name={item.icon} size={18} className="shrink-0" />
                 <span>{item.label}</span>
-              </div>
-              {loc === locale && (
-                <Icons
-                  name="check"
-                  className="h-4 w-4 text-primary font-bold"
-                />
-              )}
-            </DropdownMenuItem>
-          );
-        })}
+              </DropdownMenuRadioItem>
+            );
+          })}
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

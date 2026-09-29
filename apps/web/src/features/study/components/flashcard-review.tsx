@@ -3,7 +3,7 @@
 import { FlashcardGradeButtons } from '@/features/study/components/flashcard-grade-buttons';
 import { KeyboardShortcutsDialog } from '@/features/study/components/keyboard-shortcuts-dialog';
 import { useVocabularyWordDetail } from '@/features/vocabulary/hooks';
-import { DueFlashcard, FlashcardRating } from '@/services/study';
+import { DueWord, FlashcardRating } from '@/services/study';
 import { AudioButton } from '@/shared/components/audio-button';
 import { Locale } from '@/shared/types';
 import { getSecondaryI18nText, i18nText, playAudio } from '@/shared/utils';
@@ -32,7 +32,7 @@ export enum FlashcardShortcutKey {
 }
 
 interface FlashcardReviewProps {
-  flashcard: DueFlashcard;
+  flashcard: DueWord;
   onGrade: (grade: FlashcardRating) => void;
   isSubmitting?: boolean;
 }

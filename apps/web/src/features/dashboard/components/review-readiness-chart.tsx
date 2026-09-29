@@ -1,9 +1,9 @@
 'use client';
 
 import {
+  Badge,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Skeleton,
@@ -94,14 +94,11 @@ export function ReviewReadinessChart({
             <CardTitle className="text-base font-bold font-heading text-foreground">
               {t('readinessTitle')}
             </CardTitle>
-            <CardDescription className="text-xs text-muted-foreground">
-              {t('readinessDesc')}
-            </CardDescription>
           </div>
 
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary">
+          <Badge variant="default" size="sm">
             {totalLearnedWords} {t('cards')}
-          </span>
+          </Badge>
         </div>
       </CardHeader>
 

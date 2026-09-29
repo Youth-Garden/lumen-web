@@ -55,7 +55,7 @@ export function SwitchFolderDialog({
             <DialogTitle className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
               {t('selectFolderTitle')}
             </DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm text-muted-foreground max-w-xl">
+            <DialogDescription className="text-sm text-muted-foreground">
               {t('selectFolderSubtitle')}
             </DialogDescription>
           </div>

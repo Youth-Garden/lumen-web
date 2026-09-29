@@ -5,7 +5,6 @@ import {
   Card,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
@@ -42,7 +41,6 @@ export function MasteryFlowerDialog({
       <DialogContent className="sm:max-w-md max-h-[88vh] flex flex-col overflow-hidden">
         <DialogHeader align="center">
           <DialogTitle>{t('dialogTitle')}</DialogTitle>
-          <DialogDescription>{t('dialogDescription')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-left">

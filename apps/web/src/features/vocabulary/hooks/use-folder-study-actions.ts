@@ -7,20 +7,20 @@ import { toast } from 'sonner';
 import { StudySessionMode } from '@/features/study/types/study.types';
 import type { StudyViewData } from '@/features/study/components/study-view';
 import type { Folder, VocabularyWord } from '@/services/vocabulary';
-import type { DueFlashcard } from '@/services/study';
+import type { DueWord } from '@/services/study';
 import { i18nText } from '@/shared/utils';
 
 interface UseFolderStudyActionsProps {
   activeFolder: Folder | null;
   flashcards?: VocabularyWord[];
-  dueFlashcardsData?: DueFlashcard[];
+  dueWordsData?: DueWord[];
   presentStudyView: (data: StudyViewData) => void;
 }
 
 export function useFolderStudyActions({
   activeFolder,
   flashcards = [],
-  dueFlashcardsData = [],
+  dueWordsData = [],
   presentStudyView,
 }: UseFolderStudyActionsProps) {
   const t = useTranslations('Vocabulary.Folders');
@@ -38,7 +38,7 @@ export function useFolderStudyActions({
     const idSet = new Set<string>();
     const termSet = new Set<string>();
 
-    for (const card of dueFlashcardsData) {
+    for (const card of dueWordsData) {
       const isPastDue =
         Boolean(card.nextReviewAt) &&
         new Date(card.nextReviewAt as string).getTime() <= now;
@@ -54,7 +54,7 @@ export function useFolderStudyActions({
     }
 
     return { dueIdSet: idSet, dueTermSet: termSet };
-  }, [dueFlashcardsData]);
+  }, [dueWordsData]);
 
   const enrichedFlashcards = useMemo(() => {
     return allFlashcards.map((card) => {

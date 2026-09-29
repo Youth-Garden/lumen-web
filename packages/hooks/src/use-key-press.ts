@@ -40,17 +40,24 @@ function matchesKey(event: KeyboardEvent, keyFilter: KeyFilter): boolean {
     return keyFilter(event);
   }
 
-  const pressedKey = event.key.toLowerCase();
-  const pressedCode = event.code.toLowerCase();
+  const pressedKey = (event?.key || '').toLowerCase();
+  const pressedCode = (event?.code || '').toLowerCase();
+
+  if (!pressedKey && !pressedCode) return false;
 
   if (Array.isArray(keyFilter)) {
     return keyFilter.some(
-      (k) => k.toLowerCase() === pressedKey || k.toLowerCase() === pressedCode,
+      (k) =>
+        (pressedKey !== '' && k.toLowerCase() === pressedKey) ||
+        (pressedCode !== '' && k.toLowerCase() === pressedCode),
     );
   }
 
   const targetKey = keyFilter.toLowerCase();
-  return targetKey === pressedKey || targetKey === pressedCode;
+  return (
+    (pressedKey !== '' && targetKey === pressedKey) ||
+    (pressedCode !== '' && targetKey === pressedCode)
+  );
 }
 
 function matchesModifiers(

@@ -31,7 +31,7 @@ export function FolderCard({
 
   const coverUrl = folder.imageUrl || getFolderCoverUrl(folder.id);
 
-  const totalWords = folder.flashcardCount || 0;
+  const totalWords = folder.wordCount;
   const learnedCount = folder.learnedCount ?? 0;
   const dueCount = folder.dueCount ?? 0;
 
@@ -46,9 +46,7 @@ export function FolderCard({
   return (
     <div
       onClick={handleClick}
-      className={`group relative overflow-hidden rounded-2xl h-36 sm:h-40 p-3.5 flex flex-col justify-between select-none cursor-pointer transition-all duration-300 shadow-sm hover:shadow-xl border-none max-w-sm ${
-        isActive ? 'shadow-md scale-[1.01]' : ''
-      }`}
+      className="relative overflow-hidden rounded-2xl h-36 sm:h-40 p-3.5 flex flex-col justify-between select-none cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md border-none max-w-sm"
     >
       {/* Background Cover Image with Gradient Overlay */}
       <div className="absolute inset-0 w-full h-full bg-muted overflow-hidden pointer-events-none">
@@ -57,16 +55,16 @@ export function FolderCard({
           alt={folderDisplayName}
           fill
           sizes="(max-width: 640px) 100vw, 260px"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover"
         />
         {/* Dark gradient overlay for readable text */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       </div>
 
-      {/* TOP: Active indicator badge on top right (Type removed as requested) */}
+      {/* TOP: Active indicator badge on top right */}
       <div className="relative z-10 flex items-start justify-end pointer-events-none w-full min-h-[22px]">
         {isActive && (
-          <Badge variant="default" size="sm">
+          <Badge variant="solid" size="sm">
             {t('activeBadge')}
           </Badge>
         )}

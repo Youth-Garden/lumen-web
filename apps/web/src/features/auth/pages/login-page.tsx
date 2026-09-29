@@ -203,39 +203,15 @@ export default function LoginPage() {
             <Button
               type="button"
               className="w-full mt-6"
-              disabled={isLoading}
+              loading={isLoading}
               onClick={handleSendOtp}
             >
-              {isLoading ? (
-                <>
-                  <Icons
-                    name="loader-2"
-                    className="mr-2 h-4 w-4 animate-spin"
-                  />
-                  {t('processing')}
-                </>
-              ) : (
-                t('sendCode')
-              )}
+              {t('sendCode')}
             </Button>
           ) : (
             <div className="space-y-3">
-              <Button
-                type="submit"
-                className="w-full mt-2"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Icons
-                      name="loader-2"
-                      className="mr-2 h-4 w-4 animate-spin"
-                    />
-                    {t('processing')}
-                  </>
-                ) : (
-                  t('verify')
-                )}
+              <Button type="submit" className="w-full mt-2" loading={isLoading}>
+                {t('verify')}
               </Button>
               <Button
                 type="button"

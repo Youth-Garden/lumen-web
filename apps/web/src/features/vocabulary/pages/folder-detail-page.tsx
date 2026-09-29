@@ -9,10 +9,10 @@ import { useMemo } from 'react';
 import { toast } from 'sonner';
 
 import {
-  useFolderFlashcards,
   useFolderTopics,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
+import { vocabularyService } from '@/services/vocabulary';
 import { i18nText } from '@/shared/utils';
 import { RouteEnum } from '@/shared/constants';
 import { useGoBack, useSetBreadcrumb } from '@/shared/hooks';
@@ -66,10 +66,6 @@ export function FolderDetailPage({
     ),
   );
 
-  const { data: allFlashcardsPage } = useFolderFlashcards(folderId, undefined, {
-    enabled: Boolean(folderId),
-  });
-
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
   const [presentDeleteConfirm] = usePortal<ConfirmDeleteFolderData>(
     ConfirmDeleteFolderDialog,
@@ -88,63 +84,67 @@ export function FolderDetailPage({
     });
   };
 
-  const topicStats = topics.map((topicItem) => ({
-    name: i18nText(topicItem.topic, Locale.EN),
-    topic: topicItem.topic,
-    imageUrl: topicItem.topicImageUrl ?? undefined,
-    count: topicItem.count,
-    learnedCount: topicItem.learnedCount,
-    dueCount: topicItem.dueCount,
-  }));
-
-  const handleTopicClick = (topicName: string) => {
-    if (!topicName || !topicName.trim()) return;
+  const handleTopicClick = (topicIdentifier: string) => {
+    if (!topicIdentifier || !topicIdentifier.trim()) return;
     router.push(
       formatUrl(RouteEnum.FOLDER_TOPIC_DETAIL, {
         id: folderId,
-        topic: encodeURIComponent(topicName.trim()),
+        topic: encodeURIComponent(topicIdentifier.trim()),
       }),
     );
   };
 
-  const startStudy = (mode?: StudySessionMode) => {
-    const flashcards = allFlashcardsPage?.data ?? [];
-    if (!flashcards.length) return;
-
-    if (mode === StudySessionMode.LEARN_NEW) {
-      const unlearned = flashcards.filter(
-        (c) =>
-          (c.level ?? 0) === 0 &&
-          (c.learningStep ?? 0) === 0 &&
-          (c.masteryScore ?? 0) === 0,
+  const startStudy = async (mode?: StudySessionMode) => {
+    try {
+      const res = await vocabularyService.getFolderWords(
+        folderId,
+        undefined,
+        1,
+        50,
       );
-      if (unlearned.length === 0) {
+      const words = res?.data?.data ?? [];
+      if (!words.length) {
         toast.info(t('allWordsLearnedInFolder'));
-        startStudy(StudySessionMode.PRACTICE);
         return;
       }
-    }
 
-    if (mode === StudySessionMode.PRACTICE) {
-      const learned = flashcards.filter(
-        (c) =>
-          (c.level ?? 0) >= 1 ||
-          (c.learningStep ?? 0) >= 1 ||
-          (c.masteryScore ?? 0) > 0 ||
-          Boolean(c.isWilted),
-      );
-      if (learned.length === 0) {
-        toast.info(t('noLearnedWordsToPractice'));
-        startStudy(StudySessionMode.LEARN_NEW);
-        return;
+      if (mode === StudySessionMode.LEARN_NEW) {
+        const unlearned = words.filter(
+          (c) =>
+            (c.level ?? 0) === 0 &&
+            (c.learningStep ?? 0) === 0 &&
+            (c.masteryScore ?? 0) === 0,
+        );
+        if (unlearned.length === 0) {
+          toast.info(t('allWordsLearnedInFolder'));
+          startStudy(StudySessionMode.PRACTICE);
+          return;
+        }
       }
-    }
 
-    presentStudyView({
-      cards: flashcards,
-      mode,
-      folderName: folderDisplayName || t('defaultFolderDescription'),
-    });
+      if (mode === StudySessionMode.PRACTICE) {
+        const learned = words.filter(
+          (c) =>
+            (c.level ?? 0) >= 1 ||
+            (c.learningStep ?? 0) >= 1 ||
+            (c.masteryScore ?? 0) > 0 ||
+            Boolean(c.isWilted),
+        );
+        if (learned.length === 0) {
+          toast.info(t('noLearnedWordsToPractice'));
+          startStudy(StudySessionMode.LEARN_NEW);
+          return;
+        }
+      }
+
+      presentStudyView({
+        cards: words,
+        mode,
+        folderName: folderDisplayName || t('defaultFolderDescription'),
+      });
+    } catch {
+      toast.error(t('defaultFolderDescription'));
+    }
   };
 
   if (isLoading || isLoadingTopics) {
@@ -202,13 +202,13 @@ export function FolderDetailPage({
         category={i18nText(folderDetail.category, locale) || undefined}
         description={i18nText(folderDetail.description, locale) || undefined}
         selectedTopic={null}
-        topicStats={topicStats}
+        topics={topics}
         onSelectTopic={handleTopicClick}
         onGoBack={goBack}
         onDeleteFolder={isCustomFolder ? handleDeleteFolder : undefined}
       />
 
-      {Boolean(allFlashcardsPage?.data?.length) && (
+      {Boolean(folderDetail && folderDetail.wordCount > 0) && (
         <StudyBottomActionBar
           onLearnNew={() => startStudy(StudySessionMode.LEARN_NEW)}
           onPractice={() => startStudy(StudySessionMode.PRACTICE)}

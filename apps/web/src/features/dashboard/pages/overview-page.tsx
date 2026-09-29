@@ -20,22 +20,33 @@ import { useHeatmap, useProgressDashboard } from '../hooks';
 export function OverviewPage() {
   const t = useTranslations('Dashboard.Overview');
 
-  const { data: progressData, isLoading: progressLoading } =
-    useProgressDashboard();
+  const {
+    data: progressData,
+    isLoading: progressLoading,
+    isPending: progressPending,
+  } = useProgressDashboard();
   const { data: heatmapData, isLoading: heatmapLoading } = useHeatmap();
-  const { data: overviewRes, isLoading: overviewLoading } =
-    useVocabularyOverview();
+  const {
+    data: overviewRes,
+    isLoading: overviewLoading,
+    isPending: overviewPending,
+  } = useVocabularyOverview();
 
   const overview = overviewRes?.data;
   const dueCount = overview?.dueCount ?? 0;
 
   const totalLearnedWords = overview?.totalLearnedWords ?? 0;
   const todayStudyMinutes = progressData?.todayStudyMinutes ?? 0;
-  const rawStreak = progressData?.streak ?? 0;
-  const streak = todayStudyMinutes > 0 && rawStreak === 0 ? 1 : rawStreak;
+  const streak = progressData?.streak ?? 0;
   const dailyGoalMinutes = progressData?.dailyGoalMinutes ?? 15;
 
-  const isStatsLoading = progressLoading || overviewLoading;
+  const isStatsLoading =
+    progressLoading ||
+    overviewLoading ||
+    progressPending ||
+    overviewPending ||
+    !progressData ||
+    !overviewRes?.data;
 
   const memoryLevels: MemoryLevelItem[] = useMemo(() => {
     const rawLevels = overview?.memoryLevels || [];
@@ -106,6 +117,9 @@ export function OverviewPage() {
           todayStudyMinutes={todayStudyMinutes}
           dailyGoalMinutes={dailyGoalMinutes}
           streak={streak}
+          streakFreezes={progressData?.streakFreezes ?? 0}
+          lastActivityDate={progressData?.lastActivityDate}
+          goalHistories={progressData?.goalHistories}
           isLoading={isStatsLoading}
         />
         <StreakMilestoneCard
@@ -122,6 +136,7 @@ export function OverviewPage() {
             heatmapData={heatmapData}
             dailyGoalMinutes={dailyGoalMinutes}
             todayStudyMinutes={todayStudyMinutes}
+            goalHistories={progressData?.goalHistories}
             isLoading={isStatsLoading}
           />
         </div>
@@ -131,7 +146,7 @@ export function OverviewPage() {
             levels={memoryLevels}
             totalLearnedWords={totalLearnedWords}
             dueCount={dueCount}
-            isLoading={overviewLoading}
+            isLoading={isStatsLoading}
           />
         </div>
       </div>

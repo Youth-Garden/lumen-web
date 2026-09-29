@@ -11,6 +11,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Badge,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -76,14 +77,16 @@ export function Header() {
 
       <div className="flex items-center gap-2 bg-card/90 backdrop-blur-md rounded-full p-1 pl-2">
         {progressData && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-500 font-semibold text-xs">
-            <StreakIcon size={16} />
-            <span>
-              {progressData.todayStudyMinutes > 0 && progressData.streak === 0
-                ? 1
-                : progressData.streak}
+          <Badge
+            variant="warning"
+            size="sm"
+            className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1 text-xs font-bold leading-none shrink-0"
+          >
+            <StreakIcon size={14} className="shrink-0" />
+            <span className="leading-none text-xs font-bold">
+              {progressData.streak}
             </span>
-          </div>
+          </Badge>
         )}
 
         <NotificationDropdown />

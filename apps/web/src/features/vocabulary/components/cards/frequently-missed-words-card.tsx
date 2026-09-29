@@ -35,36 +35,65 @@ export function FrequentlyMissedWordsCard({
   }
 
   return (
-    <Card className="p-4 sm:p-5 rounded-2xl bg-muted/20 border-none space-y-3.5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-xl bg-destructive/10 text-destructive">
-            <Icons name="trendingDown" className="h-4 w-4" />
-          </div>
+    <Card className="p-4 sm:p-5 space-y-4">
+      {/* Header & Actions Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <Icons
+            name="trendingDown"
+            className="h-5 w-5 text-destructive shrink-0"
+          />
           <div>
-            <h4 className="text-xs font-bold font-heading text-foreground">
-              {t('frequentlyMissed')}
+            <h4 className="text-sm font-bold font-heading text-foreground">
+              {t('frequentlyMissedTitle')}
             </h4>
-            <p className="text-[10px] text-muted-foreground">
-              {t('missedDesc')}
+            <p className="text-xs text-muted-foreground">
+              {t('frequentlyMissedSubtitle')}
             </p>
           </div>
         </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            variant="default"
+            size="sm"
+            onClick={onReviewMissed}
+            className="gap-1.5 text-xs font-semibold cursor-pointer"
+          >
+            <Icons name="sparkles" className="h-3.5 w-3.5" />
+            <span>{tStudy('practice')}</span>
+          </Button>
+
+          {onFlashcardsMissed && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onFlashcardsMissed}
+              className="gap-1.5 text-xs font-semibold cursor-pointer"
+            >
+              <Icons name="layers" className="h-3.5 w-3.5" />
+              <span>{tStudy('flashcards')}</span>
+            </Button>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {displayCards.map((card, index) => {
+      {/* Horizontal Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        {displayCards.map((card) => {
           const firstDef = card.definitions?.[0];
           const partOfSpeech =
             formatPartOfSpeechShort(firstDef?.partOfSpeech) || 'n.';
           const meaning = i18nText(firstDef?.definition, locale) || card.term;
 
-          const errorRate = 35 - index * 3;
+          const errorRate =
+            card.errorRate ?? Math.round(100 - (card.masteryScore ?? 0));
 
           return (
             <div
               key={card.id}
-              className="p-3 rounded-xl bg-background flex items-start justify-between gap-2.5"
+              className="p-3.5 rounded-xl bg-muted/30 dark:bg-muted/20 flex items-start justify-between gap-2.5 h-full"
             >
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
@@ -74,17 +103,17 @@ export function FrequentlyMissedWordsCard({
                 </div>
 
                 <div>
-                  <h5 className="text-sm font-black text-foreground truncate">
+                  <h5 className="text-sm font-bold text-foreground truncate">
                     {card.term}
                   </h5>
                   {card.phonetic && (
-                    <p className="text-[10px] text-muted-foreground font-mono">
+                    <p className="text-[11px] text-muted-foreground font-mono">
                       {card.phonetic}
                     </p>
                   )}
                 </div>
 
-                <p className="text-[11px] text-muted-foreground line-clamp-1">
+                <p className="text-xs text-muted-foreground line-clamp-2">
                   <span className="font-semibold italic text-primary mr-1">
                     ({partOfSpeech})
                   </span>
@@ -94,12 +123,12 @@ export function FrequentlyMissedWordsCard({
 
               {/* Word Image Thumbnail */}
               {card.imageUrl && (
-                <div className="relative shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-muted/40 shadow-2xs">
+                <div className="relative shrink-0 w-12 h-12 rounded-lg overflow-hidden bg-muted/40">
                   <Image
                     src={card.imageUrl}
                     alt={card.term}
                     fill
-                    sizes="56px"
+                    sizes="48px"
                     className="object-cover"
                   />
                 </div>
@@ -107,31 +136,6 @@ export function FrequentlyMissedWordsCard({
             </div>
           );
         })}
-      </div>
-
-      {/* Action Buttons - Practice Missed Words via Interactive Games OR Flashcards */}
-      <div className="pt-0.5 flex items-center gap-2 max-w-xs">
-        <Button
-          variant="default"
-          size="sm"
-          onClick={onReviewMissed}
-          className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer"
-        >
-          <Icons name="sparkles" className="h-3.5 w-3.5" />
-          <span>{tStudy('practice')}</span>
-        </Button>
-
-        {onFlashcardsMissed && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onFlashcardsMissed}
-            className="flex-1 gap-1.5 text-xs font-semibold cursor-pointer"
-          >
-            <Icons name="layers" className="h-3.5 w-3.5" />
-            <span>{tStudy('flashcards')}</span>
-          </Button>
-        )}
       </div>
     </Card>
   );

@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
 
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -14,8 +13,6 @@ interface StudyBottomActionBarProps {
   onFlashcard: () => void;
 }
 
-let lastActionBarTimestamp = 0;
-
 export function StudyBottomActionBar({
   onLearnNew,
   onPractice,
@@ -23,17 +20,10 @@ export function StudyBottomActionBar({
 }: StudyBottomActionBarProps) {
   const t = useTranslations('Vocabulary.Study');
 
-  useEffect(() => {
-    lastActionBarTimestamp = Date.now();
-    return () => {
-      lastActionBarTimestamp = Date.now();
-    };
-  }, []);
-
   return (
     <div
       className={cn(
-        'fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl border border-border/80 px-2.5 py-2 rounded-3xl shadow-2xl flex items-center gap-2.5 max-w-fit',
+        'fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-card/95 backdrop-blur-xl px-2.5 py-2 rounded-3xl shadow-2xl flex items-center gap-2.5 max-w-fit',
       )}
     >
       {/* Button 1: Learn New */}

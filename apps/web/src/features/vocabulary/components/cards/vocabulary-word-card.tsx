@@ -27,7 +27,7 @@ export function VocabularyWordCard({ word, onClick }: VocabularyWordCardProps) {
           onClick(word);
         }
       }}
-      className="group flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-2xl hover:bg-muted/40 active:bg-muted/60 hover:scale-[1.02] transition-all cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-primary/40 gap-2.5"
+      className="flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-2xl hover:bg-muted/40 active:bg-muted/60 transition-colors cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-primary/40 gap-2.5"
     >
       <MasteryFlowerBadge
         level={word.level ?? 0}

@@ -6,7 +6,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
@@ -34,7 +33,6 @@ export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
       <DialogContent className="max-w-[360px] sm:max-w-[360px] bg-card">
         <DialogHeader align="center">
           <DialogTitle>{t('vocabularyAccentTitle')}</DialogTitle>
-          <DialogDescription>{t('accentHint')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-1">

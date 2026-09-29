@@ -106,12 +106,12 @@ export const SettingsPage = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => presentDailyGoalDialog()}
-                className="gap-2 shrink-0 font-medium"
+                className="gap-1.5 shrink-0 font-medium"
               >
                 <span>{dailyGoalMinutes}m</span>
                 <Icons
-                  name="chevron-right"
-                  className="h-3.5 w-3.5 text-muted-foreground"
+                  name="chevron-down"
+                  className="h-3 w-3 opacity-60 ml-0.5"
                 />
               </Button>
             </div>

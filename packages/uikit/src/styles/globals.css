@@ -53,8 +53,8 @@
   --success-foreground: #ffffff;
   --warning: #f59e0b;
   --warning-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: #cbd5e1;
+  --input: #cbd5e1;
   --ring: #002757;
   --chart-1: #66abff;
   --chart-2: #4487f6;
@@ -108,8 +108,8 @@
   --success-foreground: #0b0f17;
   --warning: #f59e0b;
   --warning-foreground: #0b0f17;
-  --border: #1e293b;
-  --input: #1e293b;
+  --border: #334155;
+  --input: #334155;
   --ring: #66abff;
   --chart-1: #66abff;
   --chart-2: #4487f6;
@@ -193,19 +193,6 @@
     background-color: color-mix(in srgb, var(--primary) 30%, transparent);
     color: inherit;
   }
-
-  /* Thicken stroke-based icons */
-  /* svg[stroke="currentColor"] {
-    stroke-width: 2.5px;
-  }
-   */
-  /* Thicken fill-based icons by adding a tiny stroke to their filled paths */
-  /* path[fill="currentColor"],
-  rect[fill="currentColor"],
-  circle[fill="currentColor"] {
-    stroke: currentColor;
-    stroke-width: 0.5px;
-  } */
 
   body {
     @apply bg-layout text-foreground;

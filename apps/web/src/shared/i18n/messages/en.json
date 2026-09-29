@@ -12,8 +12,8 @@
     "searching": "Searching...",
     "suggestions": "Suggestions",
     "pages": "Pages & Features",
-    "folders": "Folders & Decks",
-    "topics": "Sub-Topics",
+    "folders": "Folders",
+    "topics": "Topics",
     "vocabulary": "Vocabulary Words",
     "vocabularyWords": "Vocabulary Words",
     "quickActions": "Quick Actions",
@@ -22,13 +22,15 @@
     "vocabFolders": "Vocabulary Folders",
     "vocabularyFolders": "Vocabulary Folders",
     "profileSettings": "Profile Settings",
-    "logout": "Log out"
+    "logout": "Log out",
+    "wordsCount": "{count, plural, =1 {1 word} other {# words}}"
   },
   "Error": {
     "title": "Something went wrong",
     "subtitle": "We apologize for the inconvenience. An unexpected error has occurred.",
     "tryAgain": "Try again",
-    "backHome": "Back to Home",
+    "goBack": "Go Back",
+    "backHome": "Go to Home",
     "sessionExpired": "Your session has expired, please sign in again.",
     "networkError": "Unable to connect to the server. Please check your network connection.",
     "unauthorized": "You are not authorized to perform this action.",
@@ -40,7 +42,8 @@
   "NotFound": {
     "title": "Page Not Found",
     "subtitle": "The page you are looking for doesn't exist or has been moved.",
-    "backHome": "Back to Home"
+    "goBack": "Go Back",
+    "backHome": "Go to Home"
   },
   "Index": {
     "title": "Welcome to Lumen",
@@ -415,9 +418,17 @@
       "orContinueWith": "Or continue with"
     },
     "Layout": {
-      "badge": "Welcome to Lumen",
-      "title": "Lumen Platform",
-      "subtitle": "Discover the most comprehensive and powerful ecosystem to manage your business. Streamline processes, optimize performance."
+      "badge": "Lumen Learning",
+      "titleLine1": "Learn Smarter.",
+      "titleLine2": "Remember Forever.",
+      "titleLine3": "Achieve Fluency.",
+      "feature1Title": "FSRS Spaced Repetition",
+      "feature1Desc": "Science-backed memory curves that schedule reviews right when you need them.",
+      "feature2Title": "Active Recall Flashcards",
+      "feature2Desc": "Interactive decks, instant audio pronunciation, and adaptive difficulty ratings.",
+      "feature3Title": "Daily Consistency & Streaks",
+      "feature3Desc": "Track daily study habits, mastery flowers, and long-term fluency progression.",
+      "footerProof": "Science-backed learning platform for maximum retention"
     },
     "Validation": {
       "invalidEmail": "Invalid email",

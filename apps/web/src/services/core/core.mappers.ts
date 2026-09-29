@@ -26,4 +26,3 @@ export const toI18nString = (raw: unknown): I18nString => {
   }
   return {};
 };
-

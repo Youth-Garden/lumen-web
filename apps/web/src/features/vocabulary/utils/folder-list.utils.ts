@@ -6,7 +6,7 @@ import type {
 } from '@/services/vocabulary';
 
 export function calculateGlobalTotalWords(folders: Folder[]): number {
-  return folders.reduce((sum, folder) => sum + (folder.flashcardCount || 0), 0);
+  return folders.reduce((sum, folder) => sum + (folder.wordCount || 0), 0);
 }
 
 export function extractGlobalDueCards(

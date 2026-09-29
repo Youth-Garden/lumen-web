@@ -31,6 +31,7 @@ export interface VocabularyWord {
   isWilted?: boolean;
   flashcardId?: string;
   wordId?: string;
+  errorRate?: number;
   definitions: VocabularyDefinition[];
 }
 
@@ -41,20 +42,26 @@ export interface Folder {
   category?: I18nString | null;
   imageUrl?: string | null;
   isSystem: boolean;
-  flashcardCount: number;
+  wordCount: number;
   learnedCount: number;
   dueCount: number;
 }
 
 export interface FolderTopic {
+  id: string;
+  folderId?: string;
+  folderName?: I18nString;
+  name: I18nString;
   topic: I18nString;
+  imageUrl?: string | null;
   topicImageUrl: string | null;
+  orderIndex?: number;
   count: number;
   learnedCount: number;
   dueCount: number;
 }
 
-export interface FolderFlashcardsPage {
+export interface FolderWordsPage {
   data: VocabularyWord[];
   total: number;
 }
@@ -79,24 +86,9 @@ export interface MemoryStageLevel {
   count: number;
 }
 
-export interface FrequentlyMissedWordItem {
-  flashcardId: string;
-  wordId: string;
-  term: string;
-  partOfSpeech: string;
-  definition: I18nString;
-  phonetic?: string;
-  audioUrl?: string;
-  audioUsUrl?: string;
-  imageUrl?: string;
-  errorRate: number;
-  masteryScore: number;
-  isWilted: boolean;
-}
-
 export interface VocabularyOverview {
   totalLearnedWords: number;
   dueCount?: number;
   memoryLevels: MemoryStageLevel[];
-  frequentlyMissedWords: FrequentlyMissedWordItem[];
+  frequentlyMissedWords: VocabularyWord[];
 }

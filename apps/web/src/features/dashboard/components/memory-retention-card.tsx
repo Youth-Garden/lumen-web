@@ -1,12 +1,15 @@
 'use client';
 
 import {
+  Badge,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   Skeleton,
 } from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { PlantGrowthStage } from '@/shared/components/plant-growth-stage';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
@@ -95,13 +98,13 @@ export function MemoryRetentionCard({
           <CardTitle className="text-base font-bold text-foreground">
             {t('memoryDistribution')}
           </CardTitle>
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary w-fit">
+          <Badge variant="default" size="sm" className="w-fit">
             {isLoading ? (
               <Skeleton className="h-3 w-12 rounded" />
             ) : (
               t('totalWordsCount', { count: totalLearnedWords })
             )}
-          </span>
+          </Badge>
         </div>
       </CardHeader>
 
@@ -109,12 +112,11 @@ export function MemoryRetentionCard({
         {isLoading ? (
           <div className="flex flex-col items-center flex-1 justify-between">
             {/* Semicircle Gauge Skeleton */}
-            <div className="w-full h-40 relative flex items-center justify-center -mb-2 pt-1">
-              <div className="w-36 h-36 rounded-full border-8 border-muted/40 border-b-transparent -rotate-45 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-1 pt-4">
-                  <Skeleton className="h-7 w-14 rounded-md" />
-                  <Skeleton className="h-3 w-20 rounded-md" />
-                </div>
+            <div className="w-full h-40 relative flex items-end justify-center pb-2 pt-1 -mb-2">
+              <div className="w-48 h-24 rounded-t-full border-[10px] border-muted/30 border-b-0" />
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
+                <Skeleton className="h-7 w-14 rounded-md" />
+                <Skeleton className="h-3 w-20 rounded-md" />
               </div>
             </div>
 
@@ -211,12 +213,13 @@ export function MemoryRetentionCard({
                     key={lvl.level}
                     className="flex items-center justify-between gap-3 text-xs"
                   >
-                    <div className="flex items-center gap-2 min-w-[90px]">
-                      <span
-                        className="h-2 w-2 rounded-full shrink-0"
-                        style={{ backgroundColor: token }}
+                    <div className="flex items-center gap-1.5 min-w-[95px]">
+                      <PlantGrowthStage
+                        stage={lvl.level}
+                        size={16}
+                        className="shrink-0"
                       />
-                      <span className="text-muted-foreground text-[11px] font-medium">
+                      <span className="text-muted-foreground text-[11px] font-medium truncate">
                         {lvl.label}
                       </span>
                     </div>

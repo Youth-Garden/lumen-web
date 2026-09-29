@@ -1,13 +1,12 @@
 'use client';
 
-import { HeatmapItem } from '@/services/progress';
+import { DailyGoalHistoryItem, HeatmapItem } from '@/services/progress';
 import { StreakFreezeIcon, StreakIcon } from '@/shared/components/streak-icon';
 import { useLocale } from '@/shared/hooks';
 import {
   Badge,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Skeleton,
@@ -23,6 +22,9 @@ interface WeeklyGoalTrackerCardProps {
   todayStudyMinutes: number;
   dailyGoalMinutes: number;
   streak: number;
+  streakFreezes?: number;
+  lastActivityDate?: string;
+  goalHistories?: DailyGoalHistoryItem[];
   isLoading?: boolean;
 }
 
@@ -31,6 +33,9 @@ export function WeeklyGoalTrackerCard({
   todayStudyMinutes,
   dailyGoalMinutes,
   streak,
+  streakFreezes = 0,
+  lastActivityDate,
+  goalHistories,
   isLoading = false,
 }: WeeklyGoalTrackerCardProps) {
   const t = useTranslations('Dashboard.Overview');
@@ -42,20 +47,53 @@ export function WeeklyGoalTrackerCard({
       todayStudyMinutes,
       dailyGoalMinutes,
       locale,
+      streakFreezes,
+      false,
+      goalHistories,
+      lastActivityDate,
     );
-  }, [heatmapData, todayStudyMinutes, dailyGoalMinutes, locale]);
+  }, [
+    heatmapData,
+    todayStudyMinutes,
+    dailyGoalMinutes,
+    locale,
+    streakFreezes,
+    goalHistories,
+    lastActivityDate,
+  ]);
 
   const completedDaysCount = useMemo(() => {
     return days.filter(
-      (d) => d.status === 'completed' || (d.isToday && d.isGoalMet),
+      (d) =>
+        d.status === 'completed' ||
+        d.status === 'frozen' ||
+        (d.isToday && d.isGoalMet),
     ).length;
   }, [days]);
 
   if (isLoading) {
     return (
-      <Card className="p-4 sm:p-5 space-y-3">
-        <Skeleton className="h-6 w-36 rounded-lg" />
-        <Skeleton className="h-24 w-full rounded-2xl" />
+      <Card className="h-full flex flex-col justify-between">
+        <CardHeader className="px-5 pt-3.5 pb-0">
+          <div className="flex items-center justify-between gap-2">
+            <Skeleton className="h-4.5 w-36 rounded-md" />
+            <Skeleton className="h-5.5 w-20 rounded-full shrink-0" />
+          </div>
+        </CardHeader>
+
+        <CardContent className="px-5 pb-4 pt-1 flex-1 flex flex-col justify-center">
+          <div className="grid grid-cols-7 gap-2 sm:gap-2.5 w-full">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center justify-between py-3 sm:py-3.5 px-1 min-h-[72px] sm:min-h-[80px] rounded-2xl bg-muted/20"
+              >
+                <Skeleton className="h-6 w-6 rounded-full" />
+                <Skeleton className="h-3 w-5 rounded mt-1" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
       </Card>
     );
   }
@@ -64,19 +102,10 @@ export function WeeklyGoalTrackerCard({
     <Card className="h-full flex flex-col justify-between">
       <CardHeader className="px-5 pt-3.5 pb-0">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Icons
-              name="target"
-              className="h-4.5 w-4.5 text-primary shrink-0"
-            />
-            <div>
-              <CardTitle className="text-sm font-bold font-heading text-foreground">
-                {t('weeklyGoalTitle')}
-              </CardTitle>
-              <CardDescription className="text-[11px] text-muted-foreground">
-                {t('weeklyGoalDesc')}
-              </CardDescription>
-            </div>
+          <div>
+            <CardTitle className="text-sm font-bold font-heading text-foreground">
+              {t('weeklyGoalTitle')}
+            </CardTitle>
           </div>
 
           <Badge
@@ -150,7 +179,7 @@ export function WeeklyGoalTrackerCard({
                     'text-xs font-semibold tracking-tight transition-colors mt-1',
                     item.isToday
                       ? 'text-primary font-bold'
-                      : isCompleted || isMissed
+                      : isCompleted || isFrozen || isMissed
                         ? 'text-foreground'
                         : 'text-muted-foreground',
                   )}

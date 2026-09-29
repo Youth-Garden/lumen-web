@@ -2,6 +2,7 @@
 
 import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -10,6 +11,7 @@ import {
   useCreateFlashcard,
   useVocabularyFolders,
 } from '@/features/vocabulary/hooks';
+import { getFolderCoverUrl } from '@/features/vocabulary/utils';
 import { i18nText } from '@/shared/utils';
 import {
   Button,
@@ -73,7 +75,7 @@ export function SaveToFolderSheet({
         showCloseButton={false}
         className="w-full max-w-lg mx-auto rounded-t-3xl max-h-[85dvh] sm:max-h-[80vh] gap-0 p-0 border-t border-border/60 shadow-2xl"
       >
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border/40">
+        <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <div>
             <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground font-heading">
               {t('saveToFolder')}
@@ -120,6 +122,8 @@ export function SaveToFolderSheet({
                 {customFolders.map((folder) => {
                   const isSaving = savingFolderId === folder.id;
                   const folderName = i18nText(folder.name, locale);
+                  const coverUrl =
+                    folder.imageUrl || getFolderCoverUrl(folder.id);
 
                   return (
                     <button
@@ -127,19 +131,24 @@ export function SaveToFolderSheet({
                       type="button"
                       disabled={isPending}
                       onClick={() => handleSelectFolder(folder.id)}
-                      className="w-full flex items-center justify-between p-3.5 rounded-2xl hover:bg-muted/50 transition-colors text-left group cursor-pointer disabled:opacity-50"
+                      className="w-full flex items-center justify-between p-3.5 rounded-2xl hover:bg-muted/50 transition-colors text-left cursor-pointer disabled:opacity-50"
                     >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                          <Icons name="folder" className="h-4 w-4" />
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-muted border border-border/40 shadow-2xs">
+                          <Image
+                            src={coverUrl}
+                            alt={folderName}
+                            fill
+                            sizes="44px"
+                            className="object-cover"
+                          />
                         </div>
                         <div className="truncate">
                           <p className="font-bold text-sm text-foreground truncate">
                             {folderName}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {folder.flashcardCount}{' '}
-                            {t('wordDetail').toLowerCase()}
+                            {folder.wordCount} {t('wordDetail').toLowerCase()}
                           </p>
                         </div>
                       </div>
@@ -153,7 +162,7 @@ export function SaveToFolderSheet({
                         ) : (
                           <Icons
                             name="plus"
-                            className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors"
+                            className="h-4 w-4 text-muted-foreground"
                           />
                         )}
                       </div>

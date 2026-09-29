@@ -2,10 +2,10 @@
 
 import { RouteEnum } from '@/shared/constants';
 import {
+  Badge,
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Skeleton,
@@ -33,14 +33,8 @@ export function HeroActionCard({
       <Card className="h-full flex flex-col justify-between">
         <CardHeader className="px-5 pt-3.5 pb-0">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-4.5 w-4.5 rounded-full shrink-0" />
-              <div className="space-y-1">
-                <Skeleton className="h-4 w-28 rounded-md" />
-                <Skeleton className="h-3 w-36 rounded-md" />
-              </div>
-            </div>
-            <Skeleton className="h-5 w-16 rounded-full" />
+            <Skeleton className="h-4.5 w-32 rounded-md" />
+            <Skeleton className="h-5.5 w-16 rounded-full shrink-0" />
           </div>
         </CardHeader>
 
@@ -48,12 +42,12 @@ export function HeroActionCard({
           <div className="flex items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-baseline gap-1.5">
-                <Skeleton className="h-7 w-12 rounded-md" />
+                <Skeleton className="h-8 w-10 rounded-md" />
                 <Skeleton className="h-3.5 w-16 rounded" />
               </div>
-              <Skeleton className="h-3 w-28 rounded" />
+              <Skeleton className="h-3 w-24 rounded" />
             </div>
-            <Skeleton className="h-7 w-20 rounded-xl" />
+            <Skeleton className="h-7 w-20 rounded-xl shrink-0" />
           </div>
 
           <Skeleton className="w-full h-9 rounded-xl" />
@@ -68,30 +62,15 @@ export function HeroActionCard({
     <Card className="h-full flex flex-col justify-between">
       <CardHeader className="px-5 pt-3.5 pb-0">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Icons
-              name="sparkles"
-              className="h-4.5 w-4.5 text-primary shrink-0"
-            />
-            <div>
-              <CardTitle className="text-sm font-bold font-heading text-foreground">
-                {hasDueCards ? t('dueTodayCount') : t('allCaughtUp')}
-              </CardTitle>
-              <CardDescription className="text-[11px] text-muted-foreground">
-                {hasDueCards ? t('needReviewPrompt') : t('allDonePrompt')}
-              </CardDescription>
-            </div>
+          <div>
+            <CardTitle className="text-sm font-bold font-heading text-foreground">
+              {hasDueCards ? t('dueTodayCount') : t('allCaughtUp')}
+            </CardTitle>
           </div>
 
-          <span
-            className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
-              hasDueCards
-                ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
-                : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            }`}
-          >
+          <Badge variant={hasDueCards ? 'warning' : 'success'} size="sm">
             {hasDueCards ? `${dueCount} ${t('cards')}` : '0 ' + t('cards')}
-          </span>
+          </Badge>
         </div>
       </CardHeader>
 

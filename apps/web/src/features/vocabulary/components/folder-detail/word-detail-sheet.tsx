@@ -251,10 +251,10 @@ export function WordDetailSheet({
           <div className="px-6 pb-8 space-y-6">
             {word?.definitions.map((def) => {
               const primaryText = i18nText(def.definition, locale);
-              const secondaryText =
-                locale !== Locale.EN
-                  ? i18nText(def.definition, Locale.EN)
-                  : getSecondaryI18nText(def.definition, Locale.EN);
+              const secondaryText = getSecondaryI18nText(
+                def.definition,
+                locale,
+              );
 
               const partOfSpeech = normalizePartOfSpeech(def.partOfSpeech);
 
@@ -283,15 +283,24 @@ export function WordDetailSheet({
                       <p className="text-xs font-medium italic text-muted-foreground">
                         {t('examples')}:
                       </p>
-                      {def.examples.map((example) => {
+                      {Array.from(
+                        new Map(
+                          def.examples.map((ex) => [
+                            i18nText(ex.sentence, Locale.EN)
+                              .toLowerCase()
+                              .trim(),
+                            ex,
+                          ]),
+                        ).values(),
+                      ).map((example) => {
                         const sentenceEn = i18nText(
                           example.sentence,
                           Locale.EN,
                         );
-                        const nativeSentence =
-                          locale !== Locale.EN
-                            ? i18nText(example.sentence, locale)
-                            : null;
+                        const nativeSentence = getSecondaryI18nText(
+                          example.sentence,
+                          locale,
+                        );
 
                         return (
                           <div key={example.id} className="space-y-0.5">
@@ -299,7 +308,8 @@ export function WordDetailSheet({
                               {renderHighlightedSentence(sentenceEn, word.term)}
                             </p>
                             {nativeSentence &&
-                              nativeSentence !== sentenceEn && (
+                              nativeSentence.toLowerCase().trim() !==
+                                sentenceEn.toLowerCase().trim() && (
                                 <p className="text-sm text-muted-foreground leading-normal">
                                   {nativeSentence}
                                 </p>

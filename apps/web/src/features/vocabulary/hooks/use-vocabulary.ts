@@ -48,7 +48,7 @@ export const useDeleteFolder = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
-      queryClient.invalidateQueries({ queryKey: studyKeys.dueFlashcards() });
+      queryClient.invalidateQueries({ queryKey: studyKeys.dueWords() });
     },
   });
 };
@@ -62,7 +62,7 @@ export const useCreateFlashcard = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: vocabularyKeys.folders() });
       queryClient.invalidateQueries({
-        queryKey: studyKeys.dueFlashcards(),
+        queryKey: studyKeys.dueWords(),
       });
     },
   });
@@ -131,16 +131,16 @@ export const useFolderTopics = (
   });
 };
 
-export const useFolderFlashcards = (
+export const useFolderWords = (
   folderId: string,
   topic?: string,
   options?: { enabled?: boolean },
 ) => {
   return useQuery({
-    queryKey: vocabularyKeys.folderFlashcards(folderId, topic),
+    queryKey: vocabularyKeys.folderWords(folderId, topic),
     queryFn: () =>
       vocabularyService
-        .getFolderFlashcards(folderId, topic)
+        .getFolderWords(folderId, topic)
         .then((res) => res?.data ?? { data: [], total: 0 }),
     enabled: Boolean(folderId) && Boolean(topic) && (options?.enabled ?? true),
     retry: false,

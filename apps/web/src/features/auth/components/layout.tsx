@@ -2,84 +2,60 @@
 
 import { OpenEffect } from '@lumen/uikit/components';
 import { useTranslations } from 'next-intl';
-import { PropsWithChildren, useId } from 'react';
+import { PropsWithChildren } from 'react';
 import { Silk } from './silk';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   const t = useTranslations('Auth.Layout');
-  // useId() trả về dạng ":r0:" — bỏ dấu ":" để dùng an toàn trong id/url()
-  const waveId = `wave-edge-${useId().replace(/:/g, '')}`;
 
   return (
-    <div className="min-h-screen w-full flex relative">
-      {/* Left side - Silk Brand Background */}
-      <div className="hidden lg:flex lg:w-7/12 relative overflow-hidden">
-        {/* Lớp nền được clip theo hình sóng — chỉ clip phần visual, không clip text */}
-        <div
-          className="absolute inset-0"
-          style={{ clipPath: `url(#${waveId})` }}
-        >
-          {/* React Bits Silk WebGL background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a] via-[#2563eb] to-[#38bdf8]">
+    <div className="min-h-screen w-full flex p-3 lg:p-4 overflow-x-hidden">
+      {/* Left side - Minimal Hero Panel with Bottom-Left Copy */}
+      <div className="hidden lg:flex lg:w-[52%] xl:w-[54%] relative select-none flex-col justify-end p-8 xl:p-14 rounded-3xl overflow-hidden text-white shadow-2xl bg-[#090d16] my-1 ml-1">
+        {/* WebGL Silk Background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#090e1a] via-[#102456] to-[#1e40af]">
             <Silk
-              speed={5}
-              scale={1}
-              color="#66abff"
-              noiseIntensity={1.5}
+              speed={3.5}
+              scale={1.1}
+              color="#3b82f6"
+              noiseIntensity={1.2}
               rotation={0}
               lightMode={true}
             />
           </div>
 
-          {/* Vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-black/25 pointer-events-none" />
+          {/* Radial Ambient Glow */}
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Dot grid */}
+          {/* Vignette Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30 pointer-events-none" />
+
+          {/* Subtle Dot Grid */}
           <div
             className="absolute inset-0 opacity-[0.06] pointer-events-none"
             style={{
               backgroundImage:
                 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-              backgroundSize: '22px 22px',
+              backgroundSize: '24px 24px',
             }}
           />
         </div>
 
-        {/* Định nghĩa path cho mép sóng — chỉnh amplitude/tần số ở đây */}
-        <svg width="0" height="0" className="absolute" aria-hidden="true">
-          <defs>
-            <clipPath id={waveId} clipPathUnits="objectBoundingBox">
-              <path
-                d="M0,0
-                   L0.82,0
-                   Q0.97,0.08 0.85,0.15
-                   Q0.73,0.22 0.85,0.3
-                   Q0.97,0.38 0.85,0.45
-                   Q0.73,0.52 0.85,0.6
-                   Q0.97,0.68 0.85,0.75
-                   Q0.73,0.82 0.85,0.9
-                   Q0.95,0.95 0.9,1
-                   L0,1
-                   Z"
-              />
-            </clipPath>
-          </defs>
-        </svg>
-
-        {/* Content — nằm ngoài clip nên chữ không bao giờ bị cắt */}
-        <div className="absolute bottom-16 left-16 z-20 text-white max-w-lg">
-          <h1 className="text-5xl font-bold mb-4 tracking-tight leading-[1.1] text-white">
-            {t('title')}
+        {/* Bottom-Left Main Content Block */}
+        <div className="relative z-20 max-w-lg pb-2 xl:pb-6">
+          <h1 className="text-3xl xl:text-4xl font-extrabold tracking-tight text-white leading-[1.25]">
+            <span className="block">{t('titleLine1')}</span>
+            <span className="block">{t('titleLine2')}</span>
+            <span className="block">{t('titleLine3')}</span>
           </h1>
-          <p className="text-zinc-100/90 text-lg leading-relaxed">
-            {t('subtitle')}
-          </p>
         </div>
       </div>
 
-      {/* Right side - Auth Form */}
-      <div className="w-full lg:w-5/12 flex flex-col justify-center items-center px-4 sm:px-12 xl:px-24">
-        <OpenEffect className="w-full max-w-[550px]">{children}</OpenEffect>
+      {/* Right side - Auth Form Container */}
+      <div className="w-full lg:w-[48%] xl:w-[46%] flex flex-col justify-center items-center px-6 sm:px-12 lg:px-12 xl:px-16 py-8">
+        <OpenEffect className="w-full max-w-[560px]">{children}</OpenEffect>
       </div>
     </div>
   );

@@ -1,9 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { PartOfSpeech } from '@/shared/types';
-import {
-  normalizePartOfSpeech,
-  formatPartOfSpeechShort,
-} from '../vocabulary';
+import { normalizePartOfSpeech, formatPartOfSpeechShort } from '../vocabulary';
 
 describe('normalizePartOfSpeech', () => {
   it('should normalize standard single letters and abbreviations', () => {

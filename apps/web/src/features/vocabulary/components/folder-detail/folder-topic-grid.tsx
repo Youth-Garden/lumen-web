@@ -3,6 +3,9 @@
 import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 
+import type { FolderTopic } from '@/services/vocabulary';
+import { Locale } from '@/shared/types';
+import { i18nText } from '@/shared/utils';
 import {
   Badge,
   DropdownMenu,
@@ -11,25 +14,15 @@ import {
   DropdownMenuTrigger,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { I18nString } from '@/shared/types';
-import { i18nText } from '@/shared/utils';
 import Image from 'next/image';
-
-export interface TopicStatItem {
-  name: string;
-  topic: I18nString;
-  imageUrl?: string;
-  count: number;
-  learnedCount: number;
-  dueCount: number;
-}
 
 export interface FolderTopicGridProps {
   folderName: string;
   category?: string;
   description?: string;
   selectedTopic: string | null;
-  topicStats: TopicStatItem[];
+  topics?: FolderTopic[];
+  topicStats?: FolderTopic[];
   onSelectTopic: (topicName: string) => void;
   onGoBack?: () => void;
   onDeleteFolder?: () => void;
@@ -40,12 +33,14 @@ export function FolderTopicGrid({
   category,
   description,
   selectedTopic,
+  topics,
   topicStats,
   onSelectTopic,
   onDeleteFolder,
 }: FolderTopicGridProps) {
   const t = useTranslations('Vocabulary.Folders');
   const locale = useLocale();
+  const topicList = topics ?? topicStats ?? [];
 
   return (
     <div className="space-y-8">
@@ -92,10 +87,15 @@ export function FolderTopicGrid({
 
       {/* Grid of Circular Topic Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 justify-items-center">
-        {topicStats.map((topicItem) => {
-          const topicImg = topicItem.imageUrl;
-          const isSelected = selectedTopic === topicItem.name;
-          const title = i18nText(topicItem.topic, locale);
+        {topicList.map((topicItem) => {
+          const topicImg = topicItem.imageUrl || topicItem.topicImageUrl;
+          const topicRawEn = i18nText(
+            topicItem.name || topicItem.topic,
+            Locale.EN,
+          );
+          const isSelected =
+            selectedTopic === topicItem.id || selectedTopic === topicRawEn;
+          const title = i18nText(topicItem.name || topicItem.topic, locale);
 
           const learnedCount = topicItem.learnedCount ?? 0;
           const dueCount = topicItem.dueCount ?? 0;
@@ -106,12 +106,10 @@ export function FolderTopicGrid({
 
           return (
             <div
-              key={topicItem.name}
-              onClick={() => onSelectTopic(topicItem.name)}
-              className={`group flex flex-col items-center justify-between text-center select-none cursor-pointer transition-all duration-200 p-2.5 rounded-2xl w-36 sm:w-40 ${
-                isSelected
-                  ? 'bg-primary/10 shadow-sm scale-105'
-                  : 'hover:bg-muted/40 hover:scale-102'
+              key={topicItem.id}
+              onClick={() => onSelectTopic(topicItem.id || topicRawEn)}
+              className={`flex flex-col items-center justify-between text-center select-none cursor-pointer transition-all duration-200 p-2.5 rounded-2xl w-36 sm:w-40 ${
+                isSelected ? 'bg-primary/10 shadow-sm' : 'hover:bg-muted/40'
               }`}
             >
               {/* Circular Avatar with Circular Progress Ring */}
@@ -122,7 +120,7 @@ export function FolderTopicGrid({
                   className="w-22 h-22 sm:w-24 sm:h-24 absolute inset-0 pointer-events-none text-primary"
                 />
 
-                <div className="w-16 h-16 sm:w-17 sm:h-17 rounded-full overflow-hidden relative bg-muted/40 transition-transform group-hover:scale-105">
+                <div className="w-16 h-16 sm:w-17 sm:h-17 rounded-full overflow-hidden relative bg-muted/40">
                   {topicImg ? (
                     <Image
                       src={topicImg}

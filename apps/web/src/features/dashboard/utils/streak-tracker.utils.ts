@@ -1,4 +1,4 @@
-import { HeatmapItem } from '@/services/progress';
+import { DailyGoalHistoryItem, HeatmapItem } from '@/services/progress';
 import { Locale } from '@/shared/types';
 import { format, isAfter, isSameDay, startOfDay, subDays } from 'date-fns';
 
@@ -35,6 +35,51 @@ export function formatTrackerDayLabel(date: Date, locale: Locale): string {
   return format(date, 'EEE');
 }
 
+export function resolveTargetForDate(
+  date: Date,
+  goalHistories: DailyGoalHistoryItem[] | undefined,
+  fallbackGoal: number,
+  initialDefaultGoal = 15,
+): number {
+  const targetDate = startOfDay(date);
+  const today = startOfDay(new Date());
+  const isPastDay = targetDate.getTime() < today.getTime();
+
+  if (goalHistories && goalHistories.length > 0) {
+    const sorted = [...goalHistories].sort(
+      (a, b) =>
+        new Date(a.effectiveFrom).getTime() -
+        new Date(b.effectiveFrom).getTime(),
+    );
+
+    const dateTime = targetDate.getTime();
+
+    for (const history of sorted) {
+      const fromTime = startOfDay(new Date(history.effectiveFrom)).getTime();
+      const toTime = history.effectiveTo
+        ? startOfDay(new Date(history.effectiveTo)).getTime()
+        : Infinity;
+
+      if (dateTime >= fromTime && dateTime <= toTime) {
+        return Math.max(history.targetMinutes, 1);
+      }
+    }
+
+    const earliestFrom = startOfDay(
+      new Date(sorted[0].effectiveFrom),
+    ).getTime();
+    if (dateTime < earliestFrom) {
+      return Math.max(initialDefaultGoal, 1);
+    }
+  }
+
+  if (isPastDay) {
+    return Math.max(initialDefaultGoal, 1);
+  }
+
+  return Math.max(fallbackGoal, 1);
+}
+
 export function computeWeeklyTrackerDays(
   heatmapData: HeatmapItem[] | undefined,
   todayStudyMinutes: number,
@@ -42,9 +87,10 @@ export function computeWeeklyTrackerDays(
   locale: Locale,
   streakFreezes = 0,
   forceTodayCompleted = false,
+  goalHistories?: DailyGoalHistoryItem[],
+  lastActivityDate?: string,
 ): TrackerDayItem[] {
   const today = startOfDay(new Date());
-  const safeGoal = Math.max(dailyGoalMinutes, 1);
 
   const historyMap = new Map<string, number>();
   heatmapData?.forEach((item) => {
@@ -57,14 +103,18 @@ export function computeWeeklyTrackerDays(
     }
   });
 
-  const days: TrackerDayItem[] = [];
-  let availableFreezes = Math.max(0, streakFreezes);
+  const rawDays: TrackerDayItem[] = [];
 
   for (let i = 6; i >= 0; i--) {
     const date = subDays(today, i);
     const dateStr = format(date, 'yyyy-MM-dd');
     const isToday = isSameDay(date, today);
     const isFuture = isAfter(date, today);
+    const safeGoal = resolveTargetForDate(
+      date,
+      goalHistories,
+      dailyGoalMinutes,
+    );
 
     let minutes = 0;
     if (isToday) {
@@ -85,15 +135,12 @@ export function computeWeeklyTrackerDays(
     } else if (!isFuture) {
       if (isGoalMet || minutes > 0) {
         status = 'completed';
-      } else if (availableFreezes > 0) {
-        status = 'frozen';
-        availableFreezes--;
       } else {
         status = 'missed';
       }
     }
 
-    days.push({
+    rawDays.push({
       date,
       dateStr,
       dayLabel: formatTrackerDayLabel(date, locale),
@@ -105,7 +152,66 @@ export function computeWeeklyTrackerDays(
     });
   }
 
-  return days;
+  const lastActiveDay = lastActivityDate
+    ? startOfDay(new Date(lastActivityDate))
+    : null;
+
+  const lastActiveDayStr = lastActiveDay
+    ? format(lastActiveDay, 'yyyy-MM-dd')
+    : null;
+  const lastActiveHasMinutes = lastActiveDayStr
+    ? (historyMap.get(lastActiveDayStr) || 0) > 0
+    : false;
+  const isLastActiveAFreezeDay =
+    lastActiveDay !== null && !lastActiveHasMinutes;
+
+  let lastActualStudyDay: Date | null = null;
+  rawDays.forEach((d) => {
+    if (d.status === 'completed') {
+      if (!lastActualStudyDay || isAfter(d.date, lastActualStudyDay)) {
+        if (
+          !lastActiveDay ||
+          !isAfter(d.date, lastActiveDay) ||
+          lastActiveHasMinutes
+        ) {
+          lastActualStudyDay = d.date;
+        }
+      }
+    }
+  });
+
+  let availableFreezes = Math.max(0, streakFreezes);
+
+  for (let i = 0; i < rawDays.length; i++) {
+    const day = rawDays[i];
+    if (day.status === 'missed') {
+      const prevDay = i > 0 ? rawDays[i - 1] : null;
+      const nextDay = i < rawDays.length - 1 ? rawDays[i + 1] : null;
+
+      const isPrecededByActive =
+        !prevDay ||
+        prevDay.status === 'completed' ||
+        prevDay.status === 'frozen';
+
+      const isPastConsumedFreeze =
+        isLastActiveAFreezeDay &&
+        lastActiveDay !== null &&
+        (!lastActualStudyDay || isAfter(day.date, lastActualStudyDay)) &&
+        !isAfter(day.date, lastActiveDay);
+
+      const isSandwichedFrozen =
+        prevDay?.status === 'completed' && nextDay?.status === 'completed';
+
+      if (isPastConsumedFreeze || isSandwichedFrozen) {
+        day.status = 'frozen';
+      } else if (isPrecededByActive && availableFreezes > 0) {
+        day.status = 'frozen';
+        availableFreezes--;
+      }
+    }
+  }
+
+  return rawDays;
 }
 
 export function calculateStreakMilestone(

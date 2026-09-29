@@ -13,6 +13,12 @@ export enum LeaderboardPeriodEnum {
   ALL_TIME = 'all-time',
 }
 
+export interface DailyGoalHistoryItem {
+  targetMinutes: number;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+}
+
 export interface DashboardProgressResponse {
   streak: number;
   lastActivityDate?: string;
@@ -21,6 +27,7 @@ export interface DashboardProgressResponse {
   todayStudyMinutes: number;
   streakFreezes: number;
   unlockedBadges?: string[];
+  goalHistories?: DailyGoalHistoryItem[];
 }
 
 export interface HeatmapItem {

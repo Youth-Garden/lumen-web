@@ -20,11 +20,13 @@ export enum ApiEndpointEnum {
   VOCABULARY_FOLDERS = '/api/vocabulary/words/folders',
   VOCABULARY_FOLDER_DETAIL = '/api/vocabulary/words/folders/:id',
   VOCABULARY_FOLDER_TOPICS = '/api/vocabulary/words/folders/:id/topics',
+  VOCABULARY_TOPICS = '/api/vocabulary/words/topics',
+  VOCABULARY_FOLDER_WORDS = '/api/vocabulary/words/folders/:id/words',
   VOCABULARY_FOLDER_FLASHCARDS = '/api/vocabulary/words/folders/:id/flashcards',
   VOCABULARY_FLASHCARDS = '/api/vocabulary/words/flashcards',
   VOCABULARY_OVERVIEW = '/api/vocabulary/words/overview',
 
-  STUDY_FLASHCARDS_DUE = '/api/vocabulary/words/flashcards/due',
+  STUDY_WORDS_DUE = '/api/vocabulary/words/due',
   STUDY_FLASHCARDS_REVIEW = '/api/vocabulary/words/flashcards/review',
   STUDY_FLASHCARDS_REVIEW_BATCH = '/api/vocabulary/words/flashcards/review-batch',
 

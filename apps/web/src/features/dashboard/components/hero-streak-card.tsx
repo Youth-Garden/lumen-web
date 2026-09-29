@@ -18,8 +18,7 @@ export function HeroStreakCard({
   const t = useTranslations('Dashboard.Overview');
 
   const isStudiedToday = todayStudyMinutes > 0;
-  // Display streak is at least 1 if user studied today
-  const displayStreak = isStudiedToday && streak === 0 ? 1 : streak;
+  const displayStreak = streak;
 
   return (
     <Card className="bg-linear-to-br from-amber-400 via-amber-500 to-orange-600 text-white overflow-hidden relative group min-h-37 backdrop-blur-3xl">
@@ -54,7 +53,11 @@ export function HeroStreakCard({
 
         {/* Bottom-Left: Status Badge */}
         <div className="pt-1.5">
-          <Badge variant="subtle" size="sm" className="bg-white/20 text-white font-bold backdrop-blur-xs">
+          <Badge
+            variant="subtle"
+            size="sm"
+            className="bg-white/20 text-white font-bold backdrop-blur-xs"
+          >
             {isStudiedToday
               ? t('streakActive').replace('🔥', '').trim()
               : t('streakInactive')}

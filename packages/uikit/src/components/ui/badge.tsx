@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@lumen/uikit/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
 const badgeVariants = cva(
-  'inline-flex shrink-0 items-center justify-center gap-1 rounded-full text-xs font-bold tracking-tight whitespace-nowrap transition-colors select-none ring-offset-background',
+  'inline-flex shrink-0 items-center justify-center gap-1 rounded-md text-xs font-bold tracking-tight whitespace-nowrap transition-colors select-none ring-offset-background',
   {
     variants: {
       variant: {

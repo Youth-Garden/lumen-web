@@ -2,7 +2,6 @@
 
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
   IconButton,
@@ -73,9 +72,6 @@ export function DailyGoalWidget() {
           <CardTitle className="text-sm font-bold text-foreground">
             {t('dailyGoal')}
           </CardTitle>
-          <CardDescription className="text-[11px] text-muted-foreground">
-            {t('learningProgress')}
-          </CardDescription>
         </div>
         <IconButton
           onClick={() => presentDailyGoalDialog()}

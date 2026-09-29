@@ -42,7 +42,6 @@ export function VocabularyListPage() {
     cefrLevel,
   });
 
-
   return (
     <div className="flex flex-col space-y-6 h-full min-h-[calc(100vh-8rem)]">
       <div className="flex items-center justify-between">

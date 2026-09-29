@@ -6,7 +6,6 @@ import {
   Badge,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Skeleton,
@@ -38,14 +37,8 @@ export function StreakMilestoneCard({
       <Card className="h-full flex flex-col justify-between">
         <CardHeader className="px-5 pt-4 pb-0">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5">
-              <Skeleton className="h-5 w-5 rounded-full shrink-0" />
-              <div className="space-y-1">
-                <Skeleton className="h-4 w-32 rounded-md" />
-                <Skeleton className="h-3 w-40 rounded-md" />
-              </div>
-            </div>
-            <Skeleton className="h-5 w-20 rounded-full" />
+            <Skeleton className="h-4.5 w-36 rounded-md" />
+            <Skeleton className="h-5.5 w-24 rounded-full shrink-0" />
           </div>
         </CardHeader>
 
@@ -63,20 +56,28 @@ export function StreakMilestoneCard({
           </div>
 
           <div className="grid grid-cols-2 gap-2 pt-1">
-            <div className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-muted/20">
+            <Card
+              variant="muted"
+              size="sm"
+              className="flex-row items-center gap-2.5 p-2.5"
+            >
               <Skeleton className="size-7 rounded-full shrink-0" />
-              <div className="space-y-1 flex-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <Skeleton className="h-2.5 w-16 rounded" />
                 <Skeleton className="h-3.5 w-12 rounded" />
               </div>
-            </div>
-            <div className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-muted/20">
+            </Card>
+            <Card
+              variant="muted"
+              size="sm"
+              className="flex-row items-center gap-2.5 p-2.5"
+            >
               <Skeleton className="size-7 rounded-full shrink-0" />
-              <div className="space-y-1 flex-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <Skeleton className="h-2.5 w-16 rounded" />
                 <Skeleton className="h-3.5 w-12 rounded" />
               </div>
-            </div>
+            </Card>
           </div>
         </CardContent>
       </Card>
@@ -94,16 +95,10 @@ export function StreakMilestoneCard({
     <Card className="h-full flex flex-col justify-between">
       <CardHeader className="px-5 pt-4 pb-0">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5">
-            <Icons name="trophy" className="h-5 w-5 text-amber-500 shrink-0" />
-            <div>
-              <CardTitle className="text-sm font-bold font-heading text-foreground">
-                {t('streakMilestoneTitle')}
-              </CardTitle>
-              <CardDescription className="text-[11px] text-muted-foreground">
-                {t('streakMilestoneDesc')}
-              </CardDescription>
-            </div>
+          <div>
+            <CardTitle className="text-sm font-bold font-heading text-foreground">
+              {t('streakMilestoneTitle')}
+            </CardTitle>
           </div>
 
           <Badge variant="warning" size="sm" className="shrink-0 font-bold">
@@ -116,15 +111,12 @@ export function StreakMilestoneCard({
         {/* Milestone Progress Bar */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5">
-              <Icons name="award" className="size-4 text-amber-500 shrink-0" />
-              <span className="text-xs font-bold text-foreground">
-                {streak} {streakUnit}{' '}
-                <span className="text-[11px] text-muted-foreground font-normal">
-                  ({milestone.progressPercent}%)
-                </span>
+            <span className="text-xs font-bold text-foreground">
+              {streak} {streakUnit}{' '}
+              <span className="text-[11px] text-muted-foreground font-normal">
+                ({milestone.progressPercent}%)
               </span>
-            </div>
+            </span>
             <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 shrink-0">
               {t('daysRemainingToMilestone', { days: milestone.remainingDays })}
             </span>
@@ -159,7 +151,7 @@ export function StreakMilestoneCard({
           <Card
             variant="muted"
             size="sm"
-            className="flex-row items-center gap-2.5 p-2.5 rounded-2xl"
+            className="flex-row items-center gap-2.5 p-2.5"
           >
             <div className="flex size-7 shrink-0 items-center justify-center">
               <StreakFreezeIcon size={22} />
@@ -178,7 +170,7 @@ export function StreakMilestoneCard({
           <Card
             variant="muted"
             size="sm"
-            className="flex-row items-center gap-2.5 p-2.5 rounded-2xl"
+            className="flex-row items-center gap-2.5 p-2.5"
           >
             <div className="flex size-7 shrink-0 items-center justify-center">
               <LongestStreakIcon size={22} />

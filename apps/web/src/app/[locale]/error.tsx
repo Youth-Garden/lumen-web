@@ -11,7 +11,7 @@ export default function LocalizedError() {
   const router = useRouter();
 
   return (
-    <main className="flex min-h-[75vh] flex-col items-center justify-center p-4 text-center">
+    <main className="flex min-h-[100dvh] w-full flex-col items-center justify-center p-4 text-center">
       <div className="relative flex max-w-md flex-col items-center space-y-6">
         {/* Ambient Glow */}
         <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-destructive/10 blur-[80px] rounded-full pointer-events-none -z-10" />
@@ -31,16 +31,21 @@ export default function LocalizedError() {
           </p>
         </div>
 
-        {/* Action */}
-        <Button
-          variant="default"
-          size="lg"
-          onClick={() => router.push(RouteEnum.DASHBOARD)}
-          className="cursor-pointer mt-2"
-        >
-          <Icons name="home" />
-          <span>{t('backHome')}</span>
-        </Button>
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-2 w-full sm:w-auto">
+          <Button variant="outline" size="lg" onClick={() => router.back()}>
+            <Icons name="arrow-left" />
+            <span>{t('goBack')}</span>
+          </Button>
+          <Button
+            variant="default"
+            size="lg"
+            onClick={() => router.push(RouteEnum.DASHBOARD)}
+          >
+            <Icons name="home" />
+            <span>{t('backHome')}</span>
+          </Button>
+        </div>
       </div>
     </main>
   );

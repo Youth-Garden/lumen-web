@@ -4,9 +4,9 @@ import { StreakIcon } from '@/shared/components/streak-icon';
 import { HeatmapItem } from '@/services/progress';
 import { Locale } from '@/shared/types';
 import {
+  Badge,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Skeleton,
@@ -110,15 +110,12 @@ export function StudyGoalConsistencyChart({
             <CardTitle className="text-base font-bold font-heading text-foreground">
               {t('goalConsistencyTitle')}
             </CardTitle>
-            <CardDescription className="text-xs text-muted-foreground">
-              {t('goalConsistencyDesc')}
-            </CardDescription>
           </div>
 
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary flex items-center gap-1">
+          <Badge variant="default" size="sm">
             <Icons name="check" className="h-3 w-3" />
             {completedDays}/7 {t('days')}
-          </span>
+          </Badge>
         </div>
       </CardHeader>
 

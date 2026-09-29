@@ -1,4 +1,5 @@
 import { JWT_ACCESS_TOKEN_KEY } from '@/shared/constants';
+import { cookieHelper } from '@lumen/utils';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
@@ -40,9 +41,10 @@ export const useAuthStore = create<AuthState>()(
         isSessionExpired: false,
 
         setAuth: (user, accessToken, refreshToken) => {
-          if (typeof document !== 'undefined') {
-            document.cookie = `${JWT_ACCESS_TOKEN_KEY}=true; path=/; max-age=604800; SameSite=Lax`;
-          }
+          cookieHelper.set(JWT_ACCESS_TOKEN_KEY, 'true', {
+            expires: 7,
+            path: '/',
+          });
           set((state) => ({
             user,
             accessToken: accessToken || state.accessToken,
@@ -60,8 +62,14 @@ export const useAuthStore = create<AuthState>()(
         setLoading: (isLoading) => set({ isLoading }),
 
         clearAuth: () => {
-          if (typeof document !== 'undefined') {
-            document.cookie = `${JWT_ACCESS_TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+          cookieHelper.remove(JWT_ACCESS_TOKEN_KEY, { path: '/' });
+          if (typeof window !== 'undefined') {
+            try {
+              localStorage.removeItem('lumen_progress_dashboard_cache');
+              localStorage.removeItem('lumen_heatmap_cache');
+            } catch {
+              // ignore
+            }
           }
           set({
             user: null,
@@ -73,8 +81,14 @@ export const useAuthStore = create<AuthState>()(
         },
 
         expireSession: () => {
-          if (typeof document !== 'undefined') {
-            document.cookie = `${JWT_ACCESS_TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+          cookieHelper.remove(JWT_ACCESS_TOKEN_KEY, { path: '/' });
+          if (typeof window !== 'undefined') {
+            try {
+              localStorage.removeItem('lumen_progress_dashboard_cache');
+              localStorage.removeItem('lumen_heatmap_cache');
+            } catch {
+              // ignore
+            }
           }
           set({
             user: null,

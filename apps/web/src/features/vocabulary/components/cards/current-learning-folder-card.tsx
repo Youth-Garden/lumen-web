@@ -38,7 +38,7 @@ export function CurrentLearningFolderCard({
     return null;
   }
 
-  const wordCount = activeFolder.flashcardCount || 0;
+  const wordCount = activeFolder.wordCount;
   const displayName = i18nText(activeFolder.name, locale);
   const learnedApprox = Math.min(wordCount, Math.max(0, learnedCount));
 

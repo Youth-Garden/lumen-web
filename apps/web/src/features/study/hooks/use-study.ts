@@ -3,13 +3,10 @@ import {
   studyService,
   studyKeys,
   type BatchReviewFlashcardsPayload,
-  type DueFlashcard,
+  type DueWord,
   type ReviewFlashcardPayload,
 } from '@/services/study';
-import {
-  vocabularyKeys,
-  type FolderFlashcardsPage,
-} from '@/services/vocabulary';
+import { vocabularyKeys, type FolderWordsPage } from '@/services/vocabulary';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useReviewFlashcard = () => {
@@ -37,7 +34,7 @@ export const useReviewFlashcard = () => {
       }
 
       if (newLevel !== undefined) {
-        queryClient.setQueriesData<FolderFlashcardsPage>(
+        queryClient.setQueriesData<FolderWordsPage>(
           { queryKey: vocabularyKeys.folders() },
           (old) => {
             if (!old || !Array.isArray(old.data)) return old;
@@ -62,7 +59,7 @@ export const useReviewFlashcard = () => {
           },
         );
 
-        queryClient.setQueriesData<DueFlashcard[]>(
+        queryClient.setQueriesData<DueWord[]>(
           { queryKey: studyKeys.all },
           (old) => {
             if (!Array.isArray(old)) return old;
@@ -77,7 +74,7 @@ export const useReviewFlashcard = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: studyKeys.dueFlashcards(),
+        queryKey: studyKeys.dueWords(),
       });
       queryClient.invalidateQueries({
         queryKey: vocabularyKeys.all,
@@ -97,7 +94,7 @@ export const useBatchReviewFlashcards = () => {
       studyService.batchReviewFlashcards(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: studyKeys.dueFlashcards(),
+        queryKey: studyKeys.dueWords(),
       });
       queryClient.invalidateQueries({
         queryKey: vocabularyKeys.all,
@@ -109,16 +106,18 @@ export const useBatchReviewFlashcards = () => {
   });
 };
 
-export const useDueFlashcards = (
+export const useDueWords = (
   params?: {
     folderId?: string;
     limit?: number;
+    page?: number;
+    includeNew?: boolean;
   },
   options?: { enabled?: boolean },
 ) => {
   return useQuery({
-    queryKey: studyKeys.dueFlashcards(params),
-    queryFn: () => studyService.listDueFlashcards(params),
+    queryKey: studyKeys.dueWords(params),
+    queryFn: () => studyService.listDueWords(params),
     retry: false,
     ...options,
   });

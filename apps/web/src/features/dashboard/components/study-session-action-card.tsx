@@ -6,10 +6,10 @@ import React from 'react';
 
 import { StreakIcon } from '@/shared/components/streak-icon';
 import {
+  Badge,
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Skeleton,
@@ -64,15 +64,12 @@ export function StudySessionActionCard({
                 {t('dailyGoal')}
               </CardTitle>
             </div>
-            <CardDescription className="text-xs text-muted-foreground">
-              {t('learningProgress')}
-            </CardDescription>
           </div>
 
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center gap-1.5 shrink-0">
+          <Badge variant="warning" size="sm">
             <StreakIcon size={14} />
             {streak} {t('days')}
-          </span>
+          </Badge>
         </div>
       </CardHeader>
 

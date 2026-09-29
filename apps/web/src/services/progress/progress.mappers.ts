@@ -50,6 +50,13 @@ export const dashboardMapper = (raw: any): DashboardProgressResponse => ({
   todayStudyMinutes: raw.todayStudyMinutes || 0,
   streakFreezes: raw.streakFreezes || 0,
   unlockedBadges: Array.isArray(raw.unlockedBadges) ? raw.unlockedBadges : [],
+  goalHistories: Array.isArray(raw.goalHistories)
+    ? raw.goalHistories.map((h: any) => ({
+        targetMinutes: Number(h.targetMinutes) || 0,
+        effectiveFrom: String(h.effectiveFrom || ''),
+        effectiveTo: h.effectiveTo ? String(h.effectiveTo) : null,
+      }))
+    : [],
 });
 
 export const leaderboardMapper = (raw: any): LeaderboardResponse => {

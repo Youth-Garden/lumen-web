@@ -14,8 +14,8 @@ import {
 } from '@/features/study/components/study-view';
 import { StudySessionMode } from '@/features/study/types/study.types';
 import {
-  useFolderFlashcards,
   useFolderTopics,
+  useFolderWords,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
 import { RouteEnum } from '@/shared/constants';
@@ -43,25 +43,30 @@ export function TopicDetailPage() {
     useVocabularyFolderDetail(folderId);
   const { data: topics = [], isLoading: isLoadingTopics } =
     useFolderTopics(folderId);
-  const { data: flashcardsPage, isLoading: isLoadingFlashcards } =
-    useFolderFlashcards(folderId, topicName, {
+  const { data: wordsPage, isLoading: isLoadingWords } = useFolderWords(
+    folderId,
+    topicName,
+    {
       enabled: Boolean(folderId) && Boolean(topicName),
-    });
+    },
+  );
 
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
   const topicInfo = useMemo(
-    () => topics.find((item) => includesI18n(item.topic, topicName)),
+    () =>
+      topics.find(
+        (item) =>
+          item.id === topicName ||
+          includesI18n(item.name || item.topic, topicName),
+      ),
     [topics, topicName],
   );
 
   const localizedTopicTitle = topicInfo
-    ? i18nText(topicInfo.topic, locale)
+    ? i18nText(topicInfo.name || topicInfo.topic, locale)
     : topicName;
-  const flashcards = useMemo(
-    () => flashcardsPage?.data ?? [],
-    [flashcardsPage?.data],
-  );
+  const words = useMemo(() => wordsPage?.data ?? [], [wordsPage?.data]);
 
   const folderDisplayName = i18nText(folderDetail?.name, locale);
 
@@ -81,7 +86,7 @@ export function TopicDetailPage() {
       items.push({
         label: localizedTopicTitle || topicName,
         isLoading:
-          (isLoadingTopics || isLoadingFlashcards) &&
+          (isLoadingTopics || isLoadingWords) &&
           !localizedTopicTitle &&
           !topicName,
       });
@@ -95,15 +100,15 @@ export function TopicDetailPage() {
       localizedTopicTitle,
       topicName,
       isLoadingTopics,
-      isLoadingFlashcards,
+      isLoadingWords,
     ]),
   );
 
   const startStudy = (mode: StudySessionMode) => {
-    if (!flashcards.length) return;
+    if (!words.length) return;
 
     if (mode === StudySessionMode.LEARN_NEW) {
-      const unlearned = flashcards.filter(
+      const unlearned = words.filter(
         (c) =>
           (c.level ?? 0) === 0 &&
           (c.learningStep ?? 0) === 0 &&
@@ -117,7 +122,7 @@ export function TopicDetailPage() {
     }
 
     if (mode === StudySessionMode.PRACTICE) {
-      const learned = flashcards.filter(
+      const learned = words.filter(
         (c) =>
           (c.level ?? 0) >= 1 ||
           (c.learningStep ?? 0) >= 1 ||
@@ -132,14 +137,14 @@ export function TopicDetailPage() {
     }
 
     presentStudyView({
-      cards: flashcards,
+      cards: words,
       selectedTopic: topicName,
       mode,
       folderName: localizedTopicTitle || topicName,
     });
   };
 
-  const isLoading = isLoadingFolder || isLoadingTopics || isLoadingFlashcards;
+  const isLoading = isLoadingFolder || isLoadingTopics || isLoadingWords;
 
   if (isLoading) {
     return (
@@ -174,9 +179,9 @@ export function TopicDetailPage() {
 
   return (
     <div className="w-full py-2 pb-36">
-      <TopicWordsList flashcards={flashcards} />
+      <TopicWordsList words={words} />
 
-      {flashcards.length > 0 && (
+      {words.length > 0 && (
         <StudyBottomActionBar
           onLearnNew={() => startStudy(StudySessionMode.LEARN_NEW)}
           onPractice={() => startStudy(StudySessionMode.PRACTICE)}

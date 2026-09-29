@@ -4,7 +4,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
@@ -73,7 +72,6 @@ export function ActivityInfoDialog({ isOpen, onDismiss }: PortalProps) {
       >
         <DialogHeader align="center">
           <DialogTitle>{t('title')}</DialogTitle>
-          <DialogDescription>{t('subtitle')}</DialogDescription>
         </DialogHeader>
 
         <div className="min-h-0 flex-1 overflow-y-auto pr-1 space-y-5">

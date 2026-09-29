@@ -7,7 +7,6 @@ import {
   Card,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -132,7 +131,6 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader align="center">
           <DialogTitle>{t('setDailyGoal')}</DialogTitle>
-          <DialogDescription>{t('setDailyGoalDesc')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-3 my-4">
@@ -159,13 +157,13 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                     <div className="flex items-center gap-2">
                       <div
                         className={cn(
-                          'flex h-7 w-7 items-center justify-center rounded-xl shrink-0 transition-colors',
+                          'flex h-8 w-8 items-center justify-center rounded-xl shrink-0 transition-colors',
                           isSelected
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-muted/60 text-muted-foreground',
                         )}
                       >
-                        <Icons name={tier.iconName} className="h-3.5 w-3.5" />
+                        <Icons name={tier.iconName} className="h-4 w-4" />
                       </div>
                       <span className="text-sm font-black font-heading tracking-tight text-foreground">
                         {tier.minutes} {t('mins')}
@@ -200,13 +198,13 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
             <div className="flex items-center gap-2.5 min-w-0">
               <div
                 className={cn(
-                  'flex h-7 w-7 items-center justify-center rounded-xl shrink-0 transition-colors',
+                  'flex h-8 w-8 items-center justify-center rounded-xl shrink-0 transition-colors',
                   isCustom
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-muted/60 text-muted-foreground',
                 )}
               >
-                <Icons name="sliders" className="h-3.5 w-3.5" />
+                <Icons name="sliders" className="h-4 w-4" />
               </div>
               <div className="space-y-0.5">
                 <span className="text-xs font-bold text-foreground block">

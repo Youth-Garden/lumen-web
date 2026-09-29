@@ -12,8 +12,8 @@
     "searching": "Đang tìm kiếm...",
     "suggestions": "Gợi ý nhanh",
     "pages": "Trang & Tính năng",
-    "folders": "Thư mục từ vựng",
-    "topics": "Chủ đề từ vựng",
+    "folders": "Thư mục",
+    "topics": "Chủ đề",
     "vocabulary": "Từ vựng",
     "vocabularyWords": "Từ vựng",
     "quickActions": "Hành động nhanh",
@@ -22,12 +22,14 @@
     "vocabFolders": "Thư mục từ vựng",
     "vocabularyFolders": "Thư mục từ vựng",
     "profileSettings": "Cài đặt tài khoản",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "wordsCount": "{count} từ"
   },
   "Error": {
     "title": "Đã có lỗi xảy ra",
     "subtitle": "Chúng tôi xin lỗi vì sự bất tiện này. Đã có một lỗi không mong muốn xảy ra.",
     "tryAgain": "Thử lại",
+    "goBack": "Quay lại",
     "backHome": "Về trang chủ",
     "sessionExpired": "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.",
     "networkError": "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
@@ -40,6 +42,7 @@
   "NotFound": {
     "title": "Không tìm thấy trang",
     "subtitle": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+    "goBack": "Quay lại",
     "backHome": "Về trang chủ"
   },
   "Index": {
@@ -415,9 +418,17 @@
       "orContinueWith": "Hoặc tiếp tục với"
     },
     "Layout": {
-      "badge": "Chào mừng đến với Lumen",
-      "title": "Lumen Platform",
-      "subtitle": "Khám phá hệ sinh thái toàn diện và mạnh mẽ nhất để quản lý doanh nghiệp của bạn. Tối ưu hóa quy trình, nâng cao hiệu suất."
+      "badge": "Lumen Learning",
+      "titleLine1": "Học Thông Minh.",
+      "titleLine2": "Ghi Nhớ Bền Vững.",
+      "titleLine3": "Làm Chủ Ngôn Ngữ.",
+      "feature1Title": "Thuật toán Lặp lại Ngắt quãng (FSRS)",
+      "feature1Desc": "Tự động tính toán đường cong quên để ôn tập đúng thời điểm tối ưu nhất.",
+      "feature2Title": "Thẻ Ghi nhớ Chủ động",
+      "feature2Desc": "Thẻ từ vựng tương tác, phát âm chuẩn và đánh giá mức độ ghi nhớ tức thì.",
+      "feature3Title": "Theo dõi Chuỗi ngày Học tập",
+      "feature3Desc": "Duy trì thói quen học hàng ngày, đo lường từ vựng đã thuộc và đà tiến bộ.",
+      "footerProof": "Phương pháp ghi nhớ khoa học giúp tối ưu hóa hiệu quả học tập"
     },
     "Validation": {
       "invalidEmail": "Email không hợp lệ",

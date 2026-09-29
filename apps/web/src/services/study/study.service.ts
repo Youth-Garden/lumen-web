@@ -4,20 +4,19 @@ import { BaseResponse } from '@lumen/shared-api';
 import { registry } from './study.registry';
 import {
   BatchReviewFlashcardsPayload,
-  DueFlashcard,
+  DueWord,
   FlashcardRating,
   ReviewFlashcardPayload,
 } from './study.types';
 
 export class StudyService extends CoreService {
-  listDueFlashcards(params?: {
+  listDueWords(params?: {
     folderId?: string;
     limit?: number;
-  }): Promise<BaseResponse<DueFlashcard[]>> {
-    return this._get<DueFlashcard[]>(
-      ApiEndpointEnum.STUDY_FLASHCARDS_DUE,
-      params,
-    );
+    page?: number;
+    includeNew?: boolean;
+  }): Promise<BaseResponse<DueWord[]>> {
+    return this._get<DueWord[]>(ApiEndpointEnum.STUDY_WORDS_DUE, params);
   }
 
   reviewFlashcard(

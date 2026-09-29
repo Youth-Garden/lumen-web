@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
 
-import { Icons } from '@lumen/uikit/icons';
+import { PlantGrowthStage } from '@/shared/components/plant-growth-stage';
 
 export interface PlantMasteryRingProps {
   level: number;
@@ -208,9 +208,10 @@ export function PlantMasteryRing({
               }}
               className="w-full h-full flex items-center justify-center"
             >
-              <Icons
-                name="plant-growth"
-                stage={clampedLevel >= 1 ? 5 : Math.min(5, learningStep)}
+              <PlantGrowthStage
+                stage={
+                  clampedLevel >= 1 ? clampedLevel : Math.min(5, learningStep)
+                }
                 isWilted={isWilted}
                 className="w-full h-full"
               />
