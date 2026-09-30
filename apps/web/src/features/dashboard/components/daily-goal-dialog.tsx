@@ -103,9 +103,6 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
           toast.success(t('goalUpdatedSuccess'));
           onDismiss?.();
         },
-        onError: () => {
-          toast.error(t('goalUpdatedError'));
-        },
       },
     );
   };

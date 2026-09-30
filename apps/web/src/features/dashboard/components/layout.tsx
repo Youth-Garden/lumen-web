@@ -68,14 +68,14 @@ function DashboardContent({
               <div className="pt-2 pb-5 mb-2 min-h-[2.25rem] flex items-center">
                 {breadcrumbs.length > 0 && (
                   <Breadcrumb>
-                    <BreadcrumbList className="gap-0.5 sm:gap-1">
+                    <BreadcrumbList className="gap-0.5 sm:gap-1 items-center">
                       {breadcrumbs.map((item, index) => {
                         const isLast = index === breadcrumbs.length - 1;
                         return (
                           <React.Fragment key={index}>
-                            <BreadcrumbItem>
+                            <BreadcrumbItem className="inline-flex items-center">
                               {item.isLoading ? (
-                                <Skeleton className="h-4 w-16 sm:w-20 rounded-md" />
+                                <Skeleton className="h-3.5 w-16 sm:w-20 rounded-md shrink-0" />
                               ) : isLast ? (
                                 <BreadcrumbPage className="text-xs font-bold text-foreground select-none">
                                   {item.label}

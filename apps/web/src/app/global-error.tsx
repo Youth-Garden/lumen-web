@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Locale } from '@/shared/types';
 import { Button } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
@@ -44,10 +45,15 @@ export default function GlobalError() {
           {/* Ambient Glow */}
           <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-destructive/10 blur-[80px] rounded-full pointer-events-none -z-10" />
 
-          {/* Icon Badge */}
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-destructive/10 text-destructive">
-            <Icons name="danger" className="h-10 w-10" />
-          </div>
+          {/* Standalone 3D Error State Image */}
+          <Image
+            src="/images/common/error-state.png"
+            alt={t.title}
+            width={180}
+            height={180}
+            className="w-40 h-40 md:w-48 md:h-48 object-contain select-none pointer-events-none"
+            priority
+          />
 
           {/* Text */}
           <div className="space-y-2">

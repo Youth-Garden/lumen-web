@@ -29,6 +29,7 @@ export function DueWordsListView({
   onFlashcards,
 }: DueWordsListViewProps) {
   const t = useTranslations('Vocabulary.Folders');
+  const tStudy = useTranslations('Vocabulary.Study');
   const [activeTab, setActiveTab] = useState<TabType>('due');
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
 
@@ -49,8 +50,32 @@ export function DueWordsListView({
             </div>
           </div>
 
-          {/* Tab Filter using UIKit Button variants */}
-          <div className="flex items-center gap-1.5 self-start sm:self-auto">
+          {/* Action Buttons & Tab Filter using UIKit Button variants */}
+          <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+            {onPractice && displayedCards.length > 0 && (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => onPractice(displayedCards)}
+              >
+                <Icons name="sparkles" />
+                <span>{tStudy('practice')}</span>
+              </Button>
+            )}
+
+            {onFlashcards && displayedCards.length > 0 && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => onFlashcards(displayedCards)}
+              >
+                <Icons name="layers" />
+                <span>{tStudy('flashcards')}</span>
+              </Button>
+            )}
+
+            <div className="h-4 w-px bg-border mx-1 hidden sm:block" />
+
             <Button
               variant={activeTab === 'due' ? 'secondary' : 'ghost'}
               size="sm"
@@ -79,7 +104,10 @@ export function DueWordsListView({
           {displayedCards.map((flashcard) => (
             <VocabularyWordCard
               key={flashcard.id}
-              word={flashcard}
+              word={{
+                ...flashcard,
+                isWilted: activeTab === 'due' ? true : flashcard.isWilted,
+              }}
               onClick={presentWordDetail}
             />
           ))}

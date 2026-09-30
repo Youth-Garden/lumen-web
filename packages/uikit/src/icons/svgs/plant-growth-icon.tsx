@@ -11,12 +11,14 @@ import { PlantWiltedIcon } from './plant-wilted-icon';
 export interface PlantGrowthIconProps extends Omit<IconProps, 'size'> {
   stage?: number;
   isWilted?: boolean;
+  useStepIcon?: boolean;
   size?: number | string;
 }
 
 export function PlantGrowthIcon({
   stage = 1,
   isWilted = false,
+  useStepIcon = false,
   ...props
 }: PlantGrowthIconProps) {
   if (isWilted) {
@@ -25,19 +27,25 @@ export function PlantGrowthIcon({
 
   const clampedStage = Math.max(0, Math.min(5, Math.round(stage)));
 
-  switch (clampedStage) {
-    case 0:
-      return <PlantStage0Icon {...props} />;
-    case 1:
-      return <PlantStage1Icon {...props} />;
-    case 2:
-      return <PlantStage2Icon {...props} />;
-    case 3:
-      return <PlantStage3Icon {...props} />;
-    case 4:
-      return <PlantStage4Icon {...props} />;
-    case 5:
-    default:
-      return <PlantStage5Icon {...props} />;
+  if (clampedStage === 0) {
+    return <PlantStage0Icon {...props} />;
   }
+
+  if (useStepIcon) {
+    switch (clampedStage) {
+      case 1:
+        return <PlantStage1Icon {...props} />;
+      case 2:
+        return <PlantStage2Icon {...props} />;
+      case 3:
+        return <PlantStage3Icon {...props} />;
+      case 4:
+        return <PlantStage4Icon {...props} />;
+      case 5:
+      default:
+        return <PlantStage5Icon {...props} />;
+    }
+  }
+
+  return <PlantStage5Icon {...props} />;
 }

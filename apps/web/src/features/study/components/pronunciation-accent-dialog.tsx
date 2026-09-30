@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 
@@ -54,20 +53,11 @@ export function PronunciationAccentDialog({ isOpen, onDismiss }: PortalProps) {
               >
                 <span
                   className={`text-sm ${
-                    isSelected
-                      ? 'text-primary font-bold'
-                      : 'text-foreground font-medium'
+                    isSelected ? 'text-primary' : 'text-foreground font-medium'
                   }`}
                 >
                   {item.label}
                 </span>
-
-                {isSelected && (
-                  <Icons
-                    name="check"
-                    className="w-4 h-4 text-primary shrink-0"
-                  />
-                )}
               </Button>
             );
           })}

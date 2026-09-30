@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 
-import { i18nText } from '@/shared/utils';
 import type { Folder } from '@/services/vocabulary';
 import { useDragScroll, useLocale } from '@/shared/hooks';
+import { i18nText } from '@/shared/utils';
 import { Button, Card, IconButton } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 
@@ -50,7 +50,7 @@ export function CurrentLearningFolderCard({
         </h3>
 
         <Button variant="outline" size="sm" onClick={onSwitchFolder}>
-          <Icons name="refresh-cw" className="text-primary" />
+          <Icons name="refresh-cw" />
           <span>{t('switchFolder')}</span>
         </Button>
       </div>

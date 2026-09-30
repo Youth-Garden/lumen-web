@@ -120,8 +120,9 @@ export function StudyTyping({
             placeholder={t('typePlaceholder')}
             autoComplete="off"
             autoCorrect="off"
+            autoCapitalize="off"
             spellCheck="false"
-            className="w-full h-16 px-5 text-center font-black text-xl sm:text-2xl tracking-wide bg-background/80 dark:bg-muted/15 border-2 border-border/80 focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/15 rounded-2xl placeholder:font-medium placeholder:text-base sm:placeholder:text-lg placeholder:text-muted-foreground/35 transition-all duration-200 shadow-xs hover:border-primary/40 focus-visible:shadow-md"
+            className="w-full h-16 px-12 text-center font-bold text-2xl sm:text-3xl tracking-wide caret-primary bg-card text-foreground border-2 border-border rounded-2xl shadow-sm outline-none placeholder:font-medium placeholder:text-base sm:placeholder:text-lg placeholder:tracking-normal placeholder:text-muted-foreground/40 transition-all duration-200 hover:border-primary/40 hover:shadow-md focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:shadow-md"
           />
 
           {value.length > 0 && (
@@ -131,7 +132,7 @@ export function StudyTyping({
                 setValue('');
                 inputRef.current?.focus();
               }}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/60 hover:text-foreground hover:bg-muted transition-colors"
             >
               <Icons name="x" className="w-4 h-4" />
             </IconButton>

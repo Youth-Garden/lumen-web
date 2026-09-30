@@ -4,12 +4,12 @@ import { useTranslations } from 'next-intl';
 
 import { useLocale } from '@/shared/hooks';
 
-import Image from 'next/image';
-import { useMemo } from 'react';
+import { type VocabularyWord } from '@/services/vocabulary';
+import { formatPartOfSpeechShort, i18nText } from '@/shared/utils';
 import { Badge, Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { i18nText, formatPartOfSpeechShort } from '@/shared/utils';
-import { type VocabularyWord } from '@/services/vocabulary';
+import Image from 'next/image';
+import { useMemo } from 'react';
 
 interface FrequentlyMissedWordsCardProps {
   missedCards: VocabularyWord[];
@@ -67,7 +67,7 @@ export function FrequentlyMissedWordsCard({
 
           {onFlashcardsMissed && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onFlashcardsMissed}
               className="gap-1.5 text-xs font-semibold cursor-pointer"

@@ -297,7 +297,7 @@ export function WordDetailSheet({
                           example.sentence,
                           Locale.EN,
                         );
-                        const nativeSentence = getSecondaryI18nText(
+                        const nativeSentence = i18nText(
                           example.sentence,
                           locale,
                         );

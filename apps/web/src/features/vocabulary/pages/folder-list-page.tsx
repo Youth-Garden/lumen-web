@@ -115,11 +115,7 @@ export function FolderListPage() {
   };
 
   const handleGlobalPractice = () => {
-    if (globalDueCount > 0) {
-      router.push(RouteEnum.VOCABULARY_DUE);
-    } else {
-      startActiveFolderStudy(StudySessionMode.PRACTICE);
-    }
+    startActiveFolderStudy(StudySessionMode.PRACTICE);
   };
 
   const handleGlobalLearnNew = () => {

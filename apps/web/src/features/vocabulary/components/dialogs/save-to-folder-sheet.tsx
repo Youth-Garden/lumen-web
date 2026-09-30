@@ -19,6 +19,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  Skeleton,
 } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { type PortalProps, usePortal } from '@lumen/uikit/portal';
@@ -57,7 +58,7 @@ export function SaveToFolderSheet({
       toast.success(t('addedToFolderSuccess'));
       onDismiss?.();
     } catch {
-      toast.error(t('alreadyInFolder'));
+      // API error toast is handled globally by CoreService
     } finally {
       setSavingFolderId(null);
     }
@@ -101,11 +102,22 @@ export function SaveToFolderSheet({
           {/* Folders List */}
           <ScrollArea className="max-h-[45vh] pr-2">
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Icons
-                  name="loader-2"
-                  className="h-6 w-6 animate-spin text-muted-foreground"
-                />
+              <div className="space-y-2">
+                {[1, 2, 3].map((key) => (
+                  <div
+                    key={key}
+                    className="flex items-center justify-between p-3.5 rounded-2xl"
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <Skeleton className="w-11 h-11 rounded-xl shrink-0" />
+                      <div className="space-y-1.5">
+                        <Skeleton className="h-4 w-32 rounded-md" />
+                        <Skeleton className="h-3 w-20 rounded-md" />
+                      </div>
+                    </div>
+                    <Skeleton className="w-4 h-4 rounded-full shrink-0" />
+                  </div>
+                ))}
               </div>
             ) : customFolders.length === 0 ? (
               <div className="text-center py-8 space-y-2">

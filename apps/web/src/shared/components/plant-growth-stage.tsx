@@ -6,6 +6,7 @@ import React from 'react';
 export interface PlantGrowthStageProps {
   stage?: number;
   isWilted?: boolean;
+  useStepIcon?: boolean;
   size?: number | string;
   className?: string;
   alt?: string;
@@ -14,21 +15,25 @@ export interface PlantGrowthStageProps {
 export function PlantGrowthStage({
   stage = 1,
   isWilted = false,
+  useStepIcon = false,
   size,
   className = '',
   alt,
 }: PlantGrowthStageProps) {
   const clampedStage = Math.max(0, Math.min(5, Math.round(stage)));
 
-  let imagePath = `/images/plants/step-${clampedStage}.png`;
-  let defaultAlt = `Plant Stage ${clampedStage}`;
+  let imagePath = '/images/plants/step-5.png';
+  let defaultAlt = 'Sunflower Plant';
 
   if (isWilted) {
     imagePath = '/images/plants/wilted.png';
-    defaultAlt = 'Wilted Plant';
+    defaultAlt = 'Wilted Sunflower Plant';
   } else if (clampedStage === 0) {
     imagePath = '/images/plants/seed.png';
-    defaultAlt = 'Plant Seed';
+    defaultAlt = 'Unplanted Seed';
+  } else if (useStepIcon) {
+    imagePath = `/images/plants/step-${clampedStage}.png`;
+    defaultAlt = `Plant Stage ${clampedStage}`;
   }
 
   const dimensionStyle: React.CSSProperties = size

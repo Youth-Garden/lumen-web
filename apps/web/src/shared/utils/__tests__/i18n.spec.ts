@@ -31,10 +31,10 @@ describe('getSecondaryI18nText utility', () => {
     expect(getSecondaryI18nText(undefined)).toBe('');
   });
 
-  it('should return the opposite language in switch case', () => {
+  it('should return secondary text for VI and empty string for EN', () => {
     const dict = { en: 'Hello', vi: 'Xin chào' };
     expect(getSecondaryI18nText(dict, Locale.VI)).toBe('Hello');
-    expect(getSecondaryI18nText(dict, Locale.EN)).toBe('Xin chào');
+    expect(getSecondaryI18nText(dict, Locale.EN)).toBe('');
   });
 });
 

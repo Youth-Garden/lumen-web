@@ -616,6 +616,8 @@
       "save": "Save Folder",
       "saveFolder": "Save Folder",
       "noFolders": "You don't have any folders yet.",
+      "noWordsYet": "No cards yet",
+      "noFoldersYet": "Add new vocabulary cards to start learning.",
       "cards": "cards",
       "dueToday": "Due today",
       "studyNow": "Study Now",

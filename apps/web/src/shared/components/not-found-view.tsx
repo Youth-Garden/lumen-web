@@ -20,7 +20,9 @@ export function NotFoundView() {
 
   return (
     <div className="flex min-h-[100dvh] w-full flex-col items-center justify-center p-4 text-center">
-      <div className="flex max-w-md flex-col items-center space-y-5">
+      <div className="relative flex max-w-md flex-col items-center space-y-6">
+        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 blur-[80px] rounded-full pointer-events-none -z-10" />
+
         {/* Standalone 3D Empty State Image */}
         <Image
           src="/images/common/empty-state.png"

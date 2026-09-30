@@ -83,10 +83,21 @@ export const folderTopicListMapper = (raw: any): FolderTopic[] => {
   return raw.map(folderTopicMapper);
 };
 
-export const folderWordsPageMapper = (raw: any): FolderWordsPage => ({
-  data: Array.isArray(raw?.data) ? raw.data.map(wordMapper) : [],
-  total: raw?.total || 0,
-});
+export const folderWordsPageMapper = (raw: any): FolderWordsPage => {
+  const items = Array.isArray(raw?.items)
+    ? raw.items
+    : Array.isArray(raw?.data)
+      ? raw.data
+      : Array.isArray(raw)
+        ? raw
+        : [];
+  const total = raw?.meta?.totalItems ?? raw?.total ?? items.length;
+
+  return {
+    data: items.map(wordMapper),
+    total,
+  };
+};
 
 export const vocabularyOverviewMapper = (raw: any): VocabularyOverview => {
   const memoryLevels: MemoryStageLevel[] = Array.isArray(raw.memoryLevels)

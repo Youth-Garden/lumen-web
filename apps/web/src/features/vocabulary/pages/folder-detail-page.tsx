@@ -1,36 +1,44 @@
 'use client';
 
-import { NotFoundView } from '@/shared/components/not-found-view';
+import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useLocale } from '@/shared/hooks';
-
-import { useMemo } from 'react';
 import { toast } from 'sonner';
 
-import {
-  useFolderTopics,
-  useVocabularyFolderDetail,
-} from '@/features/vocabulary/hooks';
-import { vocabularyService } from '@/services/vocabulary';
-import { i18nText } from '@/shared/utils';
-import { RouteEnum } from '@/shared/constants';
-import { useGoBack, useSetBreadcrumb } from '@/shared/hooks';
-import { Locale } from '@/shared/types';
-import { formatUrl } from '@lumen/shared-api';
-import { Skeleton } from '@lumen/uikit/components';
-import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
-import {
-  ConfirmDeleteFolderDialog,
-  type ConfirmDeleteFolderData,
-} from '@/features/vocabulary/components/dialogs/confirm-delete-folder-dialog';
+import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
 import {
   StudyView,
   type StudyViewData,
 } from '@/features/study/components/study-view';
 import { StudySessionMode } from '@/features/study/types/study.types';
-import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
+import {
+  ConfirmDeleteFolderDialog,
+  type ConfirmDeleteFolderData,
+} from '@/features/vocabulary/components/dialogs/confirm-delete-folder-dialog';
+import {
+  useFolderTopics,
+  useFolderWords,
+  useVocabularyFolderDetail,
+} from '@/features/vocabulary/hooks';
+import { vocabularyService } from '@/services/vocabulary';
+import { NotFoundView } from '@/shared/components/not-found-view';
+import { RouteEnum } from '@/shared/constants';
+import { useGoBack, useLocale, useSetBreadcrumb } from '@/shared/hooks';
+import { i18nText } from '@/shared/utils';
+import { formatUrl } from '@lumen/shared-api';
+import {
+  Badge,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Skeleton,
+} from '@lumen/uikit/components';
+import { Icons } from '@lumen/uikit/icons';
+import { usePortal, usePortalWithoutBackdrop } from '@lumen/uikit/portal';
+
 import { FolderTopicGrid } from '../components/folder-detail/folder-topic-grid';
+import { TopicWordsList } from '../components/folder-detail/topic-words-list';
 
 interface FolderDetailPageProps {
   folderId?: string;
@@ -47,9 +55,22 @@ export function FolderDetailPage({
   const folderId = propFolderId || routeId;
 
   const goBack = useGoBack(RouteEnum.VOCABULARY);
-  const { data: folderDetail, isLoading } = useVocabularyFolderDetail(folderId);
+  const { data: folderDetail, isLoading: isLoadingFolder } =
+    useVocabularyFolderDetail(folderId);
   const { data: topics = [], isLoading: isLoadingTopics } =
     useFolderTopics(folderId);
+
+  const isCustomFolder = folderDetail ? !folderDetail.isSystem : false;
+  const hasTopics = topics.length > 0;
+
+  const { data: wordsPage, isLoading: isLoadingWords } = useFolderWords(
+    folderId,
+    undefined,
+    {
+      enabled: Boolean(folderId) && (!hasTopics || isCustomFolder),
+    },
+  );
+  const words = useMemo(() => wordsPage?.data ?? [], [wordsPage?.data]);
 
   const folderDisplayName = i18nText(folderDetail?.name, locale);
 
@@ -59,10 +80,10 @@ export function FolderDetailPage({
         { label: t('title'), href: RouteEnum.VOCABULARY },
         {
           label: folderDisplayName || '',
-          isLoading: isLoading && !folderDetail,
+          isLoading: isLoadingFolder && !folderDetail,
         },
       ],
-      [t, folderDisplayName, isLoading, folderDetail],
+      [t, folderDisplayName, isLoadingFolder, folderDetail],
     ),
   );
 
@@ -70,8 +91,6 @@ export function FolderDetailPage({
   const [presentDeleteConfirm] = usePortal<ConfirmDeleteFolderData>(
     ConfirmDeleteFolderDialog,
   );
-
-  const isCustomFolder = folderDetail ? !folderDetail.isSystem : false;
 
   const handleDeleteFolder = () => {
     if (!folderDetail) return;
@@ -102,14 +121,14 @@ export function FolderDetailPage({
         1,
         50,
       );
-      const words = res?.data?.data ?? [];
-      if (!words.length) {
+      const studyWords = res?.data?.data ?? [];
+      if (!studyWords.length) {
         toast.info(t('allWordsLearnedInFolder'));
         return;
       }
 
       if (mode === StudySessionMode.LEARN_NEW) {
-        const unlearned = words.filter(
+        const unlearned = studyWords.filter(
           (c) =>
             (c.level ?? 0) === 0 &&
             (c.learningStep ?? 0) === 0 &&
@@ -123,7 +142,7 @@ export function FolderDetailPage({
       }
 
       if (mode === StudySessionMode.PRACTICE) {
-        const learned = words.filter(
+        const learned = studyWords.filter(
           (c) =>
             (c.level ?? 0) >= 1 ||
             (c.learningStep ?? 0) >= 1 ||
@@ -138,7 +157,7 @@ export function FolderDetailPage({
       }
 
       presentStudyView({
-        cards: words,
+        cards: studyWords,
         mode,
         folderName: folderDisplayName || t('defaultFolderDescription'),
       });
@@ -147,7 +166,12 @@ export function FolderDetailPage({
     }
   };
 
-  if (isLoading || isLoadingTopics) {
+  const isLoading =
+    isLoadingFolder ||
+    isLoadingTopics ||
+    ((!hasTopics || isCustomFolder) && isLoadingWords);
+
+  if (isLoading) {
     return (
       <div className="w-full py-2 pb-36 space-y-8">
         <div className="flex flex-col gap-3">
@@ -195,20 +219,86 @@ export function FolderDetailPage({
     return <NotFoundView />;
   }
 
+  const categoryText = i18nText(folderDetail.category, locale);
+  const descriptionText = i18nText(folderDetail.description, locale);
+  const totalWordCount = hasTopics ? folderDetail.wordCount || 0 : words.length;
+
   return (
     <div className="w-full py-2 pb-36">
-      <FolderTopicGrid
-        folderName={folderDisplayName}
-        category={i18nText(folderDetail.category, locale) || undefined}
-        description={i18nText(folderDetail.description, locale) || undefined}
-        selectedTopic={null}
-        topics={topics}
-        onSelectTopic={handleTopicClick}
-        onGoBack={goBack}
-        onDeleteFolder={isCustomFolder ? handleDeleteFolder : undefined}
-      />
+      {hasTopics ? (
+        <FolderTopicGrid
+          folderName={folderDisplayName}
+          category={categoryText || undefined}
+          description={descriptionText || undefined}
+          selectedTopic={null}
+          topics={topics}
+          onSelectTopic={handleTopicClick}
+          onGoBack={goBack}
+          onDeleteFolder={isCustomFolder ? handleDeleteFolder : undefined}
+        />
+      ) : (
+        <div className="space-y-8">
+          {/* Custom Folder Header */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+                  {folderDisplayName}
+                </h1>
+                {categoryText && (
+                  <Badge variant="subtle" size="sm">
+                    {categoryText}
+                  </Badge>
+                )}
+              </div>
 
-      {Boolean(folderDetail && folderDetail.wordCount > 0) && (
+              {isCustomFolder && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className="flex items-center justify-center size-9 rounded-2xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                    aria-label={t('folderActions')}
+                  >
+                    <Icons name="more-horizontal" className="h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="min-w-40">
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={handleDeleteFolder}
+                      className="cursor-pointer"
+                    >
+                      <Icons name="trash-2" className="mr-2 h-4 w-4" />
+                      <span>{t('deleteFolder')}</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+
+            <p className="text-sm text-muted-foreground mt-1">
+              {descriptionText || t('defaultFolderDescription')}
+            </p>
+          </div>
+
+          {/* Words Grid or Empty State */}
+          {words.length > 0 ? (
+            <TopicWordsList words={words} />
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                <Icons name="sparkles" className="h-6 w-6" />
+              </div>
+              <h3 className="text-base font-bold text-foreground">
+                {t('noWordsYet')}
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t('noFoldersYet')}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {totalWordCount > 0 && (
         <StudyBottomActionBar
           onLearnNew={() => startStudy(StudySessionMode.LEARN_NEW)}
           onPractice={() => startStudy(StudySessionMode.PRACTICE)}

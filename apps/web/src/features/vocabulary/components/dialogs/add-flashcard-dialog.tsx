@@ -71,8 +71,8 @@ export function AddFlashcardDialog({
       toast.success(t('addFolderSuccess', { term }));
       onDismiss?.();
       form.reset();
-    } catch (error) {
-      toast.error(t('addError'));
+    } catch {
+      // API error toast is handled globally by CoreService
     }
   };
 

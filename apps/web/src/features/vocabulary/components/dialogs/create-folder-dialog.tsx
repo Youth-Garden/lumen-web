@@ -51,7 +51,7 @@ export function CreateFolderDialog({ isOpen, onDismiss }: PortalProps) {
       onDismiss?.();
       form.reset();
     } catch {
-      toast.error(t('createError'));
+      // API error toast is handled globally by CoreService
     }
   };
 

@@ -19,6 +19,53 @@ import {
 } from '../utils/weekly-study-chart.utils';
 import { StudyChartTooltip } from './study-chart-tooltip';
 
+interface TargetReferenceLabelProps {
+  viewBox?: { x?: number; y?: number; width?: number };
+  goal: number;
+}
+
+function TargetReferenceLabel({ viewBox, goal }: TargetReferenceLabelProps) {
+  if (
+    !viewBox ||
+    viewBox.x === undefined ||
+    viewBox.y === undefined ||
+    viewBox.width === undefined
+  ) {
+    return null;
+  }
+
+  const badgeWidth = 44;
+  const badgeHeight = 18;
+  const posX = viewBox.x + viewBox.width - badgeWidth - 2;
+  const posY = viewBox.y - badgeHeight / 2;
+
+  return (
+    <g transform={`translate(${posX}, ${posY})`}>
+      <rect
+        width={badgeWidth}
+        height={badgeHeight}
+        rx={9}
+        fill="var(--card)"
+        stroke="var(--primary)"
+        strokeOpacity={0.35}
+        strokeWidth={1}
+      />
+      <circle cx={9} cy={badgeHeight / 2} r={2.5} fill="var(--primary)" />
+      <text
+        x={25}
+        y={badgeHeight / 2 + 3.5}
+        textAnchor="middle"
+        fill="var(--primary)"
+        fontSize={10}
+        fontWeight={700}
+        style={{ fontVariantNumeric: 'tabular-nums' }}
+      >
+        {goal}m
+      </text>
+    </g>
+  );
+}
+
 interface DayTickProps {
   x?: number | string;
   y?: number | string;
@@ -152,19 +199,27 @@ export function StudyBarChart({
             )}
           />
 
+          {/* Soft ambient glow layer for target line */}
           <ReferenceLine
             y={goal}
             stroke="var(--primary)"
-            strokeDasharray="4 4"
-            strokeOpacity={0.65}
-            label={{
-              value: `${goal}m ${t('dailyGoalLine')}`,
-              fill: 'var(--primary)',
-              fontSize: 10,
-              fontWeight: 600,
-              position: 'insideTopRight',
-              offset: 8,
-            }}
+            strokeWidth={5}
+            strokeOpacity={0.12}
+            strokeDasharray="6 4"
+            ifOverflow="extendDomain"
+          />
+
+          {/* Crisp, professional dashed target line with pill badge */}
+          <ReferenceLine
+            y={goal}
+            stroke="var(--primary)"
+            strokeWidth={1.5}
+            strokeOpacity={0.8}
+            strokeDasharray="5 4"
+            ifOverflow="extendDomain"
+            label={({ viewBox }) => (
+              <TargetReferenceLabel viewBox={viewBox} goal={goal} />
+            )}
           />
 
           <Bar

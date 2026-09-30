@@ -142,7 +142,7 @@ export const useFolderWords = (
       vocabularyService
         .getFolderWords(folderId, topic)
         .then((res) => res?.data ?? { data: [], total: 0 }),
-    enabled: Boolean(folderId) && Boolean(topic) && (options?.enabled ?? true),
+    enabled: Boolean(folderId) && (options?.enabled ?? true),
     retry: false,
   });
 };

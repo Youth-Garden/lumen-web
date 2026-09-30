@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLocalStorage } from '@lumen/hooks';
 import { useHeatmap, useProgressDashboard } from '@/features/dashboard/hooks';
 import { computeWeeklyTrackerDays } from '@/features/dashboard/utils/streak-tracker.utils';
@@ -31,17 +31,20 @@ export function StudyCompleted({
   const { data: heatmapData } = useHeatmap();
   const streak = Math.max(progressData?.streak || 1, 1);
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
   const [lastCompletedStreakDate, setLastCompletedStreakDate] = useLocalStorage<
     string | null
   >('lumen_last_completed_streak_date', null);
 
   const isFirstSessionToday = lastCompletedStreakDate !== todayStr;
 
-  const handleFinish = () => {
+  useEffect(() => {
     if (isFirstSessionToday) {
       setLastCompletedStreakDate(todayStr);
     }
+  }, [isFirstSessionToday, setLastCompletedStreakDate, todayStr]);
+
+  const handleFinish = () => {
     onClose();
   };
 

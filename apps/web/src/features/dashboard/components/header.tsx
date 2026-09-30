@@ -60,7 +60,7 @@ export function Header() {
         className="w-60 sm:w-72 md:w-84 justify-between font-normal text-muted-foreground text-xs bg-card/90 hover:bg-card active:bg-card dark:bg-card/90 dark:hover:bg-card/90 backdrop-blur-md active:scale-100 active:not-aria-[haspopup]:scale-100"
         title={t('searchTooltip')}
       >
-        <div className="flex items-center gap-2.5">
+        <span className="flex items-center gap-2.5">
           <Icons
             name="search"
             className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0"
@@ -68,7 +68,7 @@ export function Header() {
           <span className="font-medium text-xs text-muted-foreground/80 group-hover:text-foreground transition-colors">
             {t('searchPlaceholder')}
           </span>
-        </div>
+        </span>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-0.5 rounded-md bg-muted/60 px-1.5 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs">
           <span>Ctrl</span>
           <span>K</span>

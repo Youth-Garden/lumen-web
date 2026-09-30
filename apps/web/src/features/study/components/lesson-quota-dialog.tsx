@@ -1,7 +1,7 @@
 'use client';
 
-import { LESSON_QUOTA_CONFIGS, LessonQuotaPreset } from '@/services/study';
 import { useStudySettings } from '@/features/study/hooks/use-study-settings';
+import { LESSON_QUOTA_CONFIGS, LessonQuotaPreset } from '@/services/study';
 import {
   Button,
   Dialog,
@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@lumen/uikit/components';
-import { Icons } from '@lumen/uikit/icons';
 import { PortalProps } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 
@@ -33,7 +32,7 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onDismiss?.()}>
-      <DialogContent className="max-w-[360px] sm:max-w-[360px] bg-card">
+      <DialogContent className="max-w-[360px] sm:max-w-[360px]">
         <DialogHeader align="center">
           <DialogTitle>{t('maxQuestionsPerSession')}</DialogTitle>
         </DialogHeader>
@@ -68,7 +67,7 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
                   <span
                     className={`text-sm ${
                       isSelected
-                        ? 'text-primary font-bold'
+                        ? 'text-primary'
                         : 'text-foreground font-medium'
                     }`}
                   >
@@ -84,13 +83,6 @@ export function LessonQuotaDialog({ isOpen, onDismiss }: PortalProps) {
                     ({rangeText})
                   </span>
                 </div>
-
-                {isSelected && (
-                  <Icons
-                    name="check"
-                    className="w-4 h-4 text-primary shrink-0"
-                  />
-                )}
               </Button>
             );
           })}

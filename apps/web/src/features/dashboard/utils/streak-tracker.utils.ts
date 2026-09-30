@@ -46,29 +46,25 @@ export function resolveTargetForDate(
   const isPastDay = targetDate.getTime() < today.getTime();
 
   if (goalHistories && goalHistories.length > 0) {
-    const sorted = [...goalHistories].sort(
+    const sortedDesc = [...goalHistories].sort(
       (a, b) =>
-        new Date(a.effectiveFrom).getTime() -
-        new Date(b.effectiveFrom).getTime(),
+        new Date(b.effectiveFrom).getTime() -
+        new Date(a.effectiveFrom).getTime(),
     );
 
-    const dateTime = targetDate.getTime();
+    const targetTime = targetDate.getTime();
 
-    for (const history of sorted) {
+    for (const history of sortedDesc) {
       const fromTime = startOfDay(new Date(history.effectiveFrom)).getTime();
-      const toTime = history.effectiveTo
-        ? startOfDay(new Date(history.effectiveTo)).getTime()
-        : Infinity;
-
-      if (dateTime >= fromTime && dateTime <= toTime) {
+      if (targetTime >= fromTime) {
         return Math.max(history.targetMinutes, 1);
       }
     }
 
     const earliestFrom = startOfDay(
-      new Date(sorted[0].effectiveFrom),
+      new Date(sortedDesc[sortedDesc.length - 1].effectiveFrom),
     ).getTime();
-    if (dateTime < earliestFrom) {
+    if (targetTime < earliestFrom) {
       return Math.max(initialDefaultGoal, 1);
     }
   }

@@ -27,7 +27,7 @@ export function getSecondaryI18nText(
       return input[Locale.EN] || '';
     case Locale.EN:
     default:
-      return input[Locale.VI] || '';
+      return '';
   }
 }
 
