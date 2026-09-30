@@ -23,40 +23,71 @@ export interface UseStudyShortcutsProps {
   mode?: StudySessionMode;
   canFlipRef: RefObject<boolean | null>;
   onFlip: () => void;
-  onMastered: () => void;
-  onReview: () => void;
-  onDontKnow: () => void;
+  flashcardActions?: {
+    handleMastered: () => void;
+    handleReview: () => void;
+    handleDontKnow: () => void;
+    handleFlashcardAgain?: () => void;
+    handleFlashcardKnown?: () => void;
+  };
+  answerValidation?: {
+    handleSelectChoiceOption?: (index: number) => void;
+    handleContinueFeedback?: () => void;
+  };
+  audioState?: {
+    handlePlayUsAudio: () => void;
+    handlePlayUkAudio: () => void;
+    handlePlayAudio: () => void;
+  };
+  onMastered?: () => void;
+  onReview?: () => void;
+  onDontKnow?: () => void;
   onFlashcardAgain?: () => void;
   onFlashcardKnown?: () => void;
   onSelectChoice?: (index: number) => void;
   onContinueFeedback?: () => void;
-  onPlayUsAudio: () => void;
-  onPlayUkAudio: () => void;
-  onReplayAudio: () => void;
+  onPlayUsAudio?: () => void;
+  onPlayUkAudio?: () => void;
+  onReplayAudio?: () => void;
   onClose: () => void;
 }
 
-export function useStudyShortcuts({
-  isOpen,
-  isFinished,
-  isFlipped,
-  isFeedbackOpen,
-  exerciseType,
-  mode,
-  canFlipRef,
-  onFlip,
-  onMastered,
-  onReview,
-  onDontKnow,
-  onFlashcardAgain,
-  onFlashcardKnown,
-  onSelectChoice,
-  onContinueFeedback,
-  onPlayUsAudio,
-  onPlayUkAudio,
-  onReplayAudio,
-  onClose,
-}: UseStudyShortcutsProps) {
+export function useStudyShortcuts(props: UseStudyShortcutsProps) {
+  const {
+    isOpen,
+    isFinished,
+    isFlipped,
+    isFeedbackOpen,
+    exerciseType,
+    mode,
+    canFlipRef,
+    onFlip,
+    flashcardActions,
+    answerValidation,
+    audioState,
+    onClose,
+  } = props;
+
+  const onMastered =
+    flashcardActions?.handleMastered ?? props.onMastered ?? (() => {});
+  const onReview =
+    flashcardActions?.handleReview ?? props.onReview ?? (() => {});
+  const onDontKnow =
+    flashcardActions?.handleDontKnow ?? props.onDontKnow ?? (() => {});
+  const onFlashcardAgain =
+    flashcardActions?.handleFlashcardAgain ?? props.onFlashcardAgain;
+  const onFlashcardKnown =
+    flashcardActions?.handleFlashcardKnown ?? props.onFlashcardKnown;
+  const onSelectChoice =
+    answerValidation?.handleSelectChoiceOption ?? props.onSelectChoice;
+  const onContinueFeedback =
+    answerValidation?.handleContinueFeedback ?? props.onContinueFeedback;
+  const onPlayUsAudio =
+    audioState?.handlePlayUsAudio ?? props.onPlayUsAudio ?? (() => {});
+  const onPlayUkAudio =
+    audioState?.handlePlayUkAudio ?? props.onPlayUkAudio ?? (() => {});
+  const onReplayAudio =
+    audioState?.handlePlayAudio ?? props.onReplayAudio ?? (() => {});
   useKeyPress(
     () => true,
     (event: KeyboardEvent) => {

@@ -64,16 +64,11 @@ export default function LoginPage() {
         const callbackUrl = searchParams.get('callbackUrl');
         router.push(callbackUrl || RouteEnum.DASHBOARD);
         router.refresh();
-      } catch (error: unknown) {
-        const message =
-          error instanceof Error ? error.message : 'Unknown error';
-        toast.error('Google login failed: ' + message);
+      } catch {
+        // Handled by CoreService toast
       } finally {
         setIsLoading(false);
       }
-    },
-    onError: () => {
-      toast.error('Google login failed');
     },
   });
 

@@ -43,9 +43,6 @@ export function ProfileCard({ user }: ProfileCardProps) {
         toast.success(t('profileUpdateSuccess'));
         setIsEditing(false);
       },
-      onError: () => {
-        toast.error(t('profileUpdateFailed'));
-      },
     });
   });
 

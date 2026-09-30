@@ -37,10 +37,10 @@ export const useReviewFlashcard = () => {
         queryClient.setQueriesData<FolderWordsPage>(
           { queryKey: vocabularyKeys.folders() },
           (old) => {
-            if (!old || !Array.isArray(old.data)) return old;
+            if (!old || !Array.isArray(old.items)) return old;
             return {
               ...old,
-              data: old.data.map((item) => {
+              items: old.items.map((item) => {
                 if (
                   item.flashcardId === payload.flashcardId ||
                   item.id === payload.flashcardId ||

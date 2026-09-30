@@ -17,10 +17,11 @@ import {
 } from '@/features/vocabulary/components/dialogs/confirm-delete-folder-dialog';
 import {
   useFolderTopics,
-  useFolderWords,
+  useFolderWordsInfinite,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
-import { vocabularyService } from '@/services/vocabulary';
+import { dueWordToVocabularyWord, studyService } from '@/services/study';
+import { vocabularyService, type VocabularyWord } from '@/services/vocabulary';
 import { NotFoundView } from '@/shared/components/not-found-view';
 import { RouteEnum } from '@/shared/constants';
 import { useGoBack, useLocale, useSetBreadcrumb } from '@/shared/hooks';
@@ -63,14 +64,19 @@ export function FolderDetailPage({
   const isCustomFolder = folderDetail ? !folderDetail.isSystem : false;
   const hasTopics = topics.length > 0;
 
-  const { data: wordsPage, isLoading: isLoadingWords } = useFolderWords(
-    folderId,
-    undefined,
-    {
-      enabled: Boolean(folderId) && (!hasTopics || isCustomFolder),
-    },
+  const {
+    data: wordsInfiniteData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingWords,
+  } = useFolderWordsInfinite(folderId, undefined, {
+    enabled: Boolean(folderId) && (!hasTopics || isCustomFolder),
+  });
+  const words = useMemo(
+    () => wordsInfiniteData?.pages.flatMap((page) => page.items) ?? [],
+    [wordsInfiniteData?.pages],
   );
-  const words = useMemo(() => wordsPage?.data ?? [], [wordsPage?.data]);
 
   const folderDisplayName = i18nText(folderDetail?.name, locale);
 
@@ -115,45 +121,29 @@ export function FolderDetailPage({
 
   const startStudy = async (mode?: StudySessionMode) => {
     try {
-      const res = await vocabularyService.getFolderWords(
-        folderId,
-        undefined,
-        1,
-        50,
-      );
-      const studyWords = res?.data?.data ?? [];
+      let studyWords: VocabularyWord[];
+
+      if (mode === StudySessionMode.FLASHCARD) {
+        const res = await vocabularyService.getFolderWords(
+          folderId,
+          undefined,
+          1,
+          200,
+        );
+        studyWords = res?.data?.items ?? [];
+      } else {
+        const includeNew = mode !== StudySessionMode.PRACTICE;
+        const res = await studyService.listDueWords({
+          folderId,
+          includeNew,
+          limit: 200,
+        });
+        studyWords = (res?.data ?? []).map(dueWordToVocabularyWord);
+      }
+
       if (!studyWords.length) {
         toast.info(t('allWordsLearnedInFolder'));
         return;
-      }
-
-      if (mode === StudySessionMode.LEARN_NEW) {
-        const unlearned = studyWords.filter(
-          (c) =>
-            (c.level ?? 0) === 0 &&
-            (c.learningStep ?? 0) === 0 &&
-            (c.masteryScore ?? 0) === 0,
-        );
-        if (unlearned.length === 0) {
-          toast.info(t('allWordsLearnedInFolder'));
-          startStudy(StudySessionMode.PRACTICE);
-          return;
-        }
-      }
-
-      if (mode === StudySessionMode.PRACTICE) {
-        const learned = studyWords.filter(
-          (c) =>
-            (c.level ?? 0) >= 1 ||
-            (c.learningStep ?? 0) >= 1 ||
-            (c.masteryScore ?? 0) > 0 ||
-            Boolean(c.isWilted),
-        );
-        if (learned.length === 0) {
-          toast.info(t('noLearnedWordsToPractice'));
-          startStudy(StudySessionMode.LEARN_NEW);
-          return;
-        }
       }
 
       presentStudyView({
@@ -162,7 +152,7 @@ export function FolderDetailPage({
         folderName: folderDisplayName || t('defaultFolderDescription'),
       });
     } catch {
-      toast.error(t('defaultFolderDescription'));
+      // CoreService automatically displays toast.error for API failures
     }
   };
 
@@ -279,9 +269,13 @@ export function FolderDetailPage({
             </p>
           </div>
 
-          {/* Words Grid or Empty State */}
           {words.length > 0 ? (
-            <TopicWordsList words={words} />
+            <TopicWordsList
+              words={words}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              onFetchNextPage={fetchNextPage}
+            />
           ) : (
             <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-3">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">

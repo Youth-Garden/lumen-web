@@ -27,6 +27,7 @@ import {
   useVocabularyOverview,
 } from '@/features/vocabulary/hooks';
 import { calculateGlobalTotalWords } from '@/features/vocabulary/utils';
+import { dueWordToVocabularyWord, studyService } from '@/services/study';
 import { vocabularyService, type VocabularyWord } from '@/services/vocabulary';
 import { RouteEnum } from '@/shared/constants';
 import { useLocale } from '@/shared/hooks';
@@ -93,13 +94,26 @@ export function FolderListPage() {
   const startActiveFolderStudy = async (mode: StudySessionMode) => {
     if (!activeFolder?.id) return;
     try {
-      const res = await vocabularyService.getFolderWords(
-        activeFolder.id,
-        undefined,
-        1,
-        50,
-      );
-      const cards = res.data?.data || [];
+      let cards: VocabularyWord[];
+
+      if (mode === StudySessionMode.FLASHCARD) {
+        const res = await vocabularyService.getFolderWords(
+          activeFolder.id,
+          undefined,
+          1,
+          200,
+        );
+        cards = res.data?.items || [];
+      } else {
+        const includeNew = mode !== StudySessionMode.PRACTICE;
+        const res = await studyService.listDueWords({
+          folderId: activeFolder.id,
+          includeNew,
+          limit: 200,
+        });
+        cards = (res.data || []).map(dueWordToVocabularyWord);
+      }
+
       if (!cards.length) {
         toast.info(tStudy('noWordsInFolder'));
         return;
@@ -110,7 +124,7 @@ export function FolderListPage() {
         mode,
       });
     } catch {
-      toast.error(tStudy('failedToLoadCards'));
+      // CoreService automatically displays toast.error for API failures
     }
   };
 

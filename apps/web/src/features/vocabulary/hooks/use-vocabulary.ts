@@ -1,3 +1,4 @@
+import { EMPTY_PAGING } from '@/services/core';
 import {
   CreateFolderPayload,
   CreateFlashcardPayload,
@@ -6,7 +7,12 @@ import {
   type Folder,
 } from '@/services/vocabulary';
 import { studyKeys } from '@/services/study';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 export const useCreateFolder = () => {
   const queryClient = useQueryClient();
@@ -79,7 +85,10 @@ export const useVocabularyWords = (
 ) => {
   return useQuery({
     queryKey: vocabularyKeys.wordList(params),
-    queryFn: () => vocabularyService.listWords(params).then((res) => res.data),
+    queryFn: () =>
+      vocabularyService
+        .listWords(params)
+        .then((res) => res?.data ?? EMPTY_PAGING),
     ...options,
   });
 };
@@ -141,7 +150,29 @@ export const useFolderWords = (
     queryFn: () =>
       vocabularyService
         .getFolderWords(folderId, topic)
-        .then((res) => res?.data ?? { data: [], total: 0 }),
+        .then((res) => res?.data ?? EMPTY_PAGING),
+    enabled: Boolean(folderId) && (options?.enabled ?? true),
+    retry: false,
+  });
+};
+
+export const useFolderWordsInfinite = (
+  folderId: string,
+  topic?: string,
+  options?: { enabled?: boolean },
+) => {
+  return useInfiniteQuery({
+    queryKey: vocabularyKeys.folderWordsInfinite(folderId, topic),
+    queryFn: ({ pageParam = 1 }) =>
+      vocabularyService
+        .getFolderWords(folderId, topic, pageParam as number, 50)
+        .then((res) => res?.data ?? EMPTY_PAGING),
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.meta) return undefined;
+      const { currentPage, totalPages = 0 } = lastPage.meta;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
+    },
+    initialPageParam: 1,
     enabled: Boolean(folderId) && (options?.enabled ?? true),
     retry: false,
   });

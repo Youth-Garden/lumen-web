@@ -1,11 +1,17 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { VocabularyWordCard } from '@/features/vocabulary/components/cards/vocabulary-word-card';
 import { type VocabularyWord } from '@/services/vocabulary';
-import { Button } from '@lumen/uikit/components';
+import {
+  Button,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { WordDetailSheet } from './word-detail-sheet';
@@ -22,6 +28,47 @@ export interface DueWordsListViewProps {
 
 type TabType = 'due' | 'learned';
 
+function WordGrid({
+  cards,
+  isWiltedOverride,
+  emptyTitle,
+  emptyDesc,
+  presentWordDetail,
+}: {
+  cards: VocabularyWord[];
+  isWiltedOverride?: boolean;
+  emptyTitle: string;
+  emptyDesc: string;
+  presentWordDetail: (word: VocabularyWord) => void;
+}) {
+  if (cards.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-3">
+        <Icons name="sparkles" className="h-10 w-10 text-muted-foreground/40" />
+        <h3 className="text-base font-bold text-foreground">{emptyTitle}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          {emptyDesc}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+      {cards.map((flashcard) => (
+        <VocabularyWordCard
+          key={flashcard.id}
+          word={{
+            ...flashcard,
+            isWilted: isWiltedOverride ?? flashcard.isWilted,
+          }}
+          onClick={presentWordDetail}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function DueWordsListView({
   dueCards,
   learnedCards,
@@ -33,103 +80,74 @@ export function DueWordsListView({
   const [activeTab, setActiveTab] = useState<TabType>('due');
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
 
-  const displayedCards = useMemo(() => {
-    return activeTab === 'due' ? dueCards : learnedCards;
-  }, [activeTab, dueCards, learnedCards]);
+  const displayedCards = activeTab === 'due' ? dueCards : learnedCards;
 
   return (
     <div className="w-full space-y-6 pb-20 animate-in fade-in-50 duration-200">
-      {/* Top Navigation & Header */}
-      <div className="flex flex-col gap-3 pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-                {t('viewDueWordsTitle')}
-              </h1>
-            </div>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+          {t('viewDueWordsTitle')}
+        </h1>
 
-          {/* Action Buttons & Tab Filter using UIKit Button variants */}
-          <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
-            {onPractice && displayedCards.length > 0 && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => onPractice(displayedCards)}
-              >
-                <Icons name="sparkles" />
-                <span>{tStudy('practice')}</span>
-              </Button>
-            )}
-
-            {onFlashcards && displayedCards.length > 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => onFlashcards(displayedCards)}
-              >
-                <Icons name="layers" />
-                <span>{tStudy('flashcards')}</span>
-              </Button>
-            )}
-
-            <div className="h-4 w-px bg-border mx-1 hidden sm:block" />
-
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {onPractice && displayedCards.length > 0 && (
             <Button
-              variant={activeTab === 'due' ? 'secondary' : 'ghost'}
+              variant="default"
               size="sm"
-              onClick={() => setActiveTab('due')}
+              onClick={() => onPractice(displayedCards)}
             >
-              <span>
-                {t('tabDueOnly')} ({dueCards.length})
-              </span>
+              <Icons name="sparkles" />
+              <span>{tStudy('practice')}</span>
             </Button>
+          )}
+          {onFlashcards && displayedCards.length > 0 && (
             <Button
-              variant={activeTab === 'learned' ? 'secondary' : 'ghost'}
+              variant="secondary"
               size="sm"
-              onClick={() => setActiveTab('learned')}
+              onClick={() => onFlashcards(displayedCards)}
             >
-              <span>
-                {t('tabLearnedAll')} ({learnedCards.length})
-              </span>
+              <Icons name="layers" />
+              <span>{tStudy('flashcards')}</span>
             </Button>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Word Grid */}
-      {displayedCards.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-          {displayedCards.map((flashcard) => (
-            <VocabularyWordCard
-              key={flashcard.id}
-              word={{
-                ...flashcard,
-                isWilted: activeTab === 'due' ? true : flashcard.isWilted,
-              }}
-              onClick={presentWordDetail}
-            />
-          ))}
-        </div>
-      ) : (
-        /* Empty State */
-        <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-            <Icons name="sparkles" className="h-6 w-6" />
-          </div>
-          <h3 className="text-base font-bold text-foreground">
-            {activeTab === 'due'
-              ? t('noDueWordsTitle')
-              : t('noLearnedWordsTitle')}
-          </h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {activeTab === 'due'
-              ? t('noDueWordsDesc')
-              : t('noLearnedWordsDesc')}
-          </p>
-        </div>
-      )}
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)}>
+        <TabsList variant="line">
+          <TabsTrigger value="due">
+            {t('tabDueOnly')}
+            <span className="ml-1.5 text-xs text-muted-foreground">
+              ({dueCards.length})
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="learned">
+            {t('tabLearnedAll')}
+            <span className="ml-1.5 text-xs text-muted-foreground">
+              ({learnedCards.length})
+            </span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="due">
+          <WordGrid
+            cards={dueCards}
+            isWiltedOverride={true}
+            emptyTitle={t('noDueWordsTitle')}
+            emptyDesc={t('noDueWordsDesc')}
+            presentWordDetail={presentWordDetail}
+          />
+        </TabsContent>
+
+        <TabsContent value="learned">
+          <WordGrid
+            cards={learnedCards}
+            emptyTitle={t('noLearnedWordsTitle')}
+            emptyDesc={t('noLearnedWordsDesc')}
+            presentWordDetail={presentWordDetail}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

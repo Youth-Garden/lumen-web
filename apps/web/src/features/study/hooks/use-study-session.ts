@@ -1,22 +1,20 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
 import { useQueue, useToggle } from '@lumen/hooks';
 import {
   StudyExerciseType,
   StudyQueueItem,
-  StudySessionMode,
   type MissedWordStat,
 } from '@/features/study/types/study.types';
 import {
   calculateCumulativeProgressPercent,
   calculateTargetSessionPoints,
+  clearStudyProgressFromStorage,
   createInitialStudyQueue,
   getCurrentCardLearningStep,
   getCurrentCardMastery,
   recordMissedWordItem,
-  resolveStudyPool,
   saveStudyProgressToStorage,
   sortMissedWords,
 } from '@/features/study/utils/study-session.utils';
@@ -25,11 +23,13 @@ import { useVocabularyWords } from '@/features/vocabulary/hooks';
 import { useStudyAnswerValidation } from './use-study-answer-validation';
 import { useStudyAudio } from './use-study-audio';
 import { useStudyFlashcardActions } from './use-study-flashcard-actions';
+import { useStudyPool } from './use-study-pool';
 import { useStudyReviews } from './use-study-reviews';
 import type {
   UseStudySessionProps,
   UseStudySessionReturn,
 } from './use-study-session.types';
+import { useStudySessionQuota } from './use-study-session-quota';
 import { useStudySettings } from './use-study-settings';
 import { useStudyShortcuts } from './use-study-shortcuts';
 
@@ -41,62 +41,15 @@ export function useStudySession({
   isOpen,
   onClose,
 }: UseStudySessionProps): UseStudySessionReturn {
-  const tFolders = useTranslations('Vocabulary.Folders');
-  const { settings, currentQuotaConfig } = useStudySettings();
-
-  const [sessionQuota, setSessionQuota] = useState(() => ({
-    newWordsCount: currentQuotaConfig.newWordsCount || 5,
-    targetCount:
-      settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
-  }));
-
-  useEffect(() => {
-    if (!isOpen) {
-      setSessionQuota({
-        newWordsCount: currentQuotaConfig.newWordsCount || 5,
-        targetCount:
-          settings.wordsPerSession || currentQuotaConfig.targetCount || 20,
-      });
-    }
-  }, [
-    isOpen,
-    currentQuotaConfig.newWordsCount,
-    currentQuotaConfig.targetCount,
-    settings.wordsPerSession,
-  ]);
-
-  const resolvedMode = useMemo(() => {
-    if (mode) return mode;
-    return isReviewMode
-      ? StudySessionMode.PRACTICE
-      : StudySessionMode.LEARN_NEW;
-  }, [mode, isReviewMode]);
-
-  const storageKey = useMemo(
-    () =>
-      `lumen_study_session_${selectedTopic ? encodeURIComponent(selectedTopic) : 'general'}`,
-    [selectedTopic],
-  );
-
-  const poolCards = useMemo(
-    () =>
-      resolveStudyPool(
-        cards,
-        selectedTopic,
-        resolvedMode,
-        sessionQuota.newWordsCount,
-        sessionQuota.targetCount,
-        tFolders('generalTopic'),
-      ),
-    [
-      cards,
-      selectedTopic,
-      resolvedMode,
-      sessionQuota.newWordsCount,
-      sessionQuota.targetCount,
-      tFolders,
-    ],
-  );
+  const { settings } = useStudySettings();
+  const sessionQuota = useStudySessionQuota(isOpen);
+  const { resolvedMode, storageKey, poolCards } = useStudyPool({
+    cards,
+    selectedTopic,
+    mode,
+    isReviewMode,
+    sessionQuota,
+  });
 
   const { data: globalWordsRes } = useVocabularyWords(
     { limit: 100 },
@@ -121,6 +74,7 @@ export function useStudySession({
   const [earnedPoints, setEarnedPoints] = useState(0);
   const canFlipRef = useRef(true);
   const [isInitialized, setIsInitialized] = useState(false);
+  const isInitializedRef = useRef(false);
 
   const currentItem = studyQueue.first || null;
   const currentCard = currentItem?.card || null;
@@ -149,8 +103,6 @@ export function useStudySession({
         : 0,
     [isInitialized, earnedPoints, targetPoints, isFinished],
   );
-
-  const isInitializedRef = useRef(false);
 
   const initializeSession = useCallback(() => {
     setActiveQueue(
@@ -182,13 +134,13 @@ export function useStudySession({
     return () => clearTimeout(timer);
   }, [currentItem?.id]);
 
-  const currentCardMastery = useMemo(
-    () => getCurrentCardMastery(currentCard, wordProgressMap),
-    [currentCard, wordProgressMap],
+  const currentCardMastery = getCurrentCardMastery(
+    currentCard,
+    wordProgressMap,
   );
-  const currentCardLearningStep = useMemo(
-    () => getCurrentCardLearningStep(currentCard, wordProgressMap),
-    [currentCard, wordProgressMap],
+  const currentCardLearningStep = getCurrentCardLearningStep(
+    currentCard,
+    wordProgressMap,
   );
 
   const recordMissedWord = useCallback((card: VocabularyWord) => {
@@ -246,9 +198,7 @@ export function useStudySession({
   });
 
   const handleRestart = useCallback(() => {
-    try {
-      localStorage.removeItem(storageKey);
-    } catch {}
+    clearStudyProgressFromStorage(storageKey);
     clearPendingReviews();
     answerValidation.resetAnswerState();
     initializeSession();
@@ -302,16 +252,9 @@ export function useStudySession({
     exerciseType: currentItem?.exerciseType || StudyExerciseType.FLASHCARD,
     mode: resolvedMode,
     onFlip: handleFlip,
-    onMastered: flashcardActions.handleMastered,
-    onReview: flashcardActions.handleReview,
-    onDontKnow: flashcardActions.handleDontKnow,
-    onFlashcardAgain: flashcardActions.handleFlashcardAgain,
-    onFlashcardKnown: flashcardActions.handleFlashcardKnown,
-    onSelectChoice: answerValidation.handleSelectChoiceOption,
-    onContinueFeedback: answerValidation.handleContinueFeedback,
-    onPlayUsAudio: audioState.handlePlayUsAudio,
-    onPlayUkAudio: audioState.handlePlayUkAudio,
-    onReplayAudio: audioState.handlePlayAudio,
+    flashcardActions,
+    answerValidation,
+    audioState,
     onClose,
   });
 

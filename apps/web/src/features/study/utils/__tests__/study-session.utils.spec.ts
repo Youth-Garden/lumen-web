@@ -43,28 +43,28 @@ const createMockWord = (
 
 describe('study-session.utils', () => {
   describe('calculateNewFlashcardProgress', () => {
-    it('should set level 6 and isMastered true when rated FAST_TRACK_KNOWN', () => {
+    it('should set level 5 and isMastered true when rated FAST_TRACK_KNOWN', () => {
       const result = calculateNewFlashcardProgress(
         FlashcardRating.FAST_TRACK_KNOWN,
         0,
         0,
       );
       expect(result).toEqual({
-        newLevel: 6,
+        newLevel: 5,
         newLearningStep: 6,
         isMastered: true,
       });
     });
 
-    it('should set level 3 and isMastered false when rated FAST_TRACK_TEMP', () => {
+    it('should set level 2 and isMastered false when rated FAST_TRACK_TEMP', () => {
       const result = calculateNewFlashcardProgress(
         FlashcardRating.FAST_TRACK_TEMP,
         0,
         0,
       );
       expect(result).toEqual({
-        newLevel: 3,
-        newLearningStep: 3,
+        newLevel: 2,
+        newLearningStep: 1,
         isMastered: false,
       });
     });

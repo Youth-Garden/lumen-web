@@ -1,4 +1,5 @@
 import type { I18nString } from '@/shared/types';
+import type { Paging } from '@lumen/shared-api';
 
 export interface VocabularyExample {
   id: string;
@@ -61,10 +62,7 @@ export interface FolderTopic {
   dueCount: number;
 }
 
-export interface FolderWordsPage {
-  data: VocabularyWord[];
-  total: number;
-}
+export type FolderWordsPage = Paging<VocabularyWord>;
 
 export interface CreateFolderPayload {
   name: string;

@@ -1,4 +1,4 @@
-import { toI18nString } from '@/services/core';
+import { pagingMapper, toI18nString } from '@/services/core';
 import {
   VocabularyWord,
   Folder,
@@ -83,21 +83,8 @@ export const folderTopicListMapper = (raw: any): FolderTopic[] => {
   return raw.map(folderTopicMapper);
 };
 
-export const folderWordsPageMapper = (raw: any): FolderWordsPage => {
-  const items = Array.isArray(raw?.items)
-    ? raw.items
-    : Array.isArray(raw?.data)
-      ? raw.data
-      : Array.isArray(raw)
-        ? raw
-        : [];
-  const total = raw?.meta?.totalItems ?? raw?.total ?? items.length;
-
-  return {
-    data: items.map(wordMapper),
-    total,
-  };
-};
+export const folderWordsPageMapper = (raw: any): FolderWordsPage =>
+  pagingMapper(raw, wordMapper);
 
 export const vocabularyOverviewMapper = (raw: any): VocabularyOverview => {
   const memoryLevels: MemoryStageLevel[] = Array.isArray(raw.memoryLevels)

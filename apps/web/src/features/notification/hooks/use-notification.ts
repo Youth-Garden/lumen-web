@@ -5,7 +5,6 @@ import {
 } from '@/services/notification';
 import { useAuthStore } from '@/store/auth.store';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 export const useNotifications = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -46,7 +45,6 @@ export const useMarkAsRead = () => {
           context.previousNotifications,
         );
       }
-      toast.error('Failed to mark notification as read');
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
@@ -79,7 +77,6 @@ export const useMarkAllAsRead = () => {
           context.previousNotifications,
         );
       }
-      toast.error('Failed to mark all as read');
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });

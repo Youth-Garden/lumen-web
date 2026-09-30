@@ -15,9 +15,11 @@ import {
 import { StudySessionMode } from '@/features/study/types/study.types';
 import {
   useFolderTopics,
-  useFolderWords,
+  useFolderWordsInfinite,
   useVocabularyFolderDetail,
 } from '@/features/vocabulary/hooks';
+import { dueWordToVocabularyWord, studyService } from '@/services/study';
+import { vocabularyService, type VocabularyWord } from '@/services/vocabulary';
 import { RouteEnum } from '@/shared/constants';
 import { useSetBreadcrumb, type BreadcrumbConfigItem } from '@/shared/hooks';
 import { i18nText, includesI18n } from '@/shared/utils';
@@ -43,13 +45,15 @@ export function TopicDetailPage() {
     useVocabularyFolderDetail(folderId);
   const { data: topics = [], isLoading: isLoadingTopics } =
     useFolderTopics(folderId);
-  const { data: wordsPage, isLoading: isLoadingWords } = useFolderWords(
-    folderId,
-    topicName,
-    {
-      enabled: Boolean(folderId) && Boolean(topicName),
-    },
-  );
+  const {
+    data: wordsInfiniteData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingWords,
+  } = useFolderWordsInfinite(folderId, topicName, {
+    enabled: Boolean(folderId) && Boolean(topicName),
+  });
 
   const [presentStudyView] = usePortalWithoutBackdrop<StudyViewData>(StudyView);
 
@@ -66,7 +70,10 @@ export function TopicDetailPage() {
   const localizedTopicTitle = topicInfo
     ? i18nText(topicInfo.name || topicInfo.topic, locale)
     : topicName;
-  const words = useMemo(() => wordsPage?.data ?? [], [wordsPage?.data]);
+  const words = useMemo(
+    () => wordsInfiniteData?.pages.flatMap((page) => page.items) ?? [],
+    [wordsInfiniteData?.pages],
+  );
 
   const folderDisplayName = i18nText(folderDetail?.name, locale);
 
@@ -104,44 +111,37 @@ export function TopicDetailPage() {
     ]),
   );
 
-  const startStudy = (mode: StudySessionMode) => {
-    if (!words.length) return;
+  const startStudy = async (mode: StudySessionMode) => {
+    try {
+      let studyWords: VocabularyWord[];
 
-    if (mode === StudySessionMode.LEARN_NEW) {
-      const unlearned = words.filter(
-        (c) =>
-          (c.level ?? 0) === 0 &&
-          (c.learningStep ?? 0) === 0 &&
-          (c.masteryScore ?? 0) === 0,
-      );
-      if (unlearned.length === 0) {
+      if (mode === StudySessionMode.FLASHCARD) {
+        if (!words.length) return;
+        studyWords = words;
+      } else {
+        const includeNew = mode !== StudySessionMode.PRACTICE;
+        const res = await studyService.listDueWords({
+          folderId,
+          includeNew,
+          limit: 500,
+        });
+        studyWords = (res?.data ?? []).map(dueWordToVocabularyWord);
+      }
+
+      if (!studyWords.length) {
         toast.info(t('allWordsLearnedInTopic'));
-        startStudy(StudySessionMode.PRACTICE);
         return;
       }
-    }
 
-    if (mode === StudySessionMode.PRACTICE) {
-      const learned = words.filter(
-        (c) =>
-          (c.level ?? 0) >= 1 ||
-          (c.learningStep ?? 0) >= 1 ||
-          (c.masteryScore ?? 0) > 0 ||
-          Boolean(c.isWilted),
-      );
-      if (learned.length === 0) {
-        toast.info(t('noLearnedWordsToPractice'));
-        startStudy(StudySessionMode.LEARN_NEW);
-        return;
-      }
+      presentStudyView({
+        cards: studyWords,
+        selectedTopic: topicName,
+        mode,
+        folderName: localizedTopicTitle || topicName,
+      });
+    } catch {
+      // CoreService automatically displays toast.error for API failures
     }
-
-    presentStudyView({
-      cards: words,
-      selectedTopic: topicName,
-      mode,
-      folderName: localizedTopicTitle || topicName,
-    });
   };
 
   const isLoading = isLoadingFolder || isLoadingTopics || isLoadingWords;
@@ -179,7 +179,12 @@ export function TopicDetailPage() {
 
   return (
     <div className="w-full py-2 pb-36">
-      <TopicWordsList words={words} />
+      <TopicWordsList
+        words={words}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onFetchNextPage={fetchNextPage}
+      />
 
       {words.length > 0 && (
         <StudyBottomActionBar

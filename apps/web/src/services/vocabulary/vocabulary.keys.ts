@@ -11,5 +11,7 @@ export const vocabularyKeys = {
     [...vocabularyKeys.folders(), id, 'topics'] as const,
   folderWords: (id: string, topic?: string) =>
     [...vocabularyKeys.folders(), id, 'words', topic] as const,
+  folderWordsInfinite: (id: string, topic?: string) =>
+    [...vocabularyKeys.folders(), id, 'words-infinite', topic] as const,
   overview: () => [...vocabularyKeys.all, 'overview'] as const,
 };

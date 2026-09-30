@@ -214,10 +214,10 @@ export function calculateNewFlashcardProgress(
   currentStep: number,
 ): { newLevel: number; newLearningStep: number; isMastered: boolean } {
   if (rating === FlashcardRating.FAST_TRACK_KNOWN) {
-    return { newLevel: 6, newLearningStep: 6, isMastered: true };
+    return { newLevel: 5, newLearningStep: 6, isMastered: true };
   }
   if (rating === FlashcardRating.FAST_TRACK_TEMP) {
-    return { newLevel: 3, newLearningStep: 3, isMastered: false };
+    return { newLevel: 2, newLearningStep: 1, isMastered: false };
   }
   if (rating === FlashcardRating.WRONG) {
     const penalizedLevel = Math.max(0, currentLevel - 1);
@@ -275,6 +275,12 @@ export function saveStudyProgressToStorage(
     console.error('Failed to save study progress:', err);
     return false;
   }
+}
+
+export function clearStudyProgressFromStorage(storageKey: string): void {
+  try {
+    localStorage.removeItem(storageKey);
+  } catch {}
 }
 
 export function buildFeedbackState(
