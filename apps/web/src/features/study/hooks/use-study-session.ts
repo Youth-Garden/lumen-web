@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQueue, useToggle } from '@lumen/hooks';
+import { useQueue, useTimeout, useToggle } from '@lumen/hooks';
 import {
   StudyExerciseType,
   StudyQueueItem,
@@ -128,11 +128,11 @@ export function useStudySession({
 
   useEffect(() => {
     canFlipRef.current = false;
-    const timer = setTimeout(() => {
-      canFlipRef.current = true;
-    }, 200);
-    return () => clearTimeout(timer);
   }, [currentItem?.id]);
+
+  useTimeout(() => {
+    canFlipRef.current = true;
+  }, currentItem?.id ? 200 : null);
 
   const currentCardMastery = getCurrentCardMastery(
     currentCard,

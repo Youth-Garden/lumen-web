@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { useInterval } from './use-interval';
 
 interface UseCountdownOptions {
   initialSeconds: number;
@@ -14,21 +15,19 @@ export function useCountdown({
   const [secondsRemaining, setSecondsRemaining] = useState(initialSeconds);
   const [isActive, setIsActive] = useState(autoStart);
 
-  useEffect(() => {
-    if (!isActive) return;
-
-    if (secondsRemaining <= 0) {
-      setIsActive(false);
-      onComplete?.();
-      return;
-    }
-
-    const timer = setInterval(() => {
-      setSecondsRemaining((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isActive, secondsRemaining, onComplete]);
+  useInterval(
+    () => {
+      setSecondsRemaining((prev) => {
+        if (prev <= 1) {
+          setIsActive(false);
+          onComplete?.();
+          return 0;
+        }
+        return prev - 1;
+      });
+    },
+    isActive && secondsRemaining > 0 ? 1000 : null,
+  );
 
   const start = useCallback(() => {
     setSecondsRemaining((prev) => (prev <= 0 ? initialSeconds : prev));

@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useTimeout } from '@lumen/hooks';
 import { usePronunciation } from '@/shared/hooks';
 import {
   PronunciationAccent,
@@ -59,25 +60,17 @@ export function useStudyAudio({
     else handlePlayUsAudio();
   }, [accent, handlePlayUkAudio, handlePlayUsAudio]);
 
-  useEffect(() => {
-    if (!isOpen || isFinished || !currentCard || !autoPlayAudio) return;
-    if (
-      exerciseType === StudyExerciseType.FLASHCARD ||
-      exerciseType === StudyExerciseType.CHOICE_MEANING
-    ) {
-      const timer = setTimeout(() => {
-        handlePlayAudio();
-      }, 250);
-      return () => clearTimeout(timer);
-    }
-  }, [
-    currentCard,
-    exerciseType,
-    isOpen,
-    isFinished,
-    autoPlayAudio,
-    handlePlayAudio,
-  ]);
+  const delay =
+    isOpen &&
+    !isFinished &&
+    currentCard &&
+    autoPlayAudio &&
+    (exerciseType === StudyExerciseType.FLASHCARD ||
+      exerciseType === StudyExerciseType.CHOICE_MEANING)
+      ? 250
+      : null;
+
+  useTimeout(handlePlayAudio, delay);
 
   return {
     activePhonetic,

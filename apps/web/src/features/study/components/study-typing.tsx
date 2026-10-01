@@ -2,7 +2,7 @@
 
 import type { StudyQueueItem } from '@/features/study/types/study.types';
 import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mastery-flower-badge';
-import { useCounter, useSubmitLock } from '@lumen/hooks';
+import { useCounter, useSubmitLock, useTimeout } from '@lumen/hooks';
 import { Badge, Button, IconButton, Input } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
 import { useTranslations } from 'next-intl';
@@ -43,11 +43,11 @@ export function StudyTyping({
     setValue('');
     resetLock();
     resetHint();
-    const timer = setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
-    return () => clearTimeout(timer);
   }, [item.id, resetHint, resetLock]);
+
+  useTimeout(() => {
+    inputRef.current?.focus();
+  }, 100);
 
   const handleApplyHint = () => {
     if (remainingHints > 0 && !isSubmitted) {

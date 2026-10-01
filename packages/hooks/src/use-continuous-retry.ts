@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { useTimeout } from './use-timeout';
 
 export interface UseContinuousRetryOptions {
   interval?: number;
@@ -37,18 +38,9 @@ export function useContinuousRetry<T>(
     }
   }, []);
 
-  useEffect(() => {
-    if (hasResolved || retries >= maxRetries) return;
+  const delay = hasResolved || retries >= maxRetries ? null : (retries === 0 ? 0 : interval);
 
-    const timer = setTimeout(
-      () => {
-        attempt();
-      },
-      retries === 0 ? 0 : interval,
-    );
-
-    return () => clearTimeout(timer);
-  }, [attempt, hasResolved, interval, maxRetries, retries]);
+  useTimeout(attempt, delay);
 
   return { data, error, hasResolved, retries };
 }
