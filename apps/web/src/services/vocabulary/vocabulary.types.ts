@@ -1,6 +1,22 @@
 import type { I18nString } from '@/shared/types';
 import type { Paging } from '@lumen/shared-api';
 
+export enum WordRelationType {
+  SYNONYM = 'SYNONYM',
+  ANTONYM = 'ANTONYM',
+  RELATED = 'RELATED',
+}
+
+export interface WordRelation {
+  id: string;
+  sourceWordId: string;
+  definitionId?: string | null;
+  targetWordId?: string | null;
+  targetTerm: string;
+  relationType: WordRelationType;
+  displayOrder: number;
+}
+
 export interface VocabularyExample {
   id: string;
   sentence: I18nString;
@@ -11,6 +27,7 @@ export interface VocabularyDefinition {
   partOfSpeech: string;
   definition: I18nString;
   examples: VocabularyExample[];
+  relations?: WordRelation[];
 }
 
 export interface VocabularyWord {
@@ -34,6 +51,7 @@ export interface VocabularyWord {
   wordId?: string;
   errorRate?: number;
   definitions: VocabularyDefinition[];
+  relations?: WordRelation[];
 }
 
 export interface Folder {

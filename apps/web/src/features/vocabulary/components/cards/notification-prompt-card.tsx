@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 
+import { useToggle } from '@lumen/hooks';
 import { Button, Card } from '@lumen/uikit/components';
 import { Icons } from '@lumen/uikit/icons';
-import { useToggle } from '@lumen/hooks';
 
 export function NotificationPromptCard() {
   const t = useTranslations('Vocabulary.Folders');
@@ -28,7 +28,7 @@ export function NotificationPromptCard() {
 
       <Button
         size="sm"
-        variant={isEnabled ? 'ghost' : 'default'}
+        variant={isEnabled ? 'secondary' : 'default'}
         onClick={toggleEnabled}
         className="w-full text-xs font-bold h-9 cursor-pointer"
       >

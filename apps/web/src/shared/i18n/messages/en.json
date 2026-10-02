@@ -637,6 +637,10 @@
       "noActiveFolder": "No folder selected",
 
       "selectFolderToStudy": "Select a folder to start learning",
+      "synonyms": "Synonyms",
+      "antonyms": "Antonyms",
+      "relatedWords": "Related Words",
+      "backToPreviousWord": "Back",
       "frequentlyMissedTitle": "Frequently Missed Words",
       "frequentlyMissedSubtitle": "Review these words carefully to reduce your error rate.",
       "reviewMissed": "Review Missed",

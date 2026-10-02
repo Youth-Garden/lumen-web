@@ -637,6 +637,10 @@
       "noActiveFolder": "Chưa chọn thư mục học",
 
       "selectFolderToStudy": "Chọn một thư mục để bắt đầu học",
+      "synonyms": "Từ đồng nghĩa",
+      "antonyms": "Từ trái nghĩa",
+      "relatedWords": "Các từ liên quan",
+      "backToPreviousWord": "Quay lại",
       "frequentlyMissedTitle": "Từ vựng hay sai",
       "frequentlyMissedSubtitle": "Ôn tập kỹ các từ này để giảm tỷ lệ sai sót.",
       "reviewMissed": "Ôn lại từ hay sai",

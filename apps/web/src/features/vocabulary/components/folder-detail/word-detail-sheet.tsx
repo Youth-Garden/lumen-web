@@ -26,7 +26,10 @@ import { MasteryFlowerBadge } from '@/features/vocabulary/components/mastery/mas
 import { FlashcardRating } from '@/services/study';
 import {
   PronunciationAccent,
+  WordRelationType,
+  vocabularyService,
   type VocabularyWord,
+  type WordRelation,
 } from '@/services/vocabulary';
 import { usePronunciation } from '@/shared/hooks';
 import { Locale } from '@/shared/types';
@@ -54,10 +57,40 @@ function renderHighlightedSentence(sentence: string, term: string) {
   );
 }
 
+function RelationBadge({
+  relation,
+  onClick,
+}: {
+  relation: WordRelation;
+  onClick: (rel: WordRelation) => void;
+}) {
+  const isInteractive = Boolean(relation.targetWordId);
+
+  if (!isInteractive) {
+    return (
+      <Badge variant="subtle" size="sm">
+        {relation.targetTerm}
+      </Badge>
+    );
+  }
+
+  return (
+    <Button
+      variant="secondary"
+      size="xs"
+      onClick={() => onClick(relation)}
+      className="h-6 px-2 text-xs font-medium gap-1 rounded-md"
+    >
+      <span>{relation.targetTerm}</span>
+      <span className="text-[10px] opacity-70">↗</span>
+    </Button>
+  );
+}
+
 export function WordDetailSheet({
   isOpen,
   onDismiss,
-  data: word,
+  data: initialWord,
 }: PortalProps<VocabularyWord>) {
   const t = useTranslations('Vocabulary.Folders');
   const locale = useLocale();
@@ -65,23 +98,33 @@ export function WordDetailSheet({
   const { mutate: reviewFlashcard, isPending } = useReviewFlashcard();
   const [presentSaveToFolder] = usePortal<SaveToFolderData>(SaveToFolderSheet);
 
+  const [historyStack, setHistoryStack] = useState<VocabularyWord[]>([]);
   const [localLevel, setLocalLevel] = useState<number | null>(null);
   const [localStep, setLocalStep] = useState<number | null>(null);
   const [localIsWilted, setLocalIsWilted] = useState<boolean | null>(null);
 
   useEffect(() => {
+    if (initialWord) {
+      setHistoryStack([initialWord]);
+    }
+  }, [initialWord?.id, initialWord?.flashcardId, initialWord]);
+
+  const activeWord = historyStack[historyStack.length - 1] || initialWord;
+
+  useEffect(() => {
     setLocalLevel(null);
     setLocalStep(null);
     setLocalIsWilted(null);
-  }, [word?.id, word?.flashcardId]);
+  }, [activeWord?.id, activeWord?.flashcardId]);
 
-  const currentLevel = localLevel !== null ? localLevel : (word?.level ?? 0);
+  const currentLevel =
+    localLevel !== null ? localLevel : (activeWord?.level ?? 0);
   const currentStep =
-    localStep !== null ? localStep : (word?.learningStep ?? 0);
+    localStep !== null ? localStep : (activeWord?.learningStep ?? 0);
   const currentIsWilted =
-    localIsWilted !== null ? localIsWilted : (word?.isWilted ?? false);
+    localIsWilted !== null ? localIsWilted : (activeWord?.isWilted ?? false);
 
-  const flashcardId = word?.flashcardId ?? word?.id ?? '';
+  const flashcardId = activeWord?.flashcardId ?? activeWord?.id ?? '';
   const hasPassedFirstLevel = currentLevel >= 1;
 
   const handleMarkKnown = () => {
@@ -109,6 +152,31 @@ export function WordDetailSheet({
     });
   };
 
+  const handleNavigateRelation = async (relation: WordRelation) => {
+    if (!relation.targetWordId) return;
+    try {
+      const res = await vocabularyService.getWord(relation.targetWordId);
+      if (res?.data) {
+        setHistoryStack((prev) => [...prev, res.data]);
+      }
+    } catch {
+      // Automatic service level error toast
+    }
+  };
+
+  const handleBack = () => {
+    setHistoryStack((prev) =>
+      prev.length > 1 ? prev.slice(0, prev.length - 1) : prev,
+    );
+  };
+
+  const wordLevelRelated = (activeWord?.relations || [])
+    .filter(
+      (rel) =>
+        rel.relationType === WordRelationType.RELATED || !rel.definitionId,
+    )
+    .slice(0, 8);
+
   return (
     <Sheet
       open={isOpen}
@@ -123,6 +191,16 @@ export function WordDetailSheet({
       >
         <ScrollArea className="overflow-y-auto max-h-[88dvh] sm:max-h-[85vh]">
           <div className="flex items-center gap-3.5 px-6 pt-6 pb-2">
+            {historyStack.length > 1 && (
+              <IconButton
+                type="button"
+                className="shrink-0 mr-1"
+                onClick={handleBack}
+                title={t('backToPreviousWord')}
+              >
+                <Icons name="arrow-left" className="h-4 w-4" />
+              </IconButton>
+            )}
             <MasteryFlowerBadge
               level={currentLevel}
               learningStep={currentStep}
@@ -130,11 +208,11 @@ export function WordDetailSheet({
               size={48}
             />
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground font-heading">
-              {word?.term ?? ''}
+              {activeWord?.term ?? ''}
             </h2>
-            {word?.cefrLevel && (
+            {activeWord?.cefrLevel && (
               <Badge variant="subtle" size="sm" className="uppercase">
-                {word.cefrLevel}
+                {activeWord.cefrLevel}
               </Badge>
             )}
             <div className="flex-1" />
@@ -144,8 +222,8 @@ export function WordDetailSheet({
                 className="shrink-0"
                 onClick={() =>
                   presentSaveToFolder({
-                    wordId: word?.wordId || word?.id || '',
-                    term: word?.term,
+                    wordId: activeWord?.wordId || activeWord?.id || '',
+                    term: activeWord?.term,
                   })
                 }
                 title={t('saveToFolder')}
@@ -156,7 +234,7 @@ export function WordDetailSheet({
             </div>
           </div>
 
-          {word && (
+          {activeWord && (
             <div className="flex justify-between gap-4 px-6 pt-2 pb-4">
               <div className="flex flex-col gap-1">
                 <Button
@@ -165,9 +243,9 @@ export function WordDetailSheet({
                   type="button"
                   onClick={() =>
                     playPronunciation({
-                      term: word.term,
-                      audioUrl: word.audioUrl ?? undefined,
-                      audioUsUrl: word.audioUsUrl ?? undefined,
+                      term: activeWord.term,
+                      audioUrl: activeWord.audioUrl ?? undefined,
+                      audioUsUrl: activeWord.audioUsUrl ?? undefined,
                       accent: PronunciationAccent.US,
                     })
                   }
@@ -181,7 +259,7 @@ export function WordDetailSheet({
                     US
                   </span>
                   <span className="font-sans text-sm">
-                    {word.phoneticUs || word.phonetic || ''}
+                    {activeWord.phoneticUs || activeWord.phonetic || ''}
                   </span>
                 </Button>
                 <Button
@@ -190,8 +268,8 @@ export function WordDetailSheet({
                   type="button"
                   onClick={() =>
                     playPronunciation({
-                      term: word.term,
-                      audioUkUrl: word.audioUkUrl ?? undefined,
+                      term: activeWord.term,
+                      audioUkUrl: activeWord.audioUkUrl ?? undefined,
                       accent: PronunciationAccent.UK,
                     })
                   }
@@ -205,7 +283,7 @@ export function WordDetailSheet({
                     UK
                   </span>
                   <span className="font-sans text-sm">
-                    {word.phoneticUk || word.phonetic || ''}
+                    {activeWord.phoneticUk || activeWord.phonetic || ''}
                   </span>
                 </Button>
               </div>
@@ -234,12 +312,12 @@ export function WordDetailSheet({
             </div>
           )}
 
-          {word?.imageUrl && (
+          {activeWord?.imageUrl && (
             <div className="flex justify-center px-6 my-3">
               <div className="relative w-44 h-44 rounded-2xl overflow-hidden shadow-xs border border-border/40">
                 <Image
-                  src={word.imageUrl}
-                  alt={word.term}
+                  src={activeWord.imageUrl}
+                  alt={activeWord.term}
                   fill
                   sizes="176px"
                   className="object-cover"
@@ -249,7 +327,7 @@ export function WordDetailSheet({
           )}
 
           <div className="px-6 pb-8 space-y-6">
-            {word?.definitions.map((def) => {
+            {activeWord?.definitions.map((def) => {
               const primaryText = i18nText(def.definition, locale);
               const secondaryText = getSecondaryI18nText(
                 def.definition,
@@ -257,6 +335,13 @@ export function WordDetailSheet({
               );
 
               const partOfSpeech = normalizePartOfSpeech(def.partOfSpeech);
+
+              const synonyms = (def.relations || [])
+                .filter((r) => r.relationType === WordRelationType.SYNONYM)
+                .slice(0, 8);
+              const antonyms = (def.relations || [])
+                .filter((r) => r.relationType === WordRelationType.ANTONYM)
+                .slice(0, 8);
 
               return (
                 <div key={def.id} className="space-y-2">
@@ -276,6 +361,40 @@ export function WordDetailSheet({
                     <p className="text-sm text-foreground/90 leading-relaxed">
                       {secondaryText}
                     </p>
+                  )}
+
+                  {synonyms.length > 0 && (
+                    <div className="pt-1.5 space-y-1">
+                      <p className="text-xs font-medium text-muted-foreground">
+                        {t('synonyms')}:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {synonyms.map((rel) => (
+                          <RelationBadge
+                            key={rel.id}
+                            relation={rel}
+                            onClick={handleNavigateRelation}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {antonyms.length > 0 && (
+                    <div className="pt-1.5 space-y-1">
+                      <p className="text-xs font-medium text-muted-foreground">
+                        {t('antonyms')}:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {antonyms.map((rel) => (
+                          <RelationBadge
+                            key={rel.id}
+                            relation={rel}
+                            onClick={handleNavigateRelation}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   )}
 
                   {def.examples.length > 0 && (
@@ -305,7 +424,10 @@ export function WordDetailSheet({
                         return (
                           <div key={example.id} className="space-y-0.5">
                             <p className="text-sm font-medium text-foreground leading-normal">
-                              {renderHighlightedSentence(sentenceEn, word.term)}
+                              {renderHighlightedSentence(
+                                sentenceEn,
+                                activeWord.term,
+                              )}
                             </p>
                             {nativeSentence &&
                               nativeSentence.toLowerCase().trim() !==
@@ -322,6 +444,23 @@ export function WordDetailSheet({
                 </div>
               );
             })}
+
+            {wordLevelRelated.length > 0 && (
+              <div className="pt-4 border-t border-border/40 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  {t('relatedWords')}:
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {wordLevelRelated.map((rel) => (
+                    <RelationBadge
+                      key={rel.id}
+                      relation={rel}
+                      onClick={handleNavigateRelation}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </SheetContent>

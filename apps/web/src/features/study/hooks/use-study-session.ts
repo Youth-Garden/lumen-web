@@ -130,9 +130,12 @@ export function useStudySession({
     canFlipRef.current = false;
   }, [currentItem?.id]);
 
-  useTimeout(() => {
-    canFlipRef.current = true;
-  }, currentItem?.id ? 200 : null);
+  useTimeout(
+    () => {
+      canFlipRef.current = true;
+    },
+    currentItem?.id ? 200 : null,
+  );
 
   const currentCardMastery = getCurrentCardMastery(
     currentCard,

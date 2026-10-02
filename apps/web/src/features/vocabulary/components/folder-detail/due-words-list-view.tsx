@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { VocabularyWordCard } from '@/features/vocabulary/components/cards/vocabulary-word-card';
 import { type VocabularyWord } from '@/services/vocabulary';
 import {
-  Button,
   Tabs,
   TabsContent,
   TabsList,
@@ -88,29 +87,6 @@ export function DueWordsListView({
         <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
           {t('viewDueWordsTitle')}
         </h1>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          {onPractice && displayedCards.length > 0 && (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => onPractice(displayedCards)}
-            >
-              <Icons name="sparkles" />
-              <span>{tStudy('practice')}</span>
-            </Button>
-          )}
-          {onFlashcards && displayedCards.length > 0 && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => onFlashcards(displayedCards)}
-            >
-              <Icons name="layers" />
-              <span>{tStudy('flashcards')}</span>
-            </Button>
-          )}
-        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)}>

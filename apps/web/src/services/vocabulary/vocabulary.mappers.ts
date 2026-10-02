@@ -6,7 +6,36 @@ import {
   FolderWordsPage,
   VocabularyOverview,
   MemoryStageLevel,
+  WordRelation,
+  WordRelationType,
 } from './vocabulary.types';
+
+const RELATION_TYPES = new Set<string>(Object.values(WordRelationType));
+
+export const wordRelationMapper = (raw: unknown): WordRelation | null => {
+  if (typeof raw !== 'object' || raw === null) return null;
+  const d = raw as Record<string, unknown>;
+  if (typeof d.id !== 'string' || !d.id) return null;
+  if (typeof d.targetTerm !== 'string' || !d.targetTerm.trim()) return null;
+  if (typeof d.relationType !== 'string' || !RELATION_TYPES.has(d.relationType))
+    return null;
+
+  return {
+    id: d.id,
+    sourceWordId: String(d.sourceWordId || ''),
+    definitionId: typeof d.definitionId === 'string' ? d.definitionId : null,
+    targetWordId: typeof d.targetWordId === 'string' ? d.targetWordId : null,
+    targetTerm: d.targetTerm.trim(),
+    relationType: d.relationType as WordRelationType,
+    displayOrder: typeof d.displayOrder === 'number' ? d.displayOrder : 0,
+  };
+};
+
+export const wordRelationListMapper = (raw: unknown): WordRelation[] => {
+  return Array.isArray(raw)
+    ? raw.map(wordRelationMapper).filter((r): r is WordRelation => r !== null)
+    : [];
+};
 
 export const wordMapper = (raw: any): VocabularyWord => ({
   id: raw.id || '',
@@ -38,8 +67,10 @@ export const wordMapper = (raw: any): VocabularyWord => ({
               sentence: toI18nString(ex.sentence),
             }))
           : [],
+        relations: wordRelationListMapper(def.relations),
       }))
     : [],
+  relations: wordRelationListMapper(raw.relations),
 });
 
 export const folderMapper = (folder: any): Folder => ({
