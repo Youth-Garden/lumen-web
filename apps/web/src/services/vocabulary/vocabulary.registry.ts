@@ -4,7 +4,6 @@ import { HttpMethod, MapperRegistry, registryKey } from '@lumen/shared-api';
 import {
   folderMapper,
   folderTopicMapper,
-  folderWordsPageMapper,
   vocabularyOverviewMapper,
   wordMapper,
 } from './vocabulary.mappers';
@@ -22,9 +21,9 @@ export const registry: MapperRegistry = {
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_TOPICS)]:
     folderTopicMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FOLDER_WORDS)]:
-    folderWordsPageMapper,
+    wordMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_FOLDER_FLASHCARDS)]:
-    folderWordsPageMapper,
+    wordMapper,
   [registryKey(HttpMethod.GET, ApiEndpointEnum.VOCABULARY_OVERVIEW)]:
     vocabularyOverviewMapper,
   [registryKey(HttpMethod.POST, ApiEndpointEnum.VOCABULARY_FOLDERS)]:

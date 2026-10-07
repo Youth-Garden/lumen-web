@@ -7,7 +7,6 @@ import {
   useVocabularyWords,
 } from '@/features/vocabulary/hooks/use-vocabulary';
 import {
-  vocabularyKeys,
   vocabularyService,
   type FolderTopic,
   type VocabularyWord,
@@ -362,14 +361,6 @@ export function CommandPalette({ isOpen, onDismiss }: PortalProps) {
           <>
             <CommandSeparator />
             <CommandGroup heading={t('quickActions')}>
-              <CommandItem
-                onSelect={() =>
-                  runCommand(() => router.push(RouteEnum.SETTINGS))
-                }
-              >
-                <Icons name="user" className="mr-2 h-4 w-4" />
-                <span>{t('profileSettings')}</span>
-              </CommandItem>
               {isAuthenticated && (
                 <CommandItem
                   variant="destructive"

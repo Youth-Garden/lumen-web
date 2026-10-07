@@ -71,7 +71,10 @@ export function TopicDetailPage() {
     ? i18nText(topicInfo.name || topicInfo.topic, locale)
     : topicName;
   const words = useMemo(
-    () => wordsInfiniteData?.pages.flatMap((page) => page.items) ?? [],
+    () =>
+      (wordsInfiniteData?.pages.flatMap((page) => page?.items ?? []) ?? []).filter(
+        (word) => Boolean(word && word.id),
+      ),
     [wordsInfiniteData?.pages],
   );
 

@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { VocabularyWordCard } from '@/features/vocabulary/components/cards/vocabulary-word-card';
 import { type VocabularyWord } from '@/services/vocabulary';
+import { PageTitle } from '@/shared/components/page-title';
 import {
   Tabs,
   TabsContent,
@@ -20,7 +21,7 @@ export interface DueWordsListViewProps {
   folderName?: string;
   dueCards: VocabularyWord[];
   learnedCards: VocabularyWord[];
-  onBackToOverview: () => void;
+  onBackToOverview?: () => void;
   onPractice?: (cards: VocabularyWord[]) => void;
   onFlashcards?: (cards: VocabularyWord[]) => void;
 }
@@ -71,39 +72,30 @@ function WordGrid({
 export function DueWordsListView({
   dueCards,
   learnedCards,
-  onPractice,
-  onFlashcards,
 }: DueWordsListViewProps) {
   const t = useTranslations('Vocabulary.Folders');
-  const tStudy = useTranslations('Vocabulary.Study');
   const [activeTab, setActiveTab] = useState<TabType>('due');
   const [presentWordDetail] = usePortal<VocabularyWord>(WordDetailSheet);
 
-  const displayedCards = activeTab === 'due' ? dueCards : learnedCards;
-
   return (
     <div className="w-full space-y-6 pb-20 animate-in fade-in-50 duration-200">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-          {t('viewDueWordsTitle')}
-        </h1>
-      </div>
-
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)}>
-        <TabsList variant="line">
-          <TabsTrigger value="due">
-            {t('tabDueOnly')}
-            <span className="ml-1.5 text-xs text-muted-foreground">
-              ({dueCards.length})
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="learned">
-            {t('tabLearnedAll')}
-            <span className="ml-1.5 text-xs text-muted-foreground">
-              ({learnedCards.length})
-            </span>
-          </TabsTrigger>
-        </TabsList>
+        <PageTitle title={t('viewDueWordsTitle')}>
+          <TabsList variant="line" className="self-start sm:self-center">
+            <TabsTrigger value="due">
+              {t('tabDueOnly')}
+              <span className="ml-1.5 text-xs text-muted-foreground">
+                ({dueCards.length})
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="learned">
+              {t('tabLearnedAll')}
+              <span className="ml-1.5 text-xs text-muted-foreground">
+                ({learnedCards.length})
+              </span>
+            </TabsTrigger>
+          </TabsList>
+        </PageTitle>
 
         <TabsContent value="due">
           <WordGrid

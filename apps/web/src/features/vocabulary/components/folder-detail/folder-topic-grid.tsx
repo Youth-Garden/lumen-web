@@ -3,6 +3,7 @@
 import { useLocale } from '@/shared/hooks';
 import { useTranslations } from 'next-intl';
 
+import { PageTitle } from '@/shared/components/page-title';
 import type { FolderTopic } from '@/services/vocabulary';
 import { Locale } from '@/shared/types';
 import { i18nText } from '@/shared/utils';
@@ -45,20 +46,18 @@ export function FolderTopicGrid({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-              {folderName}
-            </h1>
-            {category && (
-              <Badge variant="subtle" size="sm">
-                {category}
-              </Badge>
-            )}
-          </div>
-
-          {onDeleteFolder && (
+      <PageTitle
+        title={folderName}
+        badge={
+          category ? (
+            <Badge variant="subtle" size="sm">
+              {category}
+            </Badge>
+          ) : undefined
+        }
+        description={description || t('defaultFolderDescription')}
+        actions={
+          onDeleteFolder && (
             <DropdownMenu>
               <DropdownMenuTrigger
                 className="flex items-center justify-center size-9 rounded-2xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
@@ -77,13 +76,9 @@ export function FolderTopicGrid({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          )}
-        </div>
-
-        <p className="text-sm text-muted-foreground mt-1">
-          {description || t('defaultFolderDescription')}
-        </p>
-      </div>
+          )
+        }
+      />
 
       {/* Grid of Circular Topic Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 justify-items-center">

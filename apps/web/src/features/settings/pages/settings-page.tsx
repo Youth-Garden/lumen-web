@@ -17,6 +17,8 @@ import { Icons } from '@lumen/uikit/icons';
 import { usePortal } from '@lumen/uikit/portal';
 import { useTranslations } from 'next-intl';
 
+import { PageTitle } from '@/shared/components/page-title';
+
 import { ProfileCard } from '../components/profile-card';
 import { StreakFreezeCard } from '../components/streak-freeze-card';
 
@@ -30,12 +32,7 @@ export const SettingsPage = () => {
 
   return (
     <div className="w-full max-w-[680px] mx-auto space-y-6 pb-10">
-      <div>
-        <h1 className="text-3xl font-heading font-bold tracking-tight text-foreground">
-          {t('title')}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
-      </div>
+      <PageTitle title={t('title')} description={t('subtitle')} />
 
       <div className="space-y-6">
         {/* 1. Account Profile */}

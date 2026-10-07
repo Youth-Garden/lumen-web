@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQueue, useTimeout, useToggle } from '@lumen/hooks';
+import { useQueue, useToggle } from '@lumen/hooks';
 import {
   StudyExerciseType,
   StudyQueueItem,
@@ -127,15 +127,13 @@ export function useStudySession({
   }, [isOpen, poolCards, initializeSession]);
 
   useEffect(() => {
+    if (!currentItem?.id) return;
     canFlipRef.current = false;
-  }, [currentItem?.id]);
-
-  useTimeout(
-    () => {
+    const timer = setTimeout(() => {
       canFlipRef.current = true;
-    },
-    currentItem?.id ? 200 : null,
-  );
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [currentItem?.id]);
 
   const currentCardMastery = getCurrentCardMastery(
     currentCard,
@@ -156,10 +154,9 @@ export function useStudySession({
       setTimeout(() => {
         setIsFlipped(false);
         setActiveQueue(nextQueue);
-        canFlipRef.current = true;
-      }, 600);
+      }, 400);
     },
-    [],
+    [setActiveQueue, setIsFlipped],
   );
 
   const handleFlip = useCallback(() => {

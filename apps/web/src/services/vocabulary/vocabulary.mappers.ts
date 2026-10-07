@@ -37,41 +37,72 @@ export const wordRelationListMapper = (raw: unknown): WordRelation[] => {
     : [];
 };
 
-export const wordMapper = (raw: any): VocabularyWord => ({
-  id: raw.id || '',
-  term: raw.term || '',
-  topic: toI18nString(raw.topic),
-  topicImageUrl: raw.topicImageUrl,
-  phonetic: raw.phonetic,
-  phoneticUs: raw.phoneticUs,
-  phoneticUk: raw.phoneticUk,
-  audioUrl: raw.audioUrl,
-  audioUsUrl: raw.audioUsUrl,
-  audioUkUrl: raw.audioUkUrl,
-  cefrLevel: raw.cefrLevel,
-  imageUrl: raw.imageUrl,
-  level: raw.level || 0,
-  learningStep: raw.learningStep || 0,
-  masteryScore: raw.masteryScore || 0,
-  isWilted: Boolean(raw.isWilted),
-  flashcardId: raw.flashcardId || raw.id,
-  wordId: raw.wordId,
-  definitions: Array.isArray(raw.definitions)
-    ? raw.definitions.map((def: any) => ({
-        id: def.id || '',
-        partOfSpeech: def.partOfSpeech || '',
-        definition: toI18nString(def.definition),
-        examples: Array.isArray(def.examples)
-          ? def.examples.map((ex: any) => ({
-              id: ex.id || '',
-              sentence: toI18nString(ex.sentence),
-            }))
-          : [],
-        relations: wordRelationListMapper(def.relations),
-      }))
-    : [],
-  relations: wordRelationListMapper(raw.relations),
-});
+export const wordMapper = (raw: any): VocabularyWord => {
+  if (!raw || typeof raw !== 'object') {
+    return {
+      id: '',
+      term: '',
+      topic: {},
+      topicImageUrl: null,
+      phonetic: null,
+      phoneticUs: null,
+      phoneticUk: null,
+      audioUrl: null,
+      audioUsUrl: null,
+      audioUkUrl: null,
+      cefrLevel: null,
+      imageUrl: null,
+      level: 0,
+      learningStep: 0,
+      masteryScore: 0,
+      isWilted: false,
+      flashcardId: '',
+      wordId: undefined,
+      definitions: [],
+      relations: [],
+    };
+  }
+
+  return {
+    id: raw.id || '',
+    term: raw.term || '',
+    topic: toI18nString(raw.topic),
+    topicImageUrl: raw.topicImageUrl,
+    phonetic: raw.phonetic,
+    phoneticUs: raw.phoneticUs,
+    phoneticUk: raw.phoneticUk,
+    audioUrl: raw.audioUrl,
+    audioUsUrl: raw.audioUsUrl,
+    audioUkUrl: raw.audioUkUrl,
+    cefrLevel: raw.cefrLevel,
+    imageUrl: raw.imageUrl,
+    level: raw.level || 0,
+    learningStep: raw.learningStep || 0,
+    masteryScore: raw.masteryScore || 0,
+    isWilted: Boolean(raw.isWilted),
+    flashcardId: raw.flashcardId || raw.id,
+    wordId: raw.wordId,
+    definitions: Array.isArray(raw.definitions)
+      ? raw.definitions
+          .filter((def: any) => Boolean(def && typeof def === 'object'))
+          .map((def: any) => ({
+            id: def.id || '',
+            partOfSpeech: def.partOfSpeech || '',
+            definition: toI18nString(def.definition),
+            examples: Array.isArray(def.examples)
+              ? def.examples
+                  .filter((ex: any) => Boolean(ex && typeof ex === 'object'))
+                  .map((ex: any) => ({
+                    id: ex.id || '',
+                    sentence: toI18nString(ex.sentence),
+                  }))
+              : [],
+            relations: wordRelationListMapper(def.relations),
+          }))
+      : [],
+    relations: wordRelationListMapper(raw.relations),
+  };
+};
 
 export const folderMapper = (folder: any): Folder => ({
   id: folder?.id || '',

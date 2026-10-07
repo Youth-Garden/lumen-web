@@ -138,7 +138,7 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                 <Card
                   key={tier.minutes}
                   role="radio"
-                  variant="muted"
+                  variant="outline"
                   aria-checked={isSelected}
                   onClick={() => {
                     setSelectedGoal(tier.minutes);
@@ -147,7 +147,9 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
                   }}
                   className={cn(
                     'cursor-pointer transition-all p-3',
-                    isSelected ? 'bg-primary/20' : 'hover:bg-muted/70',
+                    isSelected
+                      ? 'border-primary/60 bg-primary/10 dark:bg-primary/15'
+                      : 'hover:bg-muted/50 hover:border-border',
                   )}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
@@ -186,10 +188,12 @@ export function DailyGoalDialog({ isOpen, onDismiss }: PortalProps) {
           </div>
 
           <Card
-            variant="muted"
+            variant="outline"
             className={cn(
               'flex-row items-center justify-between p-3 gap-3 transition-all',
-              isCustom ? 'bg-primary/20' : 'hover:bg-muted/70',
+              isCustom
+                ? 'border-primary/60 bg-primary/10 dark:bg-primary/15'
+                : 'hover:bg-muted/50 hover:border-border',
             )}
           >
             <div className="flex items-center gap-2.5 min-w-0">

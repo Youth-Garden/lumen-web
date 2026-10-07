@@ -57,6 +57,9 @@ export const dashboardMapper = (raw: any): DashboardProgressResponse => ({
         effectiveTo: h.effectiveTo ? String(h.effectiveTo) : null,
       }))
     : [],
+  frozenDates: Array.isArray(raw.frozenDates)
+    ? raw.frozenDates.map((d: any) => String(d).slice(0, 10))
+    : [],
 });
 
 export const leaderboardMapper = (raw: any): LeaderboardResponse => {

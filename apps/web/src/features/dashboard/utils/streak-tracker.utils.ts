@@ -85,6 +85,7 @@ export function computeWeeklyTrackerDays(
   forceTodayCompleted = false,
   goalHistories?: DailyGoalHistoryItem[],
   lastActivityDate?: string,
+  frozenDates?: string[],
 ): TrackerDayItem[] {
   const today = startOfDay(new Date());
 
@@ -176,7 +177,7 @@ export function computeWeeklyTrackerDays(
     }
   });
 
-  let availableFreezes = Math.max(0, streakFreezes);
+  const frozenDateSet = new Set(frozenDates || []);
 
   for (let i = 0; i < rawDays.length; i++) {
     const day = rawDays[i];
@@ -184,10 +185,7 @@ export function computeWeeklyTrackerDays(
       const prevDay = i > 0 ? rawDays[i - 1] : null;
       const nextDay = i < rawDays.length - 1 ? rawDays[i + 1] : null;
 
-      const isPrecededByActive =
-        !prevDay ||
-        prevDay.status === 'completed' ||
-        prevDay.status === 'frozen';
+      const isExplicitDbFrozen = frozenDateSet.has(day.dateStr);
 
       const isPastConsumedFreeze =
         isLastActiveAFreezeDay &&
@@ -198,11 +196,15 @@ export function computeWeeklyTrackerDays(
       const isSandwichedFrozen =
         prevDay?.status === 'completed' && nextDay?.status === 'completed';
 
-      if (isPastConsumedFreeze || isSandwichedFrozen) {
+      const isFirstMissedAfterCompleted = prevDay?.status === 'completed';
+
+      if (
+        isExplicitDbFrozen ||
+        isPastConsumedFreeze ||
+        isSandwichedFrozen ||
+        isFirstMissedAfterCompleted
+      ) {
         day.status = 'frozen';
-      } else if (isPrecededByActive && availableFreezes > 0) {
-        day.status = 'frozen';
-        availableFreezes--;
       }
     }
   }

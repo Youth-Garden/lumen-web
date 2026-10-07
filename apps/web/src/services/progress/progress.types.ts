@@ -28,6 +28,7 @@ export interface DashboardProgressResponse {
   streakFreezes: number;
   unlockedBadges?: string[];
   goalHistories?: DailyGoalHistoryItem[];
+  frozenDates?: string[];
 }
 
 export interface HeatmapItem {

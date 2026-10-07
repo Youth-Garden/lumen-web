@@ -92,5 +92,69 @@ describe('streak-tracker.utils', () => {
       expect(pastDayItem?.isGoalMet).toBe(true);
       expect(pastDayItem?.status).toBe('completed');
     });
+
+    it('should mark the 1st missed day after a completed study day as frozen and subsequent missed days as missed', () => {
+      const today = startOfDay(new Date());
+
+      // User studied 4 days ago (Tue), but missed 3 days ago (Wed), 2 days ago (Thu), 1 day ago (Fri)
+      const heatmapData = [
+        {
+          date: subDays(today, 4).toISOString().slice(0, 10),
+          count: 20,
+        },
+      ];
+
+      const days = computeWeeklyTrackerDays(
+        heatmapData,
+        0,
+        15,
+        Locale.EN,
+        0,
+        false,
+      );
+
+      // 3 days ago (Wed - 1st missed day after Tue) should be frozen by Tue's earned freeze
+      const firstMissedDay = days.find(
+        (d) => d.dateStr === subDays(today, 3).toISOString().slice(0, 10),
+      );
+      expect(firstMissedDay?.status).toBe('frozen');
+
+      // 2 days ago (Thu - 2nd missed day) should be missed
+      const secondMissedDay = days.find(
+        (d) => d.dateStr === subDays(today, 2).toISOString().slice(0, 10),
+      );
+      expect(secondMissedDay?.status).toBe('missed');
+    });
+
+    it('should mark sandwiched missed days as frozen', () => {
+      const today = startOfDay(new Date());
+
+      // User studied 4 days ago and 2 days ago, but missed 3 days ago
+      const heatmapData = [
+        {
+          date: subDays(today, 4).toISOString().slice(0, 10),
+          count: 20,
+        },
+        {
+          date: subDays(today, 2).toISOString().slice(0, 10),
+          count: 20,
+        },
+      ];
+
+      const days = computeWeeklyTrackerDays(
+        heatmapData,
+        0,
+        15,
+        Locale.EN,
+        1,
+        false,
+      );
+
+      const sandwichedDay = days.find(
+        (d) => d.dateStr === subDays(today, 3).toISOString().slice(0, 10),
+      );
+
+      expect(sandwichedDay?.status).toBe('frozen');
+    });
   });
 });

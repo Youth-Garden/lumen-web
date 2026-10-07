@@ -28,6 +28,8 @@ import {
   i18nText,
 } from '@/shared/utils';
 
+import { PageTitle } from '@/shared/components/page-title';
+
 export function VocabularyListPage() {
   const t = useTranslations('Vocabulary.List');
   const locale = useLocale();
@@ -44,12 +46,7 @@ export function VocabularyListPage() {
 
   return (
     <div className="flex flex-col space-y-6 h-full min-h-[calc(100vh-8rem)]">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-          <p className="text-muted-foreground">{t('description')}</p>
-        </div>
-      </div>
+      <PageTitle title={t('title')} description={t('description')} as="h2" />
 
       <div className="flex flex-col gap-4">
         <div className="relative w-full max-w-md">

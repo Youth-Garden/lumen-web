@@ -1,5 +1,6 @@
 'use client';
 
+import { PageTitle } from '@/shared/components/page-title';
 import { useVocabularyOverview } from '@/features/vocabulary/hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -82,14 +83,11 @@ export function OverviewPage() {
   return (
     <div className="space-y-6 pb-28">
       {/* Top Header */}
-      <div>
-        <h2 className="text-3xl font-heading font-bold tracking-tight text-foreground">
-          {t('pageTitle')}
-        </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t('pageSubtitle')}
-        </p>
-      </div>
+      <PageTitle
+        title={t('pageTitle')}
+        description={t('pageSubtitle')}
+        as="h2"
+      />
 
       {/* Tier 1: Action-First Hero Row (3 Cards) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
@@ -120,6 +118,7 @@ export function OverviewPage() {
           streakFreezes={progressData?.streakFreezes ?? 0}
           lastActivityDate={progressData?.lastActivityDate}
           goalHistories={progressData?.goalHistories}
+          frozenDates={progressData?.frozenDates}
           isLoading={isStatsLoading}
         />
         <StreakMilestoneCard

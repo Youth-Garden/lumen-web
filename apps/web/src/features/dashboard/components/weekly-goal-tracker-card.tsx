@@ -25,6 +25,7 @@ interface WeeklyGoalTrackerCardProps {
   streakFreezes?: number;
   lastActivityDate?: string;
   goalHistories?: DailyGoalHistoryItem[];
+  frozenDates?: string[];
   isLoading?: boolean;
 }
 
@@ -36,6 +37,7 @@ export function WeeklyGoalTrackerCard({
   streakFreezes = 0,
   lastActivityDate,
   goalHistories,
+  frozenDates,
   isLoading = false,
 }: WeeklyGoalTrackerCardProps) {
   const t = useTranslations('Dashboard.Overview');
@@ -51,6 +53,7 @@ export function WeeklyGoalTrackerCard({
       false,
       goalHistories,
       lastActivityDate,
+      frozenDates,
     );
   }, [
     heatmapData,
@@ -60,6 +63,7 @@ export function WeeklyGoalTrackerCard({
     streakFreezes,
     goalHistories,
     lastActivityDate,
+    frozenDates,
   ]);
 
   const completedDaysCount = useMemo(() => {

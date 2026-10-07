@@ -35,13 +35,15 @@ export function TopicWordsList({
   return (
     <div className="w-full space-y-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-        {words.map((word) => (
-          <VocabularyWordCard
-            key={word.id}
-            word={word}
-            onClick={presentWordDetail}
-          />
-        ))}
+        {words
+          .filter((word) => Boolean(word && word.id))
+          .map((word) => (
+            <VocabularyWordCard
+              key={word.id}
+              word={word}
+              onClick={presentWordDetail}
+            />
+          ))}
       </div>
 
       <div ref={sentinelRef} className="h-1" />

@@ -11,6 +11,8 @@ import { Icons } from '@lumen/uikit/icons';
 import { FolderCard } from '@/features/vocabulary/components/cards/folder-card';
 import { StudyBottomActionBar } from '@/features/study/components/study-bottom-action-bar';
 
+import { PageTitle } from '@/shared/components/page-title';
+
 interface FolderSelectionViewProps {
   activeFolderId: string | null;
   allFolders: Folder[];
@@ -72,17 +74,10 @@ export function FolderSelectionView({
   return (
     <div className="h-full overflow-y-auto overscroll-contain pb-28 p-1 sm:p-2 max-w-[1600px] mx-auto w-full space-y-6">
       {/* 1. Top Header */}
-      <div className="flex flex-col space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              {t('selectFolderTitle')}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {t('selectFolderSubtitle')}
-            </p>
-          </div>
-
+      <PageTitle
+        title={t('selectFolderTitle')}
+        description={t('selectFolderSubtitle')}
+        actions={
           <Button
             variant="secondary"
             size="sm"
@@ -92,8 +87,8 @@ export function FolderSelectionView({
             <Icons name="plus" className="h-4 w-4" />
             <span>{t('createNewFolder')}</span>
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* 2. SECTION 1: USER-CREATED FOLDERS (HIỂN THỊ ĐẦU TIÊN) */}
       <div className="flex flex-col space-y-4">
